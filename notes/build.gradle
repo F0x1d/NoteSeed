@@ -16,22 +16,14 @@ repositories {
 
 
 android {
-    signingConfigs {
-        default_key {
-            keyAlias 'F0x1d'
-            keyPassword 'Dp40ru54'
-            storeFile file('C:/Users/admin/Desktop/Надо/key/keydp.jks')
-            storePassword 'Dp40ru54'
-        }
-    }
 
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.f0x1d.notes"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 52
-        versionName "3.8"
+        versionCode 53
+        versionName "3.8.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
