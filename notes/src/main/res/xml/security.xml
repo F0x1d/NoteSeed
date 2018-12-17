@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.f0x1d.notes.help.view.preferences.MySwitchPreference android:title="@string/use_pin" android:key="lock"/>
+    <com.f0x1d.notes.help.view.preferences.MySwitchPreference android:title="@string/use_finger" android:key="finger"/>
+</PreferenceScreen>

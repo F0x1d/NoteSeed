@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.f0x1d.notes.help.view.preferences.MyPreferenceCategory android:title="@string/editing">
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/text_size" android:summary="@string/in_editor" android:key="textSize" />
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/background" android:summary="@string/in_editor" android:key="fon" />
+        <com.f0x1d.notes.help.view.preferences.MySwitchPreference android:title="@string/force_save" android:summary="@string/in_editor" android:key="force_save"/>
+        <com.f0x1d.notes.help.view.preferences.MySwitchPreference android:title="@string/use_mono" android:summary="@string/in_editor" android:key="mono"/>
+    </com.f0x1d.notes.help.view.preferences.MyPreferenceCategory>
+
+</PreferenceScreen>

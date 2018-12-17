@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginStart="5dp"
+        android:gravity="center_vertical"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/background"
+        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content">
+
+        <com.f0x1d.notes.help.view.theming.MyImageButton
+            android:id="@+id/close"
+            android:layout_width="120dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_clear_black_24dp" />
+
+        <com.f0x1d.notes.help.view.theming.MyEditText
+            android:layout_width="match_parent"
+            android:id="@+id/text"
+            android:background="@null"
+            android:singleLine="true"
+            android:hint="@string/search"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <com.f0x1d.notes.help.view.theming.MyImageButton
+            android:id="@+id/reset"
+            android:layout_width="120dp"
+            android:layout_weight="1"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_black_24dp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/recyclerView"
+        android:layout_below="@id/background"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+
+</RelativeLayout>

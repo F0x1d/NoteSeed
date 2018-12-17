@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.f0x1d.notes.help.view.preferences.MyPreference android:icon="@drawable/ic_launcher_round" android:title="NoteSeed" android:summary="Made by F0x1d" android:selectable="false" />
+    <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/about" android:key="about" />
+
+    <!--<com.f0x1d.notes.help.view.preferences.MyPreferenceCategory android:title="@string/updates">
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/ota_updates" android:key="ota"/>
+    </com.f0x1d.notes.help.view.preferences.MyPreferenceCategory>-->
+
+    <com.f0x1d.notes.help.view.preferences.MyPreferenceCategory android:title="@string/onscreen">
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/theme" android:key="dayAccent"/>
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/editing" android:key="editor_settings"/>
+    </com.f0x1d.notes.help.view.preferences.MyPreferenceCategory>
+
+    <com.f0x1d.notes.help.view.preferences.MyPreferenceCategory android:title="@string/security">
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/security2" android:key="locking"  />
+    </com.f0x1d.notes.help.view.preferences.MyPreferenceCategory>
+
+    <com.f0x1d.notes.help.view.preferences.MyPreferenceCategory android:title="@string/debug">
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/debug" android:key="debug"  />
+    </com.f0x1d.notes.help.view.preferences.MyPreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/choose_time_layout"
+        android:layout_height="wrap_content">
+
+        <com.f0x1d.notes.help.view.theming.MyImageView
+            android:layout_width="30dp"
+            android:id="@+id/time_icon"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/choose_time"
+            android:src="@drawable/ic_access_time_black_24dp"
+            android:layout_height="30dp" />
+
+        <com.f0x1d.notes.help.view.theming.MyTextView
+            android:id="@+id/choose_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/choose_time" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/choose_date_layout"
+        android:layout_height="wrap_content">
+
+        <com.f0x1d.notes.help.view.theming.MyImageView
+            android:layout_width="30dp"
+            android:id="@+id/date_icon"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/choose_date"
+            android:src="@drawable/ic_date_range_black_24dp"
+            android:layout_height="30dp" />
+
+        <com.f0x1d.notes.help.view.theming.MyTextView
+            android:id="@+id/choose_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/choose_date" />
+    </RelativeLayout>
+
+    <com.f0x1d.notes.help.view.theming.MyButton
+        android:layout_width="match_parent"
+        android:text="OK"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/ok"
+        android:layout_height="wrap_content" />
+
+    <com.f0x1d.notes.help.view.theming.MyButton
+        android:layout_width="match_parent"
+        android:text="@string/delete_notify"
+        android:textAllCaps="false"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/delete"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

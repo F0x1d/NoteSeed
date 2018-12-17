@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.f0x1d.notes.help.view.preferences.MyPreference android:title="NoteSeed" android:summary="Made by F0x1d" android:icon="@drawable/ic_launcher_round">
+        <intent android:action="android.intent.action.VIEW" android:data="https://t.me/f0x3d"/>
+    </com.f0x1d.notes.help.view.preferences.MyPreference>
+
+    <com.f0x1d.notes.help.view.preferences.MyPreferenceCategory android:title="@string/help_me">
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/donate" android:key="donate"/>
+    </com.f0x1d.notes.help.view.preferences.MyPreferenceCategory>
+
+    <com.f0x1d.notes.help.view.preferences.MyPreferenceCategory android:title="@string/links">
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="@string/telegram">
+            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/f0x3d"/>
+        </com.f0x1d.notes.help.view.preferences.MyPreference>
+    </com.f0x1d.notes.help.view.preferences.MyPreferenceCategory>
+
+    <com.f0x1d.notes.help.view.preferences.MyPreferenceCategory android:title="@string/thanks">
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="Emulond" android:summary="@string/icon_by_emulond">
+            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/Emulond" />
+        </com.f0x1d.notes.help.view.preferences.MyPreference>
+        <com.f0x1d.notes.help.view.preferences.MyPreference android:title="murleek" android:summary="@string/murleek">
+            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/murleek" />
+        </com.f0x1d.notes.help.view.preferences.MyPreference>
+    </com.f0x1d.notes.help.view.preferences.MyPreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.f0x1d.notes.help.view.CenteredToolbar
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar"
+        android:layout_height="wrap_content">
+    </com.f0x1d.notes.help.view.CenteredToolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/notes_view"
+        android:layout_marginBottom="60dp"
+        android:layout_below="@id/toolbar"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <com.f0x1d.notes.help.view.theming.MyTextView
+        android:id="@+id/nothing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:elevation="2dp"
+        android:layout_centerVertical="true"
+        
+        android:text="@string/empty" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+
+        <com.f0x1d.notes.help.view.theming.MyButton
+            android:layout_width="match_parent"
+            
+            android:text="@string/new_note"
+            android:layout_marginStart="5dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:id="@+id/new_note"
+            android:gravity="center|start"
+            android:layout_height="wrap_content" />
+
+        <com.f0x1d.notes.help.view.theming.MyImageButton
+            android:layout_weight="1"
+            android:src="@drawable/ic_folder_black_24dp"
+            android:background="@android:color/transparent"
+            android:layout_width="100dp"
+            android:id="@+id/new_folder"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</RelativeLayout>
