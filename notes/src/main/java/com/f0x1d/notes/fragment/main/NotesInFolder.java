@@ -66,10 +66,22 @@ public class NotesInFolder extends Fragment {
 
     ItemsAdapter adapter;
 
+    public static NotesInFolder newInstance(Bundle args){
+        NotesInFolder notesInFolder = new NotesInFolder();
+        notesInFolder.setArguments(args);
+
+        return notesInFolder;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        if (getArguments() != null){
+            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("folder_name", getArguments().getString("folder_name")).apply();
+            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("in_folder_id", getArguments().getString("folder_name")).apply();
+        }
     }
 
     @Override

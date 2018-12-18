@@ -137,12 +137,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("folder_name", items.get(position).folder_name).apply();
-                PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("in_folder_id", items.get(position).folder_name).apply();
+                Bundle args = new Bundle();
+                    args.putString("folder_name", items.get(position).folder_name);
+
+                //PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("folder_name", items.get(position).folder_name).apply();
+                //PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("in_folder_id", items.get(position).folder_name).apply();
 
                 PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("in_folder_back_stack", true).apply();
 
-                activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new NotesInFolder()).commit();
+                activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, NotesInFolder.newInstance(args)).commit();
             }
         });
 
