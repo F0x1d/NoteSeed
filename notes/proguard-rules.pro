@@ -12,7 +12,7 @@
 #   public *;
 #}
 
-#-keep class com.f0x1d.notes.help.adapter.FolderAdapter {
+#-keep class com.f0x1d.notes.adapter.FolderAdapter {
 #    *;
 #}
 

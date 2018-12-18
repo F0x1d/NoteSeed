@@ -1,6 +1,5 @@
 package com.f0x1d.notes.fragment.settings;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -14,12 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
-import com.f0x1d.notes.help.view.CenteredToolbar;
+import com.f0x1d.notes.view.CenteredToolbar;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 
 public class SecuritySettings extends PreferenceFragment {
 

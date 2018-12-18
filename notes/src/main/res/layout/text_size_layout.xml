@@ -4,7 +4,7 @@
     android:id="@+id/background"
     android:layout_height="match_parent">
 
-    <com.f0x1d.notes.help.view.theming.MyTextView
+    <com.f0x1d.notes.view.theming.MyTextView
         android:layout_width="match_parent"
         android:id="@+id/text"
         android:gravity="center"

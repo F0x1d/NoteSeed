@@ -10,9 +10,9 @@ import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.settings.Settings;
 import com.f0x1d.notes.fragment.themes.ThemesFragment;
-import com.f0x1d.notes.help.App;
-import com.f0x1d.notes.help.utils.ThemesEngine;
-import com.f0x1d.notes.help.utils.UselessUtils;
+import com.f0x1d.notes.App;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,8 +22,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.f0x1d.notes.help.utils.UselessUtils.clear_back_stack;
-import static com.f0x1d.notes.help.utils.UselessUtils.lol;
+import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,20 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        if (!UselessUtils.check()){
-            throw new RuntimeException();
-        }
-
-        String x = "";
-
-        for (char c : lol) {
-            x = x + c;
-        }
-
-        if (!x.equals(App.getInstance().getPackageName())){
-            throw new RuntimeException();
-        }
-
         if (UselessUtils.appInstalledOrNot("com.encrypt.password")){
             Toast.makeText(getApplicationContext(), "желе лох", Toast.LENGTH_SHORT).show();
         }
@@ -115,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public Resources getResources() {
-        return new com.f0x1d.notes.help.resources.Resources(super.getResources().getAssets(), super.getResources().getDisplayMetrics(), super.getResources().getConfiguration());
+        return new com.f0x1d.notes.resources.Resources(super.getResources().getAssets(), super.getResources().getDisplayMetrics(), super.getResources().getConfiguration());
     }
 
     @Override

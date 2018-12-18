@@ -18,9 +18,9 @@ import android.widget.Toast;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.main.Notes;
-import com.f0x1d.notes.help.utils.ThemesEngine;
-import com.f0x1d.notes.help.utils.UselessUtils;
-import com.f0x1d.notes.help.view.theming.MyButton;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.view.theming.MyButton;
 
 import androidx.annotation.Nullable;
 

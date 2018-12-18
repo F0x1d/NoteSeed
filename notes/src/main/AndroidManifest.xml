@@ -11,7 +11,7 @@
 
     <application
         android:allowBackup="true"
-        android:name=".help.App"
+        android:name=".App"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -23,7 +23,7 @@
             android:screenOrientation="portrait"
             android:label="@string/app_name"/>
 
-        <receiver android:name=".help.service.NotifyService"/>
+        <receiver android:name=".receiver.NotifyServiceReceiver"/>
 
         <activity
             android:name=".activity.Splash"

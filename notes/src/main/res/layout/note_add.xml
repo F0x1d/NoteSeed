@@ -4,13 +4,13 @@
     android:id="@+id/background"
     android:layout_height="match_parent">
 
-    <com.f0x1d.notes.help.view.CenteredToolbar
+    <com.f0x1d.notes.view.CenteredToolbar
         android:layout_width="match_parent"
         android:id="@+id/toolbar"
         android:layout_height="wrap_content">
-    </com.f0x1d.notes.help.view.CenteredToolbar>
+    </com.f0x1d.notes.view.CenteredToolbar>
 
-    <com.f0x1d.notes.help.view.theming.MyEditText
+    <com.f0x1d.notes.view.theming.MyEditText
         android:id="@+id/edit_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:inputType="text|textCapSentences|textAutoCorrect|textMultiLine"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
-    <com.f0x1d.notes.help.view.theming.MyEditText
+    <com.f0x1d.notes.view.theming.MyEditText
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,7 +37,7 @@
         android:hint="@string/note"
         android:inputType="text|textCapSentences|textAutoCorrect|textMultiLine" />
 
-    <com.f0x1d.notes.help.view.theming.MyFAB
+    <com.f0x1d.notes.view.theming.MyFAB
         android:layout_width="wrap_content"
         android:id="@+id/force_save"
         android:src="@drawable/ic_done_black_24dp"

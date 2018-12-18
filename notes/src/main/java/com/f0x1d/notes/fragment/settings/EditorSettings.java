@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -16,9 +15,9 @@ import android.view.ViewGroup;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.bottom_sheet.TextSizeDialog;
-import com.f0x1d.notes.help.utils.ThemesEngine;
-import com.f0x1d.notes.help.utils.UselessUtils;
-import com.f0x1d.notes.help.view.CenteredToolbar;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.view.CenteredToolbar;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;

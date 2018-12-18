@@ -2,16 +2,12 @@ package com.f0x1d.notes.fragment.search;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +17,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.help.App;
-import com.f0x1d.notes.help.adapter.ItemsAdapter;
-import com.f0x1d.notes.help.db.daos.NoteOrFolderDao;
-import com.f0x1d.notes.help.db.entities.NoteOrFolder;
-import com.f0x1d.notes.help.utils.ThemesEngine;
-import com.f0x1d.notes.help.utils.UselessUtils;
+import com.f0x1d.notes.App;
+import com.f0x1d.notes.adapter.ItemsAdapter;
+import com.f0x1d.notes.db.daos.NoteOrFolderDao;
+import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
 
 import java.util.ArrayList;
 import java.util.List;

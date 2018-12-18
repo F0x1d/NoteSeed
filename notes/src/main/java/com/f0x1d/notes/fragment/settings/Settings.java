@@ -1,37 +1,18 @@
 package com.f0x1d.notes.fragment.settings;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.SwitchPreference;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
-import com.f0x1d.notes.fragment.bottom_sheet.TextSizeDialog;
 import com.f0x1d.notes.fragment.themes.ThemesFragment;
-import com.f0x1d.notes.help.utils.ThemesEngine;
-import com.f0x1d.notes.help.utils.UselessUtils;
-import com.f0x1d.notes.help.view.CenteredToolbar;
-import com.google.android.material.snackbar.Snackbar;
+import com.f0x1d.notes.view.CenteredToolbar;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 
 public class Settings extends PreferenceFragment {
 

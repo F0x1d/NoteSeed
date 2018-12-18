@@ -3,11 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.f0x1d.notes.help.view.CenteredToolbar
+    <com.f0x1d.notes.view.CenteredToolbar
         android:layout_width="match_parent"
         android:id="@+id/toolbar"
         android:layout_height="wrap_content">
-    </com.f0x1d.notes.help.view.CenteredToolbar>
+    </com.f0x1d.notes.view.CenteredToolbar>
 
     <ListView
         android:id="@android:id/list"

@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.f0x1d.notes.help.view.theming.MyEditText
+    <com.f0x1d.notes.view.theming.MyEditText
         android:layout_width="match_parent"
         android:id="@+id/edit_text"
         android:layout_marginStart="10dp"

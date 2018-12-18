@@ -6,7 +6,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -14,11 +13,9 @@ import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
-import com.f0x1d.notes.help.view.CenteredToolbar;
+import com.f0x1d.notes.view.CenteredToolbar;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class AboutSettings extends PreferenceFragment implements BillingProcessor.IBillingHandler {
 

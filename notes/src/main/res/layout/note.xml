@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.f0x1d.notes.help.view.theming.MyCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.f0x1d.notes.view.theming.MyCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
@@ -15,7 +15,7 @@
         android:gravity="center_horizontal"
         android:layout_height="wrap_content">
 
-        <com.f0x1d.notes.help.view.theming.MyImageView
+        <com.f0x1d.notes.view.theming.MyImageView
             android:layout_width="wrap_content"
             android:id="@+id/pinned"
             android:src="@drawable/ic_priority_high_black_24dp"
@@ -24,7 +24,7 @@
             android:layout_marginEnd="3dp"
             android:layout_height="wrap_content" />
 
-        <com.f0x1d.notes.help.view.theming.MyTextView
+        <com.f0x1d.notes.view.theming.MyTextView
             android:id="@+id/textView_title"
             android:layout_width="wrap_content"
             android:layout_alignParentStart="true"
@@ -37,7 +37,7 @@
             android:text="title"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
-        <com.f0x1d.notes.help.view.theming.MyTextView
+        <com.f0x1d.notes.view.theming.MyTextView
             android:layout_width="match_parent"
             android:layout_marginTop="10dp"
             android:text="text"
@@ -51,4 +51,4 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
-</com.f0x1d.notes.help.view.theming.MyCardView>
+</com.f0x1d.notes.view.theming.MyCardView>

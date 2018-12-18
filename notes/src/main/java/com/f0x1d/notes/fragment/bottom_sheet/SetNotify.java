@@ -6,13 +6,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -26,13 +22,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.help.App;
-import com.f0x1d.notes.help.db.daos.NotifyDao;
-import com.f0x1d.notes.help.db.entities.Notify;
-import com.f0x1d.notes.help.utils.ThemesEngine;
-import com.f0x1d.notes.help.utils.UselessUtils;
-import com.f0x1d.notes.help.service.NotifyService;
-import com.f0x1d.notes.help.view.theming.MyButton;
+import com.f0x1d.notes.App;
+import com.f0x1d.notes.db.daos.NotifyDao;
+import com.f0x1d.notes.db.entities.Notify;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.receiver.NotifyServiceReceiver;
+import com.f0x1d.notes.view.theming.MyButton;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
@@ -158,7 +154,7 @@ public class SetNotify extends BottomSheetDialogFragment {
                 @Override
                 public void onClick(View v) {
                     delete(id);
-                    Intent myIntent = new Intent(getActivity(), NotifyService.class);
+                    Intent myIntent = new Intent(getActivity(), NotifyServiceReceiver.class);
                     PendingIntent service = PendingIntent.getBroadcast(getActivity(), (int) to_id, myIntent, 0);
 
                     AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -181,7 +177,7 @@ public class SetNotify extends BottomSheetDialogFragment {
                                     PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("notify_text", ""), myCalendar.getTimeInMillis(),
                                     PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0)));
 
-                            Intent myIntent = new Intent(getActivity(), NotifyService.class);
+                            Intent myIntent = new Intent(getActivity(), NotifyServiceReceiver.class);
                             PendingIntent service = PendingIntent.getBroadcast(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0), myIntent, 0);
 
                             AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -204,7 +200,7 @@ public class SetNotify extends BottomSheetDialogFragment {
                                     PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("notify_text", ""), myCalendar.getTimeInMillis(),
                                     PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0)));
 
-                            Intent myIntent = new Intent(getActivity(), NotifyService.class);
+                            Intent myIntent = new Intent(getActivity(), NotifyServiceReceiver.class);
                             PendingIntent service = PendingIntent.getBroadcast(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0), myIntent, 0);
 
                             AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);

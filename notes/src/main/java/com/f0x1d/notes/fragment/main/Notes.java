@@ -3,22 +3,14 @@ package com.f0x1d.notes.fragment.main;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
-import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,14 +28,14 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.Settings;
-import com.f0x1d.notes.help.App;
-import com.f0x1d.notes.help.adapter.ItemsAdapter;
-import com.f0x1d.notes.help.db.daos.NoteOrFolderDao;
-import com.f0x1d.notes.help.db.entities.NoteOrFolder;
-import com.f0x1d.notes.help.utils.ThemesEngine;
-import com.f0x1d.notes.help.utils.UselessUtils;
-import com.f0x1d.notes.help.view.CenteredToolbar;
-import com.f0x1d.notes.help.view.theming.MyButton;
+import com.f0x1d.notes.App;
+import com.f0x1d.notes.adapter.ItemsAdapter;
+import com.f0x1d.notes.db.daos.NoteOrFolderDao;
+import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.view.CenteredToolbar;
+import com.f0x1d.notes.view.theming.MyButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
@@ -51,18 +43,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.content.res.TypedArrayUtils;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.f0x1d.notes.help.utils.UselessUtils.getFileName;
+import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 
 public class Notes extends Fragment {
 

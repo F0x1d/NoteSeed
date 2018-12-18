@@ -6,7 +6,6 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -30,11 +29,11 @@ import android.widget.Toast;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.main.Notes;
-import com.f0x1d.notes.fragment.main.in_folder_Notes;
-import com.f0x1d.notes.help.App;
-import com.f0x1d.notes.help.utils.ThemesEngine;
-import com.f0x1d.notes.help.utils.UselessUtils;
-import com.f0x1d.notes.help.view.theming.MyButton;
+import com.f0x1d.notes.fragment.main.NotesInFolder;
+import com.f0x1d.notes.App;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.view.theming.MyButton;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -109,9 +108,6 @@ public class LockScreen extends Fragment {
 
         MyButton odin = view.findViewById(R.id.odin);
         MyButton dva = view.findViewById(R.id.dva);
-        if (!UselessUtils.check()){
-            throw new RuntimeException();
-        }
         MyButton tri = view.findViewById(R.id.tri);
 
         MyButton cheture = view.findViewById(R.id.cheture);
@@ -178,9 +174,6 @@ public class LockScreen extends Fragment {
 
         cheture.setOnClickListener(oclBtn);
         pat.setOnClickListener(oclBtn);
-        if (!UselessUtils.check()){
-            throw new RuntimeException();
-        }
         shest.setOnClickListener(oclBtn);
 
         sem.setOnClickListener(oclBtn);
@@ -236,7 +229,7 @@ public class LockScreen extends Fragment {
                             getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, NoteEdit.newInstance(args)).addToBackStack(null).commit();
                             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_edit", false).apply();
                         } else {
-                            getActivity().getFragmentManager().beginTransaction().replace(android.R.id.content, new in_folder_Notes()).commit();
+                            getActivity().getFragmentManager().beginTransaction().replace(android.R.id.content, new NotesInFolder()).commit();
                             getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, NoteEdit.newInstance(args)).addToBackStack(null).commit();
                             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_edit", false).apply();
                         }
@@ -436,7 +429,7 @@ public class LockScreen extends Fragment {
                         getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new NoteEdit()).addToBackStack(null).commit();
                         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_edit", false).apply();
                     } else {
-                        getActivity().getFragmentManager().beginTransaction().replace(android.R.id.content, new in_folder_Notes()).commit();
+                        getActivity().getFragmentManager().beginTransaction().replace(android.R.id.content, new NotesInFolder()).commit();
                         getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new NoteEdit()).addToBackStack(null).commit();
                         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_edit", false).apply();
                     }

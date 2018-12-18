@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.f0x1d.notes.help.view.CenteredToolbar
+    <com.f0x1d.notes.view.CenteredToolbar
         android:layout_width="match_parent"
         android:id="@+id/toolbar"
         android:layout_height="wrap_content">
-    </com.f0x1d.notes.help.view.CenteredToolbar>
+    </com.f0x1d.notes.view.CenteredToolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
 
-    <com.f0x1d.notes.help.view.theming.MyTextView
+    <com.f0x1d.notes.view.theming.MyTextView
         android:id="@+id/nothing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content">
 
-        <com.f0x1d.notes.help.view.theming.MyButton
+        <com.f0x1d.notes.view.theming.MyButton
             android:layout_width="match_parent"
             
             android:text="@string/new_note"
@@ -46,7 +46,7 @@
             android:gravity="center|start"
             android:layout_height="wrap_content" />
 
-        <com.f0x1d.notes.help.view.theming.MyImageButton
+        <com.f0x1d.notes.view.theming.MyImageButton
             android:layout_weight="1"
             android:src="@drawable/ic_folder_black_24dp"
             android:background="@android:color/transparent"

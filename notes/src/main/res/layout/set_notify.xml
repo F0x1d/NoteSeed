@@ -10,7 +10,7 @@
         android:id="@+id/choose_time_layout"
         android:layout_height="wrap_content">
 
-        <com.f0x1d.notes.help.view.theming.MyImageView
+        <com.f0x1d.notes.view.theming.MyImageView
             android:layout_width="30dp"
             android:id="@+id/time_icon"
             android:layout_marginStart="5dp"
@@ -21,7 +21,7 @@
             android:src="@drawable/ic_access_time_black_24dp"
             android:layout_height="30dp" />
 
-        <com.f0x1d.notes.help.view.theming.MyTextView
+        <com.f0x1d.notes.view.theming.MyTextView
             android:id="@+id/choose_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:id="@+id/choose_date_layout"
         android:layout_height="wrap_content">
 
-        <com.f0x1d.notes.help.view.theming.MyImageView
+        <com.f0x1d.notes.view.theming.MyImageView
             android:layout_width="30dp"
             android:id="@+id/date_icon"
             android:layout_marginStart="5dp"
@@ -45,7 +45,7 @@
             android:src="@drawable/ic_date_range_black_24dp"
             android:layout_height="30dp" />
 
-        <com.f0x1d.notes.help.view.theming.MyTextView
+        <com.f0x1d.notes.view.theming.MyTextView
             android:id="@+id/choose_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,14 +53,14 @@
             android:text="@string/choose_date" />
     </RelativeLayout>
 
-    <com.f0x1d.notes.help.view.theming.MyButton
+    <com.f0x1d.notes.view.theming.MyButton
         android:layout_width="match_parent"
         android:text="OK"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/ok"
         android:layout_height="wrap_content" />
 
-    <com.f0x1d.notes.help.view.theming.MyButton
+    <com.f0x1d.notes.view.theming.MyButton
         android:layout_width="match_parent"
         android:text="@string/delete_notify"
         android:textAllCaps="false"

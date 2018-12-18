@@ -28,14 +28,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
-import com.f0x1d.notes.help.App;
-import com.f0x1d.notes.help.db.daos.FormatDao;
-import com.f0x1d.notes.help.db.daos.NoteOrFolderDao;
-import com.f0x1d.notes.help.db.entities.Format;
-import com.f0x1d.notes.help.db.entities.NoteOrFolder;
-import com.f0x1d.notes.help.utils.ThemesEngine;
-import com.f0x1d.notes.help.utils.UselessUtils;
-import com.f0x1d.notes.help.view.CenteredToolbar;
+import com.f0x1d.notes.App;
+import com.f0x1d.notes.db.daos.FormatDao;
+import com.f0x1d.notes.db.daos.NoteOrFolderDao;
+import com.f0x1d.notes.db.entities.Format;
+import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.view.CenteredToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 
 public class NoteAdd extends Fragment {
