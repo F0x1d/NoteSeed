@@ -104,7 +104,7 @@ public class ThemesFragment extends Fragment {
         if (data != null){
             new ThemesEngine().importTheme(data.getData(), getActivity());
 
-            UselessUtils.recreate(ThemesFragment.this, getActivity());
+            UselessUtils.recreate(ThemesFragment.this, getActivity(), "themes");
         }
     }
 

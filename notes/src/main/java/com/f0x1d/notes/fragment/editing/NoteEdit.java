@@ -44,8 +44,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 
 public class NoteEdit extends Fragment {
 
@@ -150,10 +153,6 @@ public class NoteEdit extends Fragment {
 
         setHasOptionsMenu(true);
 
-        id = getArguments().getLong("id");
-        id_str = String.valueOf(getArguments().getLong("id"));
-        locked = getArguments().getInt("locked");
-
         getActivity().invalidateOptionsMenu();
 
         title = view.findViewById(R.id.edit_title);
@@ -182,11 +181,17 @@ public class NoteEdit extends Fragment {
         dao = App.getInstance().getDatabase().noteOrFolderDao();
         formatDao = App.getInstance().getDatabase().formatDao();
 
-        titleStr = getArguments().getString("title");
-        textStr = getArguments().getString("text");
+        if (getArguments() != null){
+            titleStr = getArguments().getString("title");
+            textStr = getArguments().getString("text");
 
-        title.setText(getArguments().getString("title"));
-        text.setText(getArguments().getString("text"));
+            id = getArguments().getLong("id");
+            id_str = String.valueOf(getArguments().getLong("id"));
+            locked = getArguments().getInt("locked");
+
+            title.setText(getArguments().getString("title"));
+            text.setText(getArguments().getString("text"));
+        }
 
         for (Format format : formatDao.getAll()) {
             if (format.to_id == id){
@@ -373,7 +378,7 @@ public class NoteEdit extends Fragment {
 
                     UselessUtils.clear_back_stack(getActivity());
                     getFragmentManager().beginTransaction().remove(NoteEdit.this).commit();
-                    getFragmentManager().beginTransaction().replace(android.R.id.content, NoteEdit.newInstance(args)).addToBackStack(null).commit();
+                    getFragmentManager().beginTransaction().replace(android.R.id.content, NoteEdit.newInstance(args), "edit").addToBackStack(null).commit();
                 } else if (text.hasSelection()){
                     for (Format format : formatDao.getAll()) {
                         if (text.getSelectionStart() == format.start_position || text.getSelectionEnd() == format.end_position){
@@ -390,7 +395,7 @@ public class NoteEdit extends Fragment {
 
                     UselessUtils.clear_back_stack(getActivity());
                     getFragmentManager().beginTransaction().remove(NoteEdit.this).commit();
-                    getFragmentManager().beginTransaction().replace(android.R.id.content, NoteEdit.newInstance(args)).addToBackStack(null).commit();
+                    getFragmentManager().beginTransaction().replace(android.R.id.content, NoteEdit.newInstance(args), "edit").addToBackStack(null).commit();
                 } else {
                     Toast.makeText(getActivity(), R.string.format_error, Toast.LENGTH_SHORT).show();
                 }

@@ -45,7 +45,7 @@ public class SecuritySettings extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)){
-                        getActivity().getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new СhoosePin()).addToBackStack(null).commit();
+                        getActivity().getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new СhoosePin(), "choose_pin").addToBackStack(null).commit();
                         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("pass", "").apply();
                     }
                     return false;

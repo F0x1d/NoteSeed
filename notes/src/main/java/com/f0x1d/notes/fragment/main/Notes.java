@@ -139,7 +139,7 @@ public class Notes extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Search()).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Search(), "search").addToBackStack(null).commit();
             }
         });
 
@@ -247,7 +247,7 @@ public class Notes extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new NoteAdd()).addToBackStack(null).commit();
+                    getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new NoteAdd(), "add").addToBackStack(null).commit();
                 }
             });
 
@@ -291,7 +291,7 @@ public class Notes extends Fragment {
 
                     dao.insert(new NoteOrFolder(null, null, 0, 0, "def", 1, text.getText().toString(), 0, ""));
 
-                    getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Notes()).commit();
+                    getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
                 }
             }
         }).create();
@@ -334,7 +334,7 @@ public class Notes extends Fragment {
                 openFile("*/*", 228, getActivity());
                 break;
             case R.id.settings:
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Settings()).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Settings(), "settings").addToBackStack(null).commit();
                 break;
         }
 
@@ -402,7 +402,7 @@ public class Notes extends Fragment {
 
                 dao.insert(new NoteOrFolder(title, text, 0, 0, "def", 0, null, 0, ""));
 
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Notes()).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").addToBackStack(null).commit();
             }
         }
 
