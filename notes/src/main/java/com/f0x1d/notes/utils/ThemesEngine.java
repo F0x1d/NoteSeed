@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.R;
 import com.f0x1d.notes.model.Theme;
 
 import org.json.JSONException;
@@ -165,30 +166,134 @@ public class ThemesEngine {
                     }
                 }
             } catch (IOException e) {
-                Log.e("notes", e.getLocalizedMessage());
+                Log.e("notes_err", e.getLocalizedMessage());
+
+                PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
             }
 
+            JSONObject jsonObject = null;
+
             try {
-                JSONObject jsonObject = new JSONObject(all);
-                background = Color.parseColor(jsonObject.getString("background"));
-                statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
-                textColor = Color.parseColor(jsonObject.getString("text_color"));
-                accentColor = Color.parseColor(jsonObject.getString("accent"));
-                navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
-                iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
-                textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
-                dark = jsonObject.getBoolean("dark");
-                toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
-                toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
-                toolbarTransparent = jsonObject.getBoolean("transparent_toolbar");
-                fabColor = Color.parseColor(jsonObject.getString("fab_color"));
-                fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
-                defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
+                jsonObject = new JSONObject(all);
             } catch (Exception e) {
                 Toast.makeText(App.getContext(), "Error!", Toast.LENGTH_SHORT).show();
 
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
             }
+
+            try {
+                background = Color.parseColor(jsonObject.getString("background"));
+            } catch (Exception e){
+                background = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
+            } catch (Exception e){
+                statusBarColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                textColor = Color.parseColor(jsonObject.getString("text_color"));
+            } catch (Exception e){
+                textColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                accentColor = Color.parseColor(jsonObject.getString("accent"));
+            } catch (Exception e){
+                accentColor = 0xff00ff00;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
+            } catch (Exception e){
+                navBarColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
+            } catch (Exception e){
+                iconsColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
+            } catch (Exception e){
+                textHintColor = Color.GRAY;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                dark = jsonObject.getBoolean("dark");
+            } catch (Exception e){
+                dark = false;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
+            } catch (Exception e){
+                toolbarColor = Color.TRANSPARENT;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
+            } catch (Exception e){
+                toolbarTextColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                toolbarTransparent = jsonObject.getBoolean("transparent_toolbar");
+            } catch (Exception e){
+                toolbarTransparent = true;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                fabColor = Color.parseColor(jsonObject.getString("fab_color"));
+            } catch (Exception e){
+                fabColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
+            } catch (Exception e){
+                fabIconColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
+            } catch (Exception e){
+                defaultNoteColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+
         } catch (Exception e){
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
         }
@@ -216,23 +321,122 @@ public class ThemesEngine {
 
         try {
             JSONObject jsonObject = new JSONObject(all);
-            background = Color.parseColor(jsonObject.getString("background"));
-            statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
-            textColor = Color.parseColor(jsonObject.getString("text_color"));
-            accentColor = Color.parseColor(jsonObject.getString("accent"));
-            navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
-            iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
-            textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
-            dark = jsonObject.getBoolean("dark");
-            toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
-            toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
-            toolbarTransparent = jsonObject.getBoolean("transparent_toolbar");
-            fabColor = Color.parseColor(jsonObject.getString("fab_color"));
-            fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
-            defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
+
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", true).apply();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putString("path_theme", path.getAbsolutePath()).apply();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("change", true).apply();
+
+            try {
+                background = Color.parseColor(jsonObject.getString("background"));
+            } catch (Exception e){
+                background = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
+            } catch (Exception e){
+                statusBarColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                textColor = Color.parseColor(jsonObject.getString("text_color"));
+            } catch (Exception e){
+                textColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                accentColor = Color.parseColor(jsonObject.getString("accent"));
+            } catch (Exception e){
+                accentColor = 0xff00ff00;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
+            } catch (Exception e){
+                navBarColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
+            } catch (Exception e){
+                iconsColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
+            } catch (Exception e){
+                textHintColor = Color.GRAY;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                dark = jsonObject.getBoolean("dark");
+            } catch (Exception e){
+                dark = false;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
+            } catch (Exception e){
+                toolbarColor = Color.TRANSPARENT;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
+            } catch (Exception e){
+                toolbarTextColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                toolbarTransparent = jsonObject.getBoolean("transparent_toolbar");
+            } catch (Exception e){
+                toolbarTransparent = true;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                fabColor = Color.parseColor(jsonObject.getString("fab_color"));
+            } catch (Exception e){
+                fabColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
+            } catch (Exception e){
+                fabIconColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
+            } catch (Exception e){
+                defaultNoteColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
 
             if (dark){
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", true).apply();
@@ -246,6 +450,7 @@ public class ThemesEngine {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(i);
             activity.finish();
+
         } catch (Exception e) {
             Toast.makeText(App.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();

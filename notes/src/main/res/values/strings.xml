@@ -97,4 +97,5 @@
     <string name="italic">Italic</string>
     <string name="no_format">No format</string>
     <string name="donate">Donate</string>
+    <string name="not_all_colors_found">Not all theme\'s colors were found!</string>
 </resources>
