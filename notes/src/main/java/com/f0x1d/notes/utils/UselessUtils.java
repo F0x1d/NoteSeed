@@ -82,6 +82,10 @@ public class UselessUtils {
         activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
     }
 
+    public static void replaceNoBackStack(Activity activity, android.app.Fragment fragment, String tag){
+        activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, fragment, tag).commit();
+    }
+
     public static Drawable setTint(Drawable d, int color) {
         Drawable wrappedDrawable = DrawableCompat.wrap(d);
         DrawableCompat.setTint(wrappedDrawable, color);
