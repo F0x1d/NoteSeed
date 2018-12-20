@@ -1,6 +1,7 @@
 package com.f0x1d.notes.fragment.settings;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
 
 import androidx.annotation.Nullable;
@@ -29,6 +32,16 @@ public class SecuritySettings extends PreferenceFragment {
         CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.security));
         getActivity().setActionBar(toolbar);
+
+        if (UselessUtils.ifCustomTheme()){
+            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+
+            if (ThemesEngine.toolbarTransparent){
+                toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
+            }
+        }
         return v;
     }
 

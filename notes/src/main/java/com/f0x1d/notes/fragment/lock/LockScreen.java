@@ -77,15 +77,11 @@ public class LockScreen extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+
         if (UselessUtils.ifCustomTheme()){
-            try {
-                getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-                getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-                getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
-            } catch (Exception e){
-                PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
-                getActivity().recreate();
-            }
+            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
 
         return inflater.inflate(R.layout.screen_lock, container, false);

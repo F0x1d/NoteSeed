@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -33,6 +34,16 @@ public class EditorSettings extends PreferenceFragment {
         CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.editing));
         getActivity().setActionBar(toolbar);
+
+        if (UselessUtils.ifCustomTheme()){
+            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+
+            if (ThemesEngine.toolbarTransparent){
+                toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
+            }
+        }
         return v;
     }
 

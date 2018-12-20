@@ -9,6 +9,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -138,6 +139,16 @@ public class NoteEdit extends Fragment {
                 final Drawable wallpaperDrawable = wallpaperManager.getDrawable();
 
                 getActivity().getWindow().setBackgroundDrawable(wallpaperDrawable);
+            } else {
+                if (UselessUtils.ifCustomTheme()){
+                    getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+                    getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+                    getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+
+                    if (ThemesEngine.toolbarTransparent){
+                        toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
+                    }
+                }
             }
 
         getActivity().setActionBar(toolbar);

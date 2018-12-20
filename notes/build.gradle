@@ -22,7 +22,7 @@ android {
         applicationId "com.f0x1d.notes"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 56
+        versionCode 59
         versionName "4.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

@@ -42,22 +42,11 @@ public class Search extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
-            if (UselessUtils.ifCustomTheme()){
-                getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-                getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-                getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
-            } else {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
-                    getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(getActivity().getResources().getColor(R.color.statusbar)));
-                    getActivity().getWindow().setStatusBarColor(getActivity().getResources().getColor(R.color.statusbar));
-                    getActivity().getWindow().setNavigationBarColor(getActivity().getResources().getColor(R.color.statusbar));
-                } else {
-                    getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-                    getActivity().getWindow().setStatusBarColor(Color.WHITE);
-                    getActivity().getWindow().setNavigationBarColor(Color.BLACK);
-                }
-            }
+
+        if (UselessUtils.ifCustomTheme()){
+            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
         return inflater.inflate(R.layout.search, container, false);
     }
