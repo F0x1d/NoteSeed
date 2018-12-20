@@ -79,7 +79,7 @@ public class UselessUtils {
     }
 
     public static void replace(Activity activity, android.app.Fragment fragment, String tag){
-        activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, fragment, tag).commit();
+        activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
     }
 
     public static Drawable setTint(Drawable d, int color) {
