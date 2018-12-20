@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             savedInstanceState.getString("what_frag");
 
-
-
         } catch (Exception e){
             getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Settings(), "settings").commit();
 
@@ -120,9 +118,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        //Save the fragment's instance
-            outState.putString("what_frag", "other");
-
+        outState.putString("what_frag", "other");
     }
 
     @Override
