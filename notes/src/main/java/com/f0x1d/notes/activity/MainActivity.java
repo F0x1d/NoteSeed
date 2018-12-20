@@ -77,21 +77,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            if (savedInstanceState.getString("what_frag").equals("notes")){
-                UselessUtils.replaceNoBackStack(this, new Notes(), "notes");
-            } else if (savedInstanceState.getString("what_frag").equals("settings")){
-                UselessUtils.replaceNoBackStack(this, new Settings(), "settings");
-            } else if (savedInstanceState.getString("what_frag").equals("themes")){
-                UselessUtils.replaceNoBackStack(this, ThemesFragment.newInstance(false), "themes");
-            } else if (savedInstanceState.getString("what_frag").equals("editor_settings")){
-                UselessUtils.replaceNoBackStack(this, new EditorSettings(), "editor_settings");
-            } else if (savedInstanceState.getString("what_frag").equals("security_settings")){
-                UselessUtils.replaceNoBackStack(this, new SecuritySettings(), "security_settings");
-            } else if (savedInstanceState.getString("what_frag").equals("about")){
-                UselessUtils.replaceNoBackStack(this, new AboutSettings(), "about");
-            } else if (savedInstanceState.getString("what_frag").equals("debug")){
-                UselessUtils.replaceNoBackStack(this, new DebugSettings(), "debug");
-            }
+            savedInstanceState.getString("what_frag");
 
 
 
@@ -135,22 +121,7 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         //Save the fragment's instance
-
-        if (getFragmentManager().findFragmentByTag("notes") != null && getFragmentManager().findFragmentByTag("notes").isVisible()){
-            outState.putString("what_frag", "notes");
-        } else if (getFragmentManager().findFragmentByTag("settings") != null && getFragmentManager().findFragmentByTag("settings").isVisible()){
-            outState.putString("what_frag", "settings");
-        } else if (getFragmentManager().findFragmentByTag("editor_settings") != null && getFragmentManager().findFragmentByTag("editor_settings").isVisible()){
-            outState.putString("what_frag", "editor_settings");
-        } else if (getFragmentManager().findFragmentByTag("debug_settings") != null && getFragmentManager().findFragmentByTag("debug_settings").isVisible()){
-            outState.putString("what_frag", "debug_settings");
-        } else if (getFragmentManager().findFragmentByTag("themes") != null && getFragmentManager().findFragmentByTag("themes").isVisible()){
-            outState.putString("what_frag", "themes");
-        } else if (getFragmentManager().findFragmentByTag("security_settings") != null && getFragmentManager().findFragmentByTag("security_settings").isVisible()){
-            outState.putString("what_frag", "security_settings");
-        } else if (getFragmentManager().findFragmentByTag("about") != null && getFragmentManager().findFragmentByTag("about").isVisible()){
-            outState.putString("what_frag", "about");
-        }
+            outState.putString("what_frag", "other");
 
     }
 
