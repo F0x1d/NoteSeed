@@ -130,14 +130,32 @@ public class ThemesEngine {
                     String card_color = "#ffffff";
                     String card_text_color = "#ffffff";
 
+                    JSONObject jsonObject = null;
+
                     try {
-                        JSONObject jsonObject = new JSONObject(allnew);
+                        jsonObject = new JSONObject(allnew);
+                    } catch (Exception e) {
+                        Log.e("notes_err", e.getLocalizedMessage());
+                    }
+
+                    try {
                         name = jsonObject.getString("name");
+                    } catch (Exception e){
+                    }
+
+                    try {
                         author = jsonObject.getString("author");
+                    } catch (Exception e){
+                    }
+
+                    try {
                         card_color = jsonObject.getString("card_color");
+                    } catch (Exception e){
+                    }
+
+                    try {
                         card_text_color = jsonObject.getString("card_text_color");
-                    } catch (JSONException | NullPointerException ignored) {
-                        Log.e("notes_err", ignored.getLocalizedMessage());
+                    } catch (Exception e){
                     }
 
                     themes.add(new Theme(listFile, name, author, Color.parseColor(card_color), Color.parseColor(card_text_color)));
