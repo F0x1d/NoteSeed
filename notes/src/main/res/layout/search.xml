@@ -15,7 +15,7 @@
 
         <com.f0x1d.notes.view.theming.MyImageButton
             android:id="@+id/close"
-            android:layout_width="120dp"
+            android:layout_width="140dp"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -32,7 +32,7 @@
 
         <com.f0x1d.notes.view.theming.MyImageButton
             android:id="@+id/reset"
-            android:layout_width="120dp"
+            android:layout_width="140dp"
             android:layout_weight="1"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_height="wrap_content"
