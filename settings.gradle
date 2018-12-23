@@ -1,1 +1,1 @@
-include 'notes'
+include 'notes', 'vktest'
