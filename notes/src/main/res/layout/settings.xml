@@ -15,6 +15,7 @@
         android:layout_height="0px"
         android:layout_weight="1"
         android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
         android:clipToPadding="false"
         android:drawSelectorOnTop="false"
         android:paddingTop="0dip"

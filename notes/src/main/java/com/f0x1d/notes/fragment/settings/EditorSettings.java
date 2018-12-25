@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.bottom_sheet.TextSizeDialog;
@@ -26,6 +27,17 @@ import androidx.fragment.app.FragmentActivity;
 public class EditorSettings extends PreferenceFragment {
 
     FragmentActivity myContext;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        View rootView = getView();
+        if (rootView != null) {
+            ListView list = (ListView) rootView.findViewById(android.R.id.list);
+            list.setPadding(0, 0, 0, 0);
+            list.setDivider(null);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

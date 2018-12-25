@@ -12,6 +12,7 @@ import android.preference.SwitchPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
@@ -85,6 +86,13 @@ public class SecuritySettings extends PreferenceFragment {
         super.onResume();
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("pass", "").isEmpty()){
             lock.setChecked(false);
+        }
+
+        View rootView = getView();
+        if (rootView != null) {
+            ListView list = (ListView) rootView.findViewById(android.R.id.list);
+            list.setPadding(0, 0, 0, 0);
+            list.setDivider(null);
         }
     }
 

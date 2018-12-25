@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.themes.ThemesFragment;
@@ -42,8 +43,21 @@ public class MainSettings extends PreferenceFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+            View rootView = getView();
+            if (rootView != null) {
+                ListView list = (ListView) rootView.findViewById(android.R.id.list);
+                list.setPadding(0, 0, 0, 0);
+                list.setDivider(null);
+            }
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
 

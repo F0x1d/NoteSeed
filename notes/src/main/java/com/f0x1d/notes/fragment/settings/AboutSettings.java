@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
@@ -23,6 +24,17 @@ import androidx.annotation.Nullable;
 public class AboutSettings extends PreferenceFragment implements BillingProcessor.IBillingHandler {
 
     BillingProcessor bp;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        View rootView = getView();
+        if (rootView != null) {
+            ListView list = (ListView) rootView.findViewById(android.R.id.list);
+            list.setPadding(0, 0, 0, 0);
+            list.setDivider(null);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

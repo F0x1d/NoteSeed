@@ -12,7 +12,6 @@ import com.f0x1d.notes.fragment.settings.AboutSettings;
 import com.f0x1d.notes.fragment.settings.DebugSettings;
 import com.f0x1d.notes.fragment.settings.EditorSettings;
 import com.f0x1d.notes.fragment.settings.MainSettings;
-import com.f0x1d.notes.fragment.settings.SecuritySettings;
 import com.f0x1d.notes.fragment.themes.ThemesFragment;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.utils.ThemesEngine;
