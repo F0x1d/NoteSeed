@@ -25,9 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
-import com.f0x1d.notes.fragment.settings.Settings;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
@@ -333,8 +333,10 @@ public class Notes extends Fragment {
                 openFile("*/*", 228, getActivity());
                 break;
             case R.id.settings:
-                getFragmentManager().beginTransaction().setCustomAnimations(R.animator.enter_down, 0, 0, R.animator.exit_up).replace(android.R.id.content, new Settings(), "settings").addToBackStack(null).commit();
+                Toast.makeText(getActivity(), "lags...", Toast.LENGTH_SHORT).show();
+                UselessUtils.replace(getActivity(), MainActivity.settings, "settings");
                 break;
+
         }
 
         return super.onOptionsItemSelected(item);

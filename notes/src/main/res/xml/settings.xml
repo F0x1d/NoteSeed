@@ -5,10 +5,6 @@
     <com.f0x1d.notes.view.preferences.MyPreference
         android:title="@string/about" android:key="about" />
 
-    <!--<com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/updates">
-        <com.f0x1d.notes.view.preferences.MyPreference android:title="@string/ota_updates" android:key="ota"/>
-    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>-->
-
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/onscreen">
         <com.f0x1d.notes.view.preferences.MyPreference
             android:title="@string/theme" android:key="dayAccent"/>

@@ -62,7 +62,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (anim){
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-                animation.setDuration(400);
+                animation.setDuration(500);
                 view.startAnimation(animation);
             }
 
@@ -72,7 +72,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (anim){
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-                animation.setDuration(400);
+                animation.setDuration(500);
                 view.startAnimation(animation);
             }
 
@@ -268,6 +268,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 }
                             } else {
                                 activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, NoteEdit.newInstance(args), "edit").addToBackStack(null).commit();
+                                //activity.getFragmentManager().beginTransaction().replace(android.R.id.content, NoteEdit.newInstance(args)).addToBackStack(null).commit();
                             }
 
                         }

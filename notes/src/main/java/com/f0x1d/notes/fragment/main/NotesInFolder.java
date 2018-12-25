@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
-import com.f0x1d.notes.fragment.settings.Settings;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;

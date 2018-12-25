@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.activity.MainActivity;
 
 import java.lang.reflect.Field;
 
@@ -20,6 +21,7 @@ import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.fragment.app.Fragment;
 
 public class UselessUtils {
 
@@ -80,6 +82,10 @@ public class UselessUtils {
 
     public static void replace(Activity activity, android.app.Fragment fragment, String tag){
         activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
+    }
+
+    public static void replaceNew(Fragment fragment, String tag){
+        MainActivity.getSupportFragmentManager.beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
     }
 
     public static void replaceNoBackStack(Activity activity, android.app.Fragment fragment, String tag){

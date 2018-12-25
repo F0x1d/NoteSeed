@@ -1,7 +1,6 @@
 package com.f0x1d.notes.activity;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,8 +11,8 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.settings.AboutSettings;
 import com.f0x1d.notes.fragment.settings.DebugSettings;
 import com.f0x1d.notes.fragment.settings.EditorSettings;
+import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.SecuritySettings;
-import com.f0x1d.notes.fragment.settings.Settings;
 import com.f0x1d.notes.fragment.themes.ThemesFragment;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.utils.ThemesEngine;
@@ -25,14 +24,22 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static FragmentManager getSupportFragmentManager;
+
+    public static MainSettings settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getSupportFragmentManager = getSupportFragmentManager();
+        settings = new MainSettings();
 
         if (UselessUtils.ifCustomTheme()){
             new ThemesEngine().setupAll();
@@ -80,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             savedInstanceState.getString("what_frag");
 
         } catch (Exception e){
-            getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Settings(), "settings").commit();
+            //getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, MainActivity.settings, "settings").commit();
 
             Bundle lockargs = new Bundle();
             lockargs.putInt("id", 0);
@@ -92,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)){
                 UselessUtils.clear_back_stack(this);
                 getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Settings(), "settings").addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, MainActivity.settings, "settings").addToBackStack(null).commit();
                 getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change", false).apply();
             } else {
