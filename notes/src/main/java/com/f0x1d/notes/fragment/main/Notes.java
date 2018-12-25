@@ -333,7 +333,7 @@ public class Notes extends Fragment {
                 openFile("*/*", 228, getActivity());
                 break;
             case R.id.settings:
-                Toast.makeText(getActivity(), "lags...", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "lags...", Toast.LENGTH_SHORT).show();
                 UselessUtils.replace(getActivity(), MainActivity.settings, "settings");
                 break;
 
