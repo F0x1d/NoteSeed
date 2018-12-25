@@ -91,7 +91,7 @@ public class NotesInFolder extends Fragment {
 
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("folder_name", ""));
-        toolbar.inflateMenu(R.menu.search_menu);
+        toolbar.inflateMenu(R.menu.search_menu_no_settings);
 
         if (UselessUtils.getBool("night", false)){
             if (UselessUtils.ifCustomTheme()){
@@ -147,7 +147,7 @@ public class NotesInFolder extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Search(), "search").addToBackStack(null).commit();
+                UselessUtils.replace(getActivity(), new Search(), "search");
             }
         });
 
@@ -180,8 +180,6 @@ public class NotesInFolder extends Fragment {
         } else {
             nothing.setVisibility(View.INVISIBLE);
         }
-
-        getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
         recyclerView = view.findViewById(R.id.notes_view);
 
@@ -236,11 +234,11 @@ public class NotesInFolder extends Fragment {
         fab1.setVisibility(View.GONE);
 
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
-        animation.setDuration(500);
+        animation.setDuration(300);
         fab.startAnimation(animation);
 
         Animation animation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in);
-        animation2.setDuration(500);
+        animation2.setDuration(300);
         fab1.startAnimation(animation2);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
@@ -263,7 +261,7 @@ public class NotesInFolder extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new NoteAdd(), "add").addToBackStack(null).commit();
+                UselessUtils.replace(getActivity(), new NoteAdd(), "add");
             }
         });
     }
@@ -298,7 +296,7 @@ public class NotesInFolder extends Fragment {
 
                 if (create){
                     dao.insert(new NoteOrFolder(null, null, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 1, text.getText().toString(), 0, ""));
-                    getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
+                    UselessUtils.replace(getActivity(), new NotesInFolder(), "in_folder");
                 }
             }
         }).create();
@@ -339,9 +337,6 @@ public class NotesInFolder extends Fragment {
         switch (item.getItemId()){
             case R.id.import_note:
                 openFile("*/*", 228, getActivity());
-                break;
-            case R.id.settings:
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Settings(), "settings").addToBackStack(null).commit();
                 break;
         }
 
@@ -408,8 +403,7 @@ public class NotesInFolder extends Fragment {
                 }
 
                 dao.insert(new NoteOrFolder(title, text, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 0, null, 0, ""));
-
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").addToBackStack(null).commit();
+                UselessUtils.replaceNoBackStack(getActivity(), new NotesInFolder(), "in_folder");
             }
         }
 
@@ -470,7 +464,7 @@ public class NotesInFolder extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_menu, menu);
+        inflater.inflate(R.menu.search_menu_no_settings, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 }

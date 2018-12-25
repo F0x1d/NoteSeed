@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:drawable="@android:color/white"/>
+        android:drawable="@android:color/black"/>
 
-    <item android:gravity="center"
-            android:drawable="@drawable/ic_launcher_round_small">
+    <item
+        android:gravity="center"
+        android:drawable="@mipmap/ic_launcher">
     </item>
 </layer-list>

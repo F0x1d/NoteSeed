@@ -62,7 +62,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (anim){
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-                animation.setDuration(550);
+                animation.setDuration(400);
                 view.startAnimation(animation);
             }
 
@@ -72,7 +72,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (anim){
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-                animation.setDuration(550);
+                animation.setDuration(400);
                 view.startAnimation(animation);
             }
 

@@ -139,7 +139,7 @@ public class Notes extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Search(), "search").addToBackStack(null).commit();
+                UselessUtils.replace(getActivity(), new Search(), "search");
             }
         });
 
@@ -227,11 +227,11 @@ public class Notes extends Fragment {
         ImageButton fab1 = view.findViewById(R.id.new_folder);
 
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
-        animation.setDuration(500);
+        animation.setDuration(300);
         fab.startAnimation(animation);
 
         Animation animation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in);
-        animation2.setDuration(500);
+        animation2.setDuration(300);
         fab1.startAnimation(animation2);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
@@ -247,7 +247,7 @@ public class Notes extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new NoteAdd(), "add").addToBackStack(null).commit();
+                    UselessUtils.replace(getActivity(), new NoteAdd(), "add");
                 }
             });
 
@@ -290,8 +290,7 @@ public class Notes extends Fragment {
                 if (create){
 
                     dao.insert(new NoteOrFolder(null, null, 0, 0, "def", 1, text.getText().toString(), 0, ""));
-
-                    getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
+                    UselessUtils.replace(getActivity(), new Notes(), "notes");
                 }
             }
         }).create();
@@ -334,7 +333,7 @@ public class Notes extends Fragment {
                 openFile("*/*", 228, getActivity());
                 break;
             case R.id.settings:
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Settings(), "settings").addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().setCustomAnimations(R.animator.enter_down, 0, 0, R.animator.exit_up).replace(android.R.id.content, new Settings(), "settings").addToBackStack(null).commit();
                 break;
         }
 
@@ -401,8 +400,7 @@ public class Notes extends Fragment {
                 }
 
                 dao.insert(new NoteOrFolder(title, text, 0, 0, "def", 0, null, 0, ""));
-
-                getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").addToBackStack(null).commit();
+                UselessUtils.replace(getActivity(), new Notes(), "notes");
             }
         }
 

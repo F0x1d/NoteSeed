@@ -23,7 +23,7 @@
             android:layout_width="70dp"
             android:layout_marginTop="5dp"
             android:id="@+id/icon"
-            android:src="@drawable/ic_launcher_round"
+            android:src="@mipmap/ic_launcher_round"
             android:layout_height="70dp" />
 
         <com.f0x1d.notes.view.theming.MyTextView

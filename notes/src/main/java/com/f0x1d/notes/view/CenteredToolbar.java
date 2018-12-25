@@ -98,7 +98,7 @@ public class CenteredToolbar extends Toolbar {
         }
 
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.push_down);
-        animation.setDuration(400);
+        animation.setDuration(300);
         tvTitle.startAnimation(animation);
 
         tvTitle.setSingleLine();
