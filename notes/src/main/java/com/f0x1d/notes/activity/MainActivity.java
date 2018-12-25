@@ -117,11 +117,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public Resources getResources() {
-        return new com.f0x1d.notes.resources.Resources(super.getResources().getAssets(), super.getResources().getDisplayMetrics(), super.getResources().getConfiguration());
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 

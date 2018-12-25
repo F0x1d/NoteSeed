@@ -1,6 +1,7 @@
 package com.f0x1d.notes.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.TextUtils;
@@ -93,10 +94,6 @@ public class CenteredToolbar extends Toolbar {
         tvSubtitle = new TextView(getContext());
         tvTitle = new TextView(getContext());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            this.setOverflowIcon(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material));
-        }
-
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.push_down);
         animation.setDuration(300);
         tvTitle.startAnimation(animation);
@@ -130,6 +127,14 @@ public class CenteredToolbar extends Toolbar {
         linear.setLayoutParams(lp);
 
         addView(linear);
+
+        if (UselessUtils.ifCustomTheme()){
+            this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material), ThemesEngine.iconsColor));
+        } else if (UselessUtils.getBool("night", false)){
+            this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material), Color.WHITE));
+        } else {
+            this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material), Color.BLACK));
+        }
     }
 
 }
