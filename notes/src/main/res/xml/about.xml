@@ -7,7 +7,10 @@
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/help_me">
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:title="@string/donate" android:key="donate"/>
+            android:title="@string/donate" android:key="donate">
+
+            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/noteseed_app" />
+        </com.f0x1d.notes.view.preferences.MyPreference>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/links">

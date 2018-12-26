@@ -43,6 +43,7 @@ public class MyFAB extends FloatingActionButton {
     private void start(){
         if (UselessUtils.ifCustomTheme()){
             this.setBackgroundTintList(ColorStateList.valueOf(ThemesEngine.fabColor));
+            this.setImageDrawable(this.getDrawable());
         }
     }
 }

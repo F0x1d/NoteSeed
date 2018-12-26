@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.R;
@@ -20,6 +21,7 @@ import com.f0x1d.notes.utils.UselessUtils;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -143,5 +145,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }

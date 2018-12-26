@@ -14,9 +14,12 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.main.Notes;
@@ -442,6 +445,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         break;
                     case 1:
+
                         View v = LayoutInflater.from(activity).inflate(R.layout.dialog_edit_text, null);
 
                         EditText text = v.findViewById(R.id.edit_text);
@@ -488,6 +492,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         });
 
                         dialog1337.show();
+
+                        int currentColor;
+
+                        try {
+                            currentColor = Color.parseColor(items.get(position).color);
+                        } catch (Exception e){
+                            currentColor = 0xffffffff;
+                        }
+
                         break;
                 }
             }

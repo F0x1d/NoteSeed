@@ -16,18 +16,32 @@ public class MyImageButton extends ImageButton {
 
     public MyImageButton(Context context) {
         super(context);
+
+        setup();
     }
 
     public MyImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        setup();
     }
 
     public MyImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        setup();
     }
 
     public MyImageButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+
+        setup();
+    }
+
+    private void setup(){
+        if (UselessUtils.ifCustomTheme()){
+            setImageDrawable(this.getDrawable());
+        }
     }
 
     @Override

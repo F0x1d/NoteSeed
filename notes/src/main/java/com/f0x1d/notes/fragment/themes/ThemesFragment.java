@@ -86,15 +86,25 @@ public class ThemesFragment extends Fragment {
 
         import_fab = view.findViewById(R.id.import_theme);
 
-        if (!UselessUtils.ifCustomTheme()){
             import_fab.setImageResource(R.drawable.ic_add_black_24dp);
-        }
             import_fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     openFile("*/*", 228, getActivity());
                 }
             });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        import_fab.setImageResource(R.drawable.ic_add_black_24dp);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        import_fab.setImageResource(R.drawable.ic_add_black_24dp);
     }
 
     @Override
