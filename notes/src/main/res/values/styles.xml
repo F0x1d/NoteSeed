@@ -49,7 +49,7 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
-    <style name="AlertDialog.AppTheme.Light" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+    <style name="AlertDialog.AppTheme.Light" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:windowBackground">@drawable/dialog_round_corners</item>
         <item name="android:background">@android:color/white</item>
     </style>

@@ -1,13 +1,13 @@
 package com.f0x1d.notes.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.main.Notes;
@@ -36,6 +35,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,7 +65,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (anim){
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-                animation.setDuration(500);
+                animation.setDuration(400);
                 view.startAnimation(animation);
             }
 
@@ -75,7 +75,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (anim){
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-                animation.setDuration(500);
+                animation.setDuration(400);
                 view.startAnimation(animation);
             }
 
@@ -290,6 +290,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+
         builder1.setItems(hm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -302,6 +303,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         text.setHint(activity.getString(R.string.name));
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
                         builder.setView(v);
                         builder.setTitle(activity.getString(R.string.folder_name));
 
@@ -371,6 +373,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         text1.setText(items.get(position).color);
 
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+
                         builder1.setView(v2);
 
                         AlertDialog dialog13371 =  builder1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -426,6 +429,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+
         builder1.setItems(hm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -454,6 +458,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         text.setText(items.get(position).color);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
                         builder.setView(v);
 
                         AlertDialog dialog1337 =  builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
