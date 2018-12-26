@@ -30,6 +30,7 @@ import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyImageView;
 import com.f0x1d.notes.view.theming.MyTextView;
+import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -37,6 +38,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -50,6 +52,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private boolean anim;
 
     private NoteOrFolderDao dao;
+
+    public static long id;
+    public static boolean isFolder;
+    public static String folder_id;
 
     public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim){
         this.items = items;
@@ -365,51 +371,20 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         }
                         break;
                     case 2:
-                        View v2 = LayoutInflater.from(activity).inflate(R.layout.dialog_edit_text, null);
 
-                        EditText text1 = v2.findViewById(R.id.edit_text);
-                        text1.setHint("#ffffff");
-                        text1.setBackground(null);
-                        text1.setText(items.get(position).color);
+                        int currentColor;
 
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                        try {
+                            currentColor = Color.parseColor(items.get(position).color);
+                        } catch (Exception e){
+                            currentColor = 0xffffffff;
+                        }
 
-                        builder1.setView(v2);
+                        isFolder = true;
+                        folder_id = items.get(position).folder_name;
 
-                        AlertDialog dialog13371 =  builder1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog228, int which) {
+                        ColorPickerDialog.newBuilder().setColor(currentColor).show((FragmentActivity) activity);
 
-                                try {
-                                    dao.updateFolderColor(text1.getText().toString(), items.get(position).folder_name);
-                                } catch (Exception e){
-                                    dao.updateFolderColor("", items.get(position).folder_name);
-                                }
-
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("in_folder_back_stack", false)){
-                                    activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
-                                } else {
-                                    activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
-                                }
-
-                            }
-                        }).create();
-
-                        dialog13371.setOnShowListener(new DialogInterface.OnShowListener() {
-                            @Override
-                            public void onShow(DialogInterface dialog1) {
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("night", false)){
-                                    dialog13371.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-                                }
-                                if (UselessUtils.ifCustomTheme()){
-                                    dialog13371.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
-
-                                    dialog13371.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-                                }
-                            }
-                        });
-
-                        dialog13371.show();
                         break;
                 }
             }
@@ -450,54 +425,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         break;
                     case 1:
 
-                        View v = LayoutInflater.from(activity).inflate(R.layout.dialog_edit_text, null);
-
-                        EditText text = v.findViewById(R.id.edit_text);
-                        text.setBackground(null);
-                        text.setHint("#ffffff");
-                        text.setText(items.get(position).color);
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-                        builder.setView(v);
-
-                        AlertDialog dialog1337 =  builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog228, int which) {
-
-                                try {
-                                    dao.updateNoteColor(text.getText().toString(), items.get(position).id);
-                                } catch (Exception e){
-                                    dao.updateNoteColor("", items.get(position).id);
-                                }
-
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("in_folder_back_stack", false)) {
-                                    activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
-                                } else {
-                                    activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
-                                }
-
-                            }
-                        }).create();
-
-                        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
-                            @Override
-                            public void onShow(DialogInterface dialog1) {
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("night", false)) {
-                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-                                }
-                                if (UselessUtils.ifCustomTheme()){
-                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
-                                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
-
-                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-                                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-                                }
-                            }
-                        });
-
-                        dialog1337.show();
-
                         int currentColor;
 
                         try {
@@ -505,6 +432,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         } catch (Exception e){
                             currentColor = 0xffffffff;
                         }
+
+                        isFolder = false;
+                        id = items.get(position).id;
+
+                        ColorPickerDialog.newBuilder().setColor(currentColor).show((FragmentActivity) activity);
 
                         break;
                 }

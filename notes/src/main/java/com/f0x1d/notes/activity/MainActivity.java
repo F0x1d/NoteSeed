@@ -9,6 +9,7 @@ import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.fragment.settings.AboutSettings;
 import com.f0x1d.notes.fragment.settings.DebugSettings;
 import com.f0x1d.notes.fragment.settings.EditorSettings;
@@ -17,20 +18,24 @@ import com.f0x1d.notes.fragment.themes.ThemesFragment;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
+import java.util.function.LongFunction;
+
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ColorPickerDialogListener {
 
     public static FragmentManager getSupportFragmentManager;
 
@@ -144,5 +149,27 @@ public class MainActivity extends AppCompatActivity {
                 getFragmentManager().popBackStack();
             }
         }
+    }
+
+    @Override
+    public void onColorSelected(int dialogId, int color) {
+        Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color));
+
+        if (ItemsAdapter.isFolder){
+            App.getInstance().getDatabase().noteOrFolderDao().updateFolderColor("#" + Integer.toHexString(color), ItemsAdapter.folder_id);
+        } else {
+            App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("#" + Integer.toHexString(color), ItemsAdapter.id);
+        }
+
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("in_folder_back_stack", false)) {
+            getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
+        } else {
+            getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
+        }
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+
     }
 }
