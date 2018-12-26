@@ -8,4 +8,7 @@
     <color name="noname">#ffaa00</color>
     <color name="blue">#64B5F6</color>
     <color name="white">@android:color/white</color>
+    <color name="colorGreatGrey">#3a404a</color>
+    <color name="colorNeutralGray">#9e9e9e</color>
+    <color name="colorGreaterGrey">#343944</color>
 </resources>

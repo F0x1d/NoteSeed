@@ -233,11 +233,11 @@ public class NotesInFolder extends Fragment {
         fab1.setVisibility(View.GONE);
 
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
-        animation.setDuration(300);
+        animation.setDuration(400);
         fab.startAnimation(animation);
 
         Animation animation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in);
-        animation2.setDuration(300);
+        animation2.setDuration(400);
         fab1.startAnimation(animation2);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){

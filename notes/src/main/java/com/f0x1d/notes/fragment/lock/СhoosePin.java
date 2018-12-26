@@ -120,7 +120,7 @@ public class СhoosePin extends Fragment {
 
                             Toast.makeText(getActivity(), R.string.success, Toast.LENGTH_SHORT).show();
 
-                            getActivity().getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
+                            getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
                         }
                         break;
 

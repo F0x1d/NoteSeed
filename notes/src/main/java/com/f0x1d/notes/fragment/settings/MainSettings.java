@@ -67,7 +67,7 @@ public class MainSettings extends PreferenceFragment {
         editor_settings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new EditorSettings(), "editor_settings").addToBackStack(null).commit();
+                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new EditorSettings(), "editor_settings").addToBackStack(null).commit();
                 return false;
             }
         });
@@ -76,7 +76,7 @@ public class MainSettings extends PreferenceFragment {
         debug.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new DebugSettings(), "debug_settings").addToBackStack(null).commit();
+                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new DebugSettings(), "debug_settings").addToBackStack(null).commit();
                 return false;
             }
         });
@@ -85,7 +85,7 @@ public class MainSettings extends PreferenceFragment {
         accent.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, ThemesFragment.newInstance(true), "themes").addToBackStack(null).commit();
+                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, ThemesFragment.newInstance(true), "themes").addToBackStack(null).commit();
                 return false;
             }
         });
@@ -94,7 +94,7 @@ public class MainSettings extends PreferenceFragment {
         locking.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new SecuritySettings(), "security_settings").addToBackStack(null).commit();
+                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new SecuritySettings(), "security_settings").addToBackStack(null).commit();
                 return false;
             }
         });
@@ -103,7 +103,7 @@ public class MainSettings extends PreferenceFragment {
         about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, new AboutSettings(), "about").addToBackStack(null).commit();
+                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new AboutSettings(), "about").addToBackStack(null).commit();
                 return false;
             }
         });

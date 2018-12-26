@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 
 import java.lang.reflect.Field;
@@ -81,15 +82,15 @@ public class UselessUtils {
     }
 
     public static void replace(Activity activity, android.app.Fragment fragment, String tag){
-        activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
+        activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
     }
 
     public static void replaceNew(Fragment fragment, String tag){
-        MainActivity.getSupportFragmentManager.beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
+        MainActivity.getSupportFragmentManager.beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
     }
 
     public static void replaceNoBackStack(Activity activity, android.app.Fragment fragment, String tag){
-        activity.getFragmentManager().beginTransaction().setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out).replace(android.R.id.content, fragment, tag).commit();
+        activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, fragment, tag).commit();
     }
 
     public static Drawable setTint(Drawable d, int color) {
