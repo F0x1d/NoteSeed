@@ -96,18 +96,6 @@ public class ThemesFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        import_fab.setImageResource(R.drawable.ic_add_black_24dp);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        import_fab.setImageResource(R.drawable.ic_add_black_24dp);
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
