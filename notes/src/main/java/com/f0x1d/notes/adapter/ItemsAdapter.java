@@ -114,9 +114,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void initLayoutFolder(folderViewHolder holder, int position) {
         try {
-            holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(items.get(position).color)));
+            holder.cardView.setCardBackgroundColor(Color.parseColor(getColorFromDataBase(position)));
 
-            if (UselessUtils.ifBrightColor(Color.parseColor(items.get(position).color))){
+            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
                 holder.name.setTextColor(Color.BLACK);
                 holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
@@ -181,11 +181,25 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
+    private String getColorFromDataBase(int position){
+        long id = items.get(position).id;
+
+        String color = "0xffffffff";
+
+        for (NoteOrFolder noteOrFolder : dao.getAll()) {
+            if (noteOrFolder.id == id){
+                color = noteOrFolder.color;
+            }
+        }
+
+        return color;
+    }
+
     private void initLayoutNote(noteViewHolder holder, int position) {
         try {
-            holder.note_card.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(items.get(position).color)));
+            holder.note_card.setCardBackgroundColor(Color.parseColor(getColorFromDataBase(position)));
 
-            if (UselessUtils.ifBrightColor(Color.parseColor(items.get(position).color))){
+            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
                 holder.title.setTextColor(Color.BLACK);
                 holder.text.setTextColor(Color.BLACK);
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
@@ -207,7 +221,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         holder.title.setText(items.get(position).title);
-        //holder.text.setText(items.get(position).text);
 
         boolean oneLine;
 
