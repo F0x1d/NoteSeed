@@ -65,6 +65,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.items = items;
         this.activity = activity;
         this.anim = anim;
+
+        setHasStableIds(true);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return items.get(position).id;
     }
 
     // specify the row layout file and click for each row
@@ -481,7 +488,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     class folderViewHolder extends RecyclerView.ViewHolder{
 
-        MyTextView name;
+        TextView name;
         CardView cardView;
         MyImageView folder_image;
         MyImageView pinned;
@@ -498,8 +505,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     class noteViewHolder extends RecyclerView.ViewHolder {
 
-        MyTextView title;
-        MyTextView text;
+        TextView title;
+        TextView text;
         CardView note_card;
         MyImageView pinned;
 
