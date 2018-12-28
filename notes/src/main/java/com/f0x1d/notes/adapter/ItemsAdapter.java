@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,9 +29,11 @@ import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.view.theming.MyColorPickerDialog;
 import com.f0x1d.notes.view.theming.MyImageView;
 import com.f0x1d.notes.view.theming.MyTextView;
 import com.jaredrummler.android.colorpicker.ColorPickerDialog;
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -383,7 +386,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         isFolder = true;
                         folder_id = items.get(position).folder_name;
 
-                        ColorPickerDialog.newBuilder().setColor(currentColor).show((FragmentActivity) activity);
+                        MyColorPickerDialog.newBuilderNew().setColor(currentColor).show((FragmentActivity) activity);
 
                         break;
                 }
@@ -436,8 +439,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         isFolder = false;
                         id = items.get(position).id;
 
-                        ColorPickerDialog.newBuilder().setColor(currentColor).show((FragmentActivity) activity);
-
+                        MyColorPickerDialog.newBuilderNew().setColor(currentColor).show((FragmentActivity) activity);
                         break;
                 }
             }
