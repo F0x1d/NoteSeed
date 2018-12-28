@@ -114,7 +114,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void initLayoutFolder(folderViewHolder holder, int position) {
         try {
-            holder.cardView.setCardBackgroundColor(Color.parseColor(getColorFromDataBase(position)));
+            holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
                 holder.name.setTextColor(Color.BLACK);
@@ -197,7 +197,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void initLayoutNote(noteViewHolder holder, int position) {
         try {
-            holder.note_card.setCardBackgroundColor(Color.parseColor(getColorFromDataBase(position)));
+            holder.note_card.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
                 holder.title.setTextColor(Color.BLACK);
