@@ -59,6 +59,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public static long id;
     public static boolean isFolder;
     public static String folder_id;
+    public static int position;
 
     public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim){
         this.items = items;
@@ -151,9 +152,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             public void onClick(View v) {
                 Bundle args = new Bundle();
                     args.putString("folder_name", items.get(position).folder_name);
-
-                //PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("folder_name", items.get(position).folder_name).apply();
-                //PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("in_folder_id", items.get(position).folder_name).apply();
 
                 PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("in_folder_back_stack", true).apply();
 
@@ -385,6 +383,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         isFolder = true;
                         folder_id = items.get(position).folder_name;
+                        ItemsAdapter.position = position;
 
                         MyColorPickerDialog.newBuilderNew().setColor(currentColor).show((FragmentActivity) activity);
 
@@ -438,6 +437,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         isFolder = false;
                         id = items.get(position).id;
+                        ItemsAdapter.position = position;
 
                         MyColorPickerDialog.newBuilderNew().setColor(currentColor).show((FragmentActivity) activity);
                         break;

@@ -161,10 +161,16 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
             App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("#" + Integer.toHexString(color), ItemsAdapter.id);
         }
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("in_folder_back_stack", false)) {
-            getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
-        } else {
-            getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
+        try {
+            Notes.recyclerView.getAdapter().notifyItemChanged(ItemsAdapter.position);
+        } catch (Exception e){
+            Log.e("notes_err", "onColorSelected, Notes crash: " + e.getLocalizedMessage());
+        }
+
+        try {
+            NotesInFolder.recyclerView.getAdapter().notifyItemChanged(ItemsAdapter.position);
+        } catch (Exception e){
+            Log.e("notes_err", "onColorSelected, NotesInFolder crash: " + e.getLocalizedMessage());
         }
     }
 

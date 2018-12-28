@@ -61,15 +61,15 @@ public class MyColorPickerDialog extends ColorPickerDialog {
         Button positive = getDialog().findViewById(android.R.id.button1);
         Button neutral = getDialog().findViewById(android.R.id.button3);
 
-        if (UselessUtils.getBool("night", false)){
-            positive.setTextColor(Color.BLACK);
-            neutral.setTextColor(Color.BLACK);
-        } else if (UselessUtils.ifCustomTheme()){
+         if (UselessUtils.ifCustomTheme()){
             positive.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
             positive.setTextColor(ThemesEngine.textColor);
 
             neutral.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
             neutral.setTextColor(ThemesEngine.textColor);
+        } else if (UselessUtils.getBool("night", false)){
+            positive.setTextColor(Color.BLACK);
+            neutral.setTextColor(Color.BLACK);
         }
     }
 

@@ -54,7 +54,7 @@ import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 
 public class Notes extends Fragment {
 
-    RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
 
     static List<NoteOrFolder> allList;
 
