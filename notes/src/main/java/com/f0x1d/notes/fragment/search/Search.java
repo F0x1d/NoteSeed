@@ -48,6 +48,7 @@ public class Search extends Fragment {
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
+
         return inflater.inflate(R.layout.search, container, false);
     }
 
@@ -55,6 +56,8 @@ public class Search extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
 
         searchedList = new ArrayList<>();
         allList = new ArrayList<>();

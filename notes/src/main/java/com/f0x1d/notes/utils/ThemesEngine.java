@@ -40,6 +40,10 @@ public class ThemesEngine {
     public static int fabColor;
     public static int fabIconColor;
     public static int defaultNoteColor;
+    public static int lightColorTextColor;
+    public static int darkColorTextColor;
+    public static int lightColorIconColor;
+    public static int darkColorIconColor;
     public static boolean dark;
     public static boolean toolbarTransparent;
 
@@ -311,6 +315,38 @@ public class ThemesEngine {
                 Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
+            try {
+                lightColorTextColor = Color.parseColor(jsonObject.getString("lightColorTextColor"));
+            } catch (Exception e){
+                lightColorTextColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                darkColorTextColor = Color.parseColor(jsonObject.getString("darkColorTextColor"));
+            } catch (Exception e){
+                darkColorTextColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                lightColorIconColor = Color.parseColor(jsonObject.getString("lightColorIconColor"));
+            } catch (Exception e){
+                lightColorIconColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
+            } catch (Exception e){
+                darkColorIconColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
 
         } catch (Exception e){
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
@@ -452,6 +488,38 @@ public class ThemesEngine {
                 defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
             } catch (Exception e){
                 defaultNoteColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                lightColorTextColor = Color.parseColor(jsonObject.getString("lightColorTextColor"));
+            } catch (Exception e){
+                lightColorTextColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                darkColorTextColor = Color.parseColor(jsonObject.getString("darkColorTextColor"));
+            } catch (Exception e){
+                darkColorTextColor = 0xffffffff;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                lightColorIconColor = Color.parseColor(jsonObject.getString("lightColorIconColor"));
+            } catch (Exception e){
+                lightColorIconColor = 0xff000000;
+
+                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
+            } catch (Exception e){
+                darkColorIconColor = 0xffffffff;
 
                 Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }

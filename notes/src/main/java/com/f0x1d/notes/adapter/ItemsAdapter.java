@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.model.Theme;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyColorPickerDialog;
@@ -124,13 +126,25 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
-                holder.name.setTextColor(Color.BLACK);
-                holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
-                holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+                if (UselessUtils.ifCustomTheme()){
+                    holder.name.setTextColor(ThemesEngine.darkColorTextColor);
+                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.darkColorIconColor));
+                    holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.darkColorIconColor));
+                } else {
+                    holder.name.setTextColor(Color.BLACK);
+                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
+                    holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+                }
             } else {
-                holder.name.setTextColor(Color.WHITE);
-                holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
-                holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+                if (UselessUtils.ifCustomTheme()){
+                    holder.name.setTextColor(ThemesEngine.lightColorTextColor);
+                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.lightColorIconColor));
+                    holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.lightColorTextColor));
+                } else {
+                    holder.name.setTextColor(Color.WHITE);
+                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
+                    holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+                }
             }
         } catch (Exception e){
             if (UselessUtils.ifCustomTheme()){
@@ -140,9 +154,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (UselessUtils.getBool("night", false)){
                 holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+
+              //  holder.name.setTextColor(Color.WHITE);
             } else {
                 holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+
+               // holder.name.setTextColor(Color.BLACK);
             }
         }
 
@@ -207,13 +225,25 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.note_card.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
-                holder.title.setTextColor(Color.BLACK);
-                holder.text.setTextColor(Color.BLACK);
-                holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+                if (UselessUtils.ifCustomTheme()){
+                    holder.title.setTextColor(ThemesEngine.darkColorTextColor);
+                    holder.text.setTextColor(ThemesEngine.darkColorTextColor);
+                    holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.darkColorIconColor));
+                } else {
+                    holder.title.setTextColor(Color.BLACK);
+                    holder.text.setTextColor(Color.BLACK);
+                    holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+                }
             } else {
-                holder.title.setTextColor(Color.WHITE);
-                holder.text.setTextColor(Color.WHITE);
-                holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+                if (UselessUtils.ifCustomTheme()){
+                    holder.title.setTextColor(ThemesEngine.lightColorTextColor);
+                    holder.text.setTextColor(ThemesEngine.lightColorTextColor);
+                    holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
+                } else {
+                    holder.title.setTextColor(Color.WHITE);
+                    holder.text.setTextColor(Color.WHITE);
+                    holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+                }
             }
         } catch (Exception e){
             if (UselessUtils.ifCustomTheme()){
@@ -222,8 +252,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (UselessUtils.getBool("night", false)){
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+
+                /*holder.title.setText(Color.WHITE);
+                holder.text.setText(Color.WHITE);*/
             } else {
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+
+                /*holder.title.setText(Color.BLACK);
+                holder.text.setText(Color.BLACK);*/
             }
         }
 
@@ -310,10 +346,21 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void getFoldersDialog(int position){
         String[] hm;
-        if (items.get(position).pinned == 1){
-            hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color)};
-        } else {
-            hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color)};
+
+        try {
+            Color.parseColor(getColorFromDataBase(position));
+
+            if (items.get(position).pinned == 1){
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+            } else {
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+            }
+        } catch (Exception e){
+            if (items.get(position).pinned == 1){
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color)};
+            } else {
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color)};
+            }
         }
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
@@ -396,7 +443,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         int currentColor;
 
                         try {
-                            currentColor = Color.parseColor(items.get(position).color);
+                            currentColor = Color.parseColor(getColorFromDataBase(position));
                         } catch (Exception e){
                             currentColor = 0xffffffff;
                         }
@@ -408,6 +455,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         MyColorPickerDialog.newBuilderNew().setColor(currentColor).show((FragmentActivity) activity);
 
                         break;
+                    case 3:
+                        dao.updateFolderColor("", items.get(position).folder_name);
+
+                        notifyItemChanged(position);
+                        break;
                 }
             }
         });
@@ -418,12 +470,21 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void getNotesDialog(int position) {
         String[] hm;
-        if (items.get(position).pinned == 1) {
-            hm = new String[]{activity.getString(R.string.unpin), activity.getString(R.string.color)};
-        } else {
-            hm = new String[]{activity.getString(R.string.pin), activity.getString(R.string.color)};
-        }
+        try {
+            Color.parseColor(getColorFromDataBase(position));
 
+            if (items.get(position).pinned == 1) {
+                hm = new String[]{activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+            } else {
+                hm = new String[]{activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+            }
+        } catch (Exception e){
+            if (items.get(position).pinned == 1) {
+                hm = new String[]{activity.getString(R.string.unpin), activity.getString(R.string.color)};
+            } else {
+                hm = new String[]{activity.getString(R.string.pin), activity.getString(R.string.color)};
+            }
+        }
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
 
@@ -450,7 +511,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         int currentColor;
 
                         try {
-                            currentColor = Color.parseColor(items.get(position).color);
+                            currentColor = Color.parseColor(getColorFromDataBase(position));
                         } catch (Exception e){
                             currentColor = 0xffffffff;
                         }
@@ -460,6 +521,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         ItemsAdapter.position = position;
 
                         MyColorPickerDialog.newBuilderNew().setColor(currentColor).show((FragmentActivity) activity);
+                        break;
+                    case 2:
+                        dao.updateNoteColor("", items.get(position).id);
+
+                        notifyItemChanged(position);
                         break;
                 }
             }
@@ -490,8 +556,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         TextView name;
         CardView cardView;
-        MyImageView folder_image;
-        MyImageView pinned;
+        ImageView folder_image;
+        ImageView pinned;
 
         folderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -508,7 +574,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView title;
         TextView text;
         CardView note_card;
-        MyImageView pinned;
+        ImageView pinned;
 
         noteViewHolder(@NonNull View itemView) {
             super(itemView);

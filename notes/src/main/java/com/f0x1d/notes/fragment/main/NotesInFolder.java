@@ -433,7 +433,7 @@ public class NotesInFolder extends Fragment {
         builder.setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                recyclerView.getAdapter().notifyDataSetChanged();
+                recyclerView.getAdapter().notifyItemChanged(position);
 
                 dialog.cancel();
             }

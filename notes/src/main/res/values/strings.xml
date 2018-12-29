@@ -90,12 +90,13 @@
     <string name="force_save">Display "force save" button</string>
     <string name="use_mono">Monospace font</string>
     <string name="name">Name</string>
-    <string name="format">Format</string>
+    <string name="format">Formatting</string>
     <string name="format_error">Select text!</string>
     <string name="confirm_delete">Are you sure want to delete it?</string>
     <string name="bold">Bold</string>
     <string name="italic">Italic</string>
-    <string name="no_format">No format</string>
+    <string name="no_format">No formatting</string>
     <string name="donate">Donate</string>
     <string name="not_all_colors_found">Not all theme\'s colors were found!</string>
+    <string name="restore_color">Restore color</string>
 </resources>

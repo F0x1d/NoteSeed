@@ -98,4 +98,5 @@
     <string name="no_format">Без форматирования</string>
     <string name="donate">Пожертвовать</string>
     <string name="not_all_colors_found">Не все цвета темы были найдены!</string>
+    <string name="restore_color">Вернуть стандартный цвет</string>
 </resources>

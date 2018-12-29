@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         setContentView(R.layout.activity_main);
 
         if (UselessUtils.appInstalledOrNot("com.encrypt.password")){
-            Toast.makeText(getApplicationContext(), "желе лох", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Вот и иди к своему желе", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
         try {
