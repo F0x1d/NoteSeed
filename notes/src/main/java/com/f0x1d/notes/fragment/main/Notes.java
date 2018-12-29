@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -111,7 +112,13 @@ public class Notes extends Fragment {
                     getActivity().getWindow().setNavigationBarColor(getActivity().getResources().getColor(R.color.statusbar));
                 } else {
                     getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-                    getActivity().getWindow().setStatusBarColor(Color.WHITE);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        getActivity().getWindow().setStatusBarColor(Color.WHITE);
+                    } else {
+                        getActivity().getWindow().setStatusBarColor(Color.GRAY);
+                    }
+
                     getActivity().getWindow().setNavigationBarColor(Color.BLACK);
                 }
             }

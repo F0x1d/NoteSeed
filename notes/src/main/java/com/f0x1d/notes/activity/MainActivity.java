@@ -1,8 +1,10 @@
 package com.f0x1d.notes.activity;
 
 import android.app.Fragment;
+import android.app.NotificationChannel;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.f0x1d.notes.adapter.ItemsAdapter;
@@ -53,10 +55,18 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
 
         if (UselessUtils.ifCustomTheme()){
 
-            if (ThemesEngine.dark){
-                setTheme(R.style.NightTheme);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
+                if (ThemesEngine.dark){
+                    setTheme(R.style.NightTheme_md2);
+                } else {
+                    setTheme(R.style.AppTheme_md2);
+                }
             } else {
-                setTheme(R.style.AppTheme);
+                if (ThemesEngine.dark){
+                    setTheme(R.style.NightTheme);
+                } else {
+                    setTheme(R.style.AppTheme);
+                }
             }
 
             try {
@@ -68,17 +78,33 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
             }
         } else {
             if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", false)){
-                setTheme(R.style.NightTheme);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
+                    setTheme(R.style.NightTheme_md2);
+                } else {
+                    setTheme(R.style.NightTheme);
+                }
 
                 getWindow().setNavigationBarColor(getResources().getColor(R.color.statusbar));
             } else {
-                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)){
-                    setTheme(R.style.AppTheme_Orange);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)){
+                        setTheme(R.style.AppTheme_Orange_md2);
+                    } else {
+                        setTheme(R.style.AppTheme_md2);
+                    }
                 } else {
-                    setTheme(R.style.AppTheme);
+                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)){
+                        setTheme(R.style.AppTheme_Orange);
+                    } else {
+                        setTheme(R.style.AppTheme);
+                    }
                 }
 
-                getWindow().setStatusBarColor(Color.WHITE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    getWindow().setStatusBarColor(Color.WHITE);
+                } else {
+                    getWindow().setStatusBarColor(Color.GRAY);
+                }
             }
         }
 

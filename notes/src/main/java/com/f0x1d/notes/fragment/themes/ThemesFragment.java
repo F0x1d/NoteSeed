@@ -52,6 +52,10 @@ public class ThemesFragment extends Fragment {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+
+            if (ThemesEngine.toolbarTransparent){
+                toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
+            }
         }
         return v;
     }
