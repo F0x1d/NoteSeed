@@ -154,13 +154,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (UselessUtils.getBool("night", false)){
                 holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
-
-              //  holder.name.setTextColor(Color.WHITE);
             } else {
                 holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
-
-               // holder.name.setTextColor(Color.BLACK);
             }
         }
 
@@ -252,14 +248,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (UselessUtils.getBool("night", false)){
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
-
-                /*holder.title.setText(Color.WHITE);
-                holder.text.setText(Color.WHITE);*/
             } else {
                 holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
-
-                /*holder.title.setText(Color.BLACK);
-                holder.text.setText(Color.BLACK);*/
             }
         }
 
