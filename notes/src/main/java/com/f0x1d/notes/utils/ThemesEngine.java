@@ -88,6 +88,7 @@ public class ThemesEngine {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(i);
             activity.finish();
+
         } catch (Exception e){
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
             Log.e("notes_err", e.getLocalizedMessage());
@@ -536,7 +537,6 @@ public class ThemesEngine {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(i);
             activity.finish();
-
         } catch (Exception e) {
             Toast.makeText(App.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
