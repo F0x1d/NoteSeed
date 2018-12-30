@@ -667,6 +667,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         EditText text = v.findViewById(R.id.edit_text);
                         text.setBackground(null);
+                        text.setText(getFolderNameFromDataBase(position));
                         text.setHint(activity.getString(R.string.name));
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
