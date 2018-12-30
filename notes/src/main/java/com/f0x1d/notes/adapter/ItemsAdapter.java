@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -468,11 +469,26 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             currentColor = 0xffffffff;
                         }
 
-                        isFolder = true;
-                        folder_id = items.get(position).folder_name;
-                        ItemsAdapter.position = position;
+                        MyColorPickerDialog colorPickerDialog = MyColorPickerDialog.newBuilderNew().setColor(currentColor).create();
+                        colorPickerDialog.setColorPickerDialogListener(new ColorPickerDialogListener() {
+                            @Override
+                            public void onColorSelected(int dialogId, int color) {
+                                Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color));
 
-                        MyColorPickerDialog.newBuilderNew().setColor(currentColor).show((FragmentActivity) activity);
+                                dao.updateFolderColor("#" + Integer.toHexString(color), items.get(position).folder_name);
+
+                                notifyItemChanged(position);
+                            }
+
+                            @Override
+                            public void onDialogDismissed(int dialogId) {
+
+                            }
+                        });
+
+                        FragmentActivity fragmentActivity = (FragmentActivity) activity;
+
+                        colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
 
                         break;
                     case 3:
@@ -536,11 +552,26 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             currentColor = 0xffffffff;
                         }
 
-                        isFolder = false;
-                        id = items.get(position).id;
-                        ItemsAdapter.position = position;
+                        MyColorPickerDialog colorPickerDialog = MyColorPickerDialog.newBuilderNew().setColor(currentColor).create();
+                            colorPickerDialog.setColorPickerDialogListener(new ColorPickerDialogListener() {
+                                @Override
+                                public void onColorSelected(int dialogId, int color) {
+                                    Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color));
 
-                        MyColorPickerDialog.newBuilderNew().setColor(currentColor).show((FragmentActivity) activity);
+                                    dao.updateNoteColor("#" + Integer.toHexString(color), items.get(position).id);
+
+                                    notifyItemChanged(position);
+                                }
+
+                                @Override
+                                public void onDialogDismissed(int dialogId) {
+
+                                }
+                            });
+
+                            FragmentActivity fragmentActivity = (FragmentActivity) activity;
+
+                            colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
                     case 2:
                         dao.updateNoteColor("", items.get(position).id);

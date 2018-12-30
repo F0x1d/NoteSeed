@@ -37,7 +37,7 @@ import java.util.function.LongFunction;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
-public class MainActivity extends AppCompatActivity implements ColorPickerDialogListener {
+public class MainActivity extends AppCompatActivity {
 
     public static FragmentManager getSupportFragmentManager;
 
@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
 
         try {
             savedInstanceState.getString("what_frag");
-
         } catch (Exception e){
             //getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, MainActivity.settings, "settings").commit();
 
@@ -176,33 +175,5 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
                 getFragmentManager().popBackStack();
             }
         }
-    }
-
-    @Override
-    public void onColorSelected(int dialogId, int color) {
-        Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color));
-
-        if (ItemsAdapter.isFolder){
-            App.getInstance().getDatabase().noteOrFolderDao().updateFolderColor("#" + Integer.toHexString(color), ItemsAdapter.folder_id);
-        } else {
-            App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("#" + Integer.toHexString(color), ItemsAdapter.id);
-        }
-
-        try {
-            Notes.recyclerView.getAdapter().notifyItemChanged(ItemsAdapter.position);
-        } catch (Exception e){
-            Log.e("notes_err", "onColorSelected, Notes crash: " + e.getLocalizedMessage());
-        }
-
-        try {
-            NotesInFolder.recyclerView.getAdapter().notifyItemChanged(ItemsAdapter.position);
-        } catch (Exception e){
-            Log.e("notes_err", "onColorSelected, NotesInFolder crash: " + e.getLocalizedMessage());
-        }
-    }
-
-    @Override
-    public void onDialogDismissed(int dialogId) {
-
     }
 }
