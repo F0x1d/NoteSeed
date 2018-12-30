@@ -48,6 +48,15 @@
 
         <com.f0x1d.notes.view.theming.MyImageButton
             android:layout_weight="1"
+            android:src="@drawable/ic_notifications_active_black_24dp"
+            android:background="@android:color/transparent"
+            android:layout_width="100dp"
+            android:layout_marginEnd="3dp"
+            android:id="@+id/new_notify"
+            android:layout_height="wrap_content" />
+
+        <com.f0x1d.notes.view.theming.MyImageButton
+            android:layout_weight="1"
             android:src="@drawable/ic_folder_black_24dp"
             android:background="@android:color/transparent"
             android:layout_width="100dp"

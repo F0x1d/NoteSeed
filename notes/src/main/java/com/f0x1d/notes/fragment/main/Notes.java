@@ -250,6 +250,7 @@ public class Notes extends Fragment {
         MyButton fab = view.findViewById(R.id.new_note);
 
         ImageButton fab1 = view.findViewById(R.id.new_folder);
+        ImageButton fab2 = view.findViewById(R.id.new_notify);
 
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
         animation.setDuration(400);
@@ -259,11 +260,17 @@ public class Notes extends Fragment {
         animation2.setDuration(400);
         fab1.startAnimation(animation2);
 
+        Animation animation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
+        animation3.setDuration(400);
+        fab2.startAnimation(animation3);
+
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
             fab1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp));
             fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
+            fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notifications_active_white_24dp));
         } else {
             fab1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_black_24dp));
+            fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notifications_active_black_24dp));
             if (UselessUtils.ifCustomTheme()){
                 fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             }
@@ -282,6 +289,53 @@ public class Notes extends Fragment {
                     createFolder();
                 }
             });
+
+            fab2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createNotify();
+                }
+            });
+    }
+
+    private void createNotify(){
+        View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_two_edit_texts, null);
+
+        EditText title = v.findViewById(R.id.edit_text_one);
+        title.setBackground(null);
+        title.setHint(getString(R.string.title));
+
+        EditText text = v.findViewById(R.id.edit_text_two);
+        text.setBackground(null);
+        text.setHint(getString(R.string.text));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(v);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, "def", 2, null, 0, ""));
+                UselessUtils.replaceNoBackStack(getActivity(), new Notes(), "notes");
+            }
+        });
+
+        AlertDialog dialog1337 = builder.create();
+
+        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog1) {
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                }
+                if (UselessUtils.ifCustomTheme()){
+                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
+                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                }
+            }
+        });
+
+        dialog1337.show();
     }
 
     private void createFolder(){
@@ -315,7 +369,7 @@ public class Notes extends Fragment {
                 if (create){
 
                     dao.insert(new NoteOrFolder(null, null, 0, 0, "def", 1, text.getText().toString(), 0, ""));
-                    UselessUtils.replace(getActivity(), new Notes(), "notes");
+                    UselessUtils.replaceNoBackStack(getActivity(), new Notes(), "notes");
                 }
             }
         }).create();
