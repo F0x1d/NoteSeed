@@ -20,7 +20,6 @@ import com.f0x1d.notes.fragment.themes.ThemesFragment;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
-import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,15 +31,12 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
-import java.util.function.LongFunction;
-
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
 public class MainActivity extends AppCompatActivity {
 
     public static FragmentManager getSupportFragmentManager;
-
     public static MainSettings settings;
 
     @Override

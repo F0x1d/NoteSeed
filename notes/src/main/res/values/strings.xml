@@ -11,7 +11,7 @@
     <string name="note">Note</string>
     <string name="new_note">New note</string>
     <string name="title">Title</string>
-    <string name="empty">Empty, create a note now!</string>
+    <string name="empty">Nothing there, create something now!</string>
     <string name="pass">Password</string>
     <string name="text">Text</string>
     <string name="deleted">Deleted</string>
@@ -32,7 +32,7 @@
     <string name="icon_by_emulond">Thank you very much for the icon!</string>
     <string name="use_pin">Use PIN</string>
     <string name="select_pin">Select PIN</string>
-    <string name="use_finger">Use fingetprint</string>
+    <string name="use_finger">Use fingerprint</string>
     <string name="blue">Blue</string>
     <string name="orange">Orange</string>
     <string name="dark">Dark</string>

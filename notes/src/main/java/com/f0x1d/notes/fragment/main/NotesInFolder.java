@@ -237,7 +237,6 @@ public class NotesInFolder extends Fragment {
         MyButton fab = view.findViewById(R.id.new_note);
 
         ImageButton fab1 = view.findViewById(R.id.new_folder);
-        fab1.setVisibility(View.GONE);
         ImageButton fab2 = view.findViewById(R.id.new_notify);
 
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
