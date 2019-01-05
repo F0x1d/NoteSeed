@@ -264,15 +264,14 @@ public class NotesInFolder extends Fragment {
             }
         }
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("f_in_f", false)){
-            fab1.setVisibility(View.VISIBLE);
-            fab1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                     createFolder();
                 }
-            });
-        }
+        });
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -25,7 +25,6 @@
         android:layout_centerHorizontal="true"
         android:elevation="2dp"
         android:layout_centerVertical="true"
-        
         android:text="@string/empty" />
 
     <LinearLayout
@@ -33,18 +32,6 @@
         android:gravity="center_vertical"
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content">
-
-        <com.f0x1d.notes.view.theming.MyButton
-            android:layout_width="match_parent"
-            
-            android:text="@string/new_note"
-            android:layout_marginStart="5dp"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:id="@+id/new_note"
-            android:gravity="center|start"
-            android:layout_height="wrap_content" />
 
         <com.f0x1d.notes.view.theming.MyImageButton
             android:layout_weight="1"
@@ -55,12 +42,25 @@
             android:id="@+id/new_notify"
             android:layout_height="wrap_content" />
 
+        <com.f0x1d.notes.view.theming.MyButton
+            android:layout_width="match_parent"
+            android:text="@string/new_note"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:id="@+id/new_note"
+            android:gravity="center"
+            android:layout_height="wrap_content" />
+
         <com.f0x1d.notes.view.theming.MyImageButton
             android:layout_weight="1"
             android:src="@drawable/ic_folder_black_24dp"
             android:background="@android:color/transparent"
             android:layout_width="100dp"
             android:id="@+id/new_folder"
+            android:layout_marginStart="3dp"
             android:layout_height="wrap_content" />
 
     </LinearLayout>

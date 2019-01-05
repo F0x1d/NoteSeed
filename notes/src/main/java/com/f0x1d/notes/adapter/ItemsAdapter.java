@@ -517,15 +517,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Color.parseColor(getColorFromDataBase(position));
 
             if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             } else {
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             }
         } catch (Exception e){
             if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.unpin), activity.getString(R.string.color)};
             } else {
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.pin), activity.getString(R.string.color)};
             }
         }
 

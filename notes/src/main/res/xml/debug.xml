@@ -5,10 +5,9 @@
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/folders">
         <com.f0x1d.notes.view.preferences.MySwitchPreference
-            android:title="@string/folder_in_folder" android:summary="@string/nestabilno" android:key="f_in_f"/>
-        <com.f0x1d.notes.view.preferences.MySwitchPreference
             android:title="@string/format" android:summary="@string/nestabilno" android:key="format"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
+
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/other">
         <com.f0x1d.notes.view.preferences.MyPreference
             android:title="@string/clear_all" android:key="delete_all"/>
