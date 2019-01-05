@@ -315,7 +315,7 @@ public class Notes extends Fragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, "def", 2, null, 0, ""));
+                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, "def", 2, null, 0, "", System.currentTimeMillis()));
                 UselessUtils.replaceNoBackStack(getActivity(), new Notes(), "notes");
             }
         });
@@ -368,7 +368,7 @@ public class Notes extends Fragment {
 
                 if (create){
 
-                    dao.insert(new NoteOrFolder(null, null, 0, 0, "def", 1, text.getText().toString(), 0, ""));
+                    dao.insert(new NoteOrFolder(null, null, 0, 0, "def", 1, text.getText().toString(), 0, "", 0));
                     UselessUtils.replaceNoBackStack(getActivity(), new Notes(), "notes");
                 }
             }
@@ -480,7 +480,7 @@ public class Notes extends Fragment {
                     Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                dao.insert(new NoteOrFolder(title, text, 0, 0, "def", 0, null, 0, ""));
+                dao.insert(new NoteOrFolder(title, text, 0, 0, "def", 0, null, 0, "", System.currentTimeMillis()));
                 UselessUtils.replace(getActivity(), new Notes(), "notes");
             }
         }

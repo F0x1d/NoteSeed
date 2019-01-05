@@ -168,7 +168,7 @@ public class NoteAdd extends Fragment {
 
         if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
             rowID = dao.insert(new NoteOrFolder(generateName(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
-                    0, null, 0, ""));
+                    0, null, 0, "", System.currentTimeMillis()));
         }
 
 
@@ -194,6 +194,7 @@ public class NoteAdd extends Fragment {
                 if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
                     dao.updateNoteTitle(title.getText().toString(), rowID);
                     dao.updateNoteText(text.getText().toString(), rowID);
+                    dao.updateNoteTime(System.currentTimeMillis(), rowID);
                 }
             }
         });
@@ -220,6 +221,7 @@ public class NoteAdd extends Fragment {
                 if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
                     dao.updateNoteTitle(title.getText().toString(), rowID);
                     dao.updateNoteText(text.getText().toString(), rowID);
+                    dao.updateNoteTime(System.currentTimeMillis(), rowID);
                 }
             }
         });
@@ -249,7 +251,7 @@ public class NoteAdd extends Fragment {
             @Override
             public void onClick(View v) {
                 rowID = dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
-                        0, null, 0, ""));
+                        0, null, 0, "", System.currentTimeMillis()));
 
                     getFragmentManager().popBackStack();
                 }

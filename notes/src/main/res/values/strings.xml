@@ -100,4 +100,5 @@
     <string name="not_all_colors_found">Not all theme\'s colors were found!</string>
     <string name="restore_color">Restore color</string>
     <string name="change">Change</string>
+    <string name="last_change">Last change was at </string>
 </resources>

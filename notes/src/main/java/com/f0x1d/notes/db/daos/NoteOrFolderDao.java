@@ -47,6 +47,9 @@ public interface NoteOrFolderDao {
     @Query("UPDATE NoteOrFolder SET locked=:locked WHERE id = :id")
     void updateNoteLocked(int locked, long id);
 
+    @Query("UPDATE NoteOrFolder SET edit_time=:edit_time WHERE id = :id")
+    void updateNoteTime(long edit_time, long id);
+
     @Query("DELETE FROM NoteOrFolder WHERE id = :id")
     void deleteNote(long id);
 
@@ -57,8 +60,8 @@ public interface NoteOrFolderDao {
     void deleteFolder2(String folder_name);
 
     @Query("DELETE FROM NoteOrFolder")
-    public void nukeTable();
+    void nukeTable();
 
     @Query("DELETE FROM Notify")
-    public void nukeTable2();
+    void nukeTable2();
 }

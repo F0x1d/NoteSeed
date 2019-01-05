@@ -100,4 +100,5 @@
     <string name="not_all_colors_found">Не все цвета темы были найдены!</string>
     <string name="restore_color">Вернуть стандартный цвет</string>
     <string name="change">Изменить</string>
+    <string name="last_change">Последнее изменение было в </string>
 </resources>
