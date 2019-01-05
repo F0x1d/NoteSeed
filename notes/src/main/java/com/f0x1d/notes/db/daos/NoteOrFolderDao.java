@@ -50,6 +50,9 @@ public interface NoteOrFolderDao {
     @Query("UPDATE NoteOrFolder SET edit_time=:edit_time WHERE id = :id")
     void updateNoteTime(long edit_time, long id);
 
+    @Query("UPDATE NoteOrFolder SET pic_res=:path WHERE id = :id")
+    void updateNotePic(String path, long id);
+
     @Query("DELETE FROM NoteOrFolder WHERE id = :id")
     void deleteNote(long id);
 

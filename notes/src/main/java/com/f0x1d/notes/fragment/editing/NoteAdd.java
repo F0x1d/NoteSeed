@@ -7,6 +7,7 @@ import android.app.WallpaperManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
@@ -41,17 +43,22 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import static com.f0x1d.notes.fragment.editing.NoteEdit.copy;
+
 public class NoteAdd extends Fragment {
 
     EditText title;
     EditText text;
+    ImageView pic;
 
     long rowID;
 
@@ -147,6 +154,8 @@ public class NoteAdd extends Fragment {
             title.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));
         text = view.findViewById(R.id.edit_text);
             text.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));
+        pic = view.findViewById(R.id.picture);
+            pic.setVisibility(View.GONE);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
@@ -168,7 +177,7 @@ public class NoteAdd extends Fragment {
 
         if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
             rowID = dao.insert(new NoteOrFolder(generateName(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
-                    0, null, 0, "", System.currentTimeMillis()));
+                    0, null, 0, "", System.currentTimeMillis(), null));
         }
 
 
@@ -251,7 +260,7 @@ public class NoteAdd extends Fragment {
             @Override
             public void onClick(View v) {
                 rowID = dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
-                        0, null, 0, "", System.currentTimeMillis()));
+                        0, null, 0, "", System.currentTimeMillis(), null));
 
                     getFragmentManager().popBackStack();
                 }
@@ -397,9 +406,94 @@ public class NoteAdd extends Fragment {
                     Toast.makeText(getActivity(), R.string.format_error, Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.attach:
+                openFile("image/*", 228, getActivity());
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openFile(String minmeType, int requestCode, Context c) {
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(minmeType);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // special intent for Samsung file manager
+        Intent sIntent = new Intent("com.f0x1d.talkandtools.main.PICK_DATA");
+        // if you want any file type, you can skip next line
+        sIntent.putExtra("CONTENT_TYPE", minmeType);
+        sIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        Intent chooserIntent;
+        if (c.getPackageManager().resolveActivity(sIntent, 0) != null){
+            // it is device with samsung file manager
+            chooserIntent = Intent.createChooser(sIntent, "Open file");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent});
+        }
+        else {
+            chooserIntent = Intent.createChooser(intent, "Open file");
+        }
+
+        try {
+            startActivityForResult(chooserIntent, requestCode);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null && requestCode == 228){
+            File picture = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/pics");
+            if (!picture.exists()){
+                picture.mkdirs();
+            }
+
+            File nomedia = new File(picture, ".nomedia");
+            try {
+                nomedia.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            InputStream inputStream;
+
+            File fleks = null;
+
+            try {
+                inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+
+                fleks = new File(picture, rowID + UselessUtils.getFileName(data.getData()));
+
+                copy(inputStream, fleks);
+            } catch (FileNotFoundException e) {
+                Log.e("notes_err", e.getLocalizedMessage());
+            } catch (IOException e) {
+                Log.e("notes_err", e.getLocalizedMessage());
+            }
+
+            Log.e("notes_err", "saved: " + fleks.getPath());
+
+            dao.updateNotePic(fleks.getPath(), rowID);
+
+            pic.setVisibility(View.VISIBLE);
+            pic.setImageDrawable(Drawable.createFromPath(fleks.getPath()));
+
+            dao.updateNoteTime(System.currentTimeMillis(), rowID);
+
+            pic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dao.updateNotePic(null, rowID);
+                    pic.setVisibility(View.GONE);
+
+                    dao.updateNoteTime(System.currentTimeMillis(), rowID);
+                }
+            });
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

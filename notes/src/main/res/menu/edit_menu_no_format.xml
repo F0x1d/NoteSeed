@@ -20,4 +20,7 @@
     <item
         android:title="@string/notify"
         android:id="@+id/notify"/>
+    <item
+        android:title="@string/attach"
+        android:id="@+id/attach"/>
 </menu>

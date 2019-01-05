@@ -9,7 +9,7 @@ import com.f0x1d.notes.db.entities.Notify;
 
 import androidx.room.RoomDatabase;
 
-@androidx.room.Database(entities = {NoteOrFolder.class, Notify.class, Format.class}, version = 4, exportSchema = false)
+@androidx.room.Database(entities = {NoteOrFolder.class, Notify.class, Format.class}, version = 5, exportSchema = false)
 public abstract class Database extends RoomDatabase {
 
     public abstract NoteOrFolderDao noteOrFolderDao();

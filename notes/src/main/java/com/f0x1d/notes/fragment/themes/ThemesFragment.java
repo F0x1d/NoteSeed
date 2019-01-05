@@ -94,7 +94,7 @@ public class ThemesFragment extends Fragment {
             import_fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openFile("*/*", 228, getActivity());
+                    openFile("application/json", 228, getActivity());
                 }
             });
     }

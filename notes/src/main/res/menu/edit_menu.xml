@@ -21,6 +21,9 @@
         android:title="@string/notify"
         android:id="@+id/notify"/>
     <item
+        android:title="@string/attach"
+        android:id="@+id/attach"/>
+    <item
         android:title="@string/format"
         android:id="@+id/format">
 

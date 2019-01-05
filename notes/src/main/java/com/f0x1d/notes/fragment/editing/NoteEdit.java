@@ -7,6 +7,8 @@ import android.app.WallpaperManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Entity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -26,9 +28,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.db.daos.FormatDao;
@@ -41,8 +45,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -55,7 +64,7 @@ public class NoteEdit extends Fragment {
 
     EditText title;
     EditText text;
-    Menu menuNew;
+    ImageView pic;
 
     TextToSpeech mTTS;
 
@@ -155,6 +164,18 @@ public class NoteEdit extends Fragment {
         return v;
     }
 
+    public String getPicRes(){
+        String res = null;
+
+        for (NoteOrFolder noteOrFolder : dao.getAll()) {
+            if (noteOrFolder.id == id){
+                res = noteOrFolder.pic_res;
+            }
+        }
+
+        return res;
+    }
+
     @SuppressLint("RestrictedApi")
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -170,6 +191,7 @@ public class NoteEdit extends Fragment {
             title.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));
         text = view.findViewById(R.id.edit_text);
             text.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));
+        pic = view.findViewById(R.id.picture);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
@@ -202,11 +224,33 @@ public class NoteEdit extends Fragment {
 
             title.setText(getArguments().getString("title"));
             text.setText(getArguments().getString("text"));
+
+            if (getPicRes() == null){
+                pic.setVisibility(View.GONE);
+                Log.e("notes_err", "image not set: " + getPicRes());
+            } else {
+                Drawable d = Drawable.createFromPath(getPicRes());
+                pic.getLayoutParams().height = d.getMinimumHeight();
+                pic.setImageDrawable(d);
+
+                Log.e("notes_err", "image set: " + getPicRes());
+                pic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dao.updateNotePic(null, id);
+                        pic.setVisibility(View.GONE);
+
+                        dao.updateNoteTime(System.currentTimeMillis(), id);
+                    }
+                });
+            }
         }
 
         for (Format format : formatDao.getAll()) {
             if (format.to_id == id){
+
                 if (format.ifTitle){
+
                     if (format.type.equals("italic")){
                         title.getText().setSpan(new StyleSpan(Typeface.ITALIC), format.start_position, format.end_position, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     } else if (format.type.equals("bold")){
@@ -214,6 +258,7 @@ public class NoteEdit extends Fragment {
                     }
 
                 } else {
+
                     if (format.type.equals("italic")){
                         text.getText().setSpan(new StyleSpan(Typeface.ITALIC), format.start_position, format.end_position, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     } else if (format.type.equals("bold")){
@@ -472,9 +517,108 @@ public class NoteEdit extends Fragment {
                     Toast.makeText(getActivity(), R.string.format_error, Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.attach:
+                openFile("image/*", 228, getActivity());
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openFile(String minmeType, int requestCode, Context c) {
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(minmeType);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // special intent for Samsung file manager
+        Intent sIntent = new Intent("com.f0x1d.talkandtools.main.PICK_DATA");
+        // if you want any file type, you can skip next line
+        sIntent.putExtra("CONTENT_TYPE", minmeType);
+        sIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        Intent chooserIntent;
+        if (c.getPackageManager().resolveActivity(sIntent, 0) != null){
+            // it is device with samsung file manager
+            chooserIntent = Intent.createChooser(sIntent, "Open file");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent});
+        }
+        else {
+            chooserIntent = Intent.createChooser(intent, "Open file");
+        }
+
+        try {
+            startActivityForResult(chooserIntent, requestCode);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null && requestCode == 228){
+            File picture = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/pics");
+            if (!picture.exists()){
+                picture.mkdirs();
+            }
+
+            File nomedia = new File(picture, ".nomedia");
+            try {
+                nomedia.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            InputStream inputStream;
+
+            File fleks = null;
+
+            try {
+                inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+
+                fleks = new File(picture, id + UselessUtils.getFileName(data.getData()));
+
+                copy(inputStream, fleks);
+            } catch (FileNotFoundException e) {
+                Log.e("notes_err", e.getLocalizedMessage());
+            } catch (IOException e) {
+                Log.e("notes_err", e.getLocalizedMessage());
+            }
+
+            Log.e("notes_err", "saved: " + fleks.getPath());
+
+            dao.updateNotePic(fleks.getPath(), id);
+
+            pic.setVisibility(View.VISIBLE);
+            Drawable d = Drawable.createFromPath(getPicRes());
+            pic.getLayoutParams().height = d.getMinimumHeight();
+            pic.setImageDrawable(d);
+            pic.requestFocus();
+
+            dao.updateNoteTime(System.currentTimeMillis(), id);
+
+            pic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dao.updateNotePic(null, id);
+                    pic.setVisibility(View.GONE);
+
+                    dao.updateNoteTime(System.currentTimeMillis(), id);
+                }
+            });
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public static void copy(InputStream in, File dst) throws IOException {
+            try (OutputStream out = new FileOutputStream(dst)) {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            }
     }
 
     @Override

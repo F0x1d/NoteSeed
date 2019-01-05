@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -444,6 +445,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         holder.title.setText(items.get(position).title);
 
+        if (items.get(position).pic_res != null){
+            Drawable d = Drawable.createFromPath(items.get(position).pic_res);
+            holder.pic.getLayoutParams().height = d.getMinimumHeight();
+            holder.pic.setImageDrawable(d);
+        } else {
+            holder.pic.setVisibility(View.GONE);
+        }
+
         boolean oneLine;
 
         if (Pattern.compile("\\r?\\n").matcher(items.get(position).text).find()){
@@ -476,7 +485,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         Date currentDate = new Date(items.get(position).edit_time);
-        DateFormat df = new SimpleDateFormat("HH:mm:ss dd.MM.yy");
+        DateFormat df = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
 
         holder.time.setText(activity.getString(R.string.last_change) + " " + df.format(currentDate));
 
@@ -916,6 +925,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         CardView note_card;
         ImageView pinned;
         TextView time;
+        ImageView pic;
 
         noteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -925,6 +935,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             text = itemView.findViewById(R.id.textView_text);
             pinned = itemView.findViewById(R.id.pinned);
             time = itemView.findViewById(R.id.time);
+            pic = itemView.findViewById(R.id.picture);
         }
     }
 

@@ -24,7 +24,9 @@ public class NoteOrFolder {
 
     public long edit_time;
 
-    public NoteOrFolder(String title, String text, long id, int locked, String in_folder_id, int is_folder, String folder_name, int pinned, String color, long edit_time){
+    public String pic_res;
+
+    public NoteOrFolder(String title, String text, long id, int locked, String in_folder_id, int is_folder, String folder_name, int pinned, String color, long edit_time, String pic_res){
         this.title = title;
         this.text = text;
         this.id = id;
@@ -35,5 +37,6 @@ public class NoteOrFolder {
         this.pinned = pinned;
         this.color = color;
         this.edit_time = edit_time;
+        this.pic_res = pic_res;
     }
 }
