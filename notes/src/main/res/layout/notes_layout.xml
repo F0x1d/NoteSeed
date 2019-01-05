@@ -13,7 +13,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/notes_view"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="50dp"
         android:layout_below="@id/toolbar"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
@@ -40,6 +40,7 @@
             android:layout_width="100dp"
             android:layout_marginEnd="3dp"
             android:id="@+id/new_notify"
+            android:layout_marginStart="10dp"
             android:layout_height="wrap_content" />
 
         <com.f0x1d.notes.view.theming.MyButton
@@ -61,6 +62,7 @@
             android:layout_width="100dp"
             android:id="@+id/new_folder"
             android:layout_marginStart="3dp"
+            android:layout_marginEnd="10dp"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
