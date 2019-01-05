@@ -247,7 +247,7 @@ public class NotesInFolder extends Fragment {
         animation2.setDuration(400);
         fab1.startAnimation(animation2);
 
-        Animation animation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
+        Animation animation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_in);
         animation3.setDuration(400);
         fab2.startAnimation(animation3);
 
