@@ -7,7 +7,9 @@ import android.app.WallpaperManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -54,6 +56,7 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import static com.f0x1d.notes.fragment.editing.NoteEdit.copy;
@@ -489,40 +492,70 @@ public class NoteAdd extends Fragment {
 
                     dao.updateNoteTime(System.currentTimeMillis(), rowID);
 
-                    File finalFleks = fleks;
+                    Drawable d = Drawable.createFromPath(fleks.getPath());
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Glide.with(activity).load(finalFleks.getPath()).apply(new RequestOptions().placeholder(new ColorDrawable(Color.WHITE))).into(pic);
+                            pic.setVisibility(View.VISIBLE);
+                            pic.setImageDrawable(d);
                         }
                     });
                 }
             }).start();
 
-            pic.setOnClickListener(new View.OnClickListener() {
+            pic.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
-                    if (doubleBackToExitPressedOnce) {
-                        dao.updateNotePic(null, rowID);
-                        pic.setVisibility(View.GONE);
-
-                        dao.updateNoteTime(System.currentTimeMillis(), rowID);
-                        return;
-                    }
-
-                    doubleBackToExitPressedOnce = true;
-                    Toast.makeText(getActivity(), R.string.one_more_time_to_delete, Toast.LENGTH_SHORT).show();
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            doubleBackToExitPressedOnce=false;
-                        }
-                    }, 1500);
+                public boolean onLongClick(View v) {
+                    delete();
+                    return false;
                 }
             });
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void delete(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false);
+        builder.setTitle(R.string.confirm_delete);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dao.updateNotePic(null, rowID);
+                pic.setVisibility(View.GONE);
+
+                dao.updateNoteTime(System.currentTimeMillis(), rowID);
+            }
+        });
+
+        builder.setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog dialog1337 =  builder.create();
+
+        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog1) {
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
+                }
+                if (UselessUtils.ifCustomTheme()){
+                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
+                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
+
+                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                }
+            }
+        });
+
+        dialog1337.show();
     }
 
     @Override
