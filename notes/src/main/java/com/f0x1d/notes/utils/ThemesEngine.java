@@ -208,144 +208,108 @@ public class ThemesEngine {
                 background = Color.parseColor(jsonObject.getString("background"));
             } catch (Exception e){
                 background = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
             } catch (Exception e){
                 statusBarColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 textColor = Color.parseColor(jsonObject.getString("text_color"));
             } catch (Exception e){
                 textColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 accentColor = Color.parseColor(jsonObject.getString("accent"));
             } catch (Exception e){
                 accentColor = 0xff00ff00;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
             } catch (Exception e){
                 navBarColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
             } catch (Exception e){
                 iconsColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
             } catch (Exception e){
                 textHintColor = Color.GRAY;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 dark = jsonObject.getBoolean("dark");
             } catch (Exception e){
                 dark = false;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
             } catch (Exception e){
                 toolbarColor = Color.TRANSPARENT;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
             } catch (Exception e){
                 toolbarTextColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 toolbarTransparent = jsonObject.getBoolean("transparent_toolbar");
             } catch (Exception e){
                 toolbarTransparent = true;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 fabColor = Color.parseColor(jsonObject.getString("fab_color"));
             } catch (Exception e){
                 fabColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
             } catch (Exception e){
                 fabIconColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
             } catch (Exception e){
                 defaultNoteColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 lightColorTextColor = Color.parseColor(jsonObject.getString("lightColorTextColor"));
             } catch (Exception e){
                 lightColorTextColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 darkColorTextColor = Color.parseColor(jsonObject.getString("darkColorTextColor"));
             } catch (Exception e){
                 darkColorTextColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 lightColorIconColor = Color.parseColor(jsonObject.getString("lightColorIconColor"));
             } catch (Exception e){
                 lightColorIconColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
             } catch (Exception e){
                 darkColorIconColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
 
@@ -385,144 +349,108 @@ public class ThemesEngine {
                 background = Color.parseColor(jsonObject.getString("background"));
             } catch (Exception e){
                 background = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
             } catch (Exception e){
                 statusBarColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 textColor = Color.parseColor(jsonObject.getString("text_color"));
             } catch (Exception e){
                 textColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 accentColor = Color.parseColor(jsonObject.getString("accent"));
             } catch (Exception e){
                 accentColor = 0xff00ff00;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
             } catch (Exception e){
                 navBarColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
             } catch (Exception e){
                 iconsColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
             } catch (Exception e){
                 textHintColor = Color.GRAY;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 dark = jsonObject.getBoolean("dark");
             } catch (Exception e){
                 dark = false;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
             } catch (Exception e){
                 toolbarColor = Color.TRANSPARENT;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
             } catch (Exception e){
                 toolbarTextColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 toolbarTransparent = jsonObject.getBoolean("transparent_toolbar");
             } catch (Exception e){
                 toolbarTransparent = true;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 fabColor = Color.parseColor(jsonObject.getString("fab_color"));
             } catch (Exception e){
                 fabColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
             } catch (Exception e){
                 fabIconColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
             } catch (Exception e){
                 defaultNoteColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 lightColorTextColor = Color.parseColor(jsonObject.getString("lightColorTextColor"));
             } catch (Exception e){
                 lightColorTextColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 darkColorTextColor = Color.parseColor(jsonObject.getString("darkColorTextColor"));
             } catch (Exception e){
                 darkColorTextColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 lightColorIconColor = Color.parseColor(jsonObject.getString("lightColorIconColor"));
             } catch (Exception e){
                 lightColorIconColor = 0xff000000;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             try {
                 darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
             } catch (Exception e){
                 darkColorIconColor = 0xffffffff;
-
-                Toast.makeText(App.getContext(), R.string.not_all_colors_found, Toast.LENGTH_SHORT).show();
             }
 
             if (dark){
