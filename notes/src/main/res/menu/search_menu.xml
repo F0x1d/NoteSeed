@@ -3,11 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/import_note"
-        android:id="@+id/import_note"
-        app:showAsAction="never"/>
-
-    <item
         android:id="@+id/settings"
         android:title="@string/settings"
         android:icon="@drawable/ic_settings_black_24dp"

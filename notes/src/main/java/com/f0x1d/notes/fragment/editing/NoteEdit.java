@@ -244,12 +244,8 @@ public class NoteEdit extends Fragment {
                 RequestOptions options = new RequestOptions();
                     options.placeholder(new ColorDrawable(Color.WHITE));
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Glide.with(activity).load(getPicRes()).apply(new RequestOptions().placeholder(new ColorDrawable(Color.WHITE))).into(pic);
-                    }
-                }, 100);
+                    Glide.with(activity).load(getPicRes()).apply(new RequestOptions().placeholder(new ColorDrawable(Color.WHITE))).into(pic);
+
 
                 Log.e("notes_err", "image set: " + getPicRes());
                 pic.setOnClickListener(new View.OnClickListener() {
@@ -630,12 +626,7 @@ public class NoteEdit extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Glide.with(activity).load(finalFleks.getPath()).apply(new RequestOptions().placeholder(new ColorDrawable(Color.WHITE))).into(pic);
-                                    }
-                                }, 100);
+                                Glide.with(activity).load(finalFleks.getPath()).apply(new RequestOptions().placeholder(new ColorDrawable(Color.WHITE))).into(pic);
                             }
                         });
                 }

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.App;
@@ -91,19 +92,24 @@ public class NotesInFolder extends Fragment {
 
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("folder_name", ""));
-        toolbar.inflateMenu(R.menu.search_menu_no_settings);
+        toolbar.inflateMenu(R.menu.search_menu);
+        toolbar.getMenu().findItem(R.id.settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         if (UselessUtils.getBool("night", false)){
             if (UselessUtils.ifCustomTheme()){
                 toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_white_24dp), ThemesEngine.iconsColor));
+                toolbar.getMenu().findItem(R.id.settings).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor));
             } else {
+                toolbar.getMenu().findItem(R.id.settings).setIcon(R.drawable.ic_settings_white_24dp);
                 toolbar.setNavigationIcon(R.drawable.ic_search_white_24dp);
             }
         } else {
             if (UselessUtils.ifCustomTheme()){
                 toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_black_24dp), ThemesEngine.iconsColor));
+                toolbar.getMenu().findItem(R.id.settings).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_settings_black_24dp), ThemesEngine.iconsColor));
             } else {
                 toolbar.setNavigationIcon(R.drawable.ic_search_black_24dp);
+                toolbar.getMenu().findItem(R.id.settings).setIcon(R.drawable.ic_settings_black_24dp);
             }
         }
 
@@ -279,6 +285,14 @@ public class NotesInFolder extends Fragment {
             }
         });
 
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                openFile("*/*", 228, getActivity());
+                return false;
+            }
+        });
+
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -396,8 +410,8 @@ public class NotesInFolder extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.import_note:
-                openFile("*/*", 228, getActivity());
+            case R.id.settings:
+                UselessUtils.replace(getActivity(), MainActivity.settings, "settings");
                 break;
         }
 
@@ -525,7 +539,13 @@ public class NotesInFolder extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_menu_no_settings, menu);
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.settings);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+            item.setIcon(R.drawable.ic_settings_white_24dp);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 }

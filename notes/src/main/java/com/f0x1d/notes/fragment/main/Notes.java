@@ -283,6 +283,14 @@ public class Notes extends Fragment {
                 }
             });
 
+            fab.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    openFile("*/*", 228, getActivity());
+                    return false;
+                }
+            });
+
             fab1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -408,9 +416,6 @@ public class Notes extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.import_note:
-                openFile("*/*", 228, getActivity());
-                break;
             case R.id.settings:
                 //Toast.makeText(getActivity(), "lags...", Toast.LENGTH_SHORT).show();
                 UselessUtils.replace(getActivity(), MainActivity.settings, "settings");
