@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
@@ -31,6 +32,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
@@ -81,6 +84,8 @@ public class NoteEdit extends Fragment {
     String textStr;
 
     boolean allowFormat;
+
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onAttach(Activity activity) {
@@ -215,12 +220,17 @@ public class NoteEdit extends Fragment {
         formatDao = App.getInstance().getDatabase().formatDao();
 
         if (getArguments() != null){
-            titleStr = getArguments().getString("title");
-            textStr = getArguments().getString("text");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    titleStr = getArguments().getString("title");
+                    textStr = getArguments().getString("text");
 
-            id = getArguments().getLong("id");
-            id_str = String.valueOf(getArguments().getLong("id"));
-            locked = getArguments().getInt("locked");
+                    id = getArguments().getLong("id");
+                    id_str = String.valueOf(getArguments().getLong("id"));
+                    locked = getArguments().getInt("locked");
+                }
+            }).start();
 
             title.setText(getArguments().getString("title"));
             text.setText(getArguments().getString("text"));
@@ -229,24 +239,46 @@ public class NoteEdit extends Fragment {
                 pic.setVisibility(View.GONE);
                 Log.e("notes_err", "image not set: " + getPicRes());
             } else {
-                Drawable d = Drawable.createFromPath(getPicRes());
-                pic.getLayoutParams().height = d.getMinimumHeight();
-                pic.setImageDrawable(d);
+                pic.setVisibility(View.VISIBLE);
+
+                RequestOptions options = new RequestOptions();
+                    options.placeholder(new ColorDrawable(Color.WHITE));
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(activity).load(getPicRes()).apply(new RequestOptions().placeholder(new ColorDrawable(Color.WHITE))).into(pic);
+                    }
+                }, 100);
 
                 Log.e("notes_err", "image set: " + getPicRes());
                 pic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dao.updateNotePic(null, id);
-                        pic.setVisibility(View.GONE);
+                        if (doubleBackToExitPressedOnce) {
+                            dao.updateNotePic(null, id);
+                            pic.setVisibility(View.GONE);
 
-                        dao.updateNoteTime(System.currentTimeMillis(), id);
+                            dao.updateNoteTime(System.currentTimeMillis(), id);
+                            return;
+                        }
+
+                        doubleBackToExitPressedOnce = true;
+                        Toast.makeText(getActivity(), R.string.one_more_time_to_delete, Toast.LENGTH_SHORT).show();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                doubleBackToExitPressedOnce=false;
+                            }
+                        }, 1500);
                     }
                 });
             }
         }
 
         for (Format format : formatDao.getAll()) {
+
             if (format.to_id == id){
 
                 if (format.ifTitle){
@@ -557,53 +589,78 @@ public class NoteEdit extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null && requestCode == 228){
-            File picture = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/pics");
-            if (!picture.exists()){
-                picture.mkdirs();
-            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    File picture = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/pics");
+                    if (!picture.exists()){
+                        picture.mkdirs();
+                    }
 
-            File nomedia = new File(picture, ".nomedia");
-            try {
-                nomedia.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                    File nomedia = new File(picture, ".nomedia");
+                    try {
+                        nomedia.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-            InputStream inputStream;
+                    InputStream inputStream;
 
-            File fleks = null;
+                    File fleks = null;
 
-            try {
-                inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+                    try {
+                        inputStream = getActivity().getContentResolver().openInputStream(data.getData());
 
-                fleks = new File(picture, id + UselessUtils.getFileName(data.getData()));
+                        fleks = new File(picture, id + UselessUtils.getFileName(data.getData()));
 
-                copy(inputStream, fleks);
-            } catch (FileNotFoundException e) {
-                Log.e("notes_err", e.getLocalizedMessage());
-            } catch (IOException e) {
-                Log.e("notes_err", e.getLocalizedMessage());
-            }
+                        copy(inputStream, fleks);
+                    } catch (FileNotFoundException e) {
+                        Log.e("notes_err", e.getLocalizedMessage());
+                    } catch (IOException e) {
+                        Log.e("notes_err", e.getLocalizedMessage());
+                    }
 
-            Log.e("notes_err", "saved: " + fleks.getPath());
+                    Log.e("notes_err", "saved: " + fleks.getPath());
 
-            dao.updateNotePic(fleks.getPath(), id);
+                    dao.updateNotePic(fleks.getPath(), id);
 
-            pic.setVisibility(View.VISIBLE);
-            Drawable d = Drawable.createFromPath(getPicRes());
-            pic.getLayoutParams().height = d.getMinimumHeight();
-            pic.setImageDrawable(d);
-            pic.requestFocus();
+                    dao.updateNoteTime(System.currentTimeMillis(), id);
 
-            dao.updateNoteTime(System.currentTimeMillis(), id);
+                    File finalFleks = fleks;
+                    getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Glide.with(activity).load(finalFleks.getPath()).apply(new RequestOptions().placeholder(new ColorDrawable(Color.WHITE))).into(pic);
+                                    }
+                                }, 100);
+                            }
+                        });
+                }
+            }).start();
 
             pic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dao.updateNotePic(null, id);
-                    pic.setVisibility(View.GONE);
+                    if (doubleBackToExitPressedOnce) {
+                        dao.updateNotePic(null, id);
+                        pic.setVisibility(View.GONE);
 
-                    dao.updateNoteTime(System.currentTimeMillis(), id);
+                        dao.updateNoteTime(System.currentTimeMillis(), id);
+                        return;
+                    }
+
+                    doubleBackToExitPressedOnce = true;
+                    Toast.makeText(getActivity(), R.string.one_more_time_to_delete, Toast.LENGTH_SHORT).show();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            doubleBackToExitPressedOnce=false;
+                        }
+                    }, 1500);
                 }
             });
         }

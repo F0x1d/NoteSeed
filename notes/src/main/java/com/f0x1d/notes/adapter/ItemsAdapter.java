@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.lock.LockScreen;
@@ -446,9 +450,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.title.setText(items.get(position).title);
 
         if (items.get(position).pic_res != null){
-            Drawable d = Drawable.createFromPath(items.get(position).pic_res);
-            holder.pic.getLayoutParams().height = d.getMinimumHeight();
-            holder.pic.setImageDrawable(d);
+            RequestOptions options = new RequestOptions();
+                options.placeholder(new ColorDrawable(Color.WHITE));
+
+            Glide.with(activity).load(items.get(position).pic_res).apply(options).into(holder.pic);
         } else {
             holder.pic.setVisibility(View.GONE);
         }

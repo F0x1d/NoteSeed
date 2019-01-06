@@ -13,6 +13,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
@@ -29,6 +30,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
 import com.f0x1d.notes.App;
@@ -70,6 +74,8 @@ public class NoteAdd extends Fragment {
     FormatDao formatDao;
 
     boolean allowFormat;
+
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onAttach(Activity activity) {
@@ -446,50 +452,78 @@ public class NoteAdd extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null && requestCode == 228){
-            File picture = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/pics");
-            if (!picture.exists()){
-                picture.mkdirs();
-            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    File picture = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/pics");
+                    if (!picture.exists()){
+                        picture.mkdirs();
+                    }
 
-            File nomedia = new File(picture, ".nomedia");
-            try {
-                nomedia.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                    File nomedia = new File(picture, ".nomedia");
+                    try {
+                        nomedia.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-            InputStream inputStream;
+                    InputStream inputStream;
 
-            File fleks = null;
+                    File fleks = null;
 
-            try {
-                inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+                    try {
+                        inputStream = getActivity().getContentResolver().openInputStream(data.getData());
 
-                fleks = new File(picture, rowID + UselessUtils.getFileName(data.getData()));
+                        fleks = new File(picture, rowID + UselessUtils.getFileName(data.getData()));
 
-                copy(inputStream, fleks);
-            } catch (FileNotFoundException e) {
-                Log.e("notes_err", e.getLocalizedMessage());
-            } catch (IOException e) {
-                Log.e("notes_err", e.getLocalizedMessage());
-            }
+                        copy(inputStream, fleks);
+                    } catch (FileNotFoundException e) {
+                        Log.e("notes_err", e.getLocalizedMessage());
+                    } catch (IOException e) {
+                        Log.e("notes_err", e.getLocalizedMessage());
+                    }
 
-            Log.e("notes_err", "saved: " + fleks.getPath());
+                    Log.e("notes_err", "saved: " + fleks.getPath());
 
-            dao.updateNotePic(fleks.getPath(), rowID);
+                    dao.updateNotePic(fleks.getPath(), rowID);
 
-            pic.setVisibility(View.VISIBLE);
-            pic.setImageDrawable(Drawable.createFromPath(fleks.getPath()));
+                    dao.updateNoteTime(System.currentTimeMillis(), rowID);
 
-            dao.updateNoteTime(System.currentTimeMillis(), rowID);
+                    File finalFleks = fleks;
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Glide.with(activity).load(finalFleks.getPath()).apply(new RequestOptions().placeholder(new ColorDrawable(Color.WHITE))).into(pic);
+                                }
+                            }, 100);
+                        }
+                    });
+                }
+            }).start();
 
             pic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dao.updateNotePic(null, rowID);
-                    pic.setVisibility(View.GONE);
+                    if (doubleBackToExitPressedOnce) {
+                        dao.updateNotePic(null, rowID);
+                        pic.setVisibility(View.GONE);
 
-                    dao.updateNoteTime(System.currentTimeMillis(), rowID);
+                        dao.updateNoteTime(System.currentTimeMillis(), rowID);
+                        return;
+                    }
+
+                    doubleBackToExitPressedOnce = true;
+                    Toast.makeText(getActivity(), R.string.one_more_time_to_delete, Toast.LENGTH_SHORT).show();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            doubleBackToExitPressedOnce=false;
+                        }
+                    }, 1500);
                 }
             });
         }

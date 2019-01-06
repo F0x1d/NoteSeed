@@ -102,4 +102,5 @@
     <string name="change">Change</string>
     <string name="last_change">Last change was at </string>
     <string name="attach">Attach picture</string>
+    <string name="one_more_time_to_delete">Tap one more time to delete</string>
 </resources>
