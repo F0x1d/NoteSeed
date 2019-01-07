@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Users/admin/AppData/Local/Temp/Rar$EXa0.844/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/social/ic_notifications_active_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Users/admin/AppData/Local/Temp/Rar$EXa0.789/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_attach_file_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_notifications_active_black_24dp" />
+                            <entry key="color" value="ffffff" />
+                            <entry key="outputName" value="ic_attach_file_white_24dp" />
                             <entry key="sourceFile" value="C:\Users\admin" />
                           </map>
                         </option>

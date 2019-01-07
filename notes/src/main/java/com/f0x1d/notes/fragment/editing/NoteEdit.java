@@ -110,6 +110,20 @@ public class NoteEdit extends Fragment {
 
         setHasOptionsMenu(true);
 
+        if (getArguments() != null){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    titleStr = getArguments().getString("title");
+                    textStr = getArguments().getString("text");
+
+                    id = getArguments().getLong("id");
+                    id_str = String.valueOf(getArguments().getLong("id"));
+                    locked = getArguments().getInt("locked");
+                }
+            }).start();
+        }
+
         CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
 
             if (allowFormat){
@@ -127,6 +141,14 @@ public class NoteEdit extends Fragment {
             }
 
             toolbar.setTitle(getString(R.string.editing));
+
+            if (UselessUtils.ifCustomTheme()){
+                toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp), ThemesEngine.iconsColor));
+            } else if (UselessUtils.getBool("night", false)){
+                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_attach_file_white_24dp));
+            } else {
+                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp));
+            }
 
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
                 if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
@@ -223,18 +245,6 @@ public class NoteEdit extends Fragment {
         formatDao = App.getInstance().getDatabase().formatDao();
 
         if (getArguments() != null){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    titleStr = getArguments().getString("title");
-                    textStr = getArguments().getString("text");
-
-                    id = getArguments().getLong("id");
-                    id_str = String.valueOf(getArguments().getLong("id"));
-                    locked = getArguments().getInt("locked");
-                }
-            }).start();
-
             title.setText(getArguments().getString("title"));
             text.setText(getArguments().getString("text"));
 
