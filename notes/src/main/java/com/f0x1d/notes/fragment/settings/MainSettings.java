@@ -85,6 +85,15 @@ public class MainSettings extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.settings);
 
+        Preference about = findPreference("about");
+            about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new AboutSettings(), "themes").addToBackStack(null).commit();
+                    return false;
+                }
+            });
+
         Preference accent = findPreference("dayAccent");
         accent.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

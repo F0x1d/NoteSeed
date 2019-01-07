@@ -5,6 +5,9 @@
         <intent android:action="android.intent.action.VIEW" android:data="https://t.me/noteseed_app"/>
     </com.f0x1d.notes.view.preferences.MyPreference>
 
+    <com.f0x1d.notes.view.preferences.MyPreference
+        android:title="@string/about" android:key="about"/>
+
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/onscreen">
         <com.f0x1d.notes.view.preferences.MyPreference
             android:title="@string/theme" android:key="dayAccent"/>
@@ -32,29 +35,5 @@
                 android:title="@string/format" android:summary="@string/nestabilno" android:key="format"/>
             <com.f0x1d.notes.view.preferences.MyPreference
                 android:title="@string/clear_all" android:key="delete_all"/>
-    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
-
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/help_me">
-        <com.f0x1d.notes.view.preferences.MyPreference
-            android:title="@string/donate" android:key="donate">
-            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/noteseed_app" />
-        </com.f0x1d.notes.view.preferences.MyPreference>
-    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
-
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/links">
-        <com.f0x1d.notes.view.preferences.MyPreference android:title="@string/telegram">
-            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/f0x3d"/>
-        </com.f0x1d.notes.view.preferences.MyPreference>
-    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
-
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/thanks">
-        <com.f0x1d.notes.view.preferences.MyPreference
-            android:title="Emulond" android:summary="@string/icon_by_emulond">
-            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/Emulond" />
-        </com.f0x1d.notes.view.preferences.MyPreference>
-        <com.f0x1d.notes.view.preferences.MyPreference
-            android:title="murleek" android:summary="@string/murleek">
-            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/murleek" />
-        </com.f0x1d.notes.view.preferences.MyPreference>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 </PreferenceScreen>
