@@ -78,7 +78,7 @@ public class NoteAdd extends Fragment {
 
     boolean allowFormat;
 
-    boolean doubleBackToExitPressedOnce = false;
+    CenteredToolbar toolbar;
 
     @Override
     public void onAttach(Activity activity) {
@@ -90,7 +90,7 @@ public class NoteAdd extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.note_add, container, false);
 
-        CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
+        toolbar = v.findViewById(R.id.toolbar);
             toolbar.setTitle(getString(R.string.new_note));
 
         getActivity().setActionBar(toolbar);
@@ -103,6 +103,32 @@ public class NoteAdd extends Fragment {
             } else {
                 toolbar.inflateMenu(R.menu.edit_menu_no_format);
             }
+
+            if (UselessUtils.ifCustomTheme()){
+                toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp), ThemesEngine.iconsColor));
+            } else if (UselessUtils.getBool("night", false)){
+                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_attach_file_white_24dp));
+            } else {
+                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp));
+            }
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setItems(new String[]{getString(R.string.attach)}, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0:
+                                    openFile("image/*", 228, getActivity());
+                                    break;
+                            }
+                        }
+                    });
+                    builder.show();
+                }
+            });
         }
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
@@ -279,12 +305,6 @@ public class NoteAdd extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.copy:
-                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("note", text.getText().toString());
-                assert clipboard != null;
-                clipboard.setPrimaryClip(clip);
-                break;
             case R.id.clear:
                 text.setText("");
                 break;
@@ -414,9 +434,6 @@ public class NoteAdd extends Fragment {
                 } else {
                     Toast.makeText(getActivity(), R.string.format_error, Toast.LENGTH_SHORT).show();
                 }
-                break;
-            case R.id.attach:
-                openFile("image/*", 228, getActivity());
                 break;
         }
 

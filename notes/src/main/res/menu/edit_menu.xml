@@ -2,9 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="@string/copy"
-        android:id="@+id/copy"/>
-    <item
         android:id="@+id/lock"
         android:checkable="true"
         android:title="@string/lock"/>
@@ -20,9 +17,6 @@
     <item
         android:title="@string/notify"
         android:id="@+id/notify"/>
-    <item
-        android:title="@string/attach"
-        android:id="@+id/attach"/>
     <item
         android:title="@string/format"
         android:id="@+id/format">
