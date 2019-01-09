@@ -489,6 +489,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (items.get(position).locked == 1){
             holder.text.setText(Html.fromHtml("<i>" + activity.getString(R.string.blocked) + "</i>"));
+            holder.pic.setVisibility(View.GONE);
         }
 
         Date currentDate = new Date(items.get(position).edit_time);

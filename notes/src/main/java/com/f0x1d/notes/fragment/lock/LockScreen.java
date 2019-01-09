@@ -99,8 +99,7 @@ public class LockScreen extends Fragment {
             args.putString("text", getArguments().getString("text"));
 
             to_note = getArguments().getBoolean("to_note");
-        } catch (Exception e){
-        }
+        } catch (Exception e){}
 
         MyButton odin = view.findViewById(R.id.odin);
         MyButton dva = view.findViewById(R.id.dva);
@@ -415,6 +414,14 @@ public class LockScreen extends Fragment {
         public void onAuthenticationSucceeded(
                 FingerprintManager.AuthenticationResult result) {
 
+            Bundle args = new Bundle();
+            try {
+                args.putLong("id", getArguments().getLong("id"));
+                args.putInt("locked", getArguments().getInt("locked"));
+                args.putString("title", getArguments().getString("title"));
+                args.putString("text", getArguments().getString("text"));
+            } catch (Exception e){}
+
             try {
                 if (to_note){
 
@@ -422,11 +429,11 @@ public class LockScreen extends Fragment {
 
                     if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("in_folder_edit", false)){
                         getActivity().getFragmentManager().beginTransaction().replace(android.R.id.content, new Notes()).commit();
-                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NoteEdit(), "edit").addToBackStack(null).commit();
+                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, NoteEdit.newInstance(args), "edit").addToBackStack(null).commit();
                         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_edit", false).apply();
                     } else {
                         getActivity().getFragmentManager().beginTransaction().replace(android.R.id.content, new NotesInFolder()).commit();
-                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NoteEdit(), "edit").addToBackStack(null).commit();
+                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, NoteEdit.newInstance(args), "edit").addToBackStack(null).commit();
                         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_edit", false).apply();
                     }
                 } else {
