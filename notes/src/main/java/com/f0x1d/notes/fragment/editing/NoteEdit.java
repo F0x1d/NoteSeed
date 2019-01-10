@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
@@ -271,10 +272,12 @@ public class NoteEdit extends Fragment {
             } else {
                 pic.setVisibility(View.VISIBLE);
 
-                RequestOptions options = new RequestOptions();
-                    options.placeholder(new ColorDrawable(Color.WHITE));
+                RequestOptions options = new RequestOptions()
+                        .placeholder(new ColorDrawable(Color.WHITE))
+                        .dontTransform()
+                        .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
-                    Glide.with(activity).load(getPicRes()).apply(new RequestOptions().placeholder(new ColorDrawable(Color.WHITE))).into(pic);
+                    Glide.with(activity).load(getPicRes()).apply(options).into(pic);
 
 
                 Log.e("notes_err", "image set: " + getPicRes());

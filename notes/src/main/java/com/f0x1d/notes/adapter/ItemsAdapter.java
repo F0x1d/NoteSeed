@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.lock.LockScreen;
@@ -452,8 +453,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.title.setText(items.get(position).title);
 
         if (items.get(position).pic_res != null){
-            RequestOptions options = new RequestOptions();
-                options.placeholder(new ColorDrawable(Color.WHITE));
+            RequestOptions options = new RequestOptions()
+                    .placeholder(new ColorDrawable(Color.WHITE))
+                    .dontTransform()
+                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
             Glide.with(activity).load(items.get(position).pic_res).apply(options).into(holder.pic);
         } else {
