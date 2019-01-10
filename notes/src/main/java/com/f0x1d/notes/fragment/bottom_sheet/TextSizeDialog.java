@@ -12,6 +12,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class TextSizeDialog extends BottomSheetDialogFragment {
@@ -25,7 +27,9 @@ public class TextSizeDialog extends BottomSheetDialogFragment {
 
         LinearLayout layout = view.findViewById(R.id.background);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+        if (UselessUtils.ifCustomTheme()){
+            layout.setBackgroundColor(ThemesEngine.background);
+        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
             layout.setBackgroundColor(getActivity().getResources().getColor(R.color.statusbar));
         } else {
             layout.setBackgroundColor(Color.WHITE);

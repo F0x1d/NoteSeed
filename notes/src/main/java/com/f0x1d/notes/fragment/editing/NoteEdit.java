@@ -394,11 +394,9 @@ public class NoteEdit extends Fragment {
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
-                        dao.updateNoteTitle(title.getText().toString(), id);
-                        dao.updateNoteText(text.getText().toString(), id);
-                        dao.updateNoteTime(System.currentTimeMillis(), id);
-                    }
+                    dao.updateNoteTitle(title.getText().toString(), id);
+                    dao.updateNoteText(text.getText().toString(), id);
+                    dao.updateNoteTime(System.currentTimeMillis(), id);
 
                     getFragmentManager().popBackStack();
                 }

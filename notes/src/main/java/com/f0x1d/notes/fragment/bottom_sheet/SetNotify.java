@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -49,8 +50,6 @@ public class SetNotify extends BottomSheetDialogFragment {
     RelativeLayout choose_time;
     RelativeLayout choose_date;
 
-    LinearLayout background;
-
     ImageView time_icon;
     ImageView date_icon;
 
@@ -76,13 +75,21 @@ public class SetNotify extends BottomSheetDialogFragment {
 
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.set_notify, null);
 
+        LinearLayout layout = v.findViewById(R.id.background);
+
+        if (UselessUtils.ifCustomTheme()){
+            layout.setBackgroundColor(ThemesEngine.background);
+        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+            layout.setBackgroundColor(getActivity().getResources().getColor(R.color.statusbar));
+        } else {
+            layout.setBackgroundColor(Color.WHITE);
+        }
+
         choose_date = v.findViewById(R.id.choose_date_layout);
         choose_time = v.findViewById(R.id.choose_time_layout);
 
         time_icon = v.findViewById(R.id.time_icon);
         date_icon = v.findViewById(R.id.date_icon);
-
-        background = v.findViewById(R.id.background);
 
         time = v.findViewById(R.id.choose_time);
             choose_time.setOnClickListener(new View.OnClickListener() {
@@ -125,15 +132,10 @@ public class SetNotify extends BottomSheetDialogFragment {
             if (UselessUtils.getBool("night", false)){
                 ok.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
                 delete.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
-                background.setBackgroundColor(App.getContext().getResources().getColor(R.color.statusbar));
 
                 date_icon.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_date_range_white_24dp));
                 time_icon.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_access_time_white_24dp));
             }
-
-        if (UselessUtils.ifCustomTheme()){
-            background.setBackgroundColor(ThemesEngine.background);
-        }
 
         for (Notify notify : dao.getAll()) {
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0) == notify.to_id) {
