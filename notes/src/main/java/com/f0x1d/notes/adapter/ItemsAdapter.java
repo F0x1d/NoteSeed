@@ -96,7 +96,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return items.get(position).id;
     }
 
-    // specify the row layout file and click for each row
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == NOTE) {
@@ -130,7 +129,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             return new notifyViewHolder(view);
         } else {
-            throw new RuntimeException("The type has to be NOTE or FOLDER");
+            throw new RuntimeException("The type has to be NOTE or FOLDER or NOTIFY");
         }
     }
 
@@ -331,7 +330,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                    args.putString("folder_name", items.get(position).folder_name);
+                    args.putString("folder_name", getFolderNameFromDataBase(position));
 
                 PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("in_folder_back_stack", true).apply();
 

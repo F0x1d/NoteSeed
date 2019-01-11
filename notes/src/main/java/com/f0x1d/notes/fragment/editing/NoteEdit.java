@@ -31,7 +31,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -91,6 +93,9 @@ public class NoteEdit extends Fragment {
 
     CenteredToolbar toolbar;
 
+    ImageButton attach;
+    RelativeLayout attach_layout;
+
     @Override
     public void onAttach(Activity activity) {
         this.activity = (FragmentActivity) activity;
@@ -134,11 +139,11 @@ public class NoteEdit extends Fragment {
             }
 
         if (UselessUtils.ifCustomTheme()){
-            toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp), ThemesEngine.iconsColor));
+            toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
         } else if (UselessUtils.getBool("night", false)){
-            toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_attach_file_white_24dp));
+            toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_white_24dp));
         } else {
-            toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp));
+            toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
         }
 
             if (getArguments().getInt("locked") == 1){
@@ -215,18 +220,10 @@ public class NoteEdit extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         toolbar.setNavigationOnClickListener(v1 -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setItems(new String[]{getString(R.string.attach)}, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
-                        case 0:
-                            openFile("image/*", 228, getActivity());
-                            break;
-                    }
-                }
-            });
-            builder.show();
+            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", text.getText().toString())
+                    .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();
+            SetNotify notify = new SetNotify();
+            notify.show(activity.getSupportFragmentManager(), "TAG");
         });
 
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
@@ -240,6 +237,17 @@ public class NoteEdit extends Fragment {
         text = view.findViewById(R.id.edit_text);
             text.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));
         pic = view.findViewById(R.id.picture);
+
+        attach = view.findViewById(R.id.attach);
+        attach_layout = view.findViewById(R.id.attach_layout);
+
+        if (UselessUtils.ifCustomTheme()){
+            attach.setImageDrawable(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp), ThemesEngine.iconsColor));
+        } else if (UselessUtils.getBool("night", false)){
+            attach.setImageDrawable(getActivity().getDrawable(R.drawable.ic_attach_file_white_24dp));
+        } else {
+            attach.setImageDrawable(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp));
+        }
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
@@ -386,7 +394,23 @@ public class NoteEdit extends Fragment {
             }
         });
 
-        FloatingActionButton save = view.findViewById(R.id.force_save);
+        attach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFile("image/*", 228, getActivity());
+            }
+        });
+
+        ImageButton save = view.findViewById(R.id.force_save);
+
+        if (UselessUtils.ifCustomTheme()){
+            save.setImageDrawable(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_done_black_24dp), ThemesEngine.iconsColor));
+        } else if (UselessUtils.getBool("night", false)){
+            save.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_white_24dp));
+        } else {
+            save.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_black_24dp));
+        }
+
             if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
                 save.setVisibility(View.GONE);
             }
@@ -452,12 +476,6 @@ public class NoteEdit extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                 }
 
-                break;
-            case R.id.notify:
-                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", text.getText().toString())
-                        .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();
-                SetNotify notify = new SetNotify();
-                notify.show(activity.getSupportFragmentManager(), "TAG");
                 break;
             case R.id.clear_format:
                 if (title.hasSelection()){

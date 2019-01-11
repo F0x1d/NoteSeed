@@ -30,7 +30,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -80,6 +82,9 @@ public class NoteAdd extends Fragment {
 
     CenteredToolbar toolbar;
 
+    ImageButton attach;
+    RelativeLayout attach_layout;
+
     @Override
     public void onAttach(Activity activity) {
         this.activity = (FragmentActivity) activity;
@@ -105,28 +110,20 @@ public class NoteAdd extends Fragment {
             }
 
             if (UselessUtils.ifCustomTheme()){
-                toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp), ThemesEngine.iconsColor));
+                toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
             } else if (UselessUtils.getBool("night", false)){
-                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_attach_file_white_24dp));
+                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_white_24dp));
             } else {
-                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp));
+                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
             }
 
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setItems(new String[]{getString(R.string.attach)}, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
-                                case 0:
-                                    openFile("image/*", 228, getActivity());
-                                    break;
-                            }
-                        }
-                    });
-                    builder.show();
+                    PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", text.getText().toString())
+                            .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();
+                    SetNotify notify = new SetNotify();
+                    notify.show(activity.getSupportFragmentManager(), "TAG");
                 }
             });
         }
@@ -192,6 +189,17 @@ public class NoteAdd extends Fragment {
         pic = view.findViewById(R.id.picture);
             pic.setVisibility(View.GONE);
 
+        attach = view.findViewById(R.id.attach);
+        attach_layout = view.findViewById(R.id.attach_layout);
+
+        if (UselessUtils.ifCustomTheme()){
+            attach.setImageDrawable(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp), ThemesEngine.iconsColor));
+        } else if (UselessUtils.getBool("night", false)){
+            attach.setImageDrawable(getActivity().getDrawable(R.drawable.ic_attach_file_white_24dp));
+        } else {
+            attach.setImageDrawable(getActivity().getDrawable(R.drawable.ic_attach_file_black_24dp));
+        }
+
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
                 title.setTextColor(Color.WHITE);
@@ -213,6 +221,15 @@ public class NoteAdd extends Fragment {
         if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
             rowID = dao.insert(new NoteOrFolder(generateName(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
                     0, null, 0, "", System.currentTimeMillis(), null));
+
+            attach.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openFile("image/*", 228, getActivity());
+                }
+            });
+        } else {
+            attach_layout.setVisibility(View.GONE);
         }
 
 
@@ -286,7 +303,16 @@ public class NoteAdd extends Fragment {
             }
         });
 
-        FloatingActionButton save = view.findViewById(R.id.force_save);
+        ImageButton save = view.findViewById(R.id.force_save);
+
+        if (UselessUtils.ifCustomTheme()){
+            save.setImageDrawable(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_done_black_24dp), ThemesEngine.iconsColor));
+        } else if (UselessUtils.getBool("night", false)){
+            save.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_white_24dp));
+        } else {
+            save.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_black_24dp));
+        }
+
             if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
                 save.setVisibility(View.GONE);
             }
@@ -297,7 +323,8 @@ public class NoteAdd extends Fragment {
                 rowID = dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
                         0, null, 0, "", System.currentTimeMillis(), null));
 
-                    getFragmentManager().popBackStack();
+                getFragmentManager().popBackStack();
+
                 }
             });
     }
@@ -348,13 +375,6 @@ public class NoteAdd extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.notify:
-                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", text.getText().toString())
-                        .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();
-                SetNotify notify = new SetNotify();
-                notify.show(activity.getSupportFragmentManager(), "TAG");
-                break;
-
             case R.id.clear_format:
                 if (title.hasSelection()){
                     for (Format format : formatDao.getAll()) {
