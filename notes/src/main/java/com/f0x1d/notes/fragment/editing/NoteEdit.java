@@ -4,11 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.WallpaperManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Entity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -16,7 +13,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
@@ -49,11 +45,9 @@ import com.f0x1d.notes.db.entities.Format;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -62,12 +56,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
 
 public class NoteEdit extends Fragment {
 
@@ -110,7 +101,7 @@ public class NoteEdit extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.note_add, container, false);
+        View v = inflater.inflate(R.layout.notes_edit, container, false);
 
         allowFormat = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("format", false);
 
@@ -397,7 +388,27 @@ public class NoteEdit extends Fragment {
         attach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFile("image/*", 228, getActivity());
+                String[] items = null;
+
+                if (getPicRes() != null){
+                    items = new String[]{getString(R.string.edit_pic)};
+                } else {
+                    items = new String[]{getString(R.string.attach)};
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0:
+                                    openFile("image/*", 228, getActivity());
+                                    break;
+                            }
+                        }
+                    });
+
+                    builder.show();
             }
         });
 
@@ -431,7 +442,13 @@ public class NoteEdit extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.clear:
+                title.setText("");
                 text.setText("");
+
+                dao.updateNotePic(null, id);
+                pic.setVisibility(View.GONE);
+
+                dao.updateNoteTime(System.currentTimeMillis(), id);
                 break;
             case R.id.speak:
                 mTTS.speak(text.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);

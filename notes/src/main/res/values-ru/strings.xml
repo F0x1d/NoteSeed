@@ -103,4 +103,7 @@
     <string name="last_change">Последнее изменение было в </string>
     <string name="attach">Прикрепить картинку</string>
     <string name="one_more_time_to_delete">Нажмите ещё раз, чтобы удалить</string>
+    <string name="edit_pic">Изменить картинку</string>
+    <string name="pictures">Картинки</string>
+    <string name="picture">Картинка</string>
 </resources>

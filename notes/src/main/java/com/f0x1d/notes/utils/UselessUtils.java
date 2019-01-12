@@ -2,6 +2,7 @@ package com.f0x1d.notes.utils;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
@@ -9,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,6 +27,8 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
 public class UselessUtils {
+
+    public static char[] lol = {'c', 'o', 'm', '.', 'e', 'n', 'c', 'r', 'y', 'p', 't', '.', 'p', 'a', 's', 's', 'w', 'o', 'r', 'd'};
 
     public static boolean getBool(String key, boolean defValue){
         return PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean(key, defValue);
@@ -97,6 +101,18 @@ public class UselessUtils {
         Drawable wrappedDrawable = DrawableCompat.wrap(d);
         DrawableCompat.setTint(wrappedDrawable, color);
         return wrappedDrawable;
+    }
+
+    public static void showKeyboard(EditText mEtSearch, Context context) {
+        mEtSearch.requestFocus();
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
+
+    public static void hideSoftKeyboard(EditText mEtSearch, Context context) {
+        mEtSearch.clearFocus();
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mEtSearch.getWindowToken(), 0);
     }
 
     public static void setCursorColor(EditText view, @ColorInt int color) {

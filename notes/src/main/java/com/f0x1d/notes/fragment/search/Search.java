@@ -106,9 +106,12 @@ public class Search extends Fragment {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    UselessUtils.hideSoftKeyboard(text, getActivity());
                     getFragmentManager().popBackStack();
                 }
             });
+
+        UselessUtils.showKeyboard(text, getActivity());
 
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in);
         animation.setDuration(400);

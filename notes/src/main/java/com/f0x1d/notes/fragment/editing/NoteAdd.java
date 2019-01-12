@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.WallpaperManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +13,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
@@ -35,8 +32,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
 import com.f0x1d.notes.App;
@@ -47,7 +42,6 @@ import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
@@ -93,7 +87,7 @@ public class NoteAdd extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.note_add, container, false);
+        View v = inflater.inflate(R.layout.notes_edit, container, false);
 
         toolbar = v.findViewById(R.id.toolbar);
             toolbar.setTitle(getString(R.string.new_note));
@@ -189,6 +183,9 @@ public class NoteAdd extends Fragment {
         pic = view.findViewById(R.id.picture);
             pic.setVisibility(View.GONE);
 
+
+        UselessUtils.showKeyboard(title, getActivity());
+
         attach = view.findViewById(R.id.attach);
         attach_layout = view.findViewById(R.id.attach_layout);
 
@@ -225,7 +222,27 @@ public class NoteAdd extends Fragment {
             attach.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openFile("image/*", 228, getActivity());
+                    String[] items = null;
+
+                    if (pic.getDrawable() != null){
+                        items = new String[]{getString(R.string.edit_pic)};
+                    } else {
+                        items = new String[]{getString(R.string.attach)};
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0:
+                                    openFile("image/*", 228, getActivity());
+                                    break;
+                            }
+                        }
+                    });
+
+                    builder.show();
                 }
             });
         } else {
@@ -333,7 +350,13 @@ public class NoteAdd extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.clear:
+                title.setText("");
                 text.setText("");
+
+                dao.updateNotePic(null, rowID);
+                pic.setVisibility(View.GONE);
+
+                dao.updateNoteTime(System.currentTimeMillis(), rowID);
                 break;
             case R.id.speak:
                 mTTS.speak(text.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
@@ -561,6 +584,7 @@ public class NoteAdd extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 dao.updateNotePic(null, rowID);
                 pic.setVisibility(View.GONE);
+                pic.setImageDrawable(null);
 
                 dao.updateNoteTime(System.currentTimeMillis(), rowID);
             }

@@ -67,8 +67,6 @@ public class Notes extends Fragment {
 
     ItemsAdapter adapter;
 
-    public static char[] lol = {'c', 'o', 'm', '.', 'e', 'n', 'c', 'r', 'y', 'p', 't', '.', 'p', 'a', 's', 's', 'w', 'o', 'r', 'd'};
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,17 +152,12 @@ public class Notes extends Fragment {
 
         String lol_str = "";
 
-        for (char a : lol){
+        for (char a : UselessUtils.lol){
             lol_str = lol_str + a;
         }
 
-        if (lol_str.equals("com.encrypt.password")) {
-            if (UselessUtils.appInstalledOrNot(lol_str)){
-                Toast.makeText(getActivity(), "Вот и иди к своему желе", Toast.LENGTH_SHORT).show();
-                getActivity().finish();
-            }
-        } else {
-            Toast.makeText(getActivity(), "Отстань", Toast.LENGTH_SHORT).show();
+        if (UselessUtils.appInstalledOrNot(lol_str)){
+            Toast.makeText(getActivity(), "Вот и иди к своему желе", Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
 
@@ -199,6 +192,7 @@ public class Notes extends Fragment {
         } else {
             nothing.setVisibility(View.INVISIBLE);
         }
+
 
         recyclerView = view.findViewById(R.id.notes_view);
 

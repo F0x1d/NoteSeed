@@ -77,6 +77,7 @@
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="AlertDialog.AppTheme.Light" parent="ThemeOverlay.AppCompat.Dialog.Alert">
