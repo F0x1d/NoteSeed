@@ -96,7 +96,6 @@ public class NoteAdd extends Fragment {
 
         allowFormat = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("format", false);
 
-        if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
             if (allowFormat){
                 toolbar.inflateMenu(R.menu.edit_menu);
             } else {
@@ -120,7 +119,6 @@ public class NoteAdd extends Fragment {
                     notify.show(activity.getSupportFragmentManager(), "TAG");
                 }
             });
-        }
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
@@ -183,7 +181,6 @@ public class NoteAdd extends Fragment {
         pic = view.findViewById(R.id.picture);
             pic.setVisibility(View.GONE);
 
-
         UselessUtils.showKeyboard(title, getActivity());
 
         attach = view.findViewById(R.id.attach);
@@ -208,6 +205,7 @@ public class NoteAdd extends Fragment {
         }
 
         Typeface face;
+
         if (UselessUtils.getBool("mono", false)){
             face = Typeface.MONOSPACE;
 
@@ -215,7 +213,6 @@ public class NoteAdd extends Fragment {
             text.setTypeface(face);
         }
 
-        if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
             rowID = dao.insert(new NoteOrFolder(generateName(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
                     0, null, 0, "", System.currentTimeMillis(), null));
 
@@ -245,9 +242,6 @@ public class NoteAdd extends Fragment {
                     builder.show();
                 }
             });
-        } else {
-            attach_layout.setVisibility(View.GONE);
-        }
 
 
         title.addTextChangedListener(new TextWatcher() {
@@ -269,11 +263,9 @@ public class NoteAdd extends Fragment {
                     }
                 }
 
-                if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
                     dao.updateNoteTitle(title.getText().toString(), rowID);
                     dao.updateNoteText(text.getText().toString(), rowID);
                     dao.updateNoteTime(System.currentTimeMillis(), rowID);
-                }
             }
         });
 
@@ -296,11 +288,9 @@ public class NoteAdd extends Fragment {
                     }
                 }
 
-                if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
                     dao.updateNoteTitle(title.getText().toString(), rowID);
                     dao.updateNoteText(text.getText().toString(), rowID);
                     dao.updateNoteTime(System.currentTimeMillis(), rowID);
-                }
             }
         });
 
@@ -330,15 +320,12 @@ public class NoteAdd extends Fragment {
             save.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_black_24dp));
         }
 
-            if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
-                save.setVisibility(View.GONE);
-            }
-
-            save.setOnClickListener(new View.OnClickListener() {
+        save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rowID = dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
-                        0, null, 0, "", System.currentTimeMillis(), null));
+                dao.updateNoteTitle(title.getText().toString(), rowID);
+                dao.updateNoteText(text.getText().toString(), rowID);
+                dao.updateNoteTime(System.currentTimeMillis(), rowID);
 
                 getFragmentManager().popBackStack();
 
@@ -355,6 +342,7 @@ public class NoteAdd extends Fragment {
 
                 dao.updateNotePic(null, rowID);
                 pic.setVisibility(View.GONE);
+                pic.setImageDrawable(null);
 
                 dao.updateNoteTime(System.currentTimeMillis(), rowID);
                 break;
@@ -372,7 +360,7 @@ public class NoteAdd extends Fragment {
                     writer.append(text.getText().toString());
                     writer.flush();
                     writer.close();
-                    Toast.makeText(getActivity(), getString(R.string.saved) + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.saved) + " " + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
 
                     if (text.getText().toString().toLowerCase().contains("желе") || title.getText().toString().toLowerCase().contains("желе")){
                         Snackbar.make(getView(), "Желе лох", Snackbar.LENGTH_SHORT).show();

@@ -267,7 +267,6 @@ public class NoteEdit extends Fragment {
 
             if (getPicRes() == null){
                 pic.setVisibility(View.GONE);
-                Log.e("notes_err", "image not set: " + getPicRes());
             } else {
                 pic.setVisibility(View.VISIBLE);
 
@@ -278,8 +277,6 @@ public class NoteEdit extends Fragment {
 
                     Glide.with(activity).load(getPicRes()).apply(options).into(pic);
 
-
-                Log.e("notes_err", "image set: " + getPicRes());
                 pic.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
@@ -335,11 +332,9 @@ public class NoteEdit extends Fragment {
                         }
                     }
 
-                    if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
-                        dao.updateNoteTitle(title.getText().toString(), id);
-                        dao.updateNoteText(text.getText().toString(), id);
-                        dao.updateNoteTime(System.currentTimeMillis(), id);
-                    }
+                    dao.updateNoteTitle(title.getText().toString(), id);
+                    dao.updateNoteText(text.getText().toString(), id);
+                    dao.updateNoteTime(System.currentTimeMillis(), id);
                 }
             });
 
@@ -361,11 +356,9 @@ public class NoteEdit extends Fragment {
                         }
                     }
 
-                    if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
-                        dao.updateNoteTitle(title.getText().toString(), id);
-                        dao.updateNoteText(text.getText().toString(), id);
-                        dao.updateNoteTime(System.currentTimeMillis(), id);
-                    }
+                    dao.updateNoteTitle(title.getText().toString(), id);
+                    dao.updateNoteText(text.getText().toString(), id);
+                    dao.updateNoteTime(System.currentTimeMillis(), id);
                 }
             });
 
@@ -422,10 +415,6 @@ public class NoteEdit extends Fragment {
             save.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_black_24dp));
         }
 
-            if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("force_save", false)){
-                save.setVisibility(View.GONE);
-            }
-
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -464,7 +453,7 @@ public class NoteEdit extends Fragment {
                     writer.append(text.getText().toString());
                     writer.flush();
                     writer.close();
-                    Toast.makeText(getActivity(), getString(R.string.saved) + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.saved) + " " + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
 
                     if (text.getText().toString().toLowerCase().contains("желе") || title.getText().toString().toLowerCase().contains("желе")){
                         Snackbar.make(getView(), "Желе лох", Snackbar.LENGTH_SHORT).show();
