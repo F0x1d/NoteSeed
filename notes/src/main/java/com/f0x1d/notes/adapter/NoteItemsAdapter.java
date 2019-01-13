@@ -122,7 +122,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         }
                     }
 
-                    dao.updateElementText(s.toString(), noteItems.get(position).id);
+                    //dao.updateElementText(s.toString(), noteItems.get(position).id);
+                    dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
                 } catch (Exception e){}
             }
@@ -132,14 +133,17 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         Log.e("notes_err", "text setup: " + position);
 
+        holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
+
+        Typeface face;
+        if (UselessUtils.getBool("mono", false)){
+            face = Typeface.MONOSPACE;
+
+            holder.editText.setTypeface(face);
+        }
+
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.id == noteItems.get(position).id){
-                Typeface face;
-                if (UselessUtils.getBool("mono", false)){
-                    face = Typeface.MONOSPACE;
-
-                    holder.editText.setTypeface(face);
-                }
 
                 holder.editText.setText(noteItem.text);
 
@@ -194,13 +198,23 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 for (NoteItem noteItem : dao.getAll()) {
                     if (noteItem.to_id == noteItems.get(pos).to_id && noteItem.position - 1 == noteItems.get(pos).position){
-                        dao.updateElementPos(noteItems.get(pos).position, noteItem.id);
+                        //dao.updateElementPos(noteItems.get(pos).position, noteItem.id);
+
+                        int pos = noteItem.position - 2;
+                        NoteItem elem = noteItems.get(pos);
+
+                        String text = elem.text + "\n" + noteItem.text;
+
+                        dao.updateElementText(text, elem.id);
+                        dao.deleteItem(getItemId(noteItem.position));
+                        noteItems.remove(noteItem.position);
+                        notifyDataSetChanged();
                     }
                 }
 
                 dao.deleteItem(getItemId(pos));
                 noteItems.remove(pos);
-                notifyItemRemoved(pos);
+                notifyDataSetChanged();
             }
         });
 

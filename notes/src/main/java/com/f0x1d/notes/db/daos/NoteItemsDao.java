@@ -23,6 +23,9 @@ public interface NoteItemsDao {
     @Query("UPDATE NoteItem SET text=:text WHERE id = :id")
     void updateElementText(String text, long id);
 
+    @Query("UPDATE noteitem SET text=:text WHERE to_id = :to_id AND position = :position")
+    void updateElementTextByPos(String text, long to_id, int position);
+
     @Query("UPDATE NoteOrFolder SET edit_time=:edit_time WHERE id = :id")
     void updateNoteTime(long edit_time, long id);
 
