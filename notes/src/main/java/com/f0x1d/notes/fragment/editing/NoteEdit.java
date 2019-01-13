@@ -238,7 +238,7 @@ public class NoteEdit extends Fragment {
             }
         }
 
-        last_pos = noteItems.size();
+        last_pos = noteItems.size() - 1;
 
         NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity());
 

@@ -29,6 +29,7 @@ import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.view.theming.MyEditText;
 
 import java.util.List;
 
@@ -127,7 +128,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         };
 
-        holder.editText.removeTextChangedListener(textWatcher);
+        holder.editText.clearTextChangedListeners();
 
         Log.e("notes_err", "text setup: " + position);
 
@@ -162,8 +163,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (holder.getItemViewType() == TEXT){
             textViewHolder textViewHolder = (NoteItemsAdapter.textViewHolder) holder;
-
-            textViewHolder.editText.removeTextChangedListener(textWatcher);
+            textViewHolder.editText.clearTextChangedListeners();
         }
     }
 
@@ -246,7 +246,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     class textViewHolder extends RecyclerView.ViewHolder {
 
-        public EditText editText;
+        MyEditText editText;
 
         public textViewHolder(@NonNull View itemView) {
             super(itemView);
