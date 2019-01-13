@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -102,7 +103,22 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.id == noteItems.get(position).id){
+                Typeface face;
+                if (UselessUtils.getBool("mono", false)){
+                    face = Typeface.MONOSPACE;
+
+                    holder.editText.setTypeface(face);
+                }
+
                 holder.editText.setText(noteItem.text);
+
+                if (PreferenceManager.getDefaultSharedPreferences(activity).getInt("fon", 0) == 1){
+                    if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("dark_fon", false)){
+                        holder.editText.setTextColor(Color.WHITE);
+                    } else {
+                        holder.editText.setTextColor(Color.BLACK);
+                    }
+                }
             }
         }
 
@@ -120,9 +136,15 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void afterTextChanged(Editable s) {
                 try {
+                    if (s.toString().length() == 0){
+                        if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("dark_fon", false)){
+                            holder.editText.setHintTextColor(Color.GRAY);
+                        }
+                    }
+
                     dao.updateElementText(s.toString(), noteItems.get(position).id);
+                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
                 } catch (Exception e){}
-                dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
             }
         });
 

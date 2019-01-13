@@ -162,11 +162,11 @@ public class MainActivity extends AppCompatActivity {
                 super.onBackPressed();
             }
 
-            if (edit != null && edit.isVisible()){
+            /*if (edit != null && edit.isVisible()){
                 //getFragmentManager().beginTransaction().remove(edit).commit();
                 getFragmentManager().popBackStack();
                 return;
-            }
+            }*/
 
             if (getFragmentManager().getBackStackEntryCount() == 0){
                 clear_back_stack(MainActivity.this);
