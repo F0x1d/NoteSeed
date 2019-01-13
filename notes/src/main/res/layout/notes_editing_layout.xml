@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.f0x1d.notes.view.CenteredToolbar
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar"
+        android:layout_height="wrap_content">
+    </com.f0x1d.notes.view.CenteredToolbar>
+
+    <com.f0x1d.notes.view.theming.MyEditText
+        android:id="@+id/edit_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@null"
+        android:hint="@string/title"
+        android:inputType="text|textCapSentences|textAutoCorrect|textMultiLine"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_below="@id/edit_title"
+        android:id="@+id/recyclerView"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+
+</RelativeLayout>

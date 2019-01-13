@@ -37,6 +37,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
+import com.f0x1d.notes.db.daos.NoteItemsDao;
+import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.main.Notes;
@@ -451,47 +453,27 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         holder.title.setText(items.get(position).title);
 
-        if (items.get(position).pic_res != null){
-            RequestOptions options = new RequestOptions()
-                    .placeholder(new ColorDrawable(Color.WHITE))
-                    .dontTransform()
-                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
-
-            Glide.with(activity).load(items.get(position).pic_res).apply(options).into(holder.pic);
-        } else {
-            holder.pic.setVisibility(View.GONE);
-        }
-
-        boolean oneLine;
-
-        if (Pattern.compile("\\r?\\n").matcher(items.get(position).text).find()){
-            oneLine = false;
-        } else {
-            oneLine = true;
-        }
-
-        for (String retval : items.get(position).text.split("\\r?\\n")) {
-            if (oneLine){
-                holder.text.setText(retval);
-            } else {
-                holder.text.setText(retval + "\n...");
-            }
-            break;
-        }
-
         if (items.get(position).pinned == 1){
             holder.pinned.setVisibility(View.VISIBLE);
         } else {
             holder.pinned.setVisibility(View.INVISIBLE);
         }
 
-        if (items.get(position).text.isEmpty()){
+        NoteItemsDao dao = App.getInstance().getDatabase().noteItemsDao();
+        for (NoteItem noteItem : dao.getAll()) {
+            if (noteItem.to_id == items.get(position).id){
+                if (noteItem.position == 0){
+                    holder.text.setText(noteItem.text);
+                }
+            }
+        }
+
+        if (holder.text.getText().toString().equals("text")){
             holder.text.setText(Html.fromHtml("<i>" + activity.getString(R.string.empty_note) + "</i>"));
         }
 
         if (items.get(position).locked == 1){
             holder.text.setText(Html.fromHtml("<i>" + activity.getString(R.string.blocked) + "</i>"));
-            holder.pic.setVisibility(View.GONE);
         }
 
         Date currentDate = new Date(items.get(position).edit_time);
@@ -514,7 +496,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     args.putLong("id", items.get(position).id);
                     args.putInt("locked", items.get(position).locked);
                     args.putString("title", items.get(position).title);
-                    args.putString("text", items.get(position).text);
+                    //args.putString("text", items.get(position).text);
 
                             if (!String.valueOf(items.get(position).in_folder_id).equals("def")){
                                 PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("in_folder_edit", true).apply();
@@ -528,7 +510,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                         lockargs.putLong("id", items.get(position).id);
                                         lockargs.putInt("locked", items.get(position).locked);
                                         lockargs.putString("title", items.get(position).title);
-                                        lockargs.putString("text", items.get(position).text);
+                                        //lockargs.putString("text", items.get(position).text);
                                         lockargs.putBoolean("to_note", true);
 
                                     activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, LockScreen.newInstance(lockargs), "lock").addToBackStack(null).commit();
@@ -586,7 +568,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setView(v);
 
-                        AlertDialog dialog1337 =  builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        AlertDialog dialog1337 = builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog228, int which) {
                                 dao.updateNoteTitle(title.getText().toString(), items.get(position).id);
@@ -935,7 +917,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         CardView note_card;
         ImageView pinned;
         TextView time;
-        ImageView pic;
 
         noteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -945,7 +926,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             text = itemView.findViewById(R.id.textView_text);
             pinned = itemView.findViewById(R.id.pinned);
             time = itemView.findViewById(R.id.time);
-            pic = itemView.findViewById(R.id.picture);
         }
     }
 

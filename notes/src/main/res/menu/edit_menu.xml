@@ -9,25 +9,6 @@
         android:title="@string/clear"
         android:id="@+id/clear"/>
     <item
-        android:title="@string/speak"
-        android:id="@+id/speak"/>
-    <item
-        android:title="@string/export"
-        android:id="@+id/export"/>
-    <item
-        android:title="@string/format"
-        android:id="@+id/format">
-
-        <menu>
-            <item
-                android:title="@string/no_format"
-                android:id="@+id/clear_format"/>
-            <item
-                android:title="@string/bold"
-                android:id="@+id/bold"/>
-            <item
-                android:title="@string/italic"
-                android:id="@+id/italic"/>
-        </menu>
-    </item>
+        android:title="@string/attach"
+        android:id="@+id/attach"/>
 </menu>

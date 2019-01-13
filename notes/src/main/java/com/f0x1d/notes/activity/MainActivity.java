@@ -155,10 +155,17 @@ public class MainActivity extends AppCompatActivity {
             getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
         } else {
             Fragment notes = getFragmentManager().findFragmentByTag("notes");
+            Fragment edit = getFragmentManager().findFragmentByTag("edit");
 
             if (notes != null && notes.isVisible()){
                 clear_back_stack(MainActivity.this);
                 super.onBackPressed();
+            }
+
+            if (edit != null && edit.isVisible()){
+                //getFragmentManager().beginTransaction().remove(edit).commit();
+                getFragmentManager().popBackStack();
+                return;
             }
 
             if (getFragmentManager().getBackStackEntryCount() == 0){

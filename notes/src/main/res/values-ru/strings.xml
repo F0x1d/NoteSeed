@@ -101,7 +101,8 @@
     <string name="restore_color">Вернуть стандартный цвет</string>
     <string name="change">Изменить</string>
     <string name="last_change">Последнее изменение было в </string>
-    <string name="attach">Прикрепить картинку</string>
+    <string name="attach">Прикрепить</string>
+    <string name="pic">Картинку</string>
     <string name="one_more_time_to_delete">Нажмите ещё раз, чтобы удалить</string>
     <string name="edit_pic">Изменить картинку</string>
     <string name="pictures">Картинки</string>

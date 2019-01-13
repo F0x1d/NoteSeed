@@ -101,7 +101,8 @@
     <string name="restore_color">Restore color</string>
     <string name="change">Change</string>
     <string name="last_change">Last change was at </string>
-    <string name="attach">Attach picture</string>
+    <string name="attach">Attach</string>
+    <string name="pic">Picture</string>
     <string name="edit_pic">Change picture</string>
     <string name="pictures">Pictures</string>
     <string name="picture">Picture</string>

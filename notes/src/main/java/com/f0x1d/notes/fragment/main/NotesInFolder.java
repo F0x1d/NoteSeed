@@ -318,7 +318,7 @@ public class NotesInFolder extends Fragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 2, null, 0, "", System.currentTimeMillis(), null));
+                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 2, null, 0, "", System.currentTimeMillis()));
                 UselessUtils.replaceNoBackStack(getActivity(), new NotesInFolder(), "in_folder");
             }
         });
@@ -370,7 +370,7 @@ public class NotesInFolder extends Fragment {
                 }
 
                 if (create){
-                    dao.insert(new NoteOrFolder(null, null, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 1, text.getText().toString(), 0, "", 0, null));
+                    dao.insert(new NoteOrFolder(null, null, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 1, text.getText().toString(), 0, "", 0));
                     UselessUtils.replace(getActivity(), new NotesInFolder(), "in_folder");
                 }
             }
@@ -477,7 +477,7 @@ public class NotesInFolder extends Fragment {
                     Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                dao.insert(new NoteOrFolder(title, text, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 0, null, 0, "", System.currentTimeMillis(), null));
+                dao.insert(new NoteOrFolder(title, text, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 0, null, 0, "", System.currentTimeMillis()));
                 UselessUtils.replaceNoBackStack(getActivity(), new NotesInFolder(), "in_folder");
             }
         }
