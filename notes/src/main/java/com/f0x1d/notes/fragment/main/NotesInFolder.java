@@ -285,13 +285,13 @@ public class NotesInFolder extends Fragment {
             }
         });
 
-        fab.setOnLongClickListener(new View.OnLongClickListener() {
+        /*fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                openFile("*/*", 228, getActivity());
+                openFile("", 228, getActivity());
                 return false;
             }
-        });
+        });*/
 
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override

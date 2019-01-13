@@ -161,7 +161,7 @@ public class NoteAdd extends Fragment {
 
         noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
 
-        noteItemsDao.insert(new NoteItem(0, rowID, "", null, 0));
+        noteItemsDao.insert(new NoteItem(rowID, "", null, 0));
         last_pos = 0;
 
         setHasOptionsMenu(true);
@@ -375,17 +375,21 @@ public class NoteAdd extends Fragment {
 
                     Log.e("notes_err", "saved: " + fleks.getPath());
 
-                    last_pos = last_pos + 1;
-                    NoteItem noteItem = new NoteItem(0, rowID, null, fleks.getPath(), last_pos);
-                    noteItems.add(last_pos, noteItem);
-                    noteItemsDao.insert(noteItem);
+                    try {
+                        last_pos = last_pos + 1;
+                        NoteItem noteItem = new NoteItem(rowID, null, fleks.getPath(), last_pos);
+                        noteItems.add(last_pos, noteItem);
+                        noteItemsDao.insert(noteItem);
 
-                    last_pos = last_pos + 1;
-                    NoteItem noteItem2 = new NoteItem(0, rowID, "", null, last_pos);
-                    noteItems.add(last_pos, noteItem2);
-                    noteItemsDao.insert(noteItem2);
+                        last_pos = last_pos + 1;
+                        NoteItem noteItem2 = new NoteItem(rowID, "", null, last_pos);
+                        noteItems.add(last_pos, noteItem2);
+                        noteItemsDao.insert(noteItem2);
 
-                    Log.e("notes_err", "added to: " + noteItem.position);
+                        Log.e("notes_err", "added to: " + noteItem2.position);
+                    } catch (IndexOutOfBoundsException e){
+                        Log.e("notes_err", e.getLocalizedMessage());
+                    }
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override

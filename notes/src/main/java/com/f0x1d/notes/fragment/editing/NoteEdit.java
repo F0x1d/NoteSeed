@@ -240,7 +240,7 @@ public class NoteEdit extends Fragment {
             }
         }
 
-        if (noteItems.size() == 0){
+        /*if (noteItems.size() == 0){
             for (NoteItem item : noteItemsDao.getAll()) {
                 if (item.to_id == id){
                     add(item.position, item);
@@ -248,7 +248,7 @@ public class NoteEdit extends Fragment {
                     Log.e("notes_err", "added something to: " + last_pos);
                 }
             }
-        }
+        }*/
 
         NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity());
 
@@ -450,12 +450,12 @@ public class NoteEdit extends Fragment {
 
                     try {
                         last_pos = last_pos + 1;
-                        NoteItem noteItem = new NoteItem(0, id, null, fleks.getPath(), last_pos);
+                        NoteItem noteItem = new NoteItem(id, null, fleks.getPath(), last_pos);
                         noteItems.add(last_pos, noteItem);
                         noteItemsDao.insert(noteItem);
 
                         last_pos = last_pos + 1;
-                        NoteItem noteItem2 = new NoteItem(0, id, "", null, last_pos);
+                        NoteItem noteItem2 = new NoteItem(id, "", null, last_pos);
                         noteItems.add(last_pos, noteItem2);
                         noteItemsDao.insert(noteItem2);
 
