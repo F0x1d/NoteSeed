@@ -19,7 +19,9 @@ import android.widget.ImageButton;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.adapter.ItemsAdapter;
+import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
+import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -39,6 +41,7 @@ public class Search extends Fragment {
     static List<NoteOrFolder> searchedList;
 
     NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
+    NoteItemsDao noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -142,8 +145,22 @@ public class Search extends Fragment {
                                 searchedList.add(menuItem);
                             }
                         } else {
-                            if (menuItem.text.toLowerCase().contains(s.toString().toLowerCase()) || menuItem.title.toLowerCase().contains(s.toString().toLowerCase())){
-                                searchedList.add(menuItem);
+                            NoteItem item = null;
+                            for (NoteItem noteItem : noteItemsDao.getAll()) {
+                                if (menuItem.id == noteItem.to_id && noteItem.position == 0){
+                                    item = noteItem;
+                                }
+                            }
+
+                            if (menuItem.text != null){
+                                if (menuItem.text.toLowerCase().contains(s.toString().toLowerCase()) || menuItem.title.toLowerCase().contains(s.toString().toLowerCase())){
+                                    searchedList.add(menuItem);
+                                }
+                            } else {
+                                if (menuItem.title.toLowerCase().contains(s.toString().toLowerCase())
+                                        || item.text.toLowerCase().contains(s.toString().toLowerCase())){
+                                    searchedList.add(menuItem);
+                                }
                             }
                         }
                     }

@@ -33,6 +33,7 @@ import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -95,15 +96,19 @@ public class NoteAdd extends Fragment {
                 toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
             }
 
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /*PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", text.getText().toString())
-                            .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();
-                    SetNotify notify = new SetNotify();
-                    notify.show(activity.getSupportFragmentManager(), "TAG");*/
+        toolbar.setNavigationOnClickListener(v1 -> {
+            NoteItem item = null;
+            for (NoteItem noteItem : noteItemsDao.getAll()) {
+                if (rowID == noteItem.to_id && noteItem.position == 0){
+                    item = noteItem;
                 }
-            });
+            }
+
+            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", item.text)
+                    .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();
+            SetNotify notify = new SetNotify();
+            notify.show(activity.getSupportFragmentManager(), "TAG");
+        });
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
@@ -225,7 +230,6 @@ public class NoteAdd extends Fragment {
                 }
 
                     dao.updateNoteTitle(title.getText().toString(), rowID);
-                    //dao.updateNoteText(text.getText().toString(), rowID);
                     dao.updateNoteTime(System.currentTimeMillis(), rowID);
             }
         });

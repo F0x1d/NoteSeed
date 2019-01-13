@@ -32,6 +32,7 @@ import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
+import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -182,10 +183,17 @@ public class NoteEdit extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         toolbar.setNavigationOnClickListener(v1 -> {
-            /*PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", text.getText().toString())
+            NoteItem item = null;
+            for (NoteItem noteItem : noteItemsDao.getAll()) {
+                if (id == noteItem.to_id && noteItem.position == 0){
+                    item = noteItem;
+                }
+            }
+
+            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", item.text)
                     .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();
             SetNotify notify = new SetNotify();
-            notify.show(activity.getSupportFragmentManager(), "TAG");*/
+            notify.show(activity.getSupportFragmentManager(), "TAG");
         });
 
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
