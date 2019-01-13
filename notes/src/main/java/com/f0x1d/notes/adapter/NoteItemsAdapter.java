@@ -42,6 +42,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     NoteItemsDao dao;
 
+    TextWatcher textWatcher = null;
+
     public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity){
         this.noteItems = noteItems;
         this.activity = activity;
@@ -99,30 +101,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void setupText(textViewHolder holder, int position){
-        Log.e("notes_err", "text setup: " + position);
-
-        for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == noteItems.get(position).id){
-                Typeface face;
-                if (UselessUtils.getBool("mono", false)){
-                    face = Typeface.MONOSPACE;
-
-                    holder.editText.setTypeface(face);
-                }
-
-                holder.editText.setText(noteItem.text);
-
-                if (PreferenceManager.getDefaultSharedPreferences(activity).getInt("fon", 0) == 1){
-                    if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("dark_fon", false)){
-                        holder.editText.setTextColor(Color.WHITE);
-                    } else {
-                        holder.editText.setTextColor(Color.BLACK);
-                    }
-                }
-            }
-        }
-
-        holder.editText.addTextChangedListener(new TextWatcher() {
+        textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -146,8 +125,46 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
                 } catch (Exception e){}
             }
-        });
+        };
 
+        holder.editText.removeTextChangedListener(textWatcher);
+
+        Log.e("notes_err", "text setup: " + position);
+
+        for (NoteItem noteItem : dao.getAll()) {
+            if (noteItem.id == noteItems.get(position).id){
+                Typeface face;
+                if (UselessUtils.getBool("mono", false)){
+                    face = Typeface.MONOSPACE;
+
+                    holder.editText.setTypeface(face);
+                }
+
+                holder.editText.setText(noteItem.text);
+
+                if (PreferenceManager.getDefaultSharedPreferences(activity).getInt("fon", 0) == 1){
+                    if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("dark_fon", false)){
+                        holder.editText.setTextColor(Color.WHITE);
+                    } else {
+                        holder.editText.setTextColor(Color.BLACK);
+                    }
+                }
+            }
+        }
+
+        holder.editText.addTextChangedListener(textWatcher);
+
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+
+        if (holder.getItemViewType() == TEXT){
+            textViewHolder textViewHolder = (NoteItemsAdapter.textViewHolder) holder;
+
+            textViewHolder.editText.removeTextChangedListener(textWatcher);
+        }
     }
 
     @Override

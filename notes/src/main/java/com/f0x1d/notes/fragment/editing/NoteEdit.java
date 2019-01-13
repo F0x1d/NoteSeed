@@ -73,7 +73,7 @@ public class NoteEdit extends Fragment {
 
     List<NoteItem> noteItems;
 
-    public static int last_pos;
+    public int last_pos;
 
     Bundle args;
 
@@ -235,20 +235,10 @@ public class NoteEdit extends Fragment {
         for (NoteItem item : noteItemsDao.getAll()) {
             if (item.to_id == id){
                 add(item.position, item);
-                last_pos = item.position;
-                Log.e("notes_err", "added something to: " + last_pos);
             }
         }
 
-        /*if (noteItems.size() == 0){
-            for (NoteItem item : noteItemsDao.getAll()) {
-                if (item.to_id == id){
-                    add(item.position, item);
-                    last_pos = item.position;
-                    Log.e("notes_err", "added something to: " + last_pos);
-                }
-            }
-        }*/
+        last_pos = noteItems.size();
 
         NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity());
 
