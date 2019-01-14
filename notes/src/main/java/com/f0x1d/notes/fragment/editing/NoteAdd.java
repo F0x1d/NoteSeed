@@ -52,6 +52,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.f0x1d.notes.fragment.editing.NoteEdit.copy;
+import static com.f0x1d.notes.fragment.editing.NoteEdit.last_pos;
 
 public class NoteAdd extends Fragment {
 
@@ -69,7 +70,7 @@ public class NoteAdd extends Fragment {
 
     List<NoteItem> noteItems;
 
-    int last_pos;
+    public static boolean new_note;
 
     @Override
     public void onAttach(Activity activity) {
@@ -154,6 +155,8 @@ public class NoteAdd extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        new_note = true;
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
         rowID = dao.insert(new NoteOrFolder(generateName(), null, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
@@ -317,7 +320,7 @@ public class NoteAdd extends Fragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         // special intent for Samsung file manager
-        Intent sIntent = new Intent("com.f0x1d.talkandtools.main.PICK_DATA");
+        Intent sIntent = new Intent("com.f0x1d.notes.main.PICK_DATA");
         // if you want any file type, you can skip next line
         sIntent.putExtra("CONTENT_TYPE", minmeType);
         sIntent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -385,6 +388,8 @@ public class NoteAdd extends Fragment {
                         NoteItem noteItem2 = new NoteItem(rowID, "", null, last_pos);
                         noteItems.add(last_pos, noteItem2);
                         noteItemsDao.insert(noteItem2);
+
+                        noteItemsDao.updateElementTextByPos("", rowID, last_pos);
 
                         Log.e("notes_err", "added to: " + noteItem2.position);
                     } catch (IndexOutOfBoundsException e){

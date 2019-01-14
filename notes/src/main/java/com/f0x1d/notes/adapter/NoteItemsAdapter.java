@@ -15,9 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +28,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
+import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyEditText;
@@ -143,17 +145,17 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == noteItems.get(position).id){
-
+            if ((noteItem.id == noteItems.get(position).id) || (noteItem.position == noteItems.get(position).position && noteItem.to_id == noteItems.get(position).to_id)){
                 holder.editText.setText(noteItem.text);
+                break;
+            }
+        }
 
-                if (PreferenceManager.getDefaultSharedPreferences(activity).getInt("fon", 0) == 1){
-                    if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("dark_fon", false)){
-                        holder.editText.setTextColor(Color.WHITE);
-                    } else {
-                        holder.editText.setTextColor(Color.BLACK);
-                    }
-                }
+        if (PreferenceManager.getDefaultSharedPreferences(activity).getInt("fon", 0) == 1){
+            if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("dark_fon", false)){
+                holder.editText.setTextColor(Color.WHITE);
+            } else {
+                holder.editText.setTextColor(Color.BLACK);
             }
         }
 
@@ -181,39 +183,41 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         NoteItem item = noteItems.get(position);
 
         if (item.pic_res == null){
-            return 0;
+            return TEXT;
         } else {
-            return 1;
+            return IMAGE;
         }
     }
 
-    public void delete(int pos){
+    public void delete(int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setCancelable(false);
         builder.setTitle(R.string.confirm_delete);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(pos).to_id);
+                dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
 
                 for (NoteItem noteItem : dao.getAll()) {
-                    if (noteItem.to_id == noteItems.get(pos).to_id && noteItem.position - 1 == noteItems.get(pos).position){
-                        //dao.updateElementPos(noteItems.get(pos).position, noteItem.id);
-
+                    if (noteItem.to_id == noteItems.get(position).to_id && noteItem.position - 1 == noteItems.get(position).position){
                         int pos = noteItem.position - 2;
                         NoteItem elem = noteItems.get(pos);
 
                         String text = elem.text + "\n" + noteItem.text;
 
-                        dao.updateElementText(text, elem.id);
-                        dao.deleteItem(getItemId(noteItem.position));
+                        Toast.makeText(activity, elem.text, Toast.LENGTH_SHORT).show();
+
+                        //dao.updateElementText(text, elem.id);
+                        dao.updateElementTextByPos(text, elem.to_id, elem.position);
+                        dao.deleteByPos(noteItem.to_id, noteItem.position);
                         noteItems.remove(noteItem.position);
-                        notifyDataSetChanged();
                     }
                 }
 
-                dao.deleteItem(getItemId(pos));
-                noteItems.remove(pos);
+                dao.deleteByPos(noteItems.get(position).to_id, position);
+                noteItems.remove(position);
+
+                NoteEdit.last_pos = NoteEdit.last_pos - 2;
                 notifyDataSetChanged();
             }
         });

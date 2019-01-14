@@ -73,7 +73,7 @@ public class NoteEdit extends Fragment {
 
     List<NoteItem> noteItems;
 
-    public int last_pos;
+    public static int last_pos;
 
     Bundle args;
 
@@ -181,6 +181,8 @@ public class NoteEdit extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        NoteAdd.new_note = false;
 
         toolbar.setNavigationOnClickListener(v1 -> {
             NoteItem item = null;
@@ -457,8 +459,6 @@ public class NoteEdit extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, NoteEdit.newInstance(args), "edit").commit();
-                            //UselessUtils.recreate(NoteEdit.newInstance(args), getActivity(), "edit");
                             recyclerView.getAdapter().notifyDataSetChanged();
                         }
                     });

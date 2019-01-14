@@ -34,4 +34,7 @@ public interface NoteItemsDao {
 
     @Query("DELETE FROM NOTEITEM WHERE id = :id")
     void deleteItem(long id);
+
+    @Query("DELETE FROM NoteItem WHERE to_id = :to_id AND position = :pos")
+    void deleteByPos(long to_id, int pos);
 }
