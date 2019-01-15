@@ -189,6 +189,19 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    public String getText(long id){
+        String text = "error";
+
+        for (NoteItem noteItem : dao.getAll()) {
+            if (noteItem.id == id){
+                text = noteItem.text;
+                break;
+            }
+        }
+
+        return text;
+    }
+
     public void delete(int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setCancelable(false);
@@ -203,9 +216,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         int pos = noteItem.position - 2;
                         NoteItem elem = noteItems.get(pos);
 
-                        String text = elem.text + "\n" + noteItem.text;
-
-                        Toast.makeText(activity, elem.text, Toast.LENGTH_SHORT).show();
+                        String text = getText(elem.id) + "\n" + getText(noteItem.id);
 
                         //dao.updateElementText(text, elem.id);
                         dao.updateElementTextByPos(text, elem.to_id, elem.position);

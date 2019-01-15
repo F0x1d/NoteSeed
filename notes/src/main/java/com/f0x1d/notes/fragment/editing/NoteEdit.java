@@ -177,7 +177,7 @@ public class NoteEdit extends Fragment {
         return v;
     }
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "WrongConstant"})
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
