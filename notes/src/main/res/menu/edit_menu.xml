@@ -9,6 +9,9 @@
         android:title="@string/clear"
         android:id="@+id/clear"/>
     <item
+        android:title="@string/export"
+        android:id="@+id/export"/>
+    <item
         android:title="@string/attach"
         android:id="@+id/attach"/>
 </menu>

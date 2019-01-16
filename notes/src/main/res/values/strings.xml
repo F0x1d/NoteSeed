@@ -107,4 +107,6 @@
     <string name="pictures">Pictures</string>
     <string name="picture">Picture</string>
     <string name="one_more_time_to_delete">Tap one more time to delete</string>
+    <string name="now">Now</string>
+    <string name="set_time">Set time</string>
 </resources>

@@ -39,6 +39,7 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
+import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.main.Notes;
@@ -229,32 +230,57 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    String name1 = "Напоминания";
-                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                    NotificationChannel channel = new NotificationChannel("com.f0x1d.notes", name1, importance);
-                    // Register the channel with the system; you can't change the importance
-                    // or other notification behaviors after this
-                    channel.enableVibration(true);
-                    channel.enableLights(true);
-                    NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
-                    notificationManager.createNotificationChannel(channel);
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setItems(new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time)}, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0:
 
-                // Create Notification
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
-                        .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
-                        .setContentTitle(items.get(position).title)
-                        .setContentText(items.get(position).text)
-                        .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
-                        .setAutoCancel(true)
-                        .setVibrate(new long[]{1000L, 1000L, 1000L})
-                        .setChannelId("com.f0x1d.notes");
 
-                NotificationManager notificationManager =
-                        (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
 
-                notificationManager.notify((int) items.get(position).id, builder.build());
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        String name1 = "Напоминания";
+                                        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                                        NotificationChannel channel = new NotificationChannel("com.f0x1d.notes", name1, importance);
+                                        // Register the channel with the system; you can't change the importance
+                                        // or other notification behaviors after this
+                                        channel.enableVibration(true);
+                                        channel.enableLights(true);
+                                        NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
+                                        notificationManager.createNotificationChannel(channel);
+                                    }
+
+                                    // Create Notification
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
+                                            .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
+                                            .setContentTitle(items.get(position).title)
+                                            .setContentText(items.get(position).text)
+                                            .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
+                                            .setAutoCancel(true)
+                                            .setVibrate(new long[]{1000L, 1000L, 1000L})
+                                            .setChannelId("com.f0x1d.notes");
+
+                                    NotificationManager notificationManager =
+                                            (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
+
+                                    notificationManager.notify((int) items.get(position).id, builder.build());
+                                    break;
+
+
+
+                                case 1:
+                                    FragmentActivity activity1 = (FragmentActivity) activity;
+
+                                    PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("notify_title", items.get(position).title).putString("notify_text", items.get(position).text)
+                                            .putInt("notify_id", (int) items.get(position).id).apply();
+                                    SetNotify notify = new SetNotify();
+                                    notify.show(activity1.getSupportFragmentManager(), "TAG");
+                                    break;
+                            }
+                        }
+                    });
+                    builder.show();
             }
         });
 
@@ -459,13 +485,32 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.pinned.setVisibility(View.INVISIBLE);
         }
 
+        String text = "error";
+
         NoteItemsDao dao = App.getInstance().getDatabase().noteItemsDao();
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.to_id == items.get(position).id){
                 if (noteItem.position == 0){
-                    holder.text.setText(noteItem.text);
+                    text = noteItem.text;
                 }
             }
+        }
+
+        boolean oneLine;
+
+        if (Pattern.compile("\\r?\\n").matcher(text).find()){
+            oneLine = false;
+        } else {
+            oneLine = true;
+        }
+
+        for (String retval : text.split("\\r?\\n")) {
+            if (oneLine){
+                holder.text.setText(retval);
+            } else {
+                holder.text.setText(retval + "\n...");
+            }
+            break;
         }
 
         if (holder.text.getText().toString().equals("text")){

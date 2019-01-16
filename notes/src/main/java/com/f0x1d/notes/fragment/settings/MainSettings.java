@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
+import android.os.Handler;
 import android.preference.Preference;
 
 import android.preference.PreferenceFragment;
@@ -30,7 +31,7 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.fragment.bottom_sheet.TextSizeDialog;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
-import com.f0x1d.notes.fragment.themes.ThemesFragment;
+import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -201,7 +202,6 @@ public class MainSettings extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 removeAll();
-                Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -234,10 +234,29 @@ public class MainSettings extends PreferenceFragment {
         }
     }
 
-    public void removeAll()
-    {
-        NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
-        dao.nukeTable();
-        dao.nukeTable2();
+    boolean delete = false;
+
+    public void removeAll() {
+
+        if (delete) {
+            NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
+            dao.nukeTable();
+            dao.nukeTable2();
+
+            Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        delete = true;
+        Toast.makeText(getActivity(), R.string.one_more_time_to_delete, Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                delete = false;
+            }
+        }, 2000);
+
+
     }
 }

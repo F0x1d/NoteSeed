@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
+import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.App;
@@ -260,10 +262,10 @@ public class Notes extends Fragment {
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
             fab1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp));
             fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notifications_active_white_24dp));
+            fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notification_create_white_24dp));
         } else {
             fab1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_black_24dp));
-            fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notifications_active_black_24dp));
+            fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp));
             if (UselessUtils.ifCustomTheme()){
                 fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             }
@@ -276,13 +278,13 @@ public class Notes extends Fragment {
                 }
             });
 
-            /*fab.setOnLongClickListener(new View.OnLongClickListener() {
+            fab.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    openFile("", 228, getActivity());
+                    openFile("*/*", 228, getActivity());
                     return false;
                 }
-            });*/
+            });
 
             fab1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -478,8 +480,20 @@ public class Notes extends Fragment {
                     Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                dao.insert(new NoteOrFolder(title, null, 0, 0, "def", 0, null, 0, "", System.currentTimeMillis()));
+                long time = System.currentTimeMillis();
+                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putLong("time_to_insert", time).apply();
+
+                dao.insert(new NoteOrFolder(title, null, 0, 0, "def", 0, null, 0, "", time));
+
                 UselessUtils.replace(getActivity(), new Notes(), "notes");
+
+                time = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong("time_to_insert", System.currentTimeMillis());
+
+                for (NoteOrFolder noteOrFolder : dao.getAll()) {
+                    if (noteOrFolder.title.equals(title) && noteOrFolder.edit_time == time && noteOrFolder.text == null && noteOrFolder.is_folder == 0){
+                        App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(noteOrFolder.id, text, null, 0));
+                    }
+                }
             }
         }
 

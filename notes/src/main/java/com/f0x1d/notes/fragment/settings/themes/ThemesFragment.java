@@ -1,4 +1,4 @@
-package com.f0x1d.notes.fragment.themes;
+package com.f0x1d.notes.fragment.settings.themes;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -94,7 +94,7 @@ public class ThemesFragment extends Fragment {
             import_fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openFile("application/json", 228, getActivity());
+                    openFile("*/*", 228, getActivity());
                 }
             });
     }

@@ -1,19 +1,15 @@
 package com.f0x1d.notes.activity;
 
 import android.app.Fragment;
-import android.app.NotificationChannel;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.fragment.settings.MainSettings;
-import com.f0x1d.notes.fragment.themes.ThemesFragment;
+import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -21,8 +17,6 @@ import com.f0x1d.notes.utils.UselessUtils;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;

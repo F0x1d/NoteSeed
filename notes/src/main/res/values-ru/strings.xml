@@ -107,4 +107,6 @@
     <string name="edit_pic">Изменить картинку</string>
     <string name="pictures">Картинки</string>
     <string name="picture">Картинка</string>
+    <string name="now">Сейчас</string>
+    <string name="set_time">Установить время</string>
 </resources>

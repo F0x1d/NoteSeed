@@ -37,9 +37,11 @@ import com.f0x1d.notes.fragment.bottom_sheet.SetNotify;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -151,7 +153,7 @@ public class NoteAdd extends Fragment {
         return v;
     }
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "WrongConstant"})
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -254,26 +256,42 @@ public class NoteAdd extends Fragment {
 
                 dao.updateNoteTime(System.currentTimeMillis(), rowID);
                 break;
-            /*case R.id.export:
+            case R.id.export:
                 File noteDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/Exported notes");
                 if (!noteDir.exists()){
                     noteDir.mkdirs();
                 }
                 File note = new File(noteDir, title.getText().toString() + ".txt");
                 try {
+                    String text = "";
+
+                    boolean first = true;
+
+                    for (NoteItem noteItem : noteItemsDao.getAll()) {
+                        if (noteItem.to_id == rowID && noteItem.pic_res == null){
+                            if (first){
+                                text = text + noteItem.text;
+                                first = false;
+                            } else {
+                                text = text + "\n" + noteItem.text;
+                            }
+                        }
+                    }
+
                     FileWriter writer = new FileWriter(note);
-                    //writer.append(text.getText().toString());
+                    writer.append(text);
                     writer.flush();
                     writer.close();
                     Toast.makeText(getActivity(), getString(R.string.saved) + " " + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
 
-                    //if (text.getText().toString().toLowerCase().contains("желе") || title.getText().toString().toLowerCase().contains("желе")){
-                    //    Snackbar.make(getView(), "Желе лох", Snackbar.LENGTH_SHORT).show();
-                    //}
+                    if (text.toLowerCase().contains("желе") || title.getText().toString().toLowerCase().contains("желе")){
+                        Snackbar.make(getView(), "Желе лох", Snackbar.LENGTH_SHORT).show();
+                    }
                 } catch (IOException e) {
                     Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 }
-                break;*/
+
+                break;
             case R.id.attach:
                 String[] items = new String[]{getString(R.string.pic)};
 
