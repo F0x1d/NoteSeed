@@ -23,7 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content" />
 
-        <ImageView
+        <com.f0x1d.notes.view.theming.MyImageView
             android:layout_width="wrap_content"
             android:id="@+id/pinned"
             android:src="@drawable/ic_priority_high_black_24dp"
