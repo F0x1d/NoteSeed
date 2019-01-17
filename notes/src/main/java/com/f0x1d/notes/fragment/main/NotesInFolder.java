@@ -455,10 +455,6 @@ public class NotesInFolder extends Fragment {
 
                 InputStream fstream = null;
 
-                if (!getFileName(data.getData()).contains(".txt") || getFileName(data.getData()).contains(".fb2")){
-                    Toast.makeText(getActivity(), getString(R.string.import_note_error1), Toast.LENGTH_SHORT).show();
-                }
-
                 String title = getFileName(data.getData());
                 String text = null;
                 try {
@@ -480,15 +476,17 @@ public class NotesInFolder extends Fragment {
 
                 long time = System.currentTimeMillis();
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putLong("time_to_insert", time).apply();
+                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("title_to_insert", title).apply();
 
                 dao.insert(new NoteOrFolder(title, null, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 0, null, 0, "", time));
 
                 UselessUtils.replaceNoBackStack(getActivity(), new NotesInFolder(), "in_folder");
 
                 time = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong("time_to_insert", System.currentTimeMillis());
+                title = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("title_to_insert", "");
 
                 for (NoteOrFolder noteOrFolder : dao.getAll()) {
-                    if (noteOrFolder.title.equals(title) && noteOrFolder.edit_time == time && noteOrFolder.text == null && noteOrFolder.is_folder == 0){
+                    if (noteOrFolder.title.equals(title) && noteOrFolder.edit_time == time && noteOrFolder.is_folder == 0){
                         App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(noteOrFolder.id, text, null, 0));
                     }
                 }
