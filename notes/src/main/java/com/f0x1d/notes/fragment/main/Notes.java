@@ -491,7 +491,7 @@ public class Notes extends Fragment {
                 title = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("title_to_insert", "");
 
                 for (NoteOrFolder noteOrFolder : dao.getAll()) {
-                    if (noteOrFolder.title.equals(title) && noteOrFolder.edit_time == time && noteOrFolder.is_folder == 0){
+                    if (noteOrFolder.edit_time == time && noteOrFolder.is_folder == 0){
                         App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(noteOrFolder.id, text, null, 0));
                     }
                 }
