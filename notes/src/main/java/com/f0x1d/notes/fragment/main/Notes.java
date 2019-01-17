@@ -84,7 +84,7 @@ public class Notes extends Fragment {
         toolbar.inflateMenu(R.menu.search_menu);
         toolbar.getMenu().findItem(R.id.settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        if (UselessUtils.getBool("night", false)){
+        if (UselessUtils.getBool("night", true)){
             if (UselessUtils.ifCustomTheme()){
                 toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_white_24dp), ThemesEngine.iconsColor));
                 toolbar.getMenu().findItem(R.id.settings).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor));
@@ -108,7 +108,7 @@ public class Notes extends Fragment {
                 getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
                 getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
             } else {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
                     getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(getActivity().getResources().getColor(R.color.statusbar)));
                     getActivity().getWindow().setStatusBarColor(getActivity().getResources().getColor(R.color.statusbar));
                     getActivity().getWindow().setNavigationBarColor(getActivity().getResources().getColor(R.color.statusbar));
@@ -259,7 +259,7 @@ public class Notes extends Fragment {
         animation3.setDuration(400);
         fab2.startAnimation(animation3);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
             fab1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp));
             fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notification_create_white_24dp));
@@ -281,6 +281,7 @@ public class Notes extends Fragment {
             fab.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    Toast.makeText(getActivity(), getString(R.string.import_note), Toast.LENGTH_SHORT).show();
                     openFile("*/*", 228, getActivity());
                     return false;
                 }
@@ -328,7 +329,7 @@ public class Notes extends Fragment {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                 }
                 if (UselessUtils.ifCustomTheme()){
@@ -380,7 +381,7 @@ public class Notes extends Fragment {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                 }
                 if (UselessUtils.ifCustomTheme()){
@@ -412,10 +413,8 @@ public class Notes extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.settings:
-                //Toast.makeText(getActivity(), "lags...", Toast.LENGTH_SHORT).show();
                 UselessUtils.replace(getActivity(), MainActivity.settings, "settings");
                 break;
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -537,7 +536,7 @@ public class Notes extends Fragment {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
                 }
@@ -561,7 +560,7 @@ public class Notes extends Fragment {
         MenuItem item = menu.findItem(R.id.settings);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
                 item.setIcon(R.drawable.ic_settings_white_24dp);
             }
 

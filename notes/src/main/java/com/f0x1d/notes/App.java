@@ -14,11 +14,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.annotation.NonNull;
 import androidx.room.Room;
-import androidx.room.migration.Migration;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 import io.fabric.sdk.android.Fabric;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class App extends Application {
 

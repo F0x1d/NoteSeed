@@ -29,7 +29,7 @@ public class TextSizeDialog extends BottomSheetDialogFragment {
 
         if (UselessUtils.ifCustomTheme()){
             layout.setBackgroundColor(ThemesEngine.background);
-        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
             layout.setBackgroundColor(getActivity().getResources().getColor(R.color.statusbar));
         } else {
             layout.setBackgroundColor(Color.WHITE);

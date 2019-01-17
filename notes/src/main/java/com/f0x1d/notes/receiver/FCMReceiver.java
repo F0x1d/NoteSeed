@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 public class FCMReceiver extends FirebaseMessagingService {
 
-    @SuppressLint("NewApi")
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -34,25 +33,20 @@ public class FCMReceiver extends FirebaseMessagingService {
                 text = jsonObject.getString("body");
 
                 Notification.Builder builder = new Notification.Builder(getApplicationContext());
-                builder.setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
-                        .setContentTitle(title)
-                        .setContentText(text)
-                        .setAutoCancel(true)
-                        .setVibrate(new long[]{1000L, 1000L, 1000L})
-                        .setChannelId("com.f0x1d.notes");
+
+                    builder.setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
+                            .setContentTitle(title)
+                            .setContentText(text)
+                            .setAutoCancel(true)
+                            .setVibrate(new long[]{1000L, 1000L, 1000L});
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            builder.setChannelId("com.f0x1d.notes");
+                        }
 
                 NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 manager.notify(9999999, builder.build());
             } catch (JSONException e) {
                 Log.e("notes_err", e.getLocalizedMessage());
             }
-    }
-
-    @Override
-    public void onDeletedMessages() {
-        super.onDeletedMessages();
-
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        manager.cancel(9999999);
     }
 }

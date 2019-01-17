@@ -456,7 +456,7 @@ public class ThemesEngine {
             if (dark){
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", true).apply();
             } else {
-                PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", false).apply();
+                PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", true).apply();
             }
 
             Intent i = activity.getBaseContext().getPackageManager().

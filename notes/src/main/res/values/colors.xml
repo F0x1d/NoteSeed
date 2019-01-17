@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="statusbar">#303030</color>
+    <!--<color name="statusbar">#1c2733</color>-->
     <color name="fuksiya">#ff00ff</color>
     <color name="noname">#ffaa00</color>
     <color name="blue">#64B5F6</color>

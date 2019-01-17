@@ -91,7 +91,7 @@ public class Search extends Fragment {
             buttonRes.setBackground(null);
             buttonRes.setVisibility(View.INVISIBLE);
 
-            if (UselessUtils.getBool("night", false)){
+            if (UselessUtils.getBool("night", true)){
                 button.setImageDrawable(getActivity().getDrawable(R.drawable.ic_arrow_back_white_24dp));
                 buttonRes.setImageDrawable(getActivity().getDrawable(R.drawable.ic_clear_white_24dp));
             } else {

@@ -630,7 +630,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
                             @Override
                             public void onShow(DialogInterface dialog1) {
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("night", false)){
+                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("night", true)){
                                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                                 }
                                 if (UselessUtils.ifCustomTheme()){
@@ -765,7 +765,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
                             @Override
                             public void onShow(DialogInterface dialog1) {
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("night", false)){
+                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("night", true)){
                                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                                 }
                                 if (UselessUtils.ifCustomTheme()){

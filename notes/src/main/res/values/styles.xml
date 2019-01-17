@@ -88,7 +88,7 @@
 
     <style name="AlertDialog.AppTheme.Dark" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/dialog_round_corners</item>
-        <item name="android:background">@color/colorGreaterGrey</item>
+        <item name="android:background">@color/statusbar</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>

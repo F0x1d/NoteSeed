@@ -59,7 +59,7 @@ public class СhoosePin extends Fragment {
         MyButton nol = view.findViewById(R.id.nol);
         ImageButton done = view.findViewById(R.id.done);
             done.setBackground(null);
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
             done.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_white_24dp));
         } else {
             done.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_black_24dp));
@@ -156,7 +156,7 @@ public class СhoosePin extends Fragment {
         icon.startAnimation(animation2);
 
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
             odin.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             dva.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             tri.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));

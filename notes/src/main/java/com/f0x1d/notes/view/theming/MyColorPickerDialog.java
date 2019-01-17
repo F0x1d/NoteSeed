@@ -67,7 +67,7 @@ public class MyColorPickerDialog extends ColorPickerDialog {
 
             neutral.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
             neutral.setTextColor(ThemesEngine.textColor);
-        } else if (UselessUtils.getBool("night", false)){
+        } else if (UselessUtils.getBool("night", true)){
             positive.setTextColor(Color.BLACK);
             neutral.setTextColor(Color.BLACK);
         }

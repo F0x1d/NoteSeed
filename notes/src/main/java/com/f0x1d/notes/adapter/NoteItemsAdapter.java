@@ -245,7 +245,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", false)){
+                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", true)){
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
                 }

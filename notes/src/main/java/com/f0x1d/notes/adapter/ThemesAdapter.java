@@ -112,7 +112,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
 
                                     themes.get(position).theme_file.delete();
 
-                                    PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", false).apply();
+                                    PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", true).apply();
                                     PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("change", true).apply();
                                     PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("orange", false).apply();
                                     PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
@@ -142,7 +142,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
 
     private void cardClick(int position){
         if (position == 0){
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", false).apply();
+            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", true).apply();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("change", true).apply();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("orange", false).apply();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
@@ -154,7 +154,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
             activity.startActivity(i);
             activity.finish();
         } else if (position == 1){
-            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("night", false).apply();
+            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("night", true).apply();
             PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("change", true).apply();
             PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("orange", true).apply();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();

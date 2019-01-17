@@ -149,7 +149,7 @@ public class MainSettings extends PreferenceFragment {
                             dialog1.setOnShowListener(new DialogInterface.OnShowListener() {
                                 @Override
                                 public void onShow(DialogInterface dialog) {
-                                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+                                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
                                         dialog1.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                                         dialog1.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
                                     }
@@ -171,7 +171,7 @@ public class MainSettings extends PreferenceFragment {
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog0) {
-                        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+                        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
                             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                         }
                         if (UselessUtils.ifCustomTheme()){
