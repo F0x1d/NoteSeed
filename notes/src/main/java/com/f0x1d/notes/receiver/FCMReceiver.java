@@ -6,7 +6,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.f0x1d.notes.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -15,20 +14,13 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collection;
-import java.util.List;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
-
 public class FCMReceiver extends FirebaseMessagingService {
-
-    private String TAG = "notes_fcm";
 
     @SuppressLint("NewApi")
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d("notes_fcm", "From: " + remoteMessage.getFrom());
 
             String title = null;
             String text = null;
@@ -50,7 +42,7 @@ public class FCMReceiver extends FirebaseMessagingService {
                         .setChannelId("com.f0x1d.notes");
 
                 NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                manager.notify(99999, builder.build());
+                manager.notify(9999999, builder.build());
             } catch (JSONException e) {
                 Log.e("notes_err", e.getLocalizedMessage());
             }
@@ -61,6 +53,6 @@ public class FCMReceiver extends FirebaseMessagingService {
         super.onDeletedMessages();
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        manager.cancel(99999);
+        manager.cancel(9999999);
     }
 }
