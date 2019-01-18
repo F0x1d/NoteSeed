@@ -46,10 +46,13 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilterReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 
 public class MainSettings extends PreferenceFragment {
 
@@ -94,59 +97,6 @@ public class MainSettings extends PreferenceFragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 228 && data != null){
-            InputStream fstream;
-
-            String all = "";
-            try {
-                fstream = App.getInstance().getContentResolver().openInputStream(data.getData());
-                BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-                String strLine;
-                while ((strLine = br.readLine()) != null){
-                    all = all + strLine;
-                }
-            } catch (IOException e) {
-                Log.e("notes_err", e.getLocalizedMessage());
-            }
-
-            App.getInstance().getDatabase().noteOrFolderDao().nukeTable();
-            App.getInstance().getDatabase().noteOrFolderDao().nukeTable2();
-            App.getInstance().getDatabase().noteOrFolderDao().nukeTable3();
-
-            try {
-                JSONArray main = new JSONArray(all);
-
-                for (int i = 0; i < main.length(); i++){
-                    JSONObject note = main.getJSONObject(i);
-                    Log.e("notes_err", note.toString());
-
-                        App.getInstance().getDatabase().noteOrFolderDao().insert(new NoteOrFolder(note.getString("title"),
-                                note.getString("text"), note.getLong("id"), note.getInt("locked"), note.getString("in_folder_id"), note.getInt("is_folder"),
-                                note.getString("folder_name"), note.getInt("pinned"), note.getString("color"), note.getLong("edit_time")));
-
-                    JSONArray elements = note.getJSONArray("elems");
-
-                    for (int j = 0; j < elements.length(); j++){
-                        JSONObject element = elements.getJSONObject(j);
-
-                        if (element.getString("pic_res").equals("null")){
-                            App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
-                                    element.getLong("to_id"), element.getString("text"), null, element.getInt("position")));
-                        } else {
-                            App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
-                                    element.getLong("to_id"), element.getString("text"), element.getString("pic_res"), element.getInt("position")));
-                        }
-                    }
-                }
-            } catch (JSONException e) {
-                Log.e("notes_err", e.getLocalizedMessage());
-            }
-        }
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -158,7 +108,52 @@ public class MainSettings extends PreferenceFragment {
             import_db.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    openFile("*/*", 228, getActivity());
+                    File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+                    File database = new File(db, "database.txt");
+
+                    String all = "";
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(database));
+                        String strLine;
+                        while ((strLine = br.readLine()) != null){
+                            all = all + strLine;
+                        }
+                    } catch (IOException e) {
+                        Log.e("notes_err", e.getLocalizedMessage());
+                    }
+
+                    App.getInstance().getDatabase().noteOrFolderDao().nukeTable();
+                    App.getInstance().getDatabase().noteOrFolderDao().nukeTable2();
+                    App.getInstance().getDatabase().noteOrFolderDao().nukeTable3();
+
+                    try {
+                        JSONArray main = new JSONArray(all);
+
+                        for (int i = 0; i < main.length(); i++){
+                            JSONObject note = main.getJSONObject(i);
+                            Log.e("notes_err", note.toString());
+
+                            App.getInstance().getDatabase().noteOrFolderDao().insert(new NoteOrFolder(note.getString("title"),
+                                    note.getString("text"), note.getLong("id"), note.getInt("locked"), note.getString("in_folder_id"), note.getInt("is_folder"),
+                                    note.getString("folder_name"), note.getInt("pinned"), note.getString("color"), note.getLong("edit_time")));
+
+                            JSONArray elements = note.getJSONArray("elems");
+
+                            for (int j = 0; j < elements.length(); j++){
+                                JSONObject element = elements.getJSONObject(j);
+
+                                if (element.getString("pic_res").equals("null")){
+                                    App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
+                                            element.getLong("to_id"), element.getString("text"), null, element.getInt("position")));
+                                } else {
+                                    App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
+                                            element.getLong("to_id"), element.getString("text"), element.getString("pic_res"), element.getInt("position")));
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("notes_err", e.getLocalizedMessage());
+                    }
                     return false;
                 }
             });
@@ -234,7 +229,7 @@ public class MainSettings extends PreferenceFragment {
                         writer.flush();
                         writer.close();
 
-
+                        Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
