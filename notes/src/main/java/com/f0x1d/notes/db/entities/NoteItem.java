@@ -9,7 +9,7 @@ public class NoteItem {
     public String text;
 
     @PrimaryKey(autoGenerate = true)
-    public long id = 0;
+    public long id;
 
     public long to_id;
 
@@ -17,9 +17,10 @@ public class NoteItem {
 
     public int position;
 
-    public NoteItem(long to_id, String text, String pic_res, int position){
+    public NoteItem(long id, long to_id, String text, String pic_res, int position){
         this.pic_res = pic_res;
         this.text = text;
+        this.id = id;
         this.to_id = to_id;
         this.position = position;
     }

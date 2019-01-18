@@ -190,7 +190,7 @@ public class LockScreen extends Fragment {
             icon.startAnimation(animation2);
 
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
             odin.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             dva.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             tri.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));

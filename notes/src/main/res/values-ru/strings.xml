@@ -65,7 +65,7 @@
     <string name="ota_updates">ОТА обновления</string>
     <string name="no_update">Обновлений нет! :(</string>
     <string name="yes_update">Обновление найдено!</string>
-    <string name="import_note">Импортировать заметку</string>
+    <string name="import_db">Импортировать</string>
     <string name="import_note_error1">Это текстовый файл? Вы уверены?</string>
     <string name="new_version">Новая версия: </string>
     <string name="textSize_choose">Выберите размер текста</string>

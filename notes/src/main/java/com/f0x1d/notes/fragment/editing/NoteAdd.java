@@ -93,7 +93,7 @@ public class NoteAdd extends Fragment {
 
             if (UselessUtils.ifCustomTheme()){
                 toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
-            } else if (UselessUtils.getBool("night", true)){
+            } else if (UselessUtils.getBool("night", false)){
                 toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_white_24dp));
             } else {
                 toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
@@ -166,7 +166,7 @@ public class NoteAdd extends Fragment {
 
         noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
 
-        noteItemsDao.insert(new NoteItem(rowID, "", null, 0));
+        noteItemsDao.insert(new NoteItem(0, rowID, "", null, 0));
         last_pos = 0;
 
         setHasOptionsMenu(true);
@@ -398,12 +398,12 @@ public class NoteAdd extends Fragment {
 
                     try {
                         last_pos = last_pos + 1;
-                        NoteItem noteItem = new NoteItem(rowID, null, fleks.getPath(), last_pos);
+                        NoteItem noteItem = new NoteItem(0, rowID, null, fleks.getPath(), last_pos);
                         noteItems.add(last_pos, noteItem);
                         noteItemsDao.insert(noteItem);
 
                         last_pos = last_pos + 1;
-                        NoteItem noteItem2 = new NoteItem(rowID, "", null, last_pos);
+                        NoteItem noteItem2 = new NoteItem(0, rowID, "", null, last_pos);
                         noteItems.add(last_pos, noteItem2);
                         noteItemsDao.insert(noteItem2);
 

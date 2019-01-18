@@ -79,7 +79,7 @@ public class SetNotify extends BottomSheetDialogFragment {
 
         if (UselessUtils.ifCustomTheme()){
             layout.setBackgroundColor(ThemesEngine.background);
-        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
             layout.setBackgroundColor(getActivity().getResources().getColor(R.color.statusbar));
         } else {
             layout.setBackgroundColor(Color.WHITE);
@@ -98,7 +98,7 @@ public class SetNotify extends BottomSheetDialogFragment {
                     final Calendar c = Calendar.getInstance();
                     myHour = c.get(Calendar.HOUR_OF_DAY);
                     myMinute = c.get(Calendar.MINUTE);
-                    if (UselessUtils.getBool("night", true)){
+                    if (UselessUtils.getBool("night", false)){
                         TimePickerDialog tpd = new TimePickerDialog(getActivity(), R.style.TimePicker, myCallBack, myHour, myMinute, true);
                         tpd.show();
                     } else {
@@ -117,7 +117,7 @@ public class SetNotify extends BottomSheetDialogFragment {
                     myMonth = c.get(Calendar.MONTH);
                     myYear = c.get(Calendar.YEAR);
 
-                    if (UselessUtils.getBool("night", true)){
+                    if (UselessUtils.getBool("night", false)){
                         DatePickerDialog dpd = new DatePickerDialog(getActivity(), R.style.DatePicker, myCallBack2, myYear, myMonth, myDay);
                         dpd.show();
                     } else {
@@ -129,7 +129,7 @@ public class SetNotify extends BottomSheetDialogFragment {
 
         ok = v.findViewById(R.id.ok);
         delete = v.findViewById(R.id.delete);
-            if (UselessUtils.getBool("night", true)){
+            if (UselessUtils.getBool("night", false)){
                 ok.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
                 delete.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
 

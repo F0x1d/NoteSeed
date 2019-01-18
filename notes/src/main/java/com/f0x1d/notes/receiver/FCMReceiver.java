@@ -19,7 +19,7 @@ public class FCMReceiver extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.d("notes_fcm", "From: " + remoteMessage.getFrom());
+        Log.e("notes_fcm", "From: " + remoteMessage.getFrom());
 
             String title = null;
             String text = null;
@@ -44,7 +44,7 @@ public class FCMReceiver extends FirebaseMessagingService {
                         }
 
                 NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                manager.notify(9999999, builder.build());
+                manager.notify(99999, builder.build());
             } catch (JSONException e) {
                 Log.e("notes_err", e.getLocalizedMessage());
             }

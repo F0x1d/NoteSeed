@@ -117,7 +117,7 @@ public class NoteEdit extends Fragment {
 
         if (UselessUtils.ifCustomTheme()){
             toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
-        } else if (UselessUtils.getBool("night", true)){
+        } else if (UselessUtils.getBool("night", false)){
             toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_white_24dp));
         } else {
             toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
@@ -459,12 +459,12 @@ public class NoteEdit extends Fragment {
 
                     try {
                         last_pos = last_pos + 1;
-                        NoteItem noteItem = new NoteItem(id, null, fleks.getPath(), last_pos);
+                        NoteItem noteItem = new NoteItem(0, id, null, fleks.getPath(), last_pos);
                         noteItems.add(last_pos, noteItem);
                         noteItemsDao.insert(noteItem);
 
                         last_pos = last_pos + 1;
-                        NoteItem noteItem2 = new NoteItem(id, "", null, last_pos);
+                        NoteItem noteItem2 = new NoteItem(0, id, "", null, last_pos);
                         noteItems.add(last_pos, noteItem2);
                         noteItemsDao.insert(noteItem2);
 

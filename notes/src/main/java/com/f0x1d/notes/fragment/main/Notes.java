@@ -34,6 +34,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.utils.PermissionUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -53,6 +54,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 
 public class Notes extends Fragment {
@@ -84,7 +86,7 @@ public class Notes extends Fragment {
         toolbar.inflateMenu(R.menu.search_menu);
         toolbar.getMenu().findItem(R.id.settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        if (UselessUtils.getBool("night", true)){
+        if (UselessUtils.getBool("night", false)){
             if (UselessUtils.ifCustomTheme()){
                 toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_white_24dp), ThemesEngine.iconsColor));
                 toolbar.getMenu().findItem(R.id.settings).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor));
@@ -108,7 +110,7 @@ public class Notes extends Fragment {
                 getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
                 getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
             } else {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
                     getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(getActivity().getResources().getColor(R.color.statusbar)));
                     getActivity().getWindow().setStatusBarColor(getActivity().getResources().getColor(R.color.statusbar));
                     getActivity().getWindow().setNavigationBarColor(getActivity().getResources().getColor(R.color.statusbar));
@@ -259,7 +261,7 @@ public class Notes extends Fragment {
         animation3.setDuration(400);
         fab2.startAnimation(animation3);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
             fab1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp));
             fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notification_create_white_24dp));
@@ -281,7 +283,7 @@ public class Notes extends Fragment {
             fab.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Toast.makeText(getActivity(), getString(R.string.import_note), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.import_db), Toast.LENGTH_SHORT).show();
                     openFile("*/*", 228, getActivity());
                     return false;
                 }
@@ -329,7 +331,7 @@ public class Notes extends Fragment {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                 }
                 if (UselessUtils.ifCustomTheme()){
@@ -381,7 +383,7 @@ public class Notes extends Fragment {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                 }
                 if (UselessUtils.ifCustomTheme()){
@@ -492,7 +494,7 @@ public class Notes extends Fragment {
 
                 for (NoteOrFolder noteOrFolder : dao.getAll()) {
                     if (noteOrFolder.edit_time == time && noteOrFolder.is_folder == 0){
-                        App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(noteOrFolder.id, text, null, 0));
+                        App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(0, noteOrFolder.id, text, null, 0));
                     }
                 }
             }
@@ -536,7 +538,7 @@ public class Notes extends Fragment {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
                 }
@@ -560,7 +562,7 @@ public class Notes extends Fragment {
         MenuItem item = menu.findItem(R.id.settings);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
                 item.setIcon(R.drawable.ic_settings_white_24dp);
             }
 

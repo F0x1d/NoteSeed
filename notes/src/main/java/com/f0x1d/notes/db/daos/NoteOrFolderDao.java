@@ -64,4 +64,7 @@ public interface NoteOrFolderDao {
 
     @Query("DELETE FROM Notify")
     void nukeTable2();
+
+    @Query("DELETE FROM NoteItem")
+    void nukeTable3();
 }

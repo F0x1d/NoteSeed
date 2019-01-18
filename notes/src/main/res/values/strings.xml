@@ -66,7 +66,7 @@
     <string name="check_updates">Check for updates</string>
     <string name="no_update">No updates! :(</string>
     <string name="yes_update">Update found!</string>
-    <string name="import_note">Import note</string>
+    <string name="import_db">Import</string>
     <string name="import_note_error1">Is it a text file? Are you sure?</string>
     <string name="new_version">A new version: </string>
     <string name="textSize_choose">Choose text size</string>
