@@ -48,7 +48,11 @@ public class SyncUtils {
                                 } else {
                                     element.put("pic_res", noteItem.pic_res);
                                 }
-                                element.put("text", noteItem.text);
+                                if (noteItem.text == null){
+                                    element.put("text", "null");
+                                } else {
+                                    element.put("text", noteItem.text);
+                                }
                                 element.put("position", noteItem.position);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -100,7 +104,7 @@ public class SyncUtils {
         }).start();
     }
 
-    public static void importFile(Activity activity){
+    public static void importFile(){
         File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
         File database = new File(db, "database.noteseed");
 
@@ -138,15 +142,15 @@ public class SyncUtils {
                     if (element.getString("pic_res").equals("null")){
                         App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
                                 element.getLong("to_id"), element.getString("text"), null, element.getInt("position")));
+                    } else if (element.getString("text").equals("null")){
+                        App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
+                                element.getLong("to_id"), null, element.getString("pic_res"), element.getInt("position")));
                     } else {
                         App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
                                 element.getLong("to_id"), element.getString("text"), element.getString("pic_res"), element.getInt("position")));
                     }
                 }
             }
-
-            activity.startActivity(new Intent(activity, MainActivity.class));
-            activity.finish();
         } catch (JSONException e) {
             Log.e("notes_err", e.getLocalizedMessage());
         }

@@ -109,7 +109,7 @@ public class MainSettings extends PreferenceFragment {
             import_db.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    SyncUtils.importFile(getActivity());
+                    SyncUtils.importFile();
                     return false;
                 }
             });

@@ -2,6 +2,7 @@ package com.f0x1d.notes.activity;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,12 +24,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
 import java.io.File;
 
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
 public class MainActivity extends AppCompatActivity {
@@ -147,8 +146,9 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton(getString(R.string.restore), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SyncUtils.importFile(MainActivity.this);
+                        SyncUtils.importFile();
                         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
+                        recreate();
                     }
                 });
                 builder.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {

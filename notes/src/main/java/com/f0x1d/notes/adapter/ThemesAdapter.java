@@ -166,7 +166,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
             activity.startActivity(i);
             activity.finish();
         } else if (position == 2){
-            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("night", false).apply();
+            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("night", true).apply();
             PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("change", true).apply();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
 
