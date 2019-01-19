@@ -1,6 +1,7 @@
 package com.f0x1d.notes.activity;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,9 +13,11 @@ import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.utils.PermissionUtils;
+import com.f0x1d.notes.utils.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.preference.PreferenceManager;
@@ -22,6 +25,8 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
+
+import java.io.File;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
@@ -128,6 +133,38 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+
+        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
+            File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+            File database = new File(db, "database.noteseed");
+
+            if (database.exists()){
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle(R.string.backup_found);
+                builder.setMessage(getString(R.string.restore) + "?");
+                builder.setCancelable(false);
+
+                builder.setPositiveButton(getString(R.string.restore), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SyncUtils.importFile(MainActivity.this);
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
+                    }
+                });
+                builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            } else {
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
+                SyncUtils.export();
+            }
+        } else {
+            SyncUtils.export();
+        }
     }
 
     @Override
@@ -144,10 +181,21 @@ public class MainActivity extends AppCompatActivity {
             getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
         } else {
             Fragment notes = getFragmentManager().findFragmentByTag("notes");
+            Fragment edit = getFragmentManager().findFragmentByTag("edit");
+            Fragment add = getFragmentManager().findFragmentByTag("add");
+
+            if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())){
+                getFragmentManager().popBackStack();
+                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
+                    SyncUtils.export();
+                }
+                return;
+            }
 
             if (notes != null && notes.isVisible()){
                 clear_back_stack(MainActivity.this);
                 super.onBackPressed();
+                return;
             }
 
             if (getFragmentManager().getBackStackEntryCount() == 0){

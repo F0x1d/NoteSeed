@@ -10,6 +10,7 @@ import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.utils.PermissionUtils;
+import com.f0x1d.notes.utils.SyncUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -60,7 +61,6 @@ public class App extends Application {
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build();
-
     }
 
     public Database getDatabase() {
