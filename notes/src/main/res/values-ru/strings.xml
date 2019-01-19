@@ -110,4 +110,6 @@
     <string name="now">Сейчас</string>
     <string name="set_time">Установить время</string>
     <string name="z1">Моя команда</string>
+    <string name="backup_found">Был найден бекап!</string>
+    <string name="restore">Восстановить</string>
 </resources>

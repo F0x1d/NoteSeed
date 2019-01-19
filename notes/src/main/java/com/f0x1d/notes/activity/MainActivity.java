@@ -151,9 +151,10 @@ public class MainActivity extends AppCompatActivity {
                         PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
                     }
                 });
-                builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                builder.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
                         dialog.cancel();
                     }
                 });
