@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null){
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestServerAuthCode("676559112451-385f0milbokgvoipp1qhn056i9sc15ke.apps.googleusercontent.com")
-                    .requestScopes(new Scope(Scopes.DRIVE_FULL))
+                    .requestServerAuthCode("AIzaSyDJJ0OMPS53nju-4GnygwehCnXqgsARxcw")
+                    .requestScopes(new Scope(Scopes.DRIVE_FILE), new Scope(Scopes.DRIVE_APPS))
                     .build();
 
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_LONG).show();
         } catch (ApiException e) {
             Toast.makeText(getApplicationContext(), "error: " + e.getStatusCode(), Toast.LENGTH_SHORT).show();
-            Log.e("notes_err", "signInResult:failed code = " + e.getStatusCode());
+            Log.e("notes_err", "signInResult:failed code = " + e.getStatusCode() + "\n\n" + e.getStatusMessage() + "\n\n" + e.getLocalizedMessage());
         }
     }
 
