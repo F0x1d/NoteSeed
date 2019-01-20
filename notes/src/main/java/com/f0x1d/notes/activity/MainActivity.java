@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     public static FragmentManager getSupportFragmentManager;
     public static MainSettings settings;
 
+    private GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         PermissionUtils.requestWriteExternalPermission(this);
@@ -124,12 +126,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null){
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestEmail()
-                    .requestServerAuthCode("676559112451-e6eil8b6us4s8rsanf8bed219l3elf5r.apps.googleusercontent.com")
+                    .requestServerAuthCode("676559112451-385f0milbokgvoipp1qhn056i9sc15ke.apps.googleusercontent.com")
                     .requestScopes(new Scope(Scopes.DRIVE_FULL))
                     .build();
 
-            GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, 1);
@@ -222,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_LONG).show();
         } catch (ApiException e) {
+            Toast.makeText(getApplicationContext(), "error: " + e.getStatusCode(), Toast.LENGTH_SHORT).show();
             Log.e("notes_err", "signInResult:failed code = " + e.getStatusCode());
         }
     }
