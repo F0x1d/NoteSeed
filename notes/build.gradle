@@ -27,7 +27,7 @@ android {
         applicationId "com.f0x1d.notes"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 83
+        versionCode 84
         versionName "4.7.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -52,10 +52,6 @@ android {
     }
 }
 
-configurations {
-    all*.exclude group: 'com.google.guava', module: 'listenablefuture'
-}
-
 dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -75,15 +71,6 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
-
-    compile 'com.google.android.gms:play-services-auth:15.0.1'
-    compile 'pub.devrel:easypermissions:0.3.0'
-    compile('com.google.api-client:google-api-client-android:1.23.0') {
-        exclude group: 'org.apache.httpcomponents'
-    }
-    compile('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
-        exclude group: 'org.apache.httpcomponents'
-    }
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

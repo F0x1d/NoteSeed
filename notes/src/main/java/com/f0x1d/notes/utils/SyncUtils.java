@@ -10,15 +10,6 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
-import com.google.api.client.auth.oauth.OAuthParameters;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.FileContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,24 +23,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 public class SyncUtils {
-
-    public static void pushToGDrive(Activity activity) throws IOException {
-        com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-        fileMetadata.setName("database.json");
-        fileMetadata.setParents(Collections.singletonList("appDataFolder"));
-
-        File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
-        File database = new File(db, "database.noteseed");
-
-        FileContent mediaContent = new FileContent("application/json", database);
-
-        Drive driveService = new Drive(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), null);
-
-        com.google.api.services.drive.model.File file = driveService.files().create(fileMetadata, mediaContent)
-                .setFields("id")
-                .execute();
-        Log.e("notes_err", "File ID: " + file.getId());
-    }
 
     public static void export(){
         new Thread(new Runnable() {
