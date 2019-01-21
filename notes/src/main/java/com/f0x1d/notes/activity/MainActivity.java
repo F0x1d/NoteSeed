@@ -1,5 +1,6 @@
 package com.f0x1d.notes.activity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -119,14 +120,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null){
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken("676559112451-0806vq06cu8o6hi9dt02ql0h9njisipa.apps.googleusercontent.com")
                     .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
-                    .requestEmail()
                     .build();
 
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, 1);
+            signIn();
         }
 
         if (UselessUtils.appInstalledOrNot("com.encrypt.password")){
@@ -194,6 +194,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void signIn(){
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, 1);
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -205,9 +210,11 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1) {
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                 handleSignInResult(task);
+        } else {
+            signIn();
         }
     }
 
@@ -216,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-        } catch (ApiException | NullPointerException e) {
+        } catch (ApiException e) {
             Log.e("notes_err", "handleSignInResult:error \n\n", e);
             Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
