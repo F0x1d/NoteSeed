@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null){
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestServerAuthCode("AIzaSyDJJ0OMPS53nju-4GnygwehCnXqgsARxcw")
                     .requestScopes(new Scope(Scopes.DRIVE_FILE), new Scope(Scopes.DRIVE_APPS))
                     .build();
 

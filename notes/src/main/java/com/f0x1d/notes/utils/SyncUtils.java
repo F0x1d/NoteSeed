@@ -43,12 +43,12 @@ public class SyncUtils {
 
         FileContent mediaContent = new FileContent("application/json", database);
 
-        //Drive driveService = new Drive(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), null);
+        Drive driveService = new Drive(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), null);
 
-       // com.google.api.services.drive.model.File file = driveService.files().create(fileMetadata, mediaContent)
-        //        .setFields("id")
-        //        .execute();
-       // System.out.println("File ID: " + file.getId());
+        com.google.api.services.drive.model.File file = driveService.files().create(fileMetadata, mediaContent)
+                .setFields("id")
+                .execute();
+        Log.e("notes_err", "File ID: " + file.getId());
     }
 
     public static void export(){
@@ -91,7 +91,11 @@ public class SyncUtils {
                     }
 
                     try {
-                        note.put("title", noteOrFolder.title);
+                        if (noteOrFolder.title == null){
+                            note.put("title", "null");
+                        } else {
+                            note.put("title", noteOrFolder.title);
+                        }
                         note.put("locked", noteOrFolder.locked);
                         note.put("id", noteOrFolder.id);
                         note.put("is_folder", noteOrFolder.is_folder);
