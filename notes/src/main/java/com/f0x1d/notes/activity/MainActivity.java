@@ -40,6 +40,7 @@ import androidx.fragment.app.FragmentManager;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         if (GoogleSignIn.getLastSignedInAccount(this) == null){
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken("676559112451-0806vq06cu8o6hi9dt02ql0h9njisipa.apps.googleusercontent.com")
-                    .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
+                    .requestScopes(new Scope(Scopes.DRIVE_FULL))
                     .build();
 
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -158,40 +159,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-
-        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
-            File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
-            File database = new File(db, "database.noteseed");
-
-            if (database.exists()){
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle(R.string.backup_found);
-                builder.setMessage(getString(R.string.restore) + "?");
-                builder.setCancelable(false);
-
-                builder.setPositiveButton(getString(R.string.restore), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SyncUtils.importFile();
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
-                        recreate();
-                    }
-                });
-                builder.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
-            } else {
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
-                SyncUtils.export();
-            }
-        } else {
-            SyncUtils.export();
-        }
     }
 
     private void signIn(){
@@ -223,6 +190,55 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
+                File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+                File database = new File(db, "database.noteseed");
+
+                if (database.exists()){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle(R.string.backup_found);
+                    builder.setMessage(getString(R.string.restore) + "?");
+                    builder.setCancelable(false);
+
+                    builder.setPositiveButton(getString(R.string.restore), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SyncUtils.importFile();
+                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
+                            recreate();
+                        }
+                    });
+                    builder.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
+                            dialog.cancel();
+                        }
+                    });
+
+                    String id = SyncUtils.ifBackupExistsOnGDrive();
+
+                    if (id != null){
+                        builder.setNegativeButton("GDrive", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    SyncUtils.importFromGDrive(id);
+                                    dialog.cancel();
+                                } catch (Exception e){
+                                    Log.e("notes_err", e.getLocalizedMessage());
+                                }
+                            }
+                        });
+                    }
+
+                    builder.show();
+                } else {
+                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
+                    SyncUtils.export();
+                }
+            }
         } catch (ApiException e) {
             Log.e("notes_err", "handleSignInResult:error \n\n", e);
             Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -243,6 +259,9 @@ public class MainActivity extends AppCompatActivity {
                 getFragmentManager().popBackStack();
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
                     SyncUtils.export();
+                    if (GoogleSignIn.getLastSignedInAccount(this) != null){
+                        SyncUtils.exportToGDrive();
+                    }
                 }
                 return;
             }

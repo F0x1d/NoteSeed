@@ -1,28 +1,158 @@
 package com.f0x1d.notes.utils;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.FileContent;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.FileList;
 
+import org.apache.http.HttpRequestFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
 
 public class SyncUtils {
+
+    public static String ifBackupExistsOnGDrive() {
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        final String[] id = {null};
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), new HttpRequestInitializer() {
+                    @Override
+                    public void initialize(HttpRequest request) throws IOException {
+                        request.executeAsync();
+                    }
+                }).setApplicationName("NoteSeed").build();
+
+                FileList files = null;
+                try {
+                    files = driveService.files().list()
+                            .setSpaces("appDataFolder")
+                            .setFields("nextPageToken, files(id, name)")
+                            .setPageSize(10)
+                            .execute();
+
+                    for (com.google.api.services.drive.model.File file : files.getFiles()) {
+                        if (file.getName().equals("database.json")){
+                            id[0] = file.getId();
+                            latch.countDown();
+                        }
+                    }
+                } catch (IOException e) {
+                    Log.e("notes_err", e.getLocalizedMessage());
+                }
+            }
+        }).start();
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            Log.e("notes_err", e.getLocalizedMessage());
+        }
+        return id[0];
+    }
+
+    public static void importFromGDrive(String id) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+                File database = new File(db, "database.noteseed");
+
+                Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), new HttpRequestInitializer() {
+                    @Override
+                    public void initialize(HttpRequest request) throws IOException {
+                        request.executeAsync();
+                    }
+                }).setApplicationName("NoteSeed").build();
+
+                OutputStream outputStream = new ByteArrayOutputStream();
+                try {
+                    driveService.files().get(id)
+                            .executeMediaAndDownloadTo(outputStream);
+
+                    FileOutputStream stream = new FileOutputStream(database);
+                    ((ByteArrayOutputStream) outputStream).writeTo(stream);
+                } catch (IOException e) {
+                    Log.e("notes_err", e.getLocalizedMessage());
+                }
+
+                importFile();
+            }
+        }).start();
+    }
+
+    public static void exportToGDrive() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+                File database = new File(db, "database.noteseed");
+
+                com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
+                fileMetadata.setName("database.json");
+                fileMetadata.setParents(Collections.singletonList("appDataFolder"));
+
+                Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), new HttpRequestInitializer() {
+                    @Override
+                    public void initialize(HttpRequest request) throws IOException {
+                        request.executeAsync();
+                    }
+                }).setApplicationName("NoteSeed").build();
+
+                FileContent mediaContent = new FileContent("application/json", database);
+                try {
+                    com.google.api.services.drive.model.File file = driveService.files().create(fileMetadata, mediaContent)
+                            .setFields("id")
+                            .execute();
+                } catch (IOException e) {
+                    Log.e("notes_err", e.getLocalizedMessage());
+                }
+            }
+        }).start();
+    }
 
     public static void export(){
         new Thread(new Runnable() {

@@ -75,10 +75,13 @@ configurations {
 dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     implementation "androidx.core:core:1.1.0-alpha03"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation "androidx.appcompat:appcompat:1.1.0-alpha01"
+    implementation "androidx.annotation:annotation:1.0.1"
+
+    implementation "com.google.android.material:material:1.1.0-alpha02"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
@@ -100,7 +103,7 @@ dependencies {
     // Dependencies for the REST API example
     implementation 'com.google.api-client:google-api-client:1.25.0'
     implementation 'com.google.api-client:google-api-client-android:1.23.0'
-    implementation 'com.google.apis:google-api-services-people:v1-rev139-1.22.0'
+    implementation 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
