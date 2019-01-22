@@ -128,10 +128,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null){
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                //    .requestIdToken("676559112451-0806vq06cu8o6hi9dt02ql0h9njisipa.apps.googleusercontent.com")
-                    .requestEmail()
-                    .requestProfile()
+                    .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
                     .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
+                    .requestEmail()
                     .build();
 
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -187,8 +186,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                handleSignInResult(task);
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
         } else {
             signIn();
         }
@@ -230,10 +229,6 @@ public class MainActivity extends AppCompatActivity {
                     SyncUtils.ifBackupExistsOnGDrive().addOnCompleteListener(new OnCompleteListener<String>() {
                         @Override
                         public void onComplete(@NonNull Task<String> task) {
-                            if (task.getResult() == null){
-                                builder.show();
-                                return;
-                            }
                             id[0] = task.getResult();
 
                             if (id[0] != null){
@@ -253,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
                                                     PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
                                                     dialog.cancel();
                                                     dialog1.cancel();
+                                                    recreate();
                                                 }
                                             });
                                         } catch (Exception e){
@@ -269,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            Log.e("notes_err", e.getLocalizedMessage());
                             builder.show();
                         }
                     });
@@ -302,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
                         SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(getApplicationContext(), "Sync completed!", Toast.LENGTH_SHORT).show();
+                                Log.e("notes_err", "synced");
                             }
                         });
                     }

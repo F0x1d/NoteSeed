@@ -150,14 +150,14 @@ public class PermissionUtils {
                 // block this thread waiting for the user's response! After the
                 // user sees the explanation, try again to request the
                 // permission.
-                ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_EXTERNAL_STORAGE },
                         REQUEST_WRITE_EXTERNAL);
 
                 Toast.makeText(activity, "REQUEST LOCATION PERMISSION", Toast.LENGTH_LONG).show();
 
             } else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_EXTERNAL_STORAGE },
                         REQUEST_WRITE_EXTERNAL);
 
             }
