@@ -19,6 +19,7 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -68,17 +69,18 @@ public class SyncUtils {
             GoogleAccountCredential credential =
                     GoogleAccountCredential.usingOAuth2(
                             App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+            if (GoogleSignIn.getLastSignedInAccount(App.getContext()) != null){
+                credential.setSelectedAccount(GoogleSignIn.getLastSignedInAccount(App.getContext()).getAccount());
+            }
 
             Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
 
             try {
-                /*FileList files = driveService.files().list()
+                FileList files = driveService.files().list()
                         .setSpaces("appDataFolder")
-                        .setFields("nextPageToken, files(id)")
+                        .setFields("nextPageToken, files(name)")
                         .setPageSize(10)
-                        .execute();*/
-
-                FileList files = driveService.files().list().setSpaces("drive").execute();
+                        .execute();
 
                 for (com.google.api.services.drive.model.File file : files.getFiles()) {
                     if (file.getName().equals("database.json")){
@@ -98,6 +100,9 @@ public class SyncUtils {
             GoogleAccountCredential credential =
                     GoogleAccountCredential.usingOAuth2(
                             App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+            if (GoogleSignIn.getLastSignedInAccount(App.getContext()) != null){
+                credential.setSelectedAccount(GoogleSignIn.getLastSignedInAccount(App.getContext()).getAccount());
+            }
 
             Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
 
@@ -129,6 +134,9 @@ public class SyncUtils {
             GoogleAccountCredential credential =
                     GoogleAccountCredential.usingOAuth2(
                             App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+            if (GoogleSignIn.getLastSignedInAccount(App.getContext()) != null){
+                credential.setSelectedAccount(GoogleSignIn.getLastSignedInAccount(App.getContext()).getAccount());
+            }
 
             Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
 

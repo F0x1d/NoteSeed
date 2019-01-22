@@ -38,6 +38,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -128,9 +129,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null){
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
                     .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
                     .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
-                    .requestEmail()
                     .build();
 
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -200,23 +201,26 @@ public class MainActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
-                File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+
+                File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
                 File database = new File(db, "database.noteseed");
 
-                if (database.exists()){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle(R.string.backup_found);
                     builder.setMessage(getString(R.string.restore) + "?");
                     builder.setCancelable(false);
 
-                    builder.setPositiveButton(getString(R.string.restore), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            SyncUtils.importFile();
-                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
-                            recreate();
-                        }
-                    });
+                    if (database.exists()){
+                        builder.setPositiveButton(getString(R.string.restore), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                SyncUtils.importFile();
+                                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
+                                recreate();
+                            }
+                        });
+                    }
+
                     builder.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -225,54 +229,58 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    final String[] id = {null};
-                    SyncUtils.ifBackupExistsOnGDrive().addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            id[0] = task.getResult();
+                SyncUtils.ifBackupExistsOnGDrive().addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (task.getResult() == null) {
+                            //Toast.makeText(getApplicationContext(), "null or error", Toast.LENGTH_SHORT).show();
+                            builder.show();
+                            return;
+                        }
 
-                            if (id[0] != null){
-                                builder.setNegativeButton("GDrive", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        try {
-                                            ProgressDialog dialog1 = new ProgressDialog(MainActivity.this);
-                                            dialog1.show();
-                                            dialog1.setCancelable(false);
-                                            dialog1.setMessage("Loading...");
+                        builder.setNegativeButton("GDrive", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    ProgressDialog dialog1 = new ProgressDialog(MainActivity.this);
+                                    dialog1.setCancelable(false);
+                                    dialog1.setMessage("Loading...");
+                                    dialog1.show();
 
-                                            SyncUtils.importFromGDrive(id[0]).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    SyncUtils.importFile();
-                                                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
-                                                    dialog.cancel();
-                                                    dialog1.cancel();
-                                                    recreate();
-                                                }
-                                            });
-                                        } catch (Exception e){
-                                            Log.e("notes_err", e.getLocalizedMessage());
+                                    SyncUtils.importFromGDrive(task.getResult()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            SyncUtils.importFile();
+                                            dialog1.cancel();
+                                            dialog.cancel();
+                                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
+                                            recreate();
                                         }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                            dialog1.cancel();
+                                            dialog.cancel();
+                                        }
+                                    });
 
-
-                                    }
-                                });
+                                } catch (Exception e){
+                                    Log.e("notes_err", e.getLocalizedMessage());
+                                    Toast.makeText(getApplicationContext(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
+                        });
 
-                            builder.show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("notes_err", e.getLocalizedMessage());
-                            builder.show();
-                        }
-                    });
-                } else {
-                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
-                    SyncUtils.export();
-                }
+                        builder.show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("notes_err", e.getLocalizedMessage());
+                        builder.show();
+                    }
+                });
             }
         } catch (ApiException e) {
             Log.e("notes_err", "handleSignInResult:error \n\n", e);

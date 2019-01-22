@@ -128,12 +128,14 @@ public class CenteredToolbar extends Toolbar {
 
         addView(linear);
 
-        if (UselessUtils.ifCustomTheme()){
-            this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material), ThemesEngine.iconsColor));
-        } else if (UselessUtils.getBool("night", false)){
-            this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material), Color.WHITE));
-        } else {
-            this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material), Color.BLACK));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (UselessUtils.ifCustomTheme()){
+                this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material), ThemesEngine.iconsColor));
+            } else if (UselessUtils.getBool("night", false)){
+                this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material), Color.WHITE));
+            } else {
+                this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material), Color.BLACK));
+            }
         }
     }
 
