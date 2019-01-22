@@ -17,18 +17,23 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.FileList;
 
 import org.apache.http.HttpRequestFactory;
@@ -48,110 +53,92 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class SyncUtils {
 
-    public static String ifBackupExistsOnGDrive() {
-        final CountDownLatch latch = new CountDownLatch(1);
+    private static final Executor mExecutor = Executors.newSingleThreadExecutor();
 
-        final String[] id = {null};
+    public static Task<String> ifBackupExistsOnGDrive() {
+        return Tasks.call(mExecutor, () -> {
+            GoogleAccountCredential credential =
+                    GoogleAccountCredential.usingOAuth2(
+                            App.getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), new HttpRequestInitializer() {
-                    @Override
-                    public void initialize(HttpRequest request) throws IOException {
-                        request.executeAsync();
+            Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
+
+            FileList files = null;
+            try {
+                files = driveService.files().list()
+                        .setSpaces("appDataFolder")
+                        .setFields("nextPageToken, files(id, name)")
+                        .setPageSize(10)
+                        .execute();
+
+                for (com.google.api.services.drive.model.File file : files.getFiles()) {
+                    if (file.getName().equals("database.json")){
+                        return file.getId();
                     }
-                }).setApplicationName("NoteSeed").build();
-
-                FileList files = null;
-                try {
-                    files = driveService.files().list()
-                            .setSpaces("appDataFolder")
-                            .setFields("nextPageToken, files(id, name)")
-                            .setPageSize(10)
-                            .execute();
-
-                    for (com.google.api.services.drive.model.File file : files.getFiles()) {
-                        if (file.getName().equals("database.json")){
-                            id[0] = file.getId();
-                            latch.countDown();
-                        }
-                    }
-                } catch (IOException e) {
-                    Log.e("notes_err", e.getLocalizedMessage());
                 }
+            } catch (Exception e) {
+                Log.e("notes_err", e.getLocalizedMessage());
             }
-        }).start();
 
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            Log.e("notes_err", e.getLocalizedMessage());
-        }
-        return id[0];
+            return null;
+        });
     }
 
-    public static void importFromGDrive(String id) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
-                File database = new File(db, "database.noteseed");
+    public static Task<Void> importFromGDrive(String id) {
+        return Tasks.call(mExecutor, () -> {
+            GoogleAccountCredential credential =
+                    GoogleAccountCredential.usingOAuth2(
+                            App.getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
 
-                Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), new HttpRequestInitializer() {
-                    @Override
-                    public void initialize(HttpRequest request) throws IOException {
-                        request.executeAsync();
-                    }
-                }).setApplicationName("NoteSeed").build();
+            Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
 
-                OutputStream outputStream = new ByteArrayOutputStream();
-                try {
-                    driveService.files().get(id)
-                            .executeMediaAndDownloadTo(outputStream);
+            File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+            File database = new File(db, "database.noteseed");
 
-                    FileOutputStream stream = new FileOutputStream(database);
-                    ((ByteArrayOutputStream) outputStream).writeTo(stream);
-                } catch (IOException e) {
-                    Log.e("notes_err", e.getLocalizedMessage());
-                }
+            FileOutputStream stream = new FileOutputStream(database);
 
-                importFile();
+            try {
+                driveService.files().get(id)
+                        .executeMediaAndDownloadTo(stream);
+            } catch (IOException e) {
+                Log.e("notes_err", e.getLocalizedMessage());
             }
-        }).start();
+
+            return null;
+        });
     }
 
-    public static void exportToGDrive() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
-                File database = new File(db, "database.noteseed");
+    public static Task<Void> exportToGDrive() {
+        return Tasks.call(mExecutor, () -> {
+            File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+            File database = new File(db, "database.noteseed");
 
-                com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-                fileMetadata.setName("database.json");
-                fileMetadata.setParents(Collections.singletonList("appDataFolder"));
+            com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
+            fileMetadata.setName("database.json");
+            fileMetadata.setParents(Collections.singletonList("appDataFolder"));
 
-                Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), new HttpRequestInitializer() {
-                    @Override
-                    public void initialize(HttpRequest request) throws IOException {
-                        request.executeAsync();
-                    }
-                }).setApplicationName("NoteSeed").build();
+            GoogleAccountCredential credential =
+                    GoogleAccountCredential.usingOAuth2(
+                            App.getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
 
-                FileContent mediaContent = new FileContent("application/json", database);
-                try {
-                    com.google.api.services.drive.model.File file = driveService.files().create(fileMetadata, mediaContent)
-                            .setFields("id")
-                            .execute();
-                } catch (IOException e) {
-                    Log.e("notes_err", e.getLocalizedMessage());
-                }
+            Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
+
+            FileContent mediaContent = new FileContent("application/json", database);
+            try {
+                com.google.api.services.drive.model.File file = driveService.files().create(fileMetadata, mediaContent)
+                        .setFields("id")
+                        .execute();
+            } catch (IOException e) {
+                Log.e("notes_err", e.getLocalizedMessage());
             }
-        }).start();
+
+            return null;
+        });
     }
 
     public static void export(){

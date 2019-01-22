@@ -1,7 +1,9 @@
 package com.f0x1d.notes.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,7 +27,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +42,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
 import java.io.File;
@@ -121,8 +128,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null){
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken("676559112451-0806vq06cu8o6hi9dt02ql0h9njisipa.apps.googleusercontent.com")
-                    .requestScopes(new Scope(Scopes.DRIVE_FULL))
+                //    .requestIdToken("676559112451-0806vq06cu8o6hi9dt02ql0h9njisipa.apps.googleusercontent.com")
+                    .requestEmail()
+                    .requestProfile()
+                    .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
                     .build();
 
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -217,23 +226,52 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    String id = SyncUtils.ifBackupExistsOnGDrive();
-
-                    if (id != null){
-                        builder.setNegativeButton("GDrive", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    SyncUtils.importFromGDrive(id);
-                                    dialog.cancel();
-                                } catch (Exception e){
-                                    Log.e("notes_err", e.getLocalizedMessage());
-                                }
+                    final String[] id = {null};
+                    SyncUtils.ifBackupExistsOnGDrive().addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if (task.getResult() == null){
+                                builder.show();
+                                return;
                             }
-                        });
-                    }
+                            id[0] = task.getResult();
 
-                    builder.show();
+                            if (id[0] != null){
+                                builder.setNegativeButton("GDrive", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            ProgressDialog dialog1 = new ProgressDialog(MainActivity.this);
+                                            dialog1.show();
+                                            dialog1.setCancelable(false);
+                                            dialog1.setMessage("Loading...");
+
+                                            SyncUtils.importFromGDrive(id[0]).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    SyncUtils.importFile();
+                                                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
+                                                    dialog.cancel();
+                                                    dialog1.cancel();
+                                                }
+                                            });
+                                        } catch (Exception e){
+                                            Log.e("notes_err", e.getLocalizedMessage());
+                                        }
+
+
+                                    }
+                                });
+                            }
+
+                            builder.show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            builder.show();
+                        }
+                    });
                 } else {
                     PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
                     SyncUtils.export();
@@ -260,7 +298,13 @@ public class MainActivity extends AppCompatActivity {
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
                     SyncUtils.export();
                     if (GoogleSignIn.getLastSignedInAccount(this) != null){
-                        SyncUtils.exportToGDrive();
+
+                        SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(getApplicationContext(), "Sync completed!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
                 return;
