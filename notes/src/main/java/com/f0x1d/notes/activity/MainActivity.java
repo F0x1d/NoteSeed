@@ -332,6 +332,20 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (notes != null && notes.isVisible()){
+                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
+                    SyncUtils.export();
+
+                    if (GoogleSignIn.getLastSignedInAccount(this) != null){
+
+                        SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.e("notes_err", "synced");
+                            }
+                        });
+                    }
+                }
+
                 clear_back_stack(MainActivity.this);
                 super.onBackPressed();
                 return;
