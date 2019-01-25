@@ -26,14 +26,15 @@
             android:title="@string/use_finger" android:key="finger"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/sync">
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:title="@string/sync" android:key="sync"/>
+    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
+
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/debug">
         <com.f0x1d.notes.view.preferences.MyPreference
             android:summary="@string/debug_title" android:selectable="false"/>
             <com.f0x1d.notes.view.preferences.MyPreference
                 android:title="@string/clear_all" android:key="delete_all"/>
-            <com.f0x1d.notes.view.preferences.MyPreference
-                android:title="@string/export" android:key="export"/>
-            <com.f0x1d.notes.view.preferences.MyPreference
-                android:title="@string/import_db" android:key="import"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 </PreferenceScreen>

@@ -172,20 +172,24 @@ public class SyncUtils {
 
                     for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
                         if (noteItem.to_id == noteOrFolder.id){
+
                             JSONObject element = new JSONObject();
                             try {
                                 element.put("id", noteItem.id);
                                 element.put("to_id", noteItem.to_id);
+
                                 if (noteItem.pic_res == null){
                                     element.put("pic_res", "null");
                                 } else {
                                     element.put("pic_res", noteItem.pic_res);
                                 }
+
                                 if (noteItem.text == null){
                                     element.put("text", "null");
                                 } else {
                                     element.put("text", noteItem.text);
                                 }
+
                                 element.put("position", noteItem.position);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -201,17 +205,20 @@ public class SyncUtils {
                         } else {
                             note.put("title", noteOrFolder.title);
                         }
+
                         note.put("locked", noteOrFolder.locked);
                         note.put("id", noteOrFolder.id);
                         note.put("is_folder", noteOrFolder.is_folder);
                         note.put("pinned", noteOrFolder.pinned);
                         note.put("edit_time", noteOrFolder.edit_time);
                         note.put("in_folder_id", noteOrFolder.in_folder_id);
+
                         if (noteOrFolder.text == null){
                             note.put("text", "null");
                         } else {
                             note.put("text", noteOrFolder.text);
                         }
+
                         note.put("color", noteOrFolder.color);
                         if (noteOrFolder.folder_name == null){
                             note.put("folder_name", "null");

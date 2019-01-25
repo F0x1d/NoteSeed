@@ -112,4 +112,9 @@
     <string name="z1">Моя команда</string>
     <string name="backup_found">Был найден бекап!</string>
     <string name="restore">Восстановить</string>
+    <string name="sync">Синхронизация</string>
+    <string name="sign_out">Выйти</string>
+    <string name="export_gdrive">Экспорт на GDrive</string>
+    <string name="import_gdrive">Импорт с GDrive</string>
+    <string name="file">Файл</string>
 </resources>

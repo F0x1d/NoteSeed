@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="GDrive">
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:title="@string/import_gdrive" android:key="import_g"/>
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:title="@string/export_gdrive" android:key="export_g"/>
+    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
+
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/file">
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:title="@string/export" android:key="export"/>
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:title="@string/import_db" android:key="import"/>
+    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
+
+</PreferenceScreen>

@@ -88,20 +88,11 @@ public class MainSettings extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.settings);
 
-        Preference import_db = findPreference("import");
-            import_db.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference sync = findPreference("sync");
+            sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    SyncUtils.importFile();
-                    return false;
-                }
-            });
-
-        Preference export = findPreference("export");
-            export.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    SyncUtils.export();
+                    getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new SyncSettings(), "sync").addToBackStack(null).commit();
                     return false;
                 }
             });

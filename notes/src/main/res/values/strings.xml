@@ -112,4 +112,9 @@
     <string name="z1">My team</string>
     <string name="backup_found">Backup was found!</string>
     <string name="restore">Restore</string>
+    <string name="sync">Synchronization</string>
+    <string name="sign_out">Sign out</string>
+    <string name="export_gdrive">Export to GDrive</string>
+    <string name="import_gdrive">Import from GDrive</string>
+    <string name="file">File</string>
 </resources>

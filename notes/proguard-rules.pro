@@ -26,7 +26,30 @@
 
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep class com.f0x1d.notes.utils.SyncUtils {
+    *;
+}
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
   **[] $VALUES;
   public *;
+}
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+    @com.google.android.gms.common.annotation.KeepName *;
+}
+
+-keep class * extends com.google.api.client.json.GenericJson {
+    *;
+}
+-keep class com.google.api.services.drive.** {
+*;
+}
+
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
 }
