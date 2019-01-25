@@ -66,7 +66,7 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
 // Show Notification
         NotificationManager notificationManager =
                 (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify((int) to_id, notification);
+        notificationManager.notify((int) to_id + 1, notification);
 
         delete(id);
     }

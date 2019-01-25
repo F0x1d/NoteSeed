@@ -21,6 +21,18 @@ public class FCMReceiver extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Log.e("notes_fcm", "From: " + remoteMessage.getFrom());
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String name1 = "Напоминания";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("com.f0x1d.notes", name1, importance);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            channel.enableVibration(true);
+            channel.enableLights(true);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
             String title = null;
             String text = null;
 
@@ -44,7 +56,7 @@ public class FCMReceiver extends FirebaseMessagingService {
                         }
 
                 NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                manager.notify(99999, builder.build());
+                manager.notify(1, builder.build());
             } catch (JSONException e) {
                 Log.e("notes_err", e.getLocalizedMessage());
             }

@@ -209,9 +209,9 @@ public class MainActivity extends AppCompatActivity {
             ProgressDialog dialog = new ProgressDialog(this);
                 dialog.setMessage("Loading...");
                 dialog.setCancelable(false);
-                dialog.show();
 
             if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
+                dialog.show();
 
                 File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
                 File database = new File(db, "database.noteseed");

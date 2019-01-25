@@ -106,7 +106,7 @@ public class CenteredToolbar extends Toolbar {
             tvTitle.setTextColor(ThemesEngine.toolbarTextColor);
 
             if (!ThemesEngine.toolbarTransparent){
-                this.setBackgroundColor(ThemesEngine.toolbarColor);
+                setBackgroundColor(ThemesEngine.toolbarColor);
             }
         }
 
@@ -130,11 +130,11 @@ public class CenteredToolbar extends Toolbar {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (UselessUtils.ifCustomTheme()){
-                this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), ThemesEngine.iconsColor));
+                setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), ThemesEngine.iconsColor));
             } else if (UselessUtils.getBool("night", false)){
-                this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.WHITE));
+                setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.WHITE));
             } else {
-                this.setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.BLACK));
+                setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.BLACK));
             }
         }
     }
