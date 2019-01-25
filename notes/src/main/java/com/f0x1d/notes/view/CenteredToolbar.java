@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -129,12 +130,17 @@ public class CenteredToolbar extends Toolbar {
         addView(linear);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (UselessUtils.ifCustomTheme()){
-                setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), ThemesEngine.iconsColor));
-            } else if (UselessUtils.getBool("night", false)){
-                setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.WHITE));
-            } else {
-                setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.BLACK));
+
+            try {
+                if (UselessUtils.ifCustomTheme()){
+                    setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), ThemesEngine.iconsColor));
+                } else if (UselessUtils.getBool("night", false)){
+                    setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.WHITE));
+                } else {
+                    setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.BLACK));
+                }
+            } catch (Exception e){
+                Log.e("notes_err", e.getLocalizedMessage());
             }
         }
     }
