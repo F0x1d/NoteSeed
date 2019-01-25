@@ -1,6 +1,7 @@
 package com.f0x1d.notes.activity;
 
 import android.Manifest;
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -141,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (UselessUtils.appInstalledOrNot("com.encrypt.password")){
             Toast.makeText(getApplicationContext(), "Вот и иди к своему желе", Toast.LENGTH_SHORT).show();
-            finish();
         }
 
         try {
@@ -198,7 +198,14 @@ public class MainActivity extends AppCompatActivity {
         Log.e("notes_err", "handleSignInResult:" + completedTask.isSuccessful());
 
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            Account account = completedTask.getResult(ApiException.class).getAccount();
+
+            Log.e("notes_err", account.name);
+
+            ProgressDialog dialog = new ProgressDialog(this);
+                dialog.setMessage("Loading...");
+                dialog.setCancelable(false);
+                dialog.show();
 
             if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
 
@@ -229,11 +236,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                SyncUtils.ifBackupExistsOnGDrive().addOnCompleteListener(new OnCompleteListener<String>() {
+                SyncUtils.ifBackupExistsOnGDrive(account).addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
                     public void onComplete(@NonNull Task<String> task) {
                         if (task.getResult() == null) {
-                            //Toast.makeText(getApplicationContext(), "null or error", Toast.LENGTH_SHORT).show();
+                            Log.e("notes_err", "gdrive error");
+                            dialog.cancel();
                             builder.show();
                             return;
                         }
@@ -247,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                                     dialog1.setMessage("Loading...");
                                     dialog1.show();
 
-                                    SyncUtils.importFromGDrive(task.getResult()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    SyncUtils.importFromGDrive(task.getResult(), account).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             SyncUtils.importFile();
@@ -272,12 +280,14 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
+                        dialog.cancel();
                         builder.show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e("notes_err", e.getLocalizedMessage());
+                        dialog.cancel();
                         builder.show();
                     }
                 });

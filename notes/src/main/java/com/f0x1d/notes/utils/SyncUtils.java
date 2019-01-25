@@ -1,5 +1,6 @@
 package com.f0x1d.notes.utils;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -20,6 +21,7 @@ import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -64,25 +66,25 @@ public class SyncUtils {
 
     private static final Executor mExecutor = Executors.newSingleThreadExecutor();
 
-    public static Task<String> ifBackupExistsOnGDrive() {
+    public static Task<String> ifBackupExistsOnGDrive(Account account) {
         return Tasks.call(mExecutor, () -> {
             GoogleAccountCredential credential =
                     GoogleAccountCredential.usingOAuth2(
                             App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
-            if (GoogleSignIn.getLastSignedInAccount(App.getContext()) != null){
-                credential.setSelectedAccount(GoogleSignIn.getLastSignedInAccount(App.getContext()).getAccount());
-            }
+                credential.setSelectedAccount(account);
 
             Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
 
             try {
                 FileList files = driveService.files().list()
                         .setSpaces("appDataFolder")
-                        .setFields("nextPageToken, files(name)")
+                        .setFields("nextPageToken, files(id, name)")
                         .setPageSize(10)
                         .execute();
 
                 for (com.google.api.services.drive.model.File file : files.getFiles()) {
+                    Log.e("notes_err", "file found: " + file.getName());
+
                     if (file.getName().equals("database.json")){
                         return file.getId();
                     }
@@ -95,14 +97,13 @@ public class SyncUtils {
         });
     }
 
-    public static Task<Void> importFromGDrive(String id) {
+    public static Task<Void> importFromGDrive(String id, Account account) {
         return Tasks.call(mExecutor, () -> {
             GoogleAccountCredential credential =
                     GoogleAccountCredential.usingOAuth2(
                             App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
-            if (GoogleSignIn.getLastSignedInAccount(App.getContext()) != null){
-                credential.setSelectedAccount(GoogleSignIn.getLastSignedInAccount(App.getContext()).getAccount());
-            }
+
+                credential.setSelectedAccount(account);
 
             Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
 
@@ -114,6 +115,8 @@ public class SyncUtils {
             try {
                 driveService.files().get(id)
                         .executeMediaAndDownloadTo(stream);
+
+                stream.close();
             } catch (IOException e) {
                 Log.e("notes_err", e.getLocalizedMessage());
             }
