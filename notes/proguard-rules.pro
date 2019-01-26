@@ -47,7 +47,11 @@
     *;
 }
 -keep class com.google.api.services.drive.** {
-*;
+    *;
+}
+
+-keep class com.f0x1d.notes.adapter.ItemsAdapter {
+    *;
 }
 
 -keepnames class * implements android.os.Parcelable {

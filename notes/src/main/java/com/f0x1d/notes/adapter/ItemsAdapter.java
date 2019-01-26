@@ -467,35 +467,41 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.pinned.setVisibility(View.INVISIBLE);
         }
 
-        String text = "error";
+        String text = "text == null";
 
         NoteItemsDao dao = App.getInstance().getDatabase().noteItemsDao();
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.to_id == items.get(position).id){
                 if (noteItem.position == 0){
-                    text = noteItem.text;
+                    if (noteItem.text != null){
+                        text = noteItem.text;
+                    }
                 }
             }
         }
 
-        boolean oneLine;
+        try {
+            boolean oneLine;
 
-        if (Pattern.compile("\\r?\\n").matcher(text).find()){
-            oneLine = false;
-        } else {
-            oneLine = true;
-        }
-
-        for (String retval : text.split("\\r?\\n")) {
-            if (oneLine){
-                holder.text.setText(retval);
+            if (Pattern.compile("\\r?\\n").matcher(text).find()){
+                oneLine = false;
             } else {
-                holder.text.setText(retval + "\n...");
+                oneLine = true;
             }
-            break;
-        }
 
-        if (holder.text.getText().toString().equals("text")){
+            for (String retval : text.split("\\r?\\n")) {
+                if (oneLine){
+                    holder.text.setText(retval);
+                } else {
+                    holder.text.setText(retval + "\n...");
+                }
+
+
+                break;
+            }
+        } catch (Exception e){}
+
+        if (holder.text.getText().toString().equals("")){
             holder.text.setText(Html.fromHtml("<i>" + activity.getString(R.string.empty_note) + "</i>"));
         }
 
