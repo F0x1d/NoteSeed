@@ -3,6 +3,7 @@ package com.f0x1d.notes.utils;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
@@ -28,7 +29,9 @@ import androidx.fragment.app.Fragment;
 
 public class UselessUtils {
 
-    public static char[] lol = {'c', 'o', 'm', '.', 'e', 'n', 'c', 'r', 'y', 'p', 't', '.', 'p', 'a', 's', 's', 'w', 'o', 'r', 'd'};
+    public static SharedPreferences.Editor edit(){
+        return PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit();
+    }
 
     public static boolean getBool(String key, boolean defValue){
         return PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean(key, defValue);

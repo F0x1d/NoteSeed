@@ -319,7 +319,6 @@ public class MainActivity extends AppCompatActivity {
                     SyncUtils.export();
 
                     if (GoogleSignIn.getLastSignedInAccount(this) != null){
-
                         SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -336,7 +335,6 @@ public class MainActivity extends AppCompatActivity {
                     SyncUtils.export();
 
                     if (GoogleSignIn.getLastSignedInAccount(this) != null){
-
                         SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

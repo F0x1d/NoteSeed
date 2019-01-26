@@ -495,8 +495,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 } else {
                     holder.text.setText(retval + "\n...");
                 }
-
-
                 break;
             }
         } catch (Exception e){}

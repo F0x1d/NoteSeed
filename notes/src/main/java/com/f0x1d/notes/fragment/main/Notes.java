@@ -153,17 +153,6 @@ public class Notes extends Fragment {
             }
         });
 
-        String lol_str = "";
-
-        for (char a : UselessUtils.lol){
-            lol_str = lol_str + a;
-        }
-
-        if (UselessUtils.appInstalledOrNot(lol_str)){
-            Toast.makeText(getActivity(), "Вот и иди к своему желе", Toast.LENGTH_SHORT).show();
-            getActivity().finish();
-        }
-
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("in_folder_id", "def").apply();
 
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
