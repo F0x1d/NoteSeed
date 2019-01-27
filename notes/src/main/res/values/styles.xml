@@ -1,13 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
     <style name="AppTheme_md2" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="alertDialogTheme">@style/AlertDialog.AppTheme.Light</item>
         <item name="colorAccent">@color/blue</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
@@ -19,17 +18,10 @@
         <item name="colorAccent">@color/noname</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
-    <style name="NightTheme_md2" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/white</item>
-        <item name="alertDialogTheme">@style/AlertDialog.AppTheme.Dark</item>
-        <item name="android:statusBarColor">@color/statusbar</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-        <item name="android:windowBackground">@color/statusbar</item>
-    </style>
+
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -51,6 +43,8 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
+
+
     <style name="NightTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -60,6 +54,18 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:windowBackground">@color/statusbar</item>
     </style>
+
+    <style name="NightTheme_md2" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="alertDialogTheme">@style/AlertDialog.AppTheme.Dark</item>
+        <item name="android:statusBarColor">@color/statusbar</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowBackground">@color/statusbar</item>
+    </style>
+
+
 
     <style name="TimePicker" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@color/statusbar</item>
@@ -75,11 +81,15 @@
         <item name="colorAccent">@color/statusbar</item>
     </style>
 
+
+
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:statusBarColor">@android:color/white</item>
     </style>
+
+
 
     <style name="AlertDialog.AppTheme.Light" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/dialog_round_corners</item>

@@ -122,7 +122,11 @@ public class Notes extends Fragment {
                         getActivity().getWindow().setStatusBarColor(Color.GRAY);
                     }
 
-                    getActivity().getWindow().setNavigationBarColor(Color.BLACK);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+                        getActivity().getWindow().setNavigationBarColor(Color.WHITE);
+                    } else {
+                        getActivity().getWindow().setNavigationBarColor(Color.BLACK);
+                    }
                 }
             }
         }
@@ -387,11 +391,11 @@ public class Notes extends Fragment {
     public String generateName(){
         int first_number = 1;
 
-        String name = getString(R.string.new_note);
+        String name = getString(R.string.new_folder);
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
             if (noteOrFolder.is_folder == 0 && noteOrFolder.title.equals(name)){
-                name = getString(R.string.new_note) + first_number;
+                name = getString(R.string.new_folder) + first_number;
                 first_number++;
             }
         }
@@ -417,7 +421,7 @@ public class Notes extends Fragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         // special intent for Samsung file manager
-        Intent sIntent = new Intent("com.f0x1d.talkandtools.main.PICK_DATA");
+        Intent sIntent = new Intent("com.f0x1d.notes.main.PICK_DATA");
         // if you want any file type, you can skip next line
         sIntent.putExtra("CONTENT_TYPE", minmeType);
         sIntent.addCategory(Intent.CATEGORY_DEFAULT);

@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.R;
@@ -44,6 +45,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -53,6 +55,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import static android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,18 +77,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (UselessUtils.ifCustomTheme()){
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
-                if (ThemesEngine.dark){
-                    setTheme(R.style.NightTheme_md2);
-                } else {
-                    setTheme(R.style.AppTheme_md2);
-                }
+            if (ThemesEngine.dark){
+                setTheme(R.style.NightTheme);
             } else {
-                if (ThemesEngine.dark){
-                    setTheme(R.style.NightTheme);
-                } else {
-                    setTheme(R.style.AppTheme);
-                }
+                setTheme(R.style.AppTheme);
             }
 
             try {
@@ -124,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     getWindow().setStatusBarColor(Color.GRAY);
                 }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+                    getWindow().setNavigationBarColor(Color.WHITE);
+                }
             }
         }
 
@@ -140,10 +139,6 @@ public class MainActivity extends AppCompatActivity {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
             signIn();
-        }
-
-        if (UselessUtils.appInstalledOrNot("com.encrypt.password")){
-            Toast.makeText(getApplicationContext(), "Вот и иди к своему желе", Toast.LENGTH_SHORT).show();
         }
 
         try {
@@ -175,7 +170,9 @@ public class MainActivity extends AppCompatActivity {
     private void signIn(){
         if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS){
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, 1);
+            if (!BuildConfig.DEBUG){
+                startActivityForResult(signInIntent, 1);
+            }
         }
     }
 

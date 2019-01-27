@@ -398,7 +398,7 @@ public class NoteEdit extends Fragment {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         // special intent for Samsung file manager
-        Intent sIntent = new Intent("com.f0x1d.talkandtools.main.PICK_DATA");
+        Intent sIntent = new Intent("com.f0x1d.notes.main.PICK_DATA");
         // if you want any file type, you can skip next line
         sIntent.putExtra("CONTENT_TYPE", minmeType);
         sIntent.addCategory(Intent.CATEGORY_DEFAULT);
