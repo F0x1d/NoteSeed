@@ -110,7 +110,7 @@
     <string name="now">Now</string>
     <string name="set_time">Set time</string>
     <string name="z1">My team</string>
-    <string name="backup_found">Backup was found!</string>
+    <string name="backup_found">Choose backup!</string>
     <string name="restore">Restore</string>
     <string name="sync">Synchronization</string>
     <string name="sign_out">Sign out</string>

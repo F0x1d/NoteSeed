@@ -86,12 +86,7 @@ public class SyncSettings extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null){
-                    SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    SyncUtils.exportToGDrive();
                 } else {
                     Toast.makeText(getActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
                 }
