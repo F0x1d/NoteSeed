@@ -19,11 +19,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"/>
-
-        <receiver android:name=".receiver.NotifyServiceReceiver"/>
 
         <activity
             android:name=".activity.Splash"
@@ -40,10 +39,20 @@
             android:name="io.fabric.ApiKey"
             android:value="739e07b685d16d7a41340eaca4fe3c5d9c8907ac" />
 
-        <service android:name=".receiver.FCMReceiver">
+        <service android:name=".receiver.fcm.FCMReceiver">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".receiver.NotifyServiceReceiver"/>
+
+        <service
+            android:name=".receiver.fcm.FCMInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 </manifest>

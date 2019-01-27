@@ -1,4 +1,4 @@
-package com.f0x1d.notes.receiver;
+package com.f0x1d.notes.receiver.fcm;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
