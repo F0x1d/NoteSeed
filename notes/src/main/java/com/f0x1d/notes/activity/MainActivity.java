@@ -18,6 +18,7 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.utils.BackupDialog;
 import com.f0x1d.notes.utils.PermissionUtils;
 import com.f0x1d.notes.utils.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
@@ -78,9 +79,17 @@ public class MainActivity extends AppCompatActivity {
 
         if (UselessUtils.ifCustomTheme()){
             if (ThemesEngine.dark){
-                setTheme(R.style.NightTheme);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
+                    setTheme(R.style.NightTheme_md2);
+                } else {
+                    setTheme(R.style.NightTheme);
+                }
             } else {
-                setTheme(R.style.AppTheme);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
+                    setTheme(R.style.AppTheme_md2);
+                } else {
+                    setTheme(R.style.AppTheme);
+                }
             }
 
             try {
@@ -118,10 +127,6 @@ public class MainActivity extends AppCompatActivity {
                     getWindow().setStatusBarColor(Color.WHITE);
                 } else {
                     getWindow().setStatusBarColor(Color.GRAY);
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-                    getWindow().setNavigationBarColor(Color.WHITE);
                 }
             }
         }
@@ -203,96 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
             Log.e("notes_err", account.name);
 
-            ProgressDialog dialog = new ProgressDialog(this);
-                dialog.setMessage("Loading...");
-                dialog.setCancelable(false);
-
-            if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
-                dialog.show();
-
-                File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
-                File database = new File(db, "database.noteseed");
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle(R.string.backup_found);
-                    builder.setMessage(getString(R.string.restore) + "?");
-                    builder.setCancelable(false);
-
-                    if (database.exists()){
-                        builder.setPositiveButton(getString(R.string.restore), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                SyncUtils.importFile();
-                                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
-                                recreate();
-                            }
-                        });
-                    }
-
-                    builder.setNeutralButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
-                            dialog.cancel();
-                        }
-                    });
-
-                SyncUtils.ifBackupExistsOnGDrive(account).addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (task.getResult() == null) {
-                            Log.e("notes_err", "gdrive error");
-                            dialog.cancel();
-                            builder.show();
-                            return;
-                        }
-
-                        builder.setNegativeButton("GDrive", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    ProgressDialog dialog1 = new ProgressDialog(MainActivity.this);
-                                    dialog1.setCancelable(false);
-                                    dialog1.setMessage("Loading...");
-                                    dialog1.show();
-
-                                    SyncUtils.importFromGDrive(task.getResult(), account).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            SyncUtils.importFile();
-                                            dialog1.cancel();
-                                            dialog.cancel();
-                                            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("restored", true).apply();
-                                            recreate();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                            dialog1.cancel();
-                                            dialog.cancel();
-                                        }
-                                    });
-
-                                } catch (Exception e){
-                                    Log.e("notes_err", e.getLocalizedMessage());
-                                    Toast.makeText(getApplicationContext(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-
-                        dialog.cancel();
-                        builder.show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("notes_err", e.getLocalizedMessage());
-                        dialog.cancel();
-                        builder.show();
-                    }
-                });
-            }
+            BackupDialog.show(this, account);
         } catch (ApiException e) {
             Log.e("notes_err", "handleSignInResult:error \n\n", e);
             Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -329,16 +245,19 @@ public class MainActivity extends AppCompatActivity {
 
             if (notes != null && notes.isVisible()){
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
-                    SyncUtils.export();
-
-                    if (GoogleSignIn.getLastSignedInAccount(this) != null){
-                        SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Log.e("notes_err", "synced");
+                    SyncUtils.export().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (GoogleSignIn.getLastSignedInAccount(MainActivity.this) != null){
+                                SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.e("notes_err", "synced");
+                                    }
+                                });
                             }
-                        });
-                    }
+                        }
+                    });
                 }
 
                 clear_back_stack(MainActivity.this);

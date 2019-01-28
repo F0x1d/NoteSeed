@@ -122,11 +122,7 @@ public class Notes extends Fragment {
                         getActivity().getWindow().setStatusBarColor(Color.GRAY);
                     }
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
-                        getActivity().getWindow().setNavigationBarColor(Color.WHITE);
-                    } else {
-                        getActivity().getWindow().setNavigationBarColor(Color.BLACK);
-                    }
+                    getActivity().getWindow().setNavigationBarColor(Color.BLACK);
                 }
             }
         }

@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:title="@string/attach"
+        android:icon="@drawable/ic_image_black_24dp"
+        app:showAsAction="always"
+        android:id="@+id/attach_pic"/>
+    <item
         android:id="@+id/lock"
         android:checkable="true"
         android:title="@string/lock"/>
@@ -11,7 +16,4 @@
     <item
         android:title="@string/export"
         android:id="@+id/export"/>
-    <item
-        android:title="@string/attach"
-        android:id="@+id/attach"/>
 </menu>

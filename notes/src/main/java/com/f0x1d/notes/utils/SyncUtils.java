@@ -156,96 +156,95 @@ public class SyncUtils {
         });
     }
 
-    public static void export(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
-                if (!db.exists()){
-                    db.mkdirs();
-                }
+    public static Task<Void> export(){
+        return Tasks.call(mExecutor, () -> {
+            File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+            if (!db.exists()){
+                db.mkdirs();
+            }
 
-                JSONArray main = new JSONArray();
-                for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-                    JSONObject note = new JSONObject();
-                    JSONArray elements = new JSONArray();
+            JSONArray main = new JSONArray();
+            for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
+                JSONObject note = new JSONObject();
+                JSONArray elements = new JSONArray();
 
-                    for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
-                        if (noteItem.to_id == noteOrFolder.id){
+                for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
+                    if (noteItem.to_id == noteOrFolder.id){
 
-                            JSONObject element = new JSONObject();
-                            try {
-                                element.put("id", noteItem.id);
-                                element.put("to_id", noteItem.to_id);
+                        JSONObject element = new JSONObject();
+                        try {
+                            element.put("id", noteItem.id);
+                            element.put("to_id", noteItem.to_id);
 
-                                if (noteItem.pic_res == null){
-                                    element.put("pic_res", "null");
-                                } else {
-                                    element.put("pic_res", noteItem.pic_res);
-                                }
-
-                                if (noteItem.text == null){
-                                    element.put("text", "null");
-                                } else {
-                                    element.put("text", noteItem.text);
-                                }
-
-                                element.put("position", noteItem.position);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            if (noteItem.pic_res == null){
+                                element.put("pic_res", "null");
+                            } else {
+                                element.put("pic_res", noteItem.pic_res);
                             }
 
-                            elements.put(element);
-                        }
-                    }
+                            if (noteItem.text == null){
+                                element.put("text", "null");
+                            } else {
+                                element.put("text", noteItem.text);
+                            }
 
-                    try {
-                        if (noteOrFolder.title == null){
-                            note.put("title", "null");
-                        } else {
-                            note.put("title", noteOrFolder.title);
-                        }
-
-                        note.put("locked", noteOrFolder.locked);
-                        note.put("id", noteOrFolder.id);
-                        note.put("is_folder", noteOrFolder.is_folder);
-                        note.put("pinned", noteOrFolder.pinned);
-                        note.put("edit_time", noteOrFolder.edit_time);
-                        note.put("in_folder_id", noteOrFolder.in_folder_id);
-
-                        if (noteOrFolder.text == null){
-                            note.put("text", "null");
-                        } else {
-                            note.put("text", noteOrFolder.text);
+                            element.put("position", noteItem.position);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
 
-                        note.put("color", noteOrFolder.color);
-                        if (noteOrFolder.folder_name == null){
-                            note.put("folder_name", "null");
-                        } else {
-                            note.put("folder_name", noteOrFolder.folder_name);
-                        }
-
-                        note.put("elems", elements);
-
-                        main.put(note);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        elements.put(element);
                     }
                 }
 
-                File database = new File(db, "database.noteseed");
-
                 try {
-                    FileWriter writer = new FileWriter(database);
-                    writer.append(main.toString());
-                    writer.flush();
-                    writer.close();
-                } catch (IOException e) {
+                    if (noteOrFolder.title == null){
+                        note.put("title", "null");
+                    } else {
+                        note.put("title", noteOrFolder.title);
+                    }
+
+                    note.put("locked", noteOrFolder.locked);
+                    note.put("id", noteOrFolder.id);
+                    note.put("is_folder", noteOrFolder.is_folder);
+                    note.put("pinned", noteOrFolder.pinned);
+                    note.put("edit_time", noteOrFolder.edit_time);
+                    note.put("in_folder_id", noteOrFolder.in_folder_id);
+
+                    if (noteOrFolder.text == null){
+                        note.put("text", "null");
+                    } else {
+                        note.put("text", noteOrFolder.text);
+                    }
+
+                    note.put("color", noteOrFolder.color);
+                    if (noteOrFolder.folder_name == null){
+                        note.put("folder_name", "null");
+                    } else {
+                        note.put("folder_name", noteOrFolder.folder_name);
+                    }
+
+                    note.put("elems", elements);
+
+                    main.put(note);
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-        }).start();
+
+            File database = new File(db, "database.noteseed");
+
+            try {
+                FileWriter writer = new FileWriter(database);
+                writer.append(main.toString());
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        });
     }
 
     public static void importFile(){

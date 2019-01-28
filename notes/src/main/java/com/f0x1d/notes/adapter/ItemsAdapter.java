@@ -408,11 +408,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.text.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.time.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
+                    holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_black_24dp), ThemesEngine.lightColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.BLACK);
                     holder.text.setTextColor(Color.BLACK);
                     holder.time.setTextColor(Color.BLACK);
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+                    holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
                 }
             } else {
                 if (UselessUtils.ifCustomTheme()){
@@ -420,11 +422,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.time.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
+                    holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.WHITE);
                     holder.text.setTextColor(Color.WHITE);
                     holder.time.setTextColor(Color.WHITE);
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+                    holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
                 }
             }
         } catch (Exception e){
@@ -438,11 +442,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.text.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.time.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
+                    holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_black_24dp), ThemesEngine.lightColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.BLACK);
                     holder.text.setTextColor(Color.BLACK);
                     holder.time.setTextColor(Color.BLACK);
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+                    holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
                 }
             } else {
                 if (UselessUtils.ifCustomTheme()){
@@ -450,11 +456,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.time.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
+                    holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.WHITE);
                     holder.time.setTextColor(Color.WHITE);
                     holder.text.setTextColor(Color.WHITE);
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+                    holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
                 }
             }
         }
@@ -508,9 +516,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         Date currentDate = new Date(items.get(position).edit_time);
-        DateFormat df = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
+        DateFormat df = new SimpleDateFormat("HH:mm | dd.MM.yyyy");
 
-        holder.time.setText(activity.getString(R.string.last_change) + " " + df.format(currentDate));
+        holder.time.setText(df.format(currentDate));
 
         holder.note_card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -948,6 +956,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         CardView note_card;
         ImageView pinned;
         TextView time;
+        ImageView time_pic;
 
         noteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -957,6 +966,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             text = itemView.findViewById(R.id.textView_text);
             pinned = itemView.findViewById(R.id.pinned);
             time = itemView.findViewById(R.id.time);
+            time_pic = itemView.findViewById(R.id.time_ic);
         }
     }
 

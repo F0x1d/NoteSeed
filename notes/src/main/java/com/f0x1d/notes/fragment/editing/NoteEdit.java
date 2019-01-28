@@ -130,6 +130,17 @@ public class NoteEdit extends Fragment {
                 myItem.setChecked(false);
             }
 
+        MenuItem pic = toolbar.getMenu().findItem(R.id.attach_pic);
+            pic.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        if (UselessUtils.ifCustomTheme()){
+            pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_image_black_24dp), ThemesEngine.iconsColor));
+        } else if (UselessUtils.getBool("night", false)){
+            pic.setIcon(R.drawable.ic_image_white_24dp);
+        } else {
+            pic.setIcon(R.drawable.ic_image_black_24dp);
+        }
+
             toolbar.setTitle(getString(R.string.editing));
 
             Log.e("notes_err", "listener set");
@@ -349,22 +360,8 @@ public class NoteEdit extends Fragment {
                 }
 
                 break;
-            case R.id.attach:
-                String[] items = new String[]{getString(R.string.pic)};
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case 0:
-                                openFile("image/*", 228, getActivity());
-                                break;
-                        }
-                    }
-                });
-
-                builder.show();
+            case R.id.attach_pic:
+                openFile("image/*", 228, getActivity());
                 break;
             case R.id.lock:
                 if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)){
@@ -500,6 +497,16 @@ public class NoteEdit extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.edit_menu, menu);
+
+        MenuItem pic = menu.findItem(R.id.attach_pic);
+
+        if (UselessUtils.ifCustomTheme()){
+            pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_image_black_24dp), ThemesEngine.iconsColor));
+        } else if (UselessUtils.getBool("night", false)){
+            pic.setIcon(R.drawable.ic_image_white_24dp);
+        } else {
+            pic.setIcon(R.drawable.ic_image_black_24dp);
+        }
 
         if (getArguments().getInt("locked") == 1){
             MenuItem myItem = menu.findItem(R.id.lock);

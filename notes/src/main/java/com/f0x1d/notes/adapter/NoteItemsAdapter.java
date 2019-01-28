@@ -209,27 +209,31 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
+                try {
+                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
 
-                for (NoteItem noteItem : dao.getAll()) {
-                    if (noteItem.to_id == noteItems.get(position).to_id && noteItem.position - 1 == noteItems.get(position).position){
-                        int pos = noteItem.position - 2;
-                        NoteItem elem = noteItems.get(pos);
+                    for (NoteItem noteItem : dao.getAll()) {
+                        if (noteItem.to_id == noteItems.get(position).to_id && noteItem.position - 1 == noteItems.get(position).position){
+                            int pos = noteItem.position - 2;
+                            NoteItem elem = noteItems.get(pos);
 
-                        String text = getText(elem.id) + "\n" + getText(noteItem.id);
+                            String text = getText(elem.id) + "\n" + getText(noteItem.id);
 
-                        //dao.updateElementText(text, elem.id);
-                        dao.updateElementTextByPos(text, elem.to_id, elem.position);
-                        dao.deleteByPos(noteItem.to_id, noteItem.position);
-                        noteItems.remove(noteItem.position);
+                            dao.updateElementTextByPos(text, elem.to_id, elem.position);
+                            dao.deleteByPos(noteItem.to_id, noteItem.position);
+                            noteItems.remove(noteItem.position);
+                        }
                     }
+
+                    dao.deleteByPos(noteItems.get(position).to_id, position);
+                    noteItems.remove(position);
+
+                    NoteEdit.last_pos = NoteEdit.last_pos - 2;
+                    notifyDataSetChanged();
+                } catch (Exception e){
+                    Log.e("notes_err", e.getLocalizedMessage());
+                    Toast.makeText(activity, "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
-
-                dao.deleteByPos(noteItems.get(position).to_id, position);
-                noteItems.remove(position);
-
-                NoteEdit.last_pos = NoteEdit.last_pos - 2;
-                notifyDataSetChanged();
             }
         });
 
