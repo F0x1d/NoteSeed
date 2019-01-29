@@ -49,6 +49,7 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -128,15 +129,15 @@ public class NoteAdd extends Fragment {
             }
         }
 
-        MenuItem pic = toolbar.getMenu().findItem(R.id.attach_pic);
+        MenuItem pic = toolbar.getMenu().findItem(R.id.attach);
             pic.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         if (UselessUtils.ifCustomTheme()){
-            pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_image_black_24dp), ThemesEngine.iconsColor));
+            pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_add_black_24dp), ThemesEngine.iconsColor));
         } else if (UselessUtils.getBool("night", false)){
-            pic.setIcon(R.drawable.ic_image_white_24dp);
+            pic.setIcon(R.drawable.ic_add_white_24dp);
         } else {
-            pic.setIcon(R.drawable.ic_image_black_24dp);
+            pic.setIcon(R.drawable.ic_add_black_24dp);
         }
 
         Typeface face;
@@ -176,7 +177,7 @@ public class NoteAdd extends Fragment {
 
         noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
 
-        noteItemsDao.insert(new NoteItem(0, rowID, "", null, 0));
+        noteItemsDao.insert(new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, 0));
         last_pos = 0;
 
         setHasOptionsMenu(true);
@@ -208,6 +209,46 @@ public class NoteAdd extends Fragment {
         NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity());
 
         recyclerView.setAdapter(adapter);
+
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder h1, RecyclerView.ViewHolder h2) {
+                int fromPosition = h1.getAdapterPosition();
+                int toPosition = h2.getAdapterPosition();
+
+                recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
+                if (viewHolder.getPosition() == 0){
+                    recyclerView.getAdapter().notifyItemChanged(viewHolder.getPosition());
+                    Toast.makeText(getActivity(), "Nope.", Toast.LENGTH_SHORT).show();
+                } else
+                    adapter.delete(viewHolder.getPosition());
+            }
+
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return false;
+            }
+
+            @Override
+            public boolean isItemViewSwipeEnabled() {
+                return true;
+            }
+        };
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
@@ -258,14 +299,17 @@ public class NoteAdd extends Fragment {
         }
     }
 
+    private void remove(int pos){
+        try {
+            noteItems.remove(pos);
+        } catch (IndexOutOfBoundsException e){
+            remove(pos - 1);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.clear:
-                title.setText("");
-
-                dao.updateNoteTime(System.currentTimeMillis(), rowID);
-                break;
             case R.id.export:
                 File noteDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/Exported notes");
                 if (!noteDir.exists()){
@@ -302,8 +346,28 @@ public class NoteAdd extends Fragment {
                 }
 
                 break;
-            case R.id.attach_pic:
-                openFile("image/*", 228, getActivity());
+            case R.id.attach:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setItems(new String[]{getString(R.string.text), getString(R.string.picture)}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                last_pos = last_pos + 1;
+                                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, last_pos);
+                                noteItemsDao.insert(noteItem);
+                                add(last_pos, noteItem);
+
+                                recyclerView.getAdapter().notifyDataSetChanged();
+                                break;
+                            case 1:
+                                openFile("image/*", 228, getActivity());
+                                break;
+                        }
+                    }
+                });
+
+                builder.show();
                 break;
             case R.id.lock:
                 if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)){
@@ -394,18 +458,9 @@ public class NoteAdd extends Fragment {
 
                     try {
                         last_pos = last_pos + 1;
-                        NoteItem noteItem = new NoteItem(0, rowID, null, fleks.getPath(), last_pos);
-                        noteItems.add(last_pos, noteItem);
+                        NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, fleks.getPath(), last_pos);
                         noteItemsDao.insert(noteItem);
-
-                        last_pos = last_pos + 1;
-                        NoteItem noteItem2 = new NoteItem(0, rowID, "", null, last_pos);
-                        noteItems.add(last_pos, noteItem2);
-                        noteItemsDao.insert(noteItem2);
-
-                        noteItemsDao.updateElementTextByPos("", rowID, last_pos);
-
-                        Log.e("notes_err", "added to: " + noteItem2.position);
+                        add(last_pos, noteItem);
                     } catch (IndexOutOfBoundsException e){
                         Log.e("notes_err", e.getLocalizedMessage());
                     }
@@ -428,14 +483,14 @@ public class NoteAdd extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.edit_menu, menu);
 
-        MenuItem pic = menu.findItem(R.id.attach_pic);
+        MenuItem pic = menu.findItem(R.id.attach);
 
         if (UselessUtils.ifCustomTheme()){
-            pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_image_black_24dp), ThemesEngine.iconsColor));
+            pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_add_black_24dp), ThemesEngine.iconsColor));
         } else if (UselessUtils.getBool("night", false)){
-            pic.setIcon(R.drawable.ic_image_white_24dp);
+            pic.setIcon(R.drawable.ic_add_white_24dp);
         } else {
-            pic.setIcon(R.drawable.ic_image_black_24dp);
+            pic.setIcon(R.drawable.ic_add_black_24dp);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }

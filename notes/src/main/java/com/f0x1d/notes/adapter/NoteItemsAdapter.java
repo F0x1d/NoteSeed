@@ -93,14 +93,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
         Glide.with(App.getContext()).load(noteItems.get(position).pic_res).apply(options).into(holder.image);
-
-        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                delete(position);
-                return false;
-            }
-        });
     }
 
     private void setupText(textViewHolder holder, int position){
@@ -124,7 +116,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         }
                     }
 
-                    //dao.updateElementText(s.toString(), noteItems.get(position).id);
                     dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
                 } catch (Exception e){}
@@ -145,8 +136,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         for (NoteItem noteItem : dao.getAll()) {
-            if ((noteItem.id == noteItems.get(position).id) || (noteItem.position == noteItems.get(position).position && noteItem.to_id == noteItems.get(position).to_id)){
-                holder.editText.setText(noteItem.text);
+            if (noteItem.id == noteItems.get(position).id){
+                holder.editText.setText(getText(noteItems.get(position).id));
                 break;
             }
         }
@@ -160,7 +151,32 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         holder.editText.addTextChangedListener(textWatcher);
+    }
 
+    private String getText(long id){
+        String text = "";
+
+        for (NoteItem noteItem : dao.getAll()) {
+            if (noteItem.id == id){
+                text = noteItem.text;
+                break;
+            }
+        }
+
+        return text;
+    }
+
+    private int getPosition(long id){
+        int pos = 0;
+
+        for (NoteItem noteItem : dao.getAll()) {
+            if (noteItem.id == id){
+                pos = noteItem.position;
+                break;
+            }
+        }
+
+        return pos;
     }
 
     @Override
@@ -189,17 +205,16 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public String getText(long id){
-        String text = "error";
+    public static long getId(){
+        long max_id = 0;
 
-        for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == id){
-                text = noteItem.text;
-                break;
+        for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
+            if (noteItem.id > max_id){
+                max_id = noteItem.id;
             }
         }
 
-        return text;
+        return max_id + 1;
     }
 
     public void delete(int position){
@@ -210,25 +225,20 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
+                    for (int i = position + 1; i < noteItems.size(); i++){
+                        dao.updateElementPos(i - 1, noteItems.get(i).id);
 
-                    for (NoteItem noteItem : dao.getAll()) {
-                        if (noteItem.to_id == noteItems.get(position).to_id && noteItem.position - 1 == noteItems.get(position).position){
-                            int pos = noteItem.position - 2;
-                            NoteItem elem = noteItems.get(pos);
-
-                            String text = getText(elem.id) + "\n" + getText(noteItem.id);
-
-                            dao.updateElementTextByPos(text, elem.to_id, elem.position);
-                            dao.deleteByPos(noteItem.to_id, noteItem.position);
-                            noteItems.remove(noteItem.position);
-                        }
+                        Log.e("notes_err", "updated: " + getText(noteItems.get(i).id) + "\n\nto: " + (i - 1));
+                        notifyDataSetChanged();
                     }
 
-                    dao.deleteByPos(noteItems.get(position).to_id, position);
-                    noteItems.remove(position);
+                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
 
-                    NoteEdit.last_pos = NoteEdit.last_pos - 2;
+                    dao.deleteByPos(noteItems.get(position).to_id, position);
+                    remove(position);
+
+                    NoteEdit.last_pos = NoteEdit.last_pos - 1;
+
                     notifyDataSetChanged();
                 } catch (Exception e){
                     Log.e("notes_err", e.getLocalizedMessage());
@@ -240,6 +250,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         builder.setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                notifyItemChanged(position);
                 dialog.cancel();
             }
         });
@@ -264,6 +275,22 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         });
 
         dialog1337.show();
+    }
+
+    private void add(int pos, NoteItem item){
+        try {
+            noteItems.add(pos, item);
+        } catch (IndexOutOfBoundsException e){
+            add(pos - 1, item);
+        }
+    }
+
+    private void remove(int pos){
+        try {
+            noteItems.remove(pos);
+        } catch (IndexOutOfBoundsException e){
+            remove(pos - 1);
+        }
     }
 
     class imageViewHolder extends RecyclerView.ViewHolder {

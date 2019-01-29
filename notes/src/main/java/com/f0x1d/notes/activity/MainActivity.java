@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.utils.BackupDialog;
+import com.f0x1d.notes.utils.CustomResources;
 import com.f0x1d.notes.utils.PermissionUtils;
 import com.f0x1d.notes.utils.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
@@ -272,5 +274,10 @@ public class MainActivity extends AppCompatActivity {
                 getFragmentManager().popBackStack();
             }
         }
+    }
+
+    @Override
+    public Resources getResources() {
+        return new CustomResources(super.getAssets(), super.getResources().getDisplayMetrics(), super.getResources().getConfiguration());
     }
 }

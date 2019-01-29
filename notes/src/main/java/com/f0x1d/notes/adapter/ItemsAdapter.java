@@ -475,15 +475,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.pinned.setVisibility(View.INVISIBLE);
         }
 
-        String text = "text == null";
+        String text = "null";
 
         NoteItemsDao dao = App.getInstance().getDatabase().noteItemsDao();
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.to_id == items.get(position).id){
+                Log.e("notes_err", "text: " + noteItem.text + "\n\nposition: " + getPosition(noteItem.id));
+
                 if (noteItem.position == 0){
-                    if (noteItem.text != null){
-                        text = noteItem.text;
-                    }
+                    text = noteItem.text;
+                    break;
                 }
             }
         }
@@ -566,6 +567,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         // а если следующей нет (текущая - последняя), то false -
                         // выходим из цикла
         });
+    }
+
+    private int getPosition(long id){
+        for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
+            if (noteItem.id == id){
+                return noteItem.position;
+            }
+        }
+
+        return 0;
     }
 
     private void getNotifyDialog(int position){
