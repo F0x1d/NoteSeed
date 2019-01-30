@@ -142,14 +142,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
 
-        if (PreferenceManager.getDefaultSharedPreferences(activity).getInt("fon", 0) == 1){
-            if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("dark_fon", false)){
-                holder.editText.setTextColor(Color.WHITE);
-            } else {
-                holder.editText.setTextColor(Color.BLACK);
-            }
-        }
-
         holder.editText.addTextChangedListener(textWatcher);
     }
 

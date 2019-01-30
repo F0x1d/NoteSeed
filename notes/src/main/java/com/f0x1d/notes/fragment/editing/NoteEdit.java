@@ -110,7 +110,7 @@ public class NoteEdit extends Fragment {
             }).start();
         }
 
-            toolbar = v.findViewById(R.id.toolbar);
+        toolbar = v.findViewById(R.id.toolbar);
 
         toolbar.inflateMenu(R.menu.edit_menu);
 
@@ -123,13 +123,13 @@ public class NoteEdit extends Fragment {
             toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
         }
 
-            if (getArguments().getInt("locked") == 1){
+        if (getArguments().getInt("locked") == 1){
                 MenuItem myItem = toolbar.getMenu().findItem(R.id.lock);
                 myItem.setChecked(true);
-            } else {
+        } else {
                 MenuItem myItem = toolbar.getMenu().findItem(R.id.lock);
                 myItem.setChecked(false);
-            }
+        }
 
         MenuItem pic = toolbar.getMenu().findItem(R.id.attach);
             pic.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -142,25 +142,9 @@ public class NoteEdit extends Fragment {
             pic.setIcon(R.drawable.ic_add_black_24dp);
         }
 
-            toolbar.setTitle(getString(R.string.editing));
+        toolbar.setTitle(getString(R.string.editing));
 
-            Log.e("notes_err", "listener set");
-
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
-                    toolbar.setTitleColor(Color.WHITE);
-                    getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
-                    getActivity().getWindow().setNavigationBarColor(Color.TRANSPARENT);
-                } else {
-                    toolbar.setTitleColor(Color.BLACK);
-                    getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
-                    getActivity().getWindow().setNavigationBarColor(Color.TRANSPARENT);
-                }
-
-                if (!ThemesEngine.toolbarTransparent){
-                    toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                }
-            }
+        Log.e("notes_err", "listener set");
 
         Typeface face;
         if (UselessUtils.getBool("mono", false)){
@@ -169,24 +153,17 @@ public class NoteEdit extends Fragment {
             toolbar.setTypeFace(face);
         }
 
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1) {
-                final WallpaperManager wallpaperManager = WallpaperManager.getInstance(getActivity());
-                final Drawable wallpaperDrawable = wallpaperManager.getDrawable();
-
-                getActivity().getWindow().setBackgroundDrawable(wallpaperDrawable);
-            } else {
-                if (UselessUtils.ifCustomTheme()){
-                    getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-                    getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-                    getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
-
-                    if (ThemesEngine.toolbarTransparent){
-                        toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
-                    }
-                }
-            }
-
         getActivity().setActionBar(toolbar);
+
+        if (UselessUtils.ifCustomTheme()){
+            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+
+            if (ThemesEngine.toolbarTransparent){
+                toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
+            }
+        }
         return v;
     }
 
@@ -219,14 +196,6 @@ public class NoteEdit extends Fragment {
 
         title = view.findViewById(R.id.edit_title);
             title.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));
-
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
-                title.setTextColor(Color.WHITE);
-            } else {
-                title.setTextColor(Color.BLACK);
-            }
-        }
 
         Typeface face;
         if (UselessUtils.getBool("mono", false)){

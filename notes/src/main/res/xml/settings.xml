@@ -13,8 +13,6 @@
             android:title="@string/theme" android:key="dayAccent"/>
             <com.f0x1d.notes.view.preferences.MyPreference
                 android:title="@string/text_size" android:summary="@string/in_editor" android:key="textSize" />
-            <com.f0x1d.notes.view.preferences.MyPreference
-                android:title="@string/background" android:summary="@string/in_editor" android:key="fon" />
             <com.f0x1d.notes.view.preferences.MySwitchPreference
                 android:title="@string/use_mono" android:summary="@string/in_editor" android:key="mono"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>

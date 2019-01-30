@@ -114,30 +114,6 @@ public class NotesInFolder extends Fragment {
             }
         }
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
-            if (UselessUtils.ifCustomTheme()){
-                getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-                getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-                getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
-            } else {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
-                    getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(getActivity().getResources().getColor(R.color.statusbar)));
-                    getActivity().getWindow().setStatusBarColor(getActivity().getResources().getColor(R.color.statusbar));
-                    getActivity().getWindow().setNavigationBarColor(getActivity().getResources().getColor(R.color.statusbar));
-                } else {
-                    getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                        getActivity().getWindow().setStatusBarColor(Color.WHITE);
-                    } else {
-                        getActivity().getWindow().setStatusBarColor(Color.GRAY);
-                    }
-
-                    getActivity().getWindow().setNavigationBarColor(Color.BLACK);
-                }
-            }
-        }
-
         if (UselessUtils.ifCustomTheme()){
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);

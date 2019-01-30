@@ -89,15 +89,15 @@ public class NoteAdd extends Fragment {
 
         getActivity().setActionBar(toolbar);
 
-                toolbar.inflateMenu(R.menu.edit_menu);
+        toolbar.inflateMenu(R.menu.edit_menu);
 
-            if (UselessUtils.ifCustomTheme()){
-                toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
-            } else if (UselessUtils.getBool("night", false)){
-                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_white_24dp));
-            } else {
-                toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
-            }
+        if (UselessUtils.ifCustomTheme()){
+            toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
+        } else if (UselessUtils.getBool("night", false)){
+            toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_white_24dp));
+        } else {
+            toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
+        }
 
         toolbar.setNavigationOnClickListener(v1 -> {
             NoteItem item = null;
@@ -112,22 +112,6 @@ public class NoteAdd extends Fragment {
             SetNotify notify = new SetNotify();
             notify.show(activity.getSupportFragmentManager(), "TAG");
         });
-
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
-                toolbar.setTitleColor(Color.WHITE);
-                getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
-                getActivity().getWindow().setNavigationBarColor(Color.TRANSPARENT);
-            } else {
-                toolbar.setTitleColor(Color.BLACK);
-                getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
-                getActivity().getWindow().setNavigationBarColor(Color.TRANSPARENT);
-            }
-
-            if (!ThemesEngine.toolbarTransparent){
-                toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-            }
-        }
 
         MenuItem pic = toolbar.getMenu().findItem(R.id.attach);
             pic.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -146,19 +130,13 @@ public class NoteAdd extends Fragment {
             toolbar.setTypeFace(face);
         }
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
-                final WallpaperManager wallpaperManager = WallpaperManager.getInstance(getActivity());
-                final Drawable wallpaperDrawable = wallpaperManager.getDrawable();
-                getActivity().getWindow().setBackgroundDrawable(wallpaperDrawable);
-        } else {
-            if (UselessUtils.ifCustomTheme()){
-                getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-                getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-                getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+        if (UselessUtils.ifCustomTheme()){
+            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
 
-                if (ThemesEngine.toolbarTransparent){
-                    toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
-                }
+            if (ThemesEngine.toolbarTransparent){
+                toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
             }
         }
         return v;
@@ -249,14 +227,6 @@ public class NoteAdd extends Fragment {
 
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recyclerView);
-
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("fon", 0) == 1){
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
-                title.setTextColor(Color.WHITE);
-            } else {
-                title.setTextColor(Color.BLACK);
-            }
-        }
 
         Typeface face;
 
