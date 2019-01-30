@@ -480,8 +480,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         NoteItemsDao dao = App.getInstance().getDatabase().noteItemsDao();
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.to_id == items.get(position).id){
-                Log.e("notes_err", "text: " + noteItem.text + "\n\nposition: " + getPosition(noteItem.id));
-
                 if (noteItem.position == 0){
                     text = noteItem.text;
                     break;

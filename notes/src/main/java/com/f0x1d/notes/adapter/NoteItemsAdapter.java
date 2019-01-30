@@ -228,13 +228,13 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     for (int i = position + 1; i < noteItems.size(); i++){
                         dao.updateElementPos(i - 1, noteItems.get(i).id);
 
-                        Log.e("notes_err", "updated: " + getText(noteItems.get(i).id) + "\n\nto: " + (i - 1));
+                        Log.e("notes_err", "updated: " + getText(noteItems.get(i).id) + " to: " + (i - 1));
                         notifyDataSetChanged();
                     }
 
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
 
-                    dao.deleteByPos(noteItems.get(position).to_id, position);
+                    Log.e("notes_err", "deleted: " + dao.deleteItem(noteItems.get(position).id));
                     remove(position);
 
                     NoteEdit.last_pos = NoteEdit.last_pos - 1;

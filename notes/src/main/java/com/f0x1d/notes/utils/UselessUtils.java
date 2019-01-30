@@ -4,22 +4,28 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
+import android.util.Base64;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 
 import java.lang.reflect.Field;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
@@ -141,6 +147,31 @@ public class UselessUtils {
             field.set(editor, drawables);
         } catch (Exception ignored) {
         }
+    }
+
+    public static byte[] getSHASignature() {
+        try {
+            PackageInfo info = App.getContext().getPackageManager().getPackageInfo(App.getContext().getPackageName(), PackageManager.GET_SIGNATURES);
+            if (info.signatures != null && info.signatures.length > 0) {
+                Signature signature = info.signatures[0];
+                MessageDigest sha;
+
+                try {
+                    sha = MessageDigest.getInstance("SHA");
+                    sha.update(signature.toByteArray());
+
+                    return sha.digest();
+
+                } catch (NoSuchAlgorithmException e) {}
+            }
+
+        } catch (PackageManager.NameNotFoundException e) {}
+
+        return null;
+    }
+
+    public static void exit(Activity activity){
+        activity.finish();
     }
 
 }

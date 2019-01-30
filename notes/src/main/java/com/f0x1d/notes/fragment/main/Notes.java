@@ -12,6 +12,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -152,6 +154,13 @@ public class Notes extends Fragment {
                 UselessUtils.replace(getActivity(), new Search(), "search");
             }
         });
+
+        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
+            if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
+                //UselessUtils.exit(getActivity());
+                Log.e("notes_err", Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT));
+            }
+        }
 
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("in_folder_id", "def").apply();
 

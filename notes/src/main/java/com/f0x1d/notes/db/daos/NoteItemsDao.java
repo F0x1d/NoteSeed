@@ -30,11 +30,11 @@ public interface NoteItemsDao {
     void updateNoteTime(long edit_time, long id);
 
     @Query("UPDATE NoteItem SET position=:pos WHERE id = :id")
-    void updateElementPos(int pos, long id);
+    int updateElementPos(int pos, long id);
 
     @Query("DELETE FROM NOTEITEM WHERE id = :id")
-    void deleteItem(long id);
+    int deleteItem(long id);
 
     @Query("DELETE FROM NoteItem WHERE to_id = :to_id AND position = :pos")
-    void deleteByPos(long to_id, int pos);
+    int deleteByPos(long to_id, int pos);
 }

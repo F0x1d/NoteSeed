@@ -2,6 +2,7 @@ package com.f0x1d.notes;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,6 +12,7 @@ import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.utils.PermissionUtils;
 import com.f0x1d.notes.utils.SyncUtils;
+import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
