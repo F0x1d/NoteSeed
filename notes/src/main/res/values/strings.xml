@@ -117,4 +117,5 @@
     <string name="export_gdrive">Export to GDrive</string>
     <string name="import_gdrive">Import from GDrive</string>
     <string name="file">File</string>
+    <string name="two_rows">Two rows of notes</string>
 </resources>

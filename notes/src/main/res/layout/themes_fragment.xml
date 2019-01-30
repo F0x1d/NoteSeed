@@ -19,7 +19,6 @@
     <com.f0x1d.notes.view.theming.MyFAB
         android:layout_width="wrap_content"
         android:id="@+id/import_theme"
-        android:src="@drawable/ic_add_black_24dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"

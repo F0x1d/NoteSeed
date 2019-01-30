@@ -17,14 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.utils.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;

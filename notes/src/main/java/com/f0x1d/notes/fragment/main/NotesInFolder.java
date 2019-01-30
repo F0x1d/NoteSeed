@@ -48,6 +48,7 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -175,7 +176,11 @@ public class NotesInFolder extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-        recyclerView.setLayoutManager(llm);
+        if (UselessUtils.getBool("two_rows", false)){
+            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        } else {
+            recyclerView.setLayoutManager(llm);
+        }
 
         adapter = new ItemsAdapter(allList, getActivity(), true);
 
