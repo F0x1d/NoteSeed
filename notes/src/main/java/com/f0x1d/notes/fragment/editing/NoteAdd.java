@@ -72,8 +72,6 @@ public class NoteAdd extends Fragment {
 
     List<NoteItem> noteItems;
 
-    public static boolean new_note;
-
     @Override
     public void onAttach(Activity activity) {
         this.activity = (FragmentActivity) activity;
@@ -146,8 +144,6 @@ public class NoteAdd extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        new_note = true;
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
         rowID = dao.insert(new NoteOrFolder(generateName(), null, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),

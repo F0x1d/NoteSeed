@@ -52,5 +52,9 @@ public class MyFAB extends FloatingActionButton {
         } else {
             setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
         }
+
+        if (UselessUtils.ifCustomTheme()){
+            setImageDrawable(getDrawable());
+        }
     }
 }

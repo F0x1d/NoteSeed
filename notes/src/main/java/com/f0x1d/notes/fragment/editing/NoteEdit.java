@@ -172,8 +172,6 @@ public class NoteEdit extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        NoteAdd.new_note = false;
-
         toolbar.setNavigationOnClickListener(v1 -> {
             NoteItem item = null;
             for (NoteItem noteItem : noteItemsDao.getAll()) {

@@ -1,4 +1,4 @@
-package com.f0x1d.notes.utils;
+package com.f0x1d.notes.utils.resources;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -6,12 +6,15 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
 
 public class CustomResources extends Resources {
 

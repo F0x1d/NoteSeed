@@ -91,6 +91,7 @@ public class ThemesFragment extends Fragment {
         import_fab = view.findViewById(R.id.import_theme);
 
             import_fab.setImageResource(R.drawable.ic_add_black_24dp);
+
             import_fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
