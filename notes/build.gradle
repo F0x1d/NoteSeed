@@ -41,8 +41,8 @@ android {
         applicationId "com.f0x1d.notes"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 90
-        versionName "4.9"
+        versionCode 91
+        versionName "4.9.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -93,7 +93,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 
     implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
     // Dependency for Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
