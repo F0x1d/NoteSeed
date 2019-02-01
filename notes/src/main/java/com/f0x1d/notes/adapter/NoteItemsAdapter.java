@@ -33,6 +33,7 @@ import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyEditText;
 
+import java.util.Collections;
 import java.util.List;
 
 public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -169,6 +170,28 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         return pos;
+    }
+
+    public void onItemMoved(int fromPosition, int toPosition){
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                //Collections.swap(noteItems, i, i + 1);
+                Log.e("notes_err", "updated in loop: " + dao.updateElementPos(getPosition(noteItems.get(i).id) + 1, noteItems.get(i).id));
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                //Collections.swap(noteItems, i, i - 1);
+                Log.e("notes_err", "updated in loop: " + dao.updateElementPos(getPosition(noteItems.get(i).id) - 1, noteItems.get(i).id));
+            }
+        }
+
+        Log.e("notes_err", "updated: " + dao.updateElementPos(toPosition, noteItems.get(fromPosition).id) + " id: " + noteItems.get(fromPosition).id);
+
+        NoteItem targetUser = noteItems.get(fromPosition);
+        noteItems.remove(fromPosition);
+        noteItems.add(toPosition, targetUser);
+
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override

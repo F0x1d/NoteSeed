@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -236,14 +237,12 @@ public class NoteEdit extends Fragment {
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder h1, RecyclerView.ViewHolder h2) {
-                int fromPosition = h1.getPosition();
-                int toPosition = h2.getPosition();
+                int fromPosition = h1.getAdapterPosition();
+                int toPosition = h2.getAdapterPosition();
 
-                if (fromPosition != 0 && toPosition != 0){
-                    recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
-
-                    noteItemsDao.updateElementPos(toPosition, noteItems.get(fromPosition).id);
-                } else
+                if (fromPosition != 0 && toPosition != 0)
+                    adapter.onItemMoved(fromPosition, toPosition);
+                else
                     Toast.makeText(getActivity(), "Nope.", Toast.LENGTH_SHORT).show();
                 return true;
             }
