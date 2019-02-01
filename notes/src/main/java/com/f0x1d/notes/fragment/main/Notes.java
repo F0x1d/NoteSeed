@@ -136,6 +136,7 @@ public class Notes extends Fragment {
             if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
                 if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
                     Log.e("notes_err", "not original");
+                    UselessUtils.exit(getActivity());
                 }
             }
         }
