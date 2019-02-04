@@ -187,8 +187,6 @@ public class NoteEdit extends Fragment {
             notify.show(activity.getSupportFragmentManager(), "TAG");
         });
 
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
-
         setHasOptionsMenu(true);
 
         getActivity().invalidateOptionsMenu();

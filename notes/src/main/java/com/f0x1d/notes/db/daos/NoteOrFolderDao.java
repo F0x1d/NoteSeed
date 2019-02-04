@@ -32,6 +32,9 @@ public interface NoteOrFolderDao {
     @Query("UPDATE NoteOrFolder SET in_folder_id=:text WHERE in_folder_id = :id")
     void updateInFolderId(String text, String id);
 
+    @Query("UPDATE NoteOrFolder SET in_folder_id=:text WHERE id = :id")
+    void updateInFolderIdById(String text, long id);
+
     @Query("UPDATE NoteOrFolder SET pinned=:pinned WHERE id = :id")
     void updateNotePinned(int pinned, long id);
 

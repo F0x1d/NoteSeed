@@ -84,8 +84,6 @@ public class MainSettings extends PreferenceFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
-
         addPreferencesFromResource(R.xml.settings);
 
         Preference sync = findPreference("sync");

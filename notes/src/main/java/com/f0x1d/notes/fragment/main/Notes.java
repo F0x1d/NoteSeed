@@ -128,7 +128,7 @@ public class Notes extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(getActivity(), new Search(), "search");
+                UselessUtils.replace(getActivity(), Search.newInstance("def"), "search");
             }
         });
 
@@ -139,10 +139,6 @@ public class Notes extends Fragment {
                 }
             }
         }
-
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("in_folder_id", "def").apply();
-
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
 
         allList = new ArrayList<>();
 
@@ -255,7 +251,7 @@ public class Notes extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UselessUtils.replace(getActivity(), new NoteAdd(), "add");
+                    UselessUtils.replace(getActivity(), NoteAdd.newInstance("def"), "add");
                 }
             });
 

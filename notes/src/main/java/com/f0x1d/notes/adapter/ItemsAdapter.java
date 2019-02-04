@@ -28,6 +28,7 @@ import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
+import com.f0x1d.notes.fragment.choose.ChooseFolder;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.main.Notes;
@@ -339,12 +340,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle args = new Bundle();
-                    args.putString("folder_name", getFolderNameFromDataBase(position));
+                NotesInFolder.in_ids.add(getFolderNameFromDataBase(position));
 
-                PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("in_folder_back_stack", true).apply();
-
-                activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, NotesInFolder.newInstance(args), "in_folder").commit();
+                activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
+                        .replace(android.R.id.content, new NotesInFolder(), "in_folder").addToBackStack(null).commit();
             }
         });
 
@@ -622,7 +621,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 dao.updateNoteTitle(title.getText().toString(), items.get(position).id);
                                 dao.updateNoteText(text.getText().toString(), items.get(position).id);
 
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("in_folder_back_stack", false)){
+                                if (NotesInFolder.in_ids.size() != 0){
                                     activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
                                 } else {
                                     activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
@@ -654,7 +653,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             dao.updateNotePinned(1, items.get(position).id);
                         }
 
-                        if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("in_folder_back_stack", false)){
+                        if (NotesInFolder.in_ids.size() != 0){
                             activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
                         } else {
                             activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
@@ -789,7 +788,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             dao.updateFolderPinned(1, items.get(position).folder_name);
                         }
 
-                        if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("in_folder_back_stack", false)){
+                        if (NotesInFolder.in_ids.size() != 0){
                             activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
                         } else {
                             activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
@@ -846,15 +845,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Color.parseColor(getColorFromDataBase(position));
 
             if (items.get(position).pinned == 1) {
-                hm = new String[]{activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
             } else {
-                hm = new String[]{activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
             }
         } catch (Exception e){
             if (items.get(position).pinned == 1) {
-                hm = new String[]{activity.getString(R.string.unpin), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
             } else {
-                hm = new String[]{activity.getString(R.string.pin), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
             }
         }
 
@@ -871,7 +870,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             dao.updateNotePinned(1, items.get(position).id);
                         }
 
-                        if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("in_folder_back_stack", false)) {
+                        if (NotesInFolder.in_ids.size() != 0) {
                             activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
                         } else {
                             activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
@@ -892,7 +891,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             colorPickerDialog.setColorPickerDialogListener(new ColorPickerDialogListener() {
                                 @Override
                                 public void onColorSelected(int dialogId, int color) {
-                                    Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color));
+                                    Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color) + " id: " + items.get(position).id);
 
                                     dao.updateNoteColor("#" + Integer.toHexString(color), items.get(position).id);
 
@@ -910,6 +909,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
                     case 2:
+                        Bundle args = new Bundle();
+                            ChooseFolder.in_ids.clear();
+                            ChooseFolder.in_ids.add("def");
+
+                            args.putLong("id", items.get(position).id);
+
+                        activity.getFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, ChooseFolder.newInstance(args), "choose_folder")
+                                .addToBackStack(null).commit();
+                        break;
+                    case 3:
                         dao.updateNoteColor("", items.get(position).id);
 
                         notifyItemChanged(position);

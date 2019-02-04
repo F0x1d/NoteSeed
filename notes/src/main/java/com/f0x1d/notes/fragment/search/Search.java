@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,11 +41,25 @@ public class Search extends Fragment {
     static List<NoteOrFolder> allList;
     static List<NoteOrFolder> searchedList;
 
+    private String id;
+
     NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
     NoteItemsDao noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
 
+    public static Search newInstance(String in_folder_id) {
+
+        Bundle args = new Bundle();
+        args.putString("id", in_folder_id);
+
+        Search fragment = new Search();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+
+        id = getArguments().getString("id");
 
         if (UselessUtils.ifCustomTheme()){
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
@@ -60,8 +75,6 @@ public class Search extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
-
         searchedList = new ArrayList<>();
         allList = new ArrayList<>();
 
@@ -69,10 +82,15 @@ public class Search extends Fragment {
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
+
+        if (UselessUtils.getBool("two_rows", false)){
+            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        } else {
+            recyclerView.setLayoutManager(llm);
+        }
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.in_folder_id.equals(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"))){
+            if (noteOrFolder.in_folder_id.equals(id)){
                 allList.add(noteOrFolder);
             }
 

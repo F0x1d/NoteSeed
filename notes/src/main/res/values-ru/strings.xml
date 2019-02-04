@@ -118,4 +118,5 @@
     <string name="import_gdrive">Импорт с GDrive</string>
     <string name="file">Файл</string>
     <string name="two_rows">Два ряда заметок</string>
+    <string name="move_ro_folder">Переместить в папку</string>
 </resources>

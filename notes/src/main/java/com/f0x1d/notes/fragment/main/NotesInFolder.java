@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,9 +58,11 @@ import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 
 public class NotesInFolder extends Fragment {
 
+    public static List<String> in_ids = new ArrayList<>();
+
     public static RecyclerView recyclerView;
 
-    static List<NoteOrFolder> allList;
+    private List<NoteOrFolder> allList;
 
     TextView nothing;
 
@@ -69,22 +72,16 @@ public class NotesInFolder extends Fragment {
 
     ItemsAdapter adapter;
 
-    public static NotesInFolder newInstance(Bundle args){
-        NotesInFolder notesInFolder = new NotesInFolder();
-        notesInFolder.setArguments(args);
-
-        return notesInFolder;
-    }
+    private String in_folder_id;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if (getArguments() != null){
-            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("folder_name", getArguments().getString("folder_name")).apply();
-            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("in_folder_id", getArguments().getString("folder_name")).apply();
-        }
+        Log.e("notes_err", in_ids.get(in_ids.size() - 1));
+
+        in_folder_id = in_ids.get(in_ids.size() - 1);
     }
 
     @Override
@@ -93,7 +90,7 @@ public class NotesInFolder extends Fragment {
         View v = inflater.inflate(R.layout.notes_layout, container, false);
 
         toolbar = v.findViewById(R.id.toolbar);
-        toolbar.setTitle(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("folder_name", ""));
+        toolbar.setTitle(in_folder_id);
         toolbar.inflateMenu(R.menu.search_menu);
         toolbar.getMenu().findItem(R.id.settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
@@ -137,11 +134,9 @@ public class NotesInFolder extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(getActivity(), new Search(), "search");
+                UselessUtils.replace(getActivity(), Search.newInstance(in_folder_id), "search");
             }
         });
-
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", true).apply();
 
         allList = new ArrayList<>();
 
@@ -153,11 +148,11 @@ public class NotesInFolder extends Fragment {
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
             if (noteOrFolder.pinned == 1){
-                if (noteOrFolder.in_folder_id.equals(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"))){
+                if (noteOrFolder.in_folder_id.equals(in_folder_id)){
                     allList.add(noteOrFolder);
                 }
             } else {
-                if (noteOrFolder.in_folder_id.equals(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"))){
+                if (noteOrFolder.in_folder_id.equals(in_folder_id)){
                     notPinned.add(noteOrFolder);
                 }
             }
@@ -263,7 +258,7 @@ public class NotesInFolder extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(getActivity(), new NoteAdd(), "add");
+                UselessUtils.replace(getActivity(), NoteAdd.newInstance(in_folder_id), "add");
             }
         });
 
@@ -301,7 +296,7 @@ public class NotesInFolder extends Fragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 2, null, 0, "", System.currentTimeMillis()));
+                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, in_folder_id, 2, null, 0, "", System.currentTimeMillis()));
                 UselessUtils.replaceNoBackStack(getActivity(), new NotesInFolder(), "in_folder");
             }
         });
@@ -353,8 +348,8 @@ public class NotesInFolder extends Fragment {
                 }
 
                 if (create){
-                    dao.insert(new NoteOrFolder(null, null, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 1, text.getText().toString(), 0, "", 0));
-                    UselessUtils.replace(getActivity(), new NotesInFolder(), "in_folder");
+                    dao.insert(new NoteOrFolder(null, null, 0, 0, in_folder_id, 1, text.getText().toString(), 0, "", 0));
+                    UselessUtils.replaceNoBackStack(getActivity(), new NotesInFolder(), "in_folder");
                 }
             }
         }).create();
@@ -460,7 +455,7 @@ public class NotesInFolder extends Fragment {
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putLong("time_to_insert", time).apply();
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("title_to_insert", title).apply();
 
-                dao.insert(new NoteOrFolder(title, null, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"), 0, null, 0, "", time));
+                dao.insert(new NoteOrFolder(title, null, 0, 0, in_folder_id, 0, null, 0, "", time));
 
                 UselessUtils.replaceNoBackStack(getActivity(), new NotesInFolder(), "in_folder");
 

@@ -59,6 +59,18 @@ import static com.f0x1d.notes.fragment.editing.NoteEdit.last_pos;
 
 public class NoteAdd extends Fragment {
 
+    String id;
+
+    public static NoteAdd newInstance(String in_folder_id) {
+
+        Bundle args = new Bundle();
+        args.putString("id", in_folder_id);
+
+        NoteAdd fragment = new NoteAdd();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     EditText title;
     RecyclerView recyclerView;
 
@@ -82,6 +94,8 @@ public class NoteAdd extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.notes_editing_layout, container, false);
+
+        id = getArguments().getString("id");
 
         toolbar = v.findViewById(R.id.toolbar);
             toolbar.setTitle(getString(R.string.new_note));
@@ -147,7 +161,7 @@ public class NoteAdd extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
-        rowID = dao.insert(new NoteOrFolder(generateName(), null, 0, 0, PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("in_folder_id", "def"),
+        rowID = dao.insert(new NoteOrFolder(generateName(), null, 0, 0, id,
                 0, null, 0, "", System.currentTimeMillis()));
 
         noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
@@ -158,8 +172,6 @@ public class NoteAdd extends Fragment {
         setHasOptionsMenu(true);
 
         getActivity().invalidateOptionsMenu();
-
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("in_folder_back_stack", false).apply();
 
         title = view.findViewById(R.id.edit_title);
             title.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));

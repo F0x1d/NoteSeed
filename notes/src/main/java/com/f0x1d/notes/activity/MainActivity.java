@@ -10,9 +10,11 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.f0x1d.notes.BuildConfig;
+import com.f0x1d.notes.fragment.choose.ChooseFolder;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.App;
@@ -203,13 +205,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("in_folder_back_stack", false)){
-            clear_back_stack(MainActivity.this);
-            getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
-        } else {
             Fragment notes = getFragmentManager().findFragmentByTag("notes");
             Fragment edit = getFragmentManager().findFragmentByTag("edit");
             Fragment add = getFragmentManager().findFragmentByTag("add");
+            Fragment chooseFolder = getFragmentManager().findFragmentByTag("choose_folder");
+            Fragment notesInFolder = getFragmentManager().findFragmentByTag("in_folder");
 
             if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())){
                 getFragmentManager().popBackStack();
@@ -251,13 +251,30 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+            if (chooseFolder != null && chooseFolder.isVisible()){
+                ChooseFolder.in_ids.remove(ChooseFolder.in_ids.size() - 1);
+                getFragmentManager().popBackStack();
+                return;
+            }
+
+            if (notesInFolder != null && notesInFolder.isVisible()){
+                Log.e("notes_err", "removed: " + NotesInFolder.in_ids.get(NotesInFolder.in_ids.size() - 1));
+                NotesInFolder.in_ids.remove(NotesInFolder.in_ids.size() - 1);
+
+                try {
+                    Log.e("notes_err", "last: " + NotesInFolder.in_ids.get(NotesInFolder.in_ids.size() - 1));
+                } catch (Exception e){}
+
+                getFragmentManager().popBackStack();
+                return;
+            }
+
             if (getFragmentManager().getBackStackEntryCount() == 0){
                 clear_back_stack(MainActivity.this);
                 super.onBackPressed();
             } else {
                 getFragmentManager().popBackStack();
             }
-        }
     }
 
     @Override
