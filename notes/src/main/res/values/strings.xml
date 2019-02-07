@@ -119,4 +119,9 @@
     <string name="file">File</string>
     <string name="two_rows">Two rows of notes</string>
     <string name="move_ro_folder">Move to folder</string>
+    <string name="export_file_type">Select file extension</string>
+    <string name="do_u_want_signin">Do you want to sign in with Google?</string>
+    <string name="wihout_sign_in">Without it you will be unable to synchronize your notes!</string>
+    <string name="account">Account</string>
+    <string name="sign_in">Sign in</string>
 </resources>

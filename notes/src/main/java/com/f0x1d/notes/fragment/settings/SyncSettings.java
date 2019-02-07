@@ -20,11 +20,16 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.dialogs.SignInDialog;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.services.drive.DriveScopes;
 
 public class SyncSettings extends PreferenceFragment {
 
@@ -64,6 +69,23 @@ public class SyncSettings extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.sync);
+
+        Preference login = findPreference("sign_in");
+        login.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                        .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
+                        .build();
+
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+
+                new SignInDialog().show(getActivity(), mGoogleSignInClient);
+                return false;
+            }
+        });
 
         Preference import_gdrive = findPreference("import_g");
         import_gdrive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Handler;
@@ -39,8 +40,6 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
 
 public class MainSettings extends PreferenceFragment {
-
-    FragmentActivity myContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -72,12 +71,6 @@ public class MainSettings extends PreferenceFragment {
                 list.setPadding(0, 0, 0, 0);
                 list.setDivider(null);
             }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        myContext = (FragmentActivity) activity;
-        super.onAttach(activity);
     }
 
     @Override
@@ -118,7 +111,7 @@ public class MainSettings extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 TextSizeDialog dialog1 = new TextSizeDialog();
-                dialog1.show(myContext.getSupportFragmentManager(), "TAG");
+                dialog1.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "TAG");
 
                 return false;
             }

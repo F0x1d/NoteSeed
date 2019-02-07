@@ -119,4 +119,9 @@
     <string name="file">Файл</string>
     <string name="two_rows">Два ряда заметок</string>
     <string name="move_ro_folder">Переместить в папку</string>
+    <string name="export_file_type">Выберите расширение файла</string>
+    <string name="do_u_want_signin">Вы хотите войти через Google?</string>
+    <string name="wihout_sign_in">Без этого вы не сможете синхронизировать заметки!</string>
+    <string name="account">Аккаунт</string>
+    <string name="sign_in">Войти</string>
 </resources>

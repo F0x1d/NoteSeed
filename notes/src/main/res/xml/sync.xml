@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/account">
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:title="@string/sign_in" android:key="sign_in"/>
+    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
+
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="GDrive">
         <com.f0x1d.notes.view.preferences.MyPreference
             android:title="@string/import_gdrive" android:key="import_g"/>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.f0x1d.notes.view.theming.MyTextView
+        android:layout_width="wrap_content"
+        android:text="@string/export_file_type"
+        android:gravity="center"
+        android:textSize="17sp"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/text"
+        android:layout_height="wrap_content" />
+
+    <com.f0x1d.notes.view.theming.MyEditText
+        android:layout_width="match_parent"
+        android:id="@+id/extension"
+        android:gravity="center"
+        android:text=".txt"
+        android:layout_margin="10dp"
+        android:layout_below="@id/text"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

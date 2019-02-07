@@ -256,7 +256,7 @@ public class NoteEdit extends Fragment {
 
             @Override
             public boolean isLongPressDragEnabled() {
-                return true;
+                return false;
             }
 
             @Override
@@ -318,39 +318,46 @@ public class NoteEdit extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.export:
-                File noteDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/Exported notes");
-                if (!noteDir.exists()){
-                    noteDir.mkdirs();
-                }
-                File note = new File(noteDir, title.getText().toString() + ".txt");
-                try {
-                    String text = "";
+                View v = LayoutInflater.from(getActivity()).inflate(R.layout.export_file_type_dialog, null);
+                EditText text = v.findViewById(R.id.extension);
 
-                    boolean first = true;
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    builder2.setView(v);
+                    builder2.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            File noteDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/Exported notes");
+                            if (!noteDir.exists()){
+                                noteDir.mkdirs();
+                            }
+                            File note = new File(noteDir, title.getText().toString() + text.getText().toString());
+                            try {
+                                String text = "";
 
-                    for (NoteItem noteItem : noteItemsDao.getAll()) {
-                        if (noteItem.to_id == id && noteItem.pic_res == null){
-                            if (first){
-                                text = text + noteItem.text;
-                                first = false;
-                            } else {
-                                text = text + "\n" + noteItem.text;
+                                boolean first = true;
+
+                                for (NoteItem noteItem : noteItemsDao.getAll()) {
+                                    if (noteItem.to_id == id && noteItem.pic_res == null){
+                                        if (first){
+                                            text = text + noteItem.text;
+                                            first = false;
+                                        } else {
+                                            text = text + "\n" + noteItem.text;
+                                        }
+                                    }
+                                }
+
+                                FileWriter writer = new FileWriter(note);
+                                writer.append(text);
+                                writer.flush();
+                                writer.close();
+                                Toast.makeText(getActivity(), getString(R.string.saved) + " " + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                            } catch (IOException e) {
+                                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
-                    }
-
-                    FileWriter writer = new FileWriter(note);
-                    writer.append(text);
-                    writer.flush();
-                    writer.close();
-                    Toast.makeText(getActivity(), getString(R.string.saved) + " " + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
-
-                    if (text.toLowerCase().contains("желе") || title.getText().toString().toLowerCase().contains("желе")){
-                        Snackbar.make(getView(), "Желе лох", Snackbar.LENGTH_SHORT).show();
-                    }
-                } catch (IOException e) {
-                    Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                }
+                    });
+                    builder2.show();
 
                 break;
             case R.id.attach:

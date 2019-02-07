@@ -2,6 +2,7 @@ package com.f0x1d.notes.view.theming;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -40,6 +41,8 @@ public class MyTextView extends TextView {
     private void setColor(){
         if (UselessUtils.ifCustomTheme()){
             this.setTextColor(ThemesEngine.textColor);
+
+            setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
         }
     }
 
@@ -51,5 +54,13 @@ public class MyTextView extends TextView {
         } else {
             super.setTextColor(color);
         }
+    }
+
+    @Override
+    public void setCompoundDrawables(@Nullable Drawable left, @Nullable Drawable top, @Nullable Drawable right, @Nullable Drawable bottom) {
+        if (UselessUtils.ifCustomTheme())
+            super.setCompoundDrawables(UselessUtils.setTint(left, ThemesEngine.iconsColor), top, right, bottom);
+        else
+            super.setCompoundDrawables(left, top, right, bottom);
     }
 }

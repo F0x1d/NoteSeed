@@ -18,11 +18,13 @@ import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.utils.PreferenceUtils;
 import com.f0x1d.notes.utils.dialogs.BackupDialog;
 import com.f0x1d.notes.utils.PermissionUtils;
 import com.f0x1d.notes.utils.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.dialogs.SignInDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -161,11 +163,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn(){
-        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS){
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            if (!BuildConfig.DEBUG){
-                startActivityForResult(signInIntent, 1);
-            }
+        if (UselessUtils.getBool("want_sign_in", false)){
+            new SignInDialog().show(this, mGoogleSignInClient);
         }
     }
 
@@ -196,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
             Log.e("notes_err", account.name);
 
+            PreferenceUtils.edit().putBoolean("not_want_sign_in", false);
             BackupDialog.show(this, account);
         } catch (ApiException e) {
             Log.e("notes_err", "handleSignInResult:error \n\n", e);

@@ -60,10 +60,8 @@ public class MyEditText extends EditText {
     }
 
     @Override
-    public void addTextChangedListener(TextWatcher watcher)
-    {
-        if (mListeners == null)
-        {
+    public void addTextChangedListener(TextWatcher watcher){
+        if (mListeners == null) {
             mListeners = new ArrayList<TextWatcher>();
         }
         mListeners.add(watcher);
@@ -72,13 +70,10 @@ public class MyEditText extends EditText {
     }
 
     @Override
-    public void removeTextChangedListener(TextWatcher watcher)
-    {
-        if (mListeners != null)
-        {
+    public void removeTextChangedListener(TextWatcher watcher) {
+        if (mListeners != null) {
             int i = mListeners.indexOf(watcher);
-            if (i >= 0)
-            {
+            if (i >= 0) {
                 mListeners.remove(i);
             }
         }
@@ -86,12 +81,9 @@ public class MyEditText extends EditText {
         super.removeTextChangedListener(watcher);
     }
 
-    public void clearTextChangedListeners()
-    {
-        if(mListeners != null)
-        {
-            for(TextWatcher watcher : mListeners)
-            {
+    public void clearTextChangedListeners() {
+        if(mListeners != null) {
+            for (TextWatcher watcher : mListeners) {
                 super.removeTextChangedListener(watcher);
             }
 
