@@ -15,6 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="15dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/ic_access_time_black_24dp"
             android:layout_height="wrap_content"

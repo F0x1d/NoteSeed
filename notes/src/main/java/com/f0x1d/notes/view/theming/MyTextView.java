@@ -42,7 +42,9 @@ public class MyTextView extends TextView {
         if (UselessUtils.ifCustomTheme()){
             this.setTextColor(ThemesEngine.textColor);
 
-            setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
+            try {
+                setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
+            } catch (Exception e){}
         }
     }
 
@@ -58,9 +60,12 @@ public class MyTextView extends TextView {
 
     @Override
     public void setCompoundDrawables(@Nullable Drawable left, @Nullable Drawable top, @Nullable Drawable right, @Nullable Drawable bottom) {
-        if (UselessUtils.ifCustomTheme())
-            super.setCompoundDrawables(UselessUtils.setTint(left, ThemesEngine.iconsColor), top, right, bottom);
-        else
+        if (UselessUtils.ifCustomTheme()){
+            try {
+                super.setCompoundDrawables(UselessUtils.setTint(left, ThemesEngine.iconsColor), top, right, bottom);
+            } catch (Exception e){}
+
+        } else
             super.setCompoundDrawables(left, top, right, bottom);
     }
 }

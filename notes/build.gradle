@@ -35,14 +35,20 @@ android {
         exclude 'META-INF/ASL2.0'
     }
 
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "noteseed_${variant.versionName}.apk"
+        }
+    }
+
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "com.f0x1d.notes"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 93
-        versionName "5.0"
+        versionCode 95
+        versionName "5.1.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
