@@ -147,13 +147,6 @@ public class NoteEdit extends Fragment {
 
         Log.e("notes_err", "listener set");
 
-        Typeface face;
-        if (UselessUtils.getBool("mono", false)){
-            face = Typeface.MONOSPACE;
-
-            toolbar.setTypeFace(face);
-        }
-
         getActivity().setActionBar(toolbar);
 
         if (UselessUtils.ifCustomTheme()){

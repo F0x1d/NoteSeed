@@ -137,12 +137,6 @@ public class NoteAdd extends Fragment {
             pic.setIcon(R.drawable.ic_add_black_24dp);
         }
 
-        Typeface face;
-        if (UselessUtils.getBool("mono", false)){
-            face = Typeface.MONOSPACE;
-            toolbar.setTypeFace(face);
-        }
-
         if (UselessUtils.ifCustomTheme()){
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);

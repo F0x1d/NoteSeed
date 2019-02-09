@@ -135,7 +135,7 @@ public class Notes extends Fragment {
         if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
             if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
                 if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
-                    UselessUtils.exit(getActivity());
+                    Toast.makeText(getActivity(), "Please, bro...", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -188,6 +188,7 @@ public class Notes extends Fragment {
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                 int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+
                 return makeMovementFlags(dragFlags, swipeFlags);
             }
 
@@ -251,6 +252,13 @@ public class Notes extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
+                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
+                            if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
+                                return;
+                            }
+                        }
+                    }
                     UselessUtils.replace(getActivity(), NoteAdd.newInstance("def"), "add");
                 }
             });
@@ -267,6 +275,13 @@ public class Notes extends Fragment {
             fab1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
+                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
+                            if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
+                                return;
+                            }
+                        }
+                    }
                     createFolder();
                 }
             });
@@ -274,6 +289,13 @@ public class Notes extends Fragment {
             fab2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
+                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
+                            if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
+                                return;
+                            }
+                        }
+                    }
                     createNotify();
                 }
             });

@@ -28,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.services.drive.DriveScopes;
 
@@ -105,7 +106,17 @@ public class SyncSettings extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null){
-                    SyncUtils.exportToGDrive();
+                    ProgressDialog dialog = new ProgressDialog(getActivity());
+                    dialog.setMessage("Loading...");
+                    dialog.setCancelable(false);
+                    dialog.show();
+
+                    SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            dialog.cancel();
+                        }
+                    });
                 } else {
                     Toast.makeText(getActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
                 }
@@ -118,6 +129,7 @@ public class SyncSettings extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 SyncUtils.importFile();
+                Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -127,6 +139,7 @@ public class SyncSettings extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 SyncUtils.export();
+                Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });

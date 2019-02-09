@@ -22,7 +22,7 @@ public class AboutSettings extends PreferenceFragment {
         View v = inflater.inflate(R.layout.settings, container, false);
 
         CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.settings));
+        toolbar.setTitle(getString(R.string.about));
         getActivity().setActionBar(toolbar);
 
         if (UselessUtils.ifCustomTheme()){

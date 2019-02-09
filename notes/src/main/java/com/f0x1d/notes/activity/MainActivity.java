@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn(){
-        if (UselessUtils.getBool("want_sign_in", false)){
+        if (UselessUtils.getBool("want_sign_in", true)){
             new SignInDialog().show(this, mGoogleSignInClient);
         }
     }
