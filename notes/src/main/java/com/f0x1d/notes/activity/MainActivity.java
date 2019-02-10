@@ -18,7 +18,6 @@ import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.App;
-import com.f0x1d.notes.utils.PreferenceUtils;
 import com.f0x1d.notes.utils.dialogs.BackupDialog;
 import com.f0x1d.notes.utils.PermissionUtils;
 import com.f0x1d.notes.utils.SyncUtils;
@@ -47,21 +46,18 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 
+import java.io.File;
+import java.io.FileInputStream;
+
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static FragmentManager getSupportFragmentManager;
-    public static MainSettings settings;
 
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         PermissionUtils.requestWriteExternalPermission(this);
-
-        getSupportFragmentManager = getSupportFragmentManager();
-        settings = new MainSettings();
 
         if (UselessUtils.ifCustomTheme()){
             new ThemesEngine().setupAll();
@@ -148,15 +144,20 @@ public class MainActivity extends AppCompatActivity {
 
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)){
                     UselessUtils.clear_back_stack(this);
-                    getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
-                    getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, MainActivity.settings, "settings").addToBackStack(null).commit();
-                    getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
+                    getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                            android.R.id.content, new Notes(), "notes").commit();
+                    getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                            android.R.id.content, new MainSettings(), "settings").addToBackStack(null).commit();
+                    getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                            android.R.id.content, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
                     PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change", false).apply();
                 } else {
                     if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false)){
-                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, LockScreen.newInstance(lockargs), "lock").commit();
+                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                                android.R.id.content, LockScreen.newInstance(lockargs), "lock").commit();
                     } else {
-                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
+                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                                android.R.id.content, new Notes(), "notes").commit();
                     }
                 }
             }
@@ -164,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void signIn(){
         if (UselessUtils.getBool("want_sign_in", true)){
+            Log.e("notes_err", "want_sign_in: " + UselessUtils.getBool("want_sign_in", true));
+
             new SignInDialog().show(this, mGoogleSignInClient);
         }
     }
@@ -195,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
             Log.e("notes_err", account.name);
 
-            PreferenceUtils.edit().putBoolean("not_want_sign_in", false);
+            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("not_want_sign_in", false).apply();
             BackupDialog.show(this, account);
         } catch (ApiException e) {
             Log.e("notes_err", "handleSignInResult:error \n\n", e);

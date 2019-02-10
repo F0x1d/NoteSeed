@@ -8,9 +8,19 @@ import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
 
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@androidx.room.Database(entities = {NoteOrFolder.class, Notify.class, NoteItem.class}, version = 8, exportSchema = false)
+@androidx.room.Database(entities = {NoteOrFolder.class, Notify.class, NoteItem.class}, version = 9, exportSchema = false)
 public abstract class Database extends RoomDatabase {
+
+    public static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+        @Override
+        public void migrate(final SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE NoteItem ADD COLUMN checked INTENGER DEFAULT 0 NOT NULL");
+            database.execSQL("ALTER TABLE NoteItem ADD COLUMN type INTENGER DEFAULT 0 NOT NULL");
+        }
+    };
 
     public abstract NoteOrFolderDao noteOrFolderDao();
     public abstract NotifyDao notifyDao();

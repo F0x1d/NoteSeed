@@ -3,13 +3,13 @@ package com.f0x1d.notes.utils.dialogs;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.PreferenceUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,7 +32,7 @@ public class SignInDialog {
             });
             builder.setNeutralButton(R.string.no, (dialog, which) -> {
                 dialog.cancel();
-                PreferenceUtils.edit().putBoolean("want_sign_in", false);
+                PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
             });
             builder.show();
     }

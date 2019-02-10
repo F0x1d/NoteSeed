@@ -98,10 +98,6 @@ public class UselessUtils {
         activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
     }
 
-    public static void replaceNew(Fragment fragment, String tag){
-        MainActivity.getSupportFragmentManager.beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
-    }
-
     public static void replaceNoBackStack(Activity activity, android.app.Fragment fragment, String tag){
         activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, fragment, tag).commit();
     }

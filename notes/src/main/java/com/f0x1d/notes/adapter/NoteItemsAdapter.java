@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -40,6 +42,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public static final int TEXT = 0;
     public static final int IMAGE = 1;
+    public static final int CHECKBOX = 2;
 
     List<NoteItem> noteItems;
     Activity activity;
@@ -66,6 +69,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return new textViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text, parent, false));
         } else if (viewType == IMAGE){
             return new imageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false));
+        } else if (viewType == CHECKBOX){
+          return new checkBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_checkbox, parent, false));
         } else {
             return null;
         }
@@ -82,7 +87,77 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             case IMAGE:
                 setupImage((imageViewHolder) holder, position);
                 break;
+            case CHECKBOX:
+                setCheckbox((checkBoxViewHolder) holder, position);
+                break;
         }
+    }
+
+    private void setCheckbox(checkBoxViewHolder holder, int position){
+        textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
+                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
+                } catch (Exception e){}
+            }
+        };
+
+        holder.editText.clearTextChangedListeners();
+
+        Log.e("notes_err", "checkbox setup: " + position);
+
+        holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
+
+        Typeface face;
+        if (UselessUtils.getBool("mono", false)){
+            face = Typeface.MONOSPACE;
+
+            holder.editText.setTypeface(face);
+        }
+
+        for (NoteItem noteItem : dao.getAll()) {
+            if (noteItem.id == noteItems.get(position).id){
+                holder.editText.setText(getText(noteItems.get(position).id));
+
+                if (getChecked(noteItems.get(position).id) == 0)
+                    holder.checkBox.setChecked(false);
+                else if (getChecked(noteItems.get(position).id) == 1)
+                    holder.checkBox.setChecked(true);
+
+                break;
+            }
+        }
+
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    dao.updateIsChecked(1, noteItems.get(position).id);
+                    Log.e("notes_err", "put: " + 1);
+                } else {
+                    dao.updateIsChecked(0, noteItems.get(position).id);
+                    Log.e("notes_err", "put: " + 0);
+                }
+
+                Log.e("notes_err", "checkbox checked: " + isChecked);
+
+                dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
+            }
+        });
+
+        holder.editText.addTextChangedListener(textWatcher);
     }
 
     private void setupImage(imageViewHolder holder, int position){
@@ -111,12 +186,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    if (s.toString().length() == 0){
-                        if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("dark_fon", false)){
-                            holder.editText.setHintTextColor(Color.GRAY);
-                        }
-                    }
-
                     dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
                 } catch (Exception e){}
@@ -157,6 +226,19 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         return text;
+    }
+
+    private int getChecked(long id){
+        int checked = -1;
+
+        for (NoteItem noteItem : dao.getAll()) {
+            if (noteItem.id == id){
+                checked = noteItem.checked;
+                break;
+            }
+        }
+
+        return checked;
     }
 
     private int getPosition(long id){
@@ -213,10 +295,16 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public int getItemViewType(int position) {
         NoteItem item = noteItems.get(position);
 
-        if (item.pic_res == null){
-            return TEXT;
+        if (item.type == 0){
+            if (item.pic_res == null){
+                return TEXT;
+            } else {
+                return IMAGE;
+            }
+        } else if (item.type == 1){
+            return CHECKBOX;
         } else {
-            return IMAGE;
+            throw new RuntimeException();
         }
     }
 
@@ -326,6 +414,19 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public textViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            editText = itemView.findViewById(R.id.edit_text);
+        }
+    }
+
+    class checkBoxViewHolder extends RecyclerView.ViewHolder {
+
+        CheckBox checkBox;
+        MyEditText editText;
+
+        public checkBoxViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            checkBox = itemView.findViewById(R.id.checkBox);
             editText = itemView.findViewById(R.id.edit_text);
         }
     }

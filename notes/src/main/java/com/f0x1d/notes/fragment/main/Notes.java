@@ -36,6 +36,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -412,7 +413,7 @@ public class Notes extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.settings:
-                UselessUtils.replace(getActivity(), MainActivity.settings, "settings");
+                UselessUtils.replace(getActivity(), new MainSettings(), "settings");
                 break;
         }
 
@@ -491,7 +492,7 @@ public class Notes extends Fragment {
 
                 for (NoteOrFolder noteOrFolder : dao.getAll()) {
                     if (noteOrFolder.edit_time == time && noteOrFolder.is_folder == 0){
-                        App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(0, noteOrFolder.id, text, null, 0));
+                        App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(0, noteOrFolder.id, text, null, 0, 0, 0));
                     }
                 }
             }

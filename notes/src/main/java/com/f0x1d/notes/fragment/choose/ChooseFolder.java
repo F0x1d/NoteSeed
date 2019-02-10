@@ -91,7 +91,8 @@ public class ChooseFolder extends Fragment {
             @Override
             public void onClick(View v) {
                 dao.updateInFolderIdById(in_id, id);
-                getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
+                getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        android.R.id.content, new Notes(), "notes").commit();
             }
         });
 

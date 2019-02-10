@@ -160,7 +160,7 @@ public class NoteAdd extends Fragment {
 
         noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
 
-        noteItemsDao.insert(new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, 0));
+        noteItemsDao.insert(new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, 0, 0, 0));
         last_pos = 0;
 
         setHasOptionsMenu(true);
@@ -331,13 +331,13 @@ public class NoteAdd extends Fragment {
                 break;
             case R.id.attach:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setItems(new String[]{getString(R.string.text), getString(R.string.picture)}, new DialogInterface.OnClickListener() {
+                builder.setItems(new String[]{getString(R.string.text), getString(R.string.picture), getString(R.string.item_checkbox)}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case 0:
                                 last_pos = last_pos + 1;
-                                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, last_pos);
+                                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, last_pos, 0, 0);
                                 noteItemsDao.insert(noteItem);
                                 add(last_pos, noteItem);
 
@@ -345,6 +345,16 @@ public class NoteAdd extends Fragment {
                                 break;
                             case 1:
                                 openFile("image/*", 228, getActivity());
+                                break;
+                            case 2:
+                                last_pos = last_pos + 1;
+                                NoteItem noteItem2 = new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, last_pos, 0, 1);
+                                noteItemsDao.insert(noteItem2);
+                                add(last_pos, noteItem2);
+
+                                Log.e("notes_err", "last pos: " + last_pos);
+
+                                recyclerView.getAdapter().notifyDataSetChanged();
                                 break;
                         }
                     }
@@ -441,7 +451,7 @@ public class NoteAdd extends Fragment {
 
                     try {
                         last_pos = last_pos + 1;
-                        NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, fleks.getPath(), last_pos);
+                        NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, fleks.getPath(), last_pos, 0, 0);
                         noteItemsDao.insert(noteItem);
                         add(last_pos, noteItem);
                     } catch (IndexOutOfBoundsException e){

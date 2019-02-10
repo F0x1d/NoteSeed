@@ -175,6 +175,8 @@ public class SyncUtils {
                         try {
                             element.put("id", noteItem.id);
                             element.put("to_id", noteItem.to_id);
+                            element.put("type", noteItem.type);
+                            element.put("checked", noteItem.checked);
 
                             if (noteItem.pic_res == null){
                                 element.put("pic_res", "null");
@@ -284,13 +286,16 @@ public class SyncUtils {
 
                     if (element.getString("pic_res").equals("null")){
                         App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
-                                element.getLong("to_id"), element.getString("text"), null, element.getInt("position")));
+                                element.getLong("to_id"), element.getString("text"), null, element.getInt("position"),
+                                element.getInt("checked"), element.getInt("type")));
                     } else if (element.getString("text").equals("null")){
                         App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
-                                element.getLong("to_id"), null, element.getString("pic_res"), element.getInt("position")));
+                                element.getLong("to_id"), null, element.getString("pic_res"), element.getInt("position"),
+                                element.getInt("checked"), element.getInt("type")));
                     } else {
                         App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
-                                element.getLong("to_id"), element.getString("text"), element.getString("pic_res"), element.getInt("position")));
+                                element.getLong("to_id"), element.getString("text"), element.getString("pic_res"), element.getInt("position"),
+                                element.getInt("checked"), element.getInt("type")));
                     }
                 }
             }

@@ -32,6 +32,9 @@ public interface NoteItemsDao {
     @Query("UPDATE NoteItem SET position=:pos WHERE id = :id")
     int updateElementPos(int pos, long id);
 
+    @Query("UPDATE NoteItem SET checked=:checked WHERE id = :id")
+    int updateIsChecked(int checked, long id);
+
     @Query("DELETE FROM NOTEITEM WHERE id = :id")
     int deleteItem(long id);
 

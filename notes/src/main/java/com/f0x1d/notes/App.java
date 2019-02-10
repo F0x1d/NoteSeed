@@ -34,7 +34,7 @@ public class App extends Application {
 
         database = Room.databaseBuilder(this, Database.class, "noteseed_db")
                 .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
+                .addMigrations(Database.MIGRATION_8_9)
                 .build();
     }
 
