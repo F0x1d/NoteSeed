@@ -2,6 +2,7 @@ package com.f0x1d.notes.fragment.choose;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.main.Notes;
+import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -86,6 +88,10 @@ public class ChooseFolder extends Fragment {
         ChooseFolderAdapter adapter = new ChooseFolderAdapter(allList, getActivity(), id);
 
         recyclerView.setAdapter(adapter);
+
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_black_24dp));
+        if (UselessUtils.ifCustomTheme())
+            fab.setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -125,4 +125,5 @@
     <string name="account">Account</string>
     <string name="sign_in">Sign in</string>
     <string name="item_checkbox">TODO element</string>
+    <string name="choose">Choose</string>
 </resources>

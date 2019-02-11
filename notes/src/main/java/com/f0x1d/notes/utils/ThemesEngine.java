@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.ColorRes;
+
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.model.Theme;
@@ -46,6 +48,8 @@ public class ThemesEngine {
     public static int darkColorIconColor;
     public static boolean dark;
     public static boolean toolbarTransparent;
+    public static int seekBarColor;
+    public static int seekBarThumbColor;
 
     public void importTheme(Uri uri, Activity activity){
 
@@ -312,6 +316,17 @@ public class ThemesEngine {
                 darkColorIconColor = 0xffffffff;
             }
 
+            try {
+                seekBarColor = Color.parseColor(jsonObject.getString("seekbar_color"));
+            } catch (Exception e){
+                seekBarColor = 0xffffffff;
+            }
+
+            try {
+                seekBarThumbColor = Color.parseColor(jsonObject.getString("seekbar_thumb_color"));
+            } catch (Exception e){
+                seekBarThumbColor = 0xff888888;
+            }
 
         } catch (Exception e){
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
@@ -451,6 +466,18 @@ public class ThemesEngine {
                 darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
             } catch (Exception e){
                 darkColorIconColor = 0xffffffff;
+            }
+
+            try {
+                seekBarColor = Color.parseColor(jsonObject.getString("seekbar_color"));
+            } catch (Exception e){
+                seekBarColor = 0xffffffff;
+            }
+
+            try {
+                seekBarThumbColor = Color.parseColor(jsonObject.getString("seekbar_thumb_color"));
+            } catch (Exception e){
+                seekBarThumbColor = 0xff888888;
             }
 
             if (dark){

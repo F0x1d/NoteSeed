@@ -6,12 +6,15 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.model.Theme;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 public class MyFAB extends FloatingActionButton {
 
@@ -31,15 +34,6 @@ public class MyFAB extends FloatingActionButton {
         super(context, attrs, defStyleAttr);
 
         start();
-    }
-
-    @Override
-    public void setImageDrawable(@Nullable Drawable drawable) {
-        if (UselessUtils.ifCustomTheme()){
-            super.setImageDrawable(UselessUtils.setTint(drawable, ThemesEngine.fabIconColor));
-        } else {
-            super.setImageDrawable(drawable);
-        }
     }
 
     private void start(){

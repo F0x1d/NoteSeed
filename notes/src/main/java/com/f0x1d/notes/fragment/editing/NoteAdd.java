@@ -222,7 +222,7 @@ public class NoteAdd extends Fragment {
 
             @Override
             public boolean isLongPressDragEnabled() {
-                return false;
+                return true;
             }
 
             @Override

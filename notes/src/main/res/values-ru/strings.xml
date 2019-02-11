@@ -125,4 +125,5 @@
     <string name="account">Аккаунт</string>
     <string name="sign_in">Войти</string>
     <string name="item_checkbox">TODO элемент</string>
+    <string name="choose">Выбрать</string>
 </resources>

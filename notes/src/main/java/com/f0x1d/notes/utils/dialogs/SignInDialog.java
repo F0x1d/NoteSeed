@@ -3,6 +3,8 @@ package com.f0x1d.notes.utils.dialogs;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AlertDialog;
@@ -10,6 +12,8 @@ import androidx.appcompat.app.AlertDialog;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -34,6 +38,28 @@ public class SignInDialog {
                 dialog.cancel();
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
             });
-            builder.show();
+        AlertDialog dialog1337 = builder.create();
+        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                try {
+                    if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", false)){
+                        dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                        dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
+                        dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                    }
+                    if (UselessUtils.ifCustomTheme()){
+                        dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
+                        dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
+                        dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+
+                        dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                        dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                        dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+                    }
+                } catch (Exception e){}
+            }
+        });
+        dialog1337.show();
     }
 }

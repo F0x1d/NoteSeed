@@ -95,16 +95,19 @@ public class UselessUtils {
     }
 
     public static void replace(Activity activity, android.app.Fragment fragment, String tag){
-        activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, fragment, tag).addToBackStack(null).commit();
+        activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                android.R.id.content, fragment, tag).addToBackStack(null).commit();
     }
 
     public static void replaceNoBackStack(Activity activity, android.app.Fragment fragment, String tag){
-        activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, fragment, tag).commit();
+        activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                android.R.id.content, fragment, tag).commit();
     }
 
     public static Drawable setTint(Drawable d, int color) {
         Drawable wrappedDrawable = DrawableCompat.wrap(d);
         DrawableCompat.setTint(wrappedDrawable, color);
+
         return wrappedDrawable;
     }
 
@@ -162,12 +165,7 @@ public class UselessUtils {
             }
 
         } catch (PackageManager.NameNotFoundException e) {}
-
         return null;
-    }
-
-    public static void exit(Activity activity){
-        activity.finish();
     }
 
 }

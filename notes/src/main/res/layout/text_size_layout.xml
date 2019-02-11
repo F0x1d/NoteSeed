@@ -9,11 +9,10 @@
         android:id="@+id/text"
         android:gravity="center"
         android:layout_marginTop="10dp"
-        
         android:text="@string/text"
         android:layout_height="wrap_content" />
 
-    <SeekBar
+    <com.f0x1d.notes.view.theming.MySeekBar
         android:layout_width="match_parent"
         android:max="50"
         android:id="@+id/text_size"

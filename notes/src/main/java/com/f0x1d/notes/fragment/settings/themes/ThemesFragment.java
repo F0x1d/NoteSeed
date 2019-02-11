@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.bumptech.glide.load.resource.drawable.DrawableResource;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.adapter.ThemesAdapter;
 import com.f0x1d.notes.model.Theme;
@@ -90,7 +92,10 @@ public class ThemesFragment extends Fragment {
 
         import_fab = view.findViewById(R.id.import_theme);
 
-            import_fab.setImageResource(R.drawable.ic_add_black_24dp);
+            import_fab.setImageDrawable(getActivity().getDrawable(R.drawable.ic_add_black_24dp));
+
+            if (UselessUtils.ifCustomTheme())
+                import_fab.setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
 
             import_fab.setOnClickListener(new View.OnClickListener() {
                 @Override

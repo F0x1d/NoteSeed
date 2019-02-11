@@ -92,24 +92,24 @@ public class NotesInFolder extends Fragment {
 
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(in_folder_id);
-        toolbar.inflateMenu(R.menu.search_menu);
-        toolbar.getMenu().findItem(R.id.settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        toolbar.inflateMenu(R.menu.in_folder_menu);
+        toolbar.getMenu().findItem(R.id.root).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         if (UselessUtils.getBool("night", false)){
             if (UselessUtils.ifCustomTheme()){
                 toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_white_24dp), ThemesEngine.iconsColor));
-                toolbar.getMenu().findItem(R.id.settings).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor));
+                toolbar.getMenu().findItem(R.id.root).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_arrow_upward_white_24dp), ThemesEngine.iconsColor));
             } else {
-                toolbar.getMenu().findItem(R.id.settings).setIcon(R.drawable.ic_settings_white_24dp);
+                toolbar.getMenu().findItem(R.id.root).setIcon(R.drawable.ic_arrow_upward_white_24dp);
                 toolbar.setNavigationIcon(R.drawable.ic_search_white_24dp);
             }
         } else {
             if (UselessUtils.ifCustomTheme()){
                 toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_black_24dp), ThemesEngine.iconsColor));
-                toolbar.getMenu().findItem(R.id.settings).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_settings_black_24dp), ThemesEngine.iconsColor));
+                toolbar.getMenu().findItem(R.id.root).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_arrow_upward_black_24dp), ThemesEngine.iconsColor));
             } else {
                 toolbar.setNavigationIcon(R.drawable.ic_search_black_24dp);
-                toolbar.getMenu().findItem(R.id.settings).setIcon(R.drawable.ic_settings_black_24dp);
+                toolbar.getMenu().findItem(R.id.root).setIcon(R.drawable.ic_arrow_upward_black_24dp);
             }
         }
 
@@ -389,8 +389,9 @@ public class NotesInFolder extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.settings:
-                UselessUtils.replace(getActivity(), new MainSettings(), "settings");
+            case R.id.root:
+                UselessUtils.clear_back_stack(getActivity());
+                UselessUtils.replaceNoBackStack(getActivity(), new Notes(), "notes");
                 break;
         }
 
@@ -529,11 +530,11 @@ public class NotesInFolder extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.settings);
+        MenuItem item = menu.findItem(R.id.root);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
-            item.setIcon(R.drawable.ic_settings_white_24dp);
+            item.setIcon(R.drawable.ic_arrow_upward_white_24dp);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }

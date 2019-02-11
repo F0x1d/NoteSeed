@@ -4,6 +4,8 @@ import android.accounts.Account;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -12,9 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.utils.SyncUtils;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -64,7 +69,29 @@ public class BackupDialog {
                     if (task.getResult() == null) {
                         Log.e("notes_err", "gdrive error");
                         dialog.cancel();
-                        builder.show();
+                        AlertDialog dialog1337 = builder.create();
+                        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialog) {
+                                try {
+                                    if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", false)){
+                                        dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                                        dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
+                                        dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                                    }
+                                    if (UselessUtils.ifCustomTheme()){
+                                        dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
+                                        dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
+                                        dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+
+                                        dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                                        dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                                        dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+                                    }
+                                } catch (Exception e){}
+                            }
+                        });
+                        dialog1337.show();
                         return;
                     }
 
@@ -102,14 +129,58 @@ public class BackupDialog {
                     });
 
                     dialog.cancel();
-                    builder.show();
+                    AlertDialog dialog1337 = builder.create();
+                    dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                            try {
+                                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", false)){
+                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                                }
+                                if (UselessUtils.ifCustomTheme()){
+                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+
+                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+                                }
+                            } catch (Exception e){}
+                        }
+                    });
+                    dialog1337.show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.e("notes_err", e.getLocalizedMessage());
                     dialog.cancel();
-                    builder.show();
+                    AlertDialog dialog1337 = builder.create();
+                    dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                            try {
+                                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", false)){
+                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                                }
+                                if (UselessUtils.ifCustomTheme()){
+                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+
+                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+                                }
+                            } catch (Exception e){}
+                        }
+                    });
+                    dialog1337.show();
                 }
             });
         }
