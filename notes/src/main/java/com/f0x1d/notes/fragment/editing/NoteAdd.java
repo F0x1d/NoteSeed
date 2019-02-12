@@ -23,6 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.f0x1d.notes.R;
@@ -283,6 +285,47 @@ public class NoteAdd extends Fragment {
         }
     }
 
+    private void addThisTODOs(){
+        View v = LayoutInflater.from(getActivity()).inflate(R.layout.text_size_layout, null);
+
+        SeekBar seekBar = v.findViewById(R.id.text_size);
+            seekBar.setMax(20);
+        TextView textView = v.findViewById(R.id.text);
+            textView.setTextSize(30);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(v);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textView.setText(String.valueOf(progress));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        seekBar.setProgress(3);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (int i = 0; i < seekBar.getProgress(); i++){
+                    last_pos = last_pos + 1;
+                    NoteItem noteItem2 = new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, last_pos, 0, 1);
+                    noteItemsDao.insert(noteItem2);
+                    add(last_pos, noteItem2);
+
+                    Log.e("notes_err", "last pos: " + last_pos);
+                }
+
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+        builder.show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -347,14 +390,7 @@ public class NoteAdd extends Fragment {
                                 openFile("image/*", 228, getActivity());
                                 break;
                             case 2:
-                                last_pos = last_pos + 1;
-                                NoteItem noteItem2 = new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, last_pos, 0, 1);
-                                noteItemsDao.insert(noteItem2);
-                                add(last_pos, noteItem2);
-
-                                Log.e("notes_err", "last pos: " + last_pos);
-
-                                recyclerView.getAdapter().notifyDataSetChanged();
+                                addThisTODOs();
                                 break;
                         }
                     }

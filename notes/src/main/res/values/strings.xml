@@ -126,4 +126,6 @@
     <string name="sign_in">Sign in</string>
     <string name="item_checkbox">TODO element</string>
     <string name="choose">Choose</string>
+    <string name="where_themes">Where can I find themes?</string>
+    <string name="there_themes">In special Telegram channel</string>
 </resources>

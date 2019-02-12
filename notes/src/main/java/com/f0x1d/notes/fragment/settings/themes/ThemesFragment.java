@@ -3,10 +3,15 @@ package com.f0x1d.notes.fragment.settings.themes;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +19,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.bumptech.glide.load.resource.drawable.DrawableResource;
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.adapter.ThemesAdapter;
 import com.f0x1d.notes.model.Theme;
@@ -25,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -100,9 +107,59 @@ public class ThemesFragment extends Fragment {
             import_fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openFile("*/*", 228, getActivity());
+                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("faq_themes", false))
+                        openFile("*/*", 228, getActivity());
+                    else
+                        showFAQ();
                 }
             });
+    }
+
+    private void showFAQ(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("FAQ");
+            builder.setCancelable(false);
+            builder.setMessage(Html.fromHtml("<b>" + getString(R.string.where_themes) + "</b> <br>" + getString(R.string.there_themes)));
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("faq_themes", true).apply();
+                    dialog.cancel();
+                }
+            });
+            builder.setNeutralButton("Telegram", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("faq_themes", true).apply();
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("https://t.me/noteseed_app_themes"));
+
+                    startActivity(intent);
+                }
+            });
+        AlertDialog dialog1337 = builder.create();
+        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                try {
+                    if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", false)){
+                        dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                        dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
+                        dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                    }
+                    if (UselessUtils.ifCustomTheme()){
+                        dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
+                        dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
+                        dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+
+                        dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                        dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                        dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
+                    }
+                } catch (Exception e){}
+            }
+        });
+        dialog1337.show();
     }
 
     @Override
