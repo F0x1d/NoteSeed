@@ -14,6 +14,7 @@ public class NoteOrFolder {
 
     @PrimaryKey(autoGenerate = true)
     public long id;
+
     public String in_folder_id;
     public int is_folder;
 

@@ -35,6 +35,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
+import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -157,7 +158,7 @@ public class NoteAdd extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
-        rowID = dao.insert(new NoteOrFolder(generateName(), null, 0, 0, id,
+        rowID = dao.insert(new NoteOrFolder(generateName(), null, Notes.genId(), 0, id,
                 0, null, 0, "", System.currentTimeMillis()));
 
         noteItemsDao = App.getInstance().getDatabase().noteItemsDao();

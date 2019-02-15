@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
+import com.f0x1d.notes.adapter.NoteItemsAdapter;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
@@ -319,8 +320,15 @@ public class Notes extends Fragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), 0, 0, "def", 2, null, 0, "", System.currentTimeMillis()));
-                UselessUtils.replaceNoBackStack(getActivity(), new Notes(), "notes");
+                long id = genId();
+
+                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, "def", 2,
+                        null, 0, "", System.currentTimeMillis()));
+                allList.add(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, "def", 2,
+                        null, 0, "", System.currentTimeMillis()));
+                recyclerView.getAdapter().notifyDataSetChanged();
+
+                nothing.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -371,9 +379,13 @@ public class Notes extends Fragment {
                 }
 
                 if (create){
+                    long id = genId();
 
-                    dao.insert(new NoteOrFolder(null, null, 0, 0, "def", 1, text.getText().toString(),  0, "", 0));
-                    UselessUtils.replaceNoBackStack(getActivity(), new Notes(), "notes");
+                    dao.insert(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(),  0, "", 0));
+                    allList.add(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(),  0, "", 0));
+                    recyclerView.getAdapter().notifyDataSetChanged();
+
+                    nothing.setVisibility(View.INVISIBLE);
                 }
             }
         }).create();
@@ -400,7 +412,7 @@ public class Notes extends Fragment {
         String name = getString(R.string.new_folder);
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.is_folder == 0 && noteOrFolder.title.equals(name)){
+            if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(name)){
                 name = getString(R.string.new_folder) + first_number;
                 first_number++;
             }
@@ -453,12 +465,7 @@ public class Notes extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null){
             if (requestCode == 228){
-
                 InputStream fstream = null;
-
-                if (!getFileName(data.getData()).contains(".txt") || getFileName(data.getData()).contains(".fb2")){
-                    Toast.makeText(getActivity(), getString(R.string.import_note_error1), Toast.LENGTH_SHORT).show();
-                }
 
                 String title = getFileName(data.getData());
                 String text = null;
@@ -479,26 +486,30 @@ public class Notes extends Fragment {
                     Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                long time = System.currentTimeMillis();
-                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putLong("time_to_insert", time).apply();
-                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("title_to_insert", title).apply();
+                NoteOrFolder noteOrFolder = new NoteOrFolder(title, null, genId(), 0, "def", 0, null, 0, "", System.currentTimeMillis());
 
-                dao.insert(new NoteOrFolder(title, null, 0, 0, "def", 0, null, 0, "", time));
+                dao.insert(noteOrFolder);
+                allList.add(noteOrFolder);
 
-                UselessUtils.replace(getActivity(), new Notes(), "notes");
+                App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(NoteItemsAdapter.getId(), noteOrFolder.id, text, null, 0, 0, 0));
 
-                time = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong("time_to_insert", System.currentTimeMillis());
-                title = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("title_to_insert", "");
-
-                for (NoteOrFolder noteOrFolder : dao.getAll()) {
-                    if (noteOrFolder.edit_time == time && noteOrFolder.is_folder == 0){
-                        App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(0, noteOrFolder.id, text, null, 0, 0, 0));
-                    }
-                }
+                recyclerView.getAdapter().notifyDataSetChanged();
             }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public static long genId(){
+        long id = 0;
+
+        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
+            if (noteOrFolder.id > id){
+                id = noteOrFolder.id;
+            }
+        }
+
+        return id + 1;
     }
 
     public void delete(int position, View view){
@@ -509,11 +520,14 @@ public class Notes extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (allList.get(position).is_folder == 1){
-                        adapter.deleteFolder(allList.get(position).folder_name);
+                        if (new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position).equals(""))
+                            adapter.deleteFolder(allList.get(position).folder_name);
+                        else
+                            adapter.deleteFolder(new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position));
                     } else {
                         adapter.deleteNote(allList.get(position).id);
+                        App.getInstance().getDatabase().noteItemsDao().deleteByToId(allList.get(position).id);
                     }
-
                     allList.remove(position);
 
                     Snackbar.make(view, R.string.deleted, Snackbar.LENGTH_SHORT).show();
@@ -526,7 +540,6 @@ public class Notes extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     recyclerView.getAdapter().notifyItemChanged(position);
-
                     dialog.cancel();
                 }
             });

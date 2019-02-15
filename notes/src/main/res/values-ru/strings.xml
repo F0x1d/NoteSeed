@@ -128,4 +128,5 @@
     <string name="choose">Выбрать</string>
     <string name="where_themes">Где я могу найти темы?</string>
     <string name="there_themes">В специальном Telegram канале</string>
+    <string name="no_folders">У вас здесь нет папок!</string>
 </resources>

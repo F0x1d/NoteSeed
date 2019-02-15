@@ -21,6 +21,7 @@ import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.main.Notes;
+import com.f0x1d.notes.utils.AnimUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -76,6 +77,11 @@ public class ChooseFolder extends Fragment {
             }
         }
 
+        if (allList.isEmpty())
+            v.findViewById(R.id.no_folders).setVisibility(View.VISIBLE);
+        else
+            v.findViewById(R.id.no_folders).setVisibility(View.INVISIBLE);
+
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -90,8 +96,6 @@ public class ChooseFolder extends Fragment {
         recyclerView.setAdapter(adapter);
 
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_black_24dp));
-        if (UselessUtils.ifCustomTheme())
-            fab.setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

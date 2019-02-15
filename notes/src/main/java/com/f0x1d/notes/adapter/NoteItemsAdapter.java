@@ -255,24 +255,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void onItemMoved(int fromPosition, int toPosition){
-        /*if (fromPosition < toPosition) {
-            for (int i = fromPosition; i < toPosition; i++) {
-                Log.e("notes_err", "updated in loop: " + getText(noteItems.get(i).id) + " from: " + getPosition(noteItems.get(i).id));
-
-                dao.updateElementPos(getPosition(noteItems.get(i).id) + 1, noteItems.get(i).id);
-
-                Log.e("notes_err", "to: " + getPosition(noteItems.get(i).id));
-            }
-        } else {
-            for (int i = fromPosition; i > toPosition; i--) {
-                Log.e("notes_err", "updated in loop: " + getText(noteItems.get(i).id) + " from: " + getPosition(noteItems.get(i).id));
-
-                dao.updateElementPos(getPosition(noteItems.get(i).id) - 1, noteItems.get(i).id);
-
-                Log.e("notes_err", "to: " + getPosition(noteItems.get(i).id));
-            }
-        }*/
-
         dao.updateElementPos(toPosition, noteItems.get(fromPosition).id);
         Log.e("notes_err", "updated: " + getText(noteItems.get(fromPosition).id) + " from: " + fromPosition + " to: " + toPosition);
 

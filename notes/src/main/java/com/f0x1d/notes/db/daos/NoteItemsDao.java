@@ -11,9 +11,6 @@ import java.util.List;
 @Dao
 public interface NoteItemsDao {
 
-    /*@Query("SELECT * FROM NoteItem")
-    List<NoteItem> getAll();*/
-
     @Query("SELECT * FROM NoteItem order by position asc")
     List<NoteItem> getAll();
 
@@ -37,6 +34,9 @@ public interface NoteItemsDao {
 
     @Query("DELETE FROM NOTEITEM WHERE id = :id")
     int deleteItem(long id);
+
+    @Query("DELETE FROM NoteItem WHERE to_id = :to_id")
+    void deleteByToId(long to_id);
 
     @Query("DELETE FROM NoteItem WHERE to_id = :to_id AND position = :pos")
     int deleteByPos(long to_id, int pos);

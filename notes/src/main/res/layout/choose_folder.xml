@@ -26,4 +26,11 @@
         android:layout_marginEnd="5dp"
         android:layout_height="wrap_content" />
 
+    <com.f0x1d.notes.view.theming.MyTextView
+        android:layout_width="wrap_content"
+        android:text="@string/no_folders"
+        android:id="@+id/no_folders"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

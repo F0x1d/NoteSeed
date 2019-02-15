@@ -23,6 +23,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.adapter.ThemesAdapter;
 import com.f0x1d.notes.model.Theme;
+import com.f0x1d.notes.utils.AnimUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -98,11 +99,8 @@ public class ThemesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         import_fab = view.findViewById(R.id.import_theme);
-
             import_fab.setImageDrawable(getActivity().getDrawable(R.drawable.ic_add_black_24dp));
-
-            if (UselessUtils.ifCustomTheme())
-                import_fab.setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
+        AnimUtils.animRotate(import_fab);
 
             import_fab.setOnClickListener(new View.OnClickListener() {
                 @Override
