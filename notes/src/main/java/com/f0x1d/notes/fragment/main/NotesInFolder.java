@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -25,17 +24,22 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
+import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.adapter.NoteItemsAdapter;
+import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
+import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
-import com.f0x1d.notes.App;
-import com.f0x1d.notes.adapter.ItemsAdapter;
-import com.f0x1d.notes.db.daos.NoteOrFolderDao;
-import com.f0x1d.notes.db.entities.NoteOrFolder;
-import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -48,13 +52,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 

@@ -1,8 +1,6 @@
 package com.f0x1d.notes.adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,11 +11,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.text.Html;
-import android.transition.Fade;
-import android.transition.TransitionInflater;
-import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,19 +23,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
+import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
+import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.choose.ChooseFolder;
-import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
+import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
-import com.f0x1d.notes.App;
-import com.f0x1d.notes.db.daos.NoteOrFolderDao;
-import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyColorPickerDialog;
@@ -52,14 +53,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.NotificationCompat;
-import androidx.core.view.ViewCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -361,10 +354,43 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         dao.deleteNote(id);
     }
 
-    public void deleteFolder(String folder_name){
+    public void deleteFolder(final String folder_name){
         try {
             dao.deleteFolder(folder_name);
             dao.deleteFolder2(folder_name);
+
+            /*new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String folderName = folder_name;
+                    boolean smthDeleted = false;
+
+                    for (int i = 0; i < dao.getAll().size(); i++){
+                        NoteOrFolder noteOrFolder = dao.getAll().get(i);
+
+                        if (noteOrFolder.in_folder_id.equals(folderName) && noteOrFolder.is_folder == 1){
+                            dao.deleteFolder2(noteOrFolder.folder_name);
+                            dao.deleteFolder(noteOrFolder.folder_name);
+
+                            folderName = noteOrFolder.folder_name;
+
+                            smthDeleted = true;
+                        }
+
+                        if (i == dao.getAll().size() - 1 && smthDeleted){
+                            i = 0;
+                            smthDeleted = false;
+                        }
+                    }
+
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(activity, "Deleted all", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }).start();*/
         } catch (IndexOutOfBoundsException e){
             Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -492,11 +518,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             boolean oneLine;
 
-            if (Pattern.compile("\\r?\\n").matcher(text).find()){
-                oneLine = false;
-            } else {
-                oneLine = true;
-            }
+            oneLine = !Pattern.compile("\\r?\\n").matcher(text).find();
 
             for (String retval : text.split("\\r?\\n")) {
                 if (oneLine){

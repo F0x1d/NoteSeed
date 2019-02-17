@@ -6,10 +6,10 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
-
-import androidx.annotation.Nullable;
 
 @SuppressLint("AppCompatCustomView")
 public class MyImageView extends ImageView {

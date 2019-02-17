@@ -14,12 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 
 public class CenteredToolbar extends Toolbar {
 

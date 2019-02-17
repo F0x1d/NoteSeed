@@ -1,12 +1,12 @@
 package com.f0x1d.notes.db.daos;
 
-import com.f0x1d.notes.db.entities.NoteOrFolder;
-
-import java.util.List;
-
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.f0x1d.notes.db.entities.NoteOrFolder;
+
+import java.util.List;
 
 @Dao
 public interface NoteOrFolderDao {
@@ -61,6 +61,9 @@ public interface NoteOrFolderDao {
 
     @Query("DELETE FROM NoteOrFolder WHERE in_folder_id = :folder_name")
     void deleteFolder2(String folder_name);
+
+    @Query("DELETE FROM noteorfolder WHERE id = :id")
+    void deleteById(long id);
 
     @Query("DELETE FROM NoteOrFolder")
     void nukeTable();

@@ -2,7 +2,6 @@ package com.f0x1d.notes.fragment.lock;
 
 import android.app.Fragment;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,13 +15,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyButton;
-
-import androidx.annotation.Nullable;
 
 public class СhoosePin extends Fragment {
 

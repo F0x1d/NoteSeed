@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.core.graphics.drawable.DrawableCompat;
+
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
-
-import androidx.core.graphics.drawable.DrawableCompat;
 
 import static android.content.Context.MODE_PRIVATE;
 

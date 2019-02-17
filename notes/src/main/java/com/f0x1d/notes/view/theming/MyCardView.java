@@ -3,12 +3,12 @@ package com.f0x1d.notes.view.theming;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.f0x1d.notes.utils.ThemesEngine;
-import com.f0x1d.notes.utils.UselessUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
 
 public class MyCardView extends CardView {
 

@@ -9,13 +9,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.ColorRes;
-
 import com.f0x1d.notes.App;
-import com.f0x1d.notes.R;
 import com.f0x1d.notes.model.Theme;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -137,7 +133,7 @@ public class ThemesEngine {
                     String name = "error!";
                     String author = "error!";
                     String card_color = "#ffffff";
-                    String card_text_color = "#ffffff";
+                    String card_text_color = "#000000";
 
                     JSONObject jsonObject = null;
 
@@ -204,7 +200,6 @@ public class ThemesEngine {
                 jsonObject = new JSONObject(all);
             } catch (Exception e) {
                 Toast.makeText(App.getContext(), "Error!", Toast.LENGTH_SHORT).show();
-
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
             }
 
@@ -492,6 +487,7 @@ public class ThemesEngine {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(i);
             activity.finish();
+
         } catch (Exception e) {
             Toast.makeText(App.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();

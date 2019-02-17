@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -35,7 +34,6 @@ import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyEditText;
 
-import java.util.Collections;
 import java.util.List;
 
 public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

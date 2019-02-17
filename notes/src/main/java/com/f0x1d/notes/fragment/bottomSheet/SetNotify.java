@@ -10,26 +10,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.f0x1d.notes.R;
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NotifyDao;
 import com.f0x1d.notes.db.entities.Notify;
+import com.f0x1d.notes.receiver.NotifyServiceReceiver;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
-import com.f0x1d.notes.receiver.NotifyServiceReceiver;
 import com.f0x1d.notes.view.theming.MyButton;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 

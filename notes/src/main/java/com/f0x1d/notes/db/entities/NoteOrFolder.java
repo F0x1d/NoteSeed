@@ -1,7 +1,5 @@
 package com.f0x1d.notes.db.entities;
 
-import com.f0x1d.notes.utils.UselessUtils;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 

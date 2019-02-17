@@ -2,23 +2,13 @@ package com.f0x1d.notes.fragment.settings;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-
 import android.os.Handler;
 import android.preference.Preference;
-
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
@@ -28,13 +18,15 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.fragment.bottomSheet.TextSizeDialog;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
-import com.f0x1d.notes.utils.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -67,7 +59,7 @@ public class MainSettings extends PreferenceFragment {
         super.onResume();
             View rootView = getView();
             if (rootView != null) {
-                ListView list = (ListView) rootView.findViewById(android.R.id.list);
+                ListView list = rootView.findViewById(android.R.id.list);
                 list.setPadding(0, 0, 0, 0);
                 list.setDivider(null);
             }

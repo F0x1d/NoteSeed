@@ -8,46 +8,37 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-
-import com.f0x1d.notes.BuildConfig;
-import com.f0x1d.notes.fragment.choose.ChooseFolder;
-import com.f0x1d.notes.fragment.lock.LockScreen;
-import com.f0x1d.notes.fragment.main.Notes;
-import com.f0x1d.notes.R;
-import com.f0x1d.notes.fragment.main.NotesInFolder;
-import com.f0x1d.notes.fragment.settings.MainSettings;
-import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
-import com.f0x1d.notes.App;
-import com.f0x1d.notes.utils.dialogs.BackupDialog;
-import com.f0x1d.notes.utils.PermissionUtils;
-import com.f0x1d.notes.utils.SyncUtils;
-import com.f0x1d.notes.utils.ThemesEngine;
-import com.f0x1d.notes.utils.UselessUtils;
-import com.f0x1d.notes.utils.dialogs.SignInDialog;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.api.services.drive.DriveScopes;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.widget.Toast;
-
-import androidx.fragment.app.FragmentManager;
-
-import java.io.File;
-import java.io.FileInputStream;
+import com.f0x1d.notes.App;
+import com.f0x1d.notes.R;
+import com.f0x1d.notes.fragment.choose.ChooseFolder;
+import com.f0x1d.notes.fragment.lock.LockScreen;
+import com.f0x1d.notes.fragment.main.Notes;
+import com.f0x1d.notes.fragment.main.NotesInFolder;
+import com.f0x1d.notes.fragment.settings.MainSettings;
+import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
+import com.f0x1d.notes.utils.PermissionUtils;
+import com.f0x1d.notes.utils.SyncUtils;
+import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.dialogs.BackupDialog;
+import com.f0x1d.notes.utils.dialogs.SignInDialog;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.api.services.drive.DriveScopes;
 
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 

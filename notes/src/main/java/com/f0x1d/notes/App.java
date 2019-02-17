@@ -2,13 +2,11 @@ package com.f0x1d.notes;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
+
+import androidx.room.Room;
 
 import com.crashlytics.android.Crashlytics;
 import com.f0x1d.notes.db.Database;
-
-import androidx.annotation.NonNull;
-import androidx.room.Room;
 
 import io.fabric.sdk.android.Fabric;
 

@@ -50,7 +50,7 @@ public class AboutSettings extends PreferenceFragment {
         super.onResume();
         View rootView = getView();
         if (rootView != null) {
-            ListView list = (ListView) rootView.findViewById(android.R.id.list);
+            ListView list = rootView.findViewById(android.R.id.list);
             list.setPadding(0, 0, 0, 0);
             list.setDivider(null);
         }

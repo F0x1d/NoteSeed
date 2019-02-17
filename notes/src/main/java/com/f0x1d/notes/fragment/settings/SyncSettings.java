@@ -28,7 +28,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.services.drive.DriveScopes;
 
@@ -39,7 +38,7 @@ public class SyncSettings extends PreferenceFragment {
         super.onResume();
         View rootView = getView();
         if (rootView != null) {
-            ListView list = (ListView) rootView.findViewById(android.R.id.list);
+            ListView list = rootView.findViewById(android.R.id.list);
             list.setPadding(0, 0, 0, 0);
             list.setDivider(null);
         }

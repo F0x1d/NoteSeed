@@ -27,7 +27,7 @@ public class MyPreferenceCategory extends PreferenceCategory {
     @Override
     protected void onBindView(View view) {
         super.onBindView(view);
-        TextView titleView = (TextView) view.findViewById(android.R.id.title);
+        TextView titleView = view.findViewById(android.R.id.title);
 
         if (UselessUtils.ifCustomTheme()){
             titleView.setTextColor(ThemesEngine.accentColor);

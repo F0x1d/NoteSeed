@@ -1,12 +1,12 @@
 package com.f0x1d.notes.db.daos;
 
-import com.f0x1d.notes.db.entities.Notify;
-
-import java.util.List;
-
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.f0x1d.notes.db.entities.Notify;
+
+import java.util.List;
 
 @Dao
 public interface NotifyDao {

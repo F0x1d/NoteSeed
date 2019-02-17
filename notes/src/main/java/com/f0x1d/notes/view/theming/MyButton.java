@@ -6,10 +6,10 @@ import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
+
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
-
-import androidx.annotation.Nullable;
 
 @SuppressLint("AppCompatCustomView")
 public class MyButton extends Button {
