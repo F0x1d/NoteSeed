@@ -12,6 +12,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -62,6 +63,12 @@ public class SetNotify extends BottomSheetDialogFragment {
 
     NotifyDao dao;
 
+    Notify notify;
+
+    public SetNotify(Notify notify){
+        this.notify = notify;
+    }
+
     @SuppressLint("RestrictedApi")
     @Override
     public void setupDialog(Dialog dialog, int style) {
@@ -88,9 +95,10 @@ public class SetNotify extends BottomSheetDialogFragment {
             choose_time.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Calendar c = Calendar.getInstance();
+                    Calendar c = Calendar.getInstance();
                     myHour = c.get(Calendar.HOUR_OF_DAY);
                     myMinute = c.get(Calendar.MINUTE);
+
                     if (UselessUtils.getBool("night", false)){
                         TimePickerDialog tpd = new TimePickerDialog(getActivity(), R.style.TimePicker, myCallBack, myHour, myMinute, true);
                         tpd.show();
@@ -105,7 +113,7 @@ public class SetNotify extends BottomSheetDialogFragment {
             choose_date.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Calendar c = Calendar.getInstance();
+                    Calendar c = Calendar.getInstance();
                     myDay = c.get(Calendar.DATE);
                     myMonth = c.get(Calendar.MONTH);
                     myYear = c.get(Calendar.YEAR);
@@ -134,7 +142,7 @@ public class SetNotify extends BottomSheetDialogFragment {
             }
 
         for (Notify notify : dao.getAll()) {
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0) == notify.to_id) {
+            if (this.notify.to_id == notify.to_id) {
                 title = notify.title;
                 text = notify.text;
                 id = notify.id;
@@ -144,8 +152,6 @@ public class SetNotify extends BottomSheetDialogFragment {
                 exists = true;
             }
         }
-
-
 
         if (exists){
             delete.setOnClickListener(new View.OnClickListener() {
@@ -171,12 +177,13 @@ public class SetNotify extends BottomSheetDialogFragment {
                     if (!exists){
                         if (!date.getText().toString().equals(getActivity().getString(R.string.choose_date)) && !time.getText().toString().equals(getActivity().getString(R.string.choose_time))){
 
-                            dao.insert(new Notify(PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("notify_title", ""),
-                                    PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("notify_text", ""), myCalendar.getTimeInMillis(),
-                                    PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0)));
+                            notify.time = myCalendar.getTimeInMillis();
+
+                            dao.insert(notify);
 
                             Intent myIntent = new Intent(getActivity(), NotifyServiceReceiver.class);
-                            PendingIntent service = PendingIntent.getBroadcast(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0), myIntent, 0);
+                            PendingIntent service = PendingIntent.getBroadcast(getActivity(), (int) notify.to_id,
+                                    myIntent, 0);
 
                             AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -184,6 +191,8 @@ public class SetNotify extends BottomSheetDialogFragment {
                             } else {
                                 am.setExact(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
                             }
+
+                            Log.e("notes_err", "notify time: " + notify.time);
 
                             dialog.dismiss();
                         } else {
@@ -194,12 +203,13 @@ public class SetNotify extends BottomSheetDialogFragment {
 
                             delete(id);
 
-                            dao.insert(new Notify(PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("notify_title", ""),
-                                    PreferenceManager.getDefaultSharedPreferences(App.getInstance()).getString("notify_text", ""), myCalendar.getTimeInMillis(),
-                                    PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0)));
+                            notify.time = myCalendar.getTimeInMillis();
+
+                            dao.insert(notify);
 
                             Intent myIntent = new Intent(getActivity(), NotifyServiceReceiver.class);
-                            PendingIntent service = PendingIntent.getBroadcast(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("notify_id", 0), myIntent, 0);
+                            PendingIntent service = PendingIntent.getBroadcast(getActivity(), (int) notify.to_id,
+                                    myIntent, 0);
 
                             AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 

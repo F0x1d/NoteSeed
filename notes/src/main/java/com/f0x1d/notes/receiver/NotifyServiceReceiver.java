@@ -3,9 +3,11 @@ package com.f0x1d.notes.receiver;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.legacy.content.WakefulBroadcastReceiver;
@@ -17,13 +19,15 @@ import com.f0x1d.notes.db.entities.Notify;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
+public class NotifyServiceReceiver extends BroadcastReceiver {
 
     public void notify(Context activity) {
         String title = null;
         String text = null;
         long to_id = 0;
         long id = 0;
+
+        Log.e("notes_err", "received");
 
         for (Notify noteOrFolder : App.getInstance().getDatabase().notifyDao().getAll()) {
             long time = noteOrFolder.time / (1000 * 30);
@@ -53,8 +57,10 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
                 .setContentText(text)
                 .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
                 .setAutoCancel(true)
-                .setVibrate(new long[]{1000L, 1000L, 1000L})
-                .setChannelId("com.f0x1d.notes");
+                .setVibrate(new long[]{1000L, 1000L, 1000L});
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    builder.setChannelId("com.f0x1d.notes");
 
         NotificationManager notificationManager = (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify((int) to_id + 1, builder.build());

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 public class Notify {
 
     @PrimaryKey(autoGenerate = true)
-    public long id;
+    public long id = 0;
 
     public long time;
 

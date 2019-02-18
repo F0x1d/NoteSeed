@@ -39,6 +39,7 @@ import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.utils.ThemesEngine;
@@ -119,9 +120,9 @@ public class NoteAdd extends Fragment {
                 }
             }
 
-            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", item.text)
-                    .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();
-            SetNotify notify = new SetNotify();
+            /*PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", item.text)
+                    .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();*/
+            SetNotify notify = new SetNotify(new Notify(title.getText().toString(), item.text, 0, item.to_id));
             notify.show(activity.getSupportFragmentManager(), "TAG");
         });
 

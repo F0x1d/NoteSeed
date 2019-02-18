@@ -37,6 +37,7 @@ import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.choose.ChooseFolder;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
@@ -223,8 +224,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                         String name1 = "Напоминания";
                                         int importance = NotificationManager.IMPORTANCE_DEFAULT;
                                         NotificationChannel channel = new NotificationChannel("com.f0x1d.notes", name1, importance);
-                                        // Register the channel with the system; you can't change the importance
-                                        // or other notification behaviors after this
                                         channel.enableVibration(true);
                                         channel.enableLights(true);
                                         NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
@@ -234,9 +233,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                     // Create Notification
                                     NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
                                             .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
-                                            .setContentTitle(items.get(position).title)
-                                            .setContentText(items.get(position).text)
-                                            .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
+                                            .setContentTitle(getNotifyTitle(items.get(position).id))
+                                            .setContentText(getNotifyText(items.get(position).id))
+                                            .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class),
+                                                    PendingIntent.FLAG_CANCEL_CURRENT))
                                             .setAutoCancel(true)
                                             .setVibrate(new long[]{1000L, 1000L, 1000L})
                                             .setChannelId("com.f0x1d.notes");
@@ -249,9 +249,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 case 1:
                                     FragmentActivity activity1 = (FragmentActivity) activity;
 
-                                    PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("notify_title", items.get(position).title).putString("notify_text", items.get(position).text)
-                                            .putInt("notify_id", (int) items.get(position).id).apply();
-                                    SetNotify notify = new SetNotify();
+                                    /*PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("notify_title", items.get(position).title).putString("notify_text",
+                                    items.get(position).text)
+                                            .putInt("notify_id", (int) items.get(position).id).apply();*/
+                                    SetNotify notify = new SetNotify(new Notify(getNotifyTitle(items.get(position).id), getNotifyText(items.get(position).id), 0, items.get(position).id));
                                     notify.show(activity1.getSupportFragmentManager(), "TAG");
                                     break;
                             }
@@ -359,38 +360,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             dao.deleteFolder(folder_name);
             dao.deleteFolder2(folder_name);
 
-            /*new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    String folderName = folder_name;
-                    boolean smthDeleted = false;
-
-                    for (int i = 0; i < dao.getAll().size(); i++){
-                        NoteOrFolder noteOrFolder = dao.getAll().get(i);
-
-                        if (noteOrFolder.in_folder_id.equals(folderName) && noteOrFolder.is_folder == 1){
-                            dao.deleteFolder2(noteOrFolder.folder_name);
-                            dao.deleteFolder(noteOrFolder.folder_name);
-
-                            folderName = noteOrFolder.folder_name;
-
-                            smthDeleted = true;
-                        }
-
-                        if (i == dao.getAll().size() - 1 && smthDeleted){
-                            i = 0;
-                            smthDeleted = false;
-                        }
-                    }
-
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity, "Deleted all", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }).start();*/
         } catch (IndexOutOfBoundsException e){
             Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -408,6 +377,20 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         return color;
+    }
+
+    private void deleteAll(String folderName){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (NoteOrFolder noteOrFolder : dao.getAll()) {
+                    if (noteOrFolder.folder_name.equals(folderName) && noteOrFolder.is_folder == 1){
+                        dao.deleteFolder2(folderName);
+                        dao.deleteFolder2(noteOrFolder.folder_name);
+                    }
+                }
+            }
+        }).start();
     }
 
     public String getFolderNameFromDataBase(long id, int pos){
@@ -571,7 +554,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                         lockargs.putLong("id", items.get(position).id);
                                         lockargs.putInt("locked", items.get(position).locked);
                                         lockargs.putString("title", items.get(position).title);
-                                        //lockargs.putString("text", items.get(position).text);
                                         lockargs.putBoolean("to_note", true);
 
                                     activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
@@ -906,9 +888,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         }
 
                         if (NotesInFolder.in_ids.size() != 0) {
-                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new NotesInFolder(), "in_folder").commit();
+                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                                    android.R.id.content, new NotesInFolder(), "in_folder").commit();
                         } else {
-                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
+                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                                    android.R.id.content, new Notes(), "notes").commit();
                         }
 
                         break;
@@ -951,7 +935,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             args.putLong("id", items.get(position).id);
 
                         activity.getFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, ChooseFolder.newInstance(args), "choose_folder")
+                                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                                        android.R.id.content, ChooseFolder.newInstance(args), "choose_folder")
                                 .addToBackStack(null).commit();
                         break;
                     case 3:
