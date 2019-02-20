@@ -379,20 +379,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return color;
     }
 
-    private void deleteAll(String folderName){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (NoteOrFolder noteOrFolder : dao.getAll()) {
-                    if (noteOrFolder.folder_name.equals(folderName) && noteOrFolder.is_folder == 1){
-                        dao.deleteFolder2(folderName);
-                        dao.deleteFolder2(noteOrFolder.folder_name);
-                    }
-                }
-            }
-        }).start();
-    }
-
     public String getFolderNameFromDataBase(long id, int pos){
         String name = "";
 
@@ -604,15 +590,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Color.parseColor(getColorFromDataBase(position));
 
             if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             } else {
-                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             }
         } catch (Exception e){
             if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.unpin), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color)};
             } else {
-                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.pin), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color)};
             }
         }
 
@@ -663,22 +649,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         break;
                     case 1:
 
-                        if (items.get(position).pinned == 1){
-                            dao.updateNotePinned(0, items.get(position).id);
-                        } else {
-                            dao.updateNotePinned(1, items.get(position).id);
-                        }
-
-                        if (NotesInFolder.in_ids.size() != 0){
-                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                    android.R.id.content, new NotesInFolder(), "in_folder").commit();
-                        } else {
-                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                    android.R.id.content, new Notes(), "notes").commit();
-                        }
-                        break;
-                    case 2:
-
                         int currentColor;
 
                         try {
@@ -708,7 +678,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
-                    case 3:
+                    case 2:
                         dao.updateNoteColor("", items.get(position).id);
                         notifyItemChanged(position);
                         break;
@@ -726,15 +696,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Color.parseColor(getColorFromDataBase(position));
 
             if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             } else {
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             }
         } catch (Exception e){
             if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color)};
             } else {
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color)};
             }
         }
 
@@ -799,21 +769,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         dialog1337.show();
                         break;
                     case 1:
-                        if (items.get(position).pinned == 1){
-                            dao.updateFolderPinned(0, getFolderNameFromDataBase(items.get(position).id, position));
-                        } else {
-                            dao.updateFolderPinned(1, getFolderNameFromDataBase(items.get(position).id, position));
-                        }
-
-                        if (NotesInFolder.in_ids.size() != 0){
-                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                    android.R.id.content, new NotesInFolder(), "in_folder").commit();
-                        } else {
-                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                    android.R.id.content, new Notes(), "notes").commit();
-                        }
-                        break;
-                    case 2:
                         int currentColor;
 
                         try {
@@ -844,7 +799,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
 
                         break;
-                    case 3:
+                    case 2:
                         dao.updateFolderColor("", getFolderNameFromDataBase(items.get(position).id, position));
                         notifyItemChanged(position);
                         break;
@@ -862,15 +817,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Color.parseColor(getColorFromDataBase(position));
 
             if (items.get(position).pinned == 1) {
-                hm = new String[]{activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
             } else {
-                hm = new String[]{activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
             }
         } catch (Exception e){
             if (items.get(position).pinned == 1) {
-                hm = new String[]{activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
+                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
             } else {
-                hm = new String[]{activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
+                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
             }
         }
 
@@ -881,22 +836,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        if (items.get(position).pinned == 1){
-                            dao.updateNotePinned(0, items.get(position).id);
-                        } else {
-                            dao.updateNotePinned(1, items.get(position).id);
-                        }
-
-                        if (NotesInFolder.in_ids.size() != 0) {
-                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                    android.R.id.content, new NotesInFolder(), "in_folder").commit();
-                        } else {
-                            activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                    android.R.id.content, new Notes(), "notes").commit();
-                        }
-
-                        break;
-                    case 1:
 
                         int currentColor;
 
@@ -927,7 +866,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                             colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
-                    case 2:
+                    case 1:
                         Bundle args = new Bundle();
                             ChooseFolder.in_ids.clear();
                             ChooseFolder.in_ids.add("def");
@@ -939,7 +878,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                         android.R.id.content, ChooseFolder.newInstance(args), "choose_folder")
                                 .addToBackStack(null).commit();
                         break;
-                    case 3:
+                    case 2:
                         dao.updateNoteColor("", items.get(position).id);
 
                         notifyItemChanged(position);

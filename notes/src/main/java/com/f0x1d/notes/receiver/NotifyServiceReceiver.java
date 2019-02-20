@@ -19,15 +19,13 @@ import com.f0x1d.notes.db.entities.Notify;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-public class NotifyServiceReceiver extends BroadcastReceiver {
+public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
 
     public void notify(Context activity) {
         String title = null;
         String text = null;
         long to_id = 0;
         long id = 0;
-
-        Log.e("notes_err", "received");
 
         for (Notify noteOrFolder : App.getInstance().getDatabase().notifyDao().getAll()) {
             long time = noteOrFolder.time / (1000 * 30);
