@@ -7,7 +7,8 @@
         <item name="colorAccent">@color/blue</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
     <style name="AppTheme_Orange_md2" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -17,7 +18,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/noname</item>
         <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
@@ -28,9 +30,10 @@
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="alertDialogTheme">@style/AlertDialog.AppTheme.Light</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
         <item name="colorAccent">@color/blue</item>
         <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
@@ -40,8 +43,9 @@
         <item name="colorPrimary">@color/noname</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/noname</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
         <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
@@ -91,7 +95,6 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:statusBarColor">@android:color/white</item>
-
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:navigationBarColor" tools:targetApi="o_mr1">@android:color/white</item>
     </style>

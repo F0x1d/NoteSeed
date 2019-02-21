@@ -147,24 +147,24 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (UselessUtils.ifCustomTheme()){
                     holder.title.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.notify_text.setTextColor(ThemesEngine.lightColorTextColor);
+                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.BLACK);
                     holder.text.setTextColor(Color.BLACK);
-                    holder.notify_text.setTextColor(Color.BLACK);
+                    holder.notify_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp));
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
                 if (UselessUtils.ifCustomTheme()){
                     holder.title.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.notify_text.setTextColor(ThemesEngine.darkColorTextColor);
+                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.lightColorIconColor));
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.WHITE);
                     holder.text.setTextColor(Color.WHITE);
-                    holder.notify_text.setTextColor(Color.WHITE);
+                    holder.notify_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp));
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
                 }
             }
@@ -177,30 +177,28 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (UselessUtils.ifCustomTheme()){
                     holder.title.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.notify_text.setTextColor(ThemesEngine.lightColorTextColor);
+                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.BLACK);
                     holder.text.setTextColor(Color.BLACK);
-                    holder.notify_text.setTextColor(Color.BLACK);
+                    holder.notify_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp));
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
                 if (UselessUtils.ifCustomTheme()){
                     holder.title.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.notify_text.setTextColor(ThemesEngine.darkColorTextColor);
+                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.lightColorIconColor));
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.WHITE);
                     holder.text.setTextColor(Color.WHITE);
-                    holder.notify_text.setTextColor(Color.WHITE);
+                    holder.notify_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp));
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
                 }
             }
         }
-
-        holder.notify_text.setText(Html.fromHtml("<b>" + activity.getString(R.string.notify) + "</b>"));
 
         holder.title.setText(getNotifyTitle(items.get(position).id));
         holder.text.setText(getNotifyText(items.get(position).id));
@@ -248,10 +246,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                     break;
                                 case 1:
                                     FragmentActivity activity1 = (FragmentActivity) activity;
-
-                                    /*PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("notify_title", items.get(position).title).putString("notify_text",
-                                    items.get(position).text)
-                                            .putInt("notify_id", (int) items.get(position).id).apply();*/
                                     SetNotify notify = new SetNotify(new Notify(getNotifyTitle(items.get(position).id), getNotifyText(items.get(position).id), 0, items.get(position).id));
                                     notify.show(activity1.getSupportFragmentManager(), "TAG");
                                     break;
@@ -397,7 +391,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void initLayoutNote(noteViewHolder holder, int position) {
         try {
-            holder.note_card.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
+            holder.note_card.setCardBackgroundColor(Color.parseColor(getColorFromDataBase(position)));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
                 if (UselessUtils.ifCustomTheme()){
@@ -512,7 +506,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         holder.time.setText(df.format(currentDate));
 
-        holder.note_card.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 getNotesDialog(position);
@@ -520,7 +514,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        holder.note_card.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
@@ -953,7 +947,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView title;
         TextView text;
         ImageView pinned;
-        TextView notify_text;
+        ImageView notify_pic;
         CardView cardView;
 
         notifyViewHolder(@NonNull View itemView) {
@@ -963,7 +957,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             text = itemView.findViewById(R.id.textView_text);
             pinned = itemView.findViewById(R.id.pinned);
             cardView = itemView.findViewById(R.id.note_card);
-            notify_text = itemView.findViewById(R.id.notify_text);
+            notify_pic = itemView.findViewById(R.id.notify_pic);
         }
     }
 }
