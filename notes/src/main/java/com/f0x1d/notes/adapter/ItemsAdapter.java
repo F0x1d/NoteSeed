@@ -51,6 +51,7 @@ import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -65,6 +66,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private final int NOTE = 1;
     private final int FOLDER = 2;
     private final int NOTIFY = 3;
+
+    private final int NOTE_PINNED = 4;
+    private final int FOLDER_PINNED = 5;
+    private final int NOTIFY_PINNED = 6;
 
     private boolean anim;
 
@@ -115,6 +120,36 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
 
             return new notifyViewHolder(view);
+        } else if (viewType == NOTE_PINNED) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.note_pinned, parent, false);
+
+            if (anim){
+                Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
+                animation.setDuration(400);
+                view.startAnimation(animation);
+            }
+
+            return new noteViewHolder(view);
+        } else if (viewType == FOLDER_PINNED) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.folder_pinned, parent, false);
+
+            if (anim){
+                Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
+                animation.setDuration(400);
+                view.startAnimation(animation);
+            }
+
+            return new folderViewHolder(view);
+        } else if (viewType == NOTIFY_PINNED) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notify_pinned, parent, false);
+
+            if (anim){
+                Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
+                animation.setDuration(400);
+                view.startAnimation(animation);
+            }
+
+            return new notifyViewHolder(view);
         } else {
             throw new RuntimeException("The type has to be NOTE or FOLDER or NOTIFY");
         }
@@ -132,6 +167,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 initLayoutFolder((folderViewHolder) holder, listPosition);
                 break;
             case NOTIFY:
+                initLayoutNotify((notifyViewHolder) holder, listPosition);
+                break;
+            case NOTE_PINNED:
+                initLayoutNote((noteViewHolder) holder, listPosition);
+                break;
+            case FOLDER_PINNED:
+                initLayoutFolder((folderViewHolder) holder, listPosition);
+                break;
+            case NOTIFY_PINNED:
                 initLayoutNotify((notifyViewHolder) holder, listPosition);
                 break;
             default:
@@ -391,7 +435,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void initLayoutNote(noteViewHolder holder, int position) {
         try {
-            holder.note_card.setCardBackgroundColor(Color.parseColor(getColorFromDataBase(position)));
+            holder.note_card.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
                 if (UselessUtils.ifCustomTheme()){
@@ -564,6 +608,23 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return flex;
     }
 
+    private boolean getPinned(long id){
+        boolean flex = false;
+
+        for (NoteOrFolder noteOrFolder : dao.getAll()) {
+            if (id == noteOrFolder.id){
+                if (noteOrFolder.pinned == 1)
+                    flex = true;
+                else
+                    flex = false;
+
+                break;
+            }
+        }
+
+        return flex;
+    }
+
     private String getNotifyText(long id){
         String flex = "null";
 
@@ -583,16 +644,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             Color.parseColor(getColorFromDataBase(position));
 
-            if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+            if (getPinned(items.get(position).id)){
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             } else {
-                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             }
         } catch (Exception e){
-            if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color)};
+            if (getPinned(items.get(position).id)){
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.unpin), activity.getString(R.string.color)};
             } else {
-                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.pin), activity.getString(R.string.color)};
             }
         }
 
@@ -642,6 +703,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         dialog1337.show();
                         break;
                     case 1:
+                        int pin = 0;
+
+                        if (!getPinned(items.get(position).id)){
+                            pin = 1;
+                        }
+
+                        dao.updateNotePinned(pin, items.get(position).id);
+
+                        flexRestart(items.get(0).in_folder_id);
+                        break;
+                    case 2:
 
                         int currentColor;
 
@@ -672,7 +744,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
-                    case 2:
+                    case 3:
                         dao.updateNoteColor("", items.get(position).id);
                         notifyItemChanged(position);
                         break;
@@ -689,16 +761,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             Color.parseColor(getColorFromDataBase(position));
 
-            if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+            if (getPinned(items.get(position).id)){
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             } else {
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             }
         } catch (Exception e){
-            if (items.get(position).pinned == 1){
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color)};
+            if (getPinned(items.get(position).id)){
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color)};
             } else {
-                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color)};
+                hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color)};
             }
         }
 
@@ -763,6 +835,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         dialog1337.show();
                         break;
                     case 1:
+                        int pin = 0;
+
+                        if (!getPinned(items.get(position).id)){
+                            pin = 1;
+                        }
+
+                        dao.updateNotePinned(pin, items.get(position).id);
+
+                        flexRestart(items.get(0).in_folder_id);
+                        break;
+                    case 2:
                         int currentColor;
 
                         try {
@@ -793,7 +876,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
 
                         break;
-                    case 2:
+                    case 3:
                         dao.updateFolderColor("", getFolderNameFromDataBase(items.get(position).id, position));
                         notifyItemChanged(position);
                         break;
@@ -810,16 +893,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             Color.parseColor(getColorFromDataBase(position));
 
-            if (items.get(position).pinned == 1) {
-                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
+            if (getPinned(items.get(position).id)) {
+                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.unpin), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
             } else {
-                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
+                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.pin), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
             }
         } catch (Exception e){
-            if (items.get(position).pinned == 1) {
-                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
+            if (getPinned(items.get(position).id)) {
+                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.unpin), activity.getString(R.string.move_ro_folder)};
             } else {
-                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
+                hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.pin), activity.getString(R.string.move_ro_folder)};
             }
         }
 
@@ -861,6 +944,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
                     case 1:
+                        int pin = 0;
+
+                        if (!getPinned(items.get(position).id)){
+                            pin = 1;
+                        }
+
+                        dao.updateNotePinned(pin, items.get(position).id);
+
+                        flexRestart(items.get(0).in_folder_id);
+                        break;
+                    case 2:
                         Bundle args = new Bundle();
                             ChooseFolder.in_ids.clear();
                             ChooseFolder.in_ids.add("def");
@@ -872,7 +966,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                         android.R.id.content, ChooseFolder.newInstance(args), "choose_folder")
                                 .addToBackStack(null).commit();
                         break;
-                    case 2:
+                    case 3:
                         dao.updateNoteColor("", items.get(position).id);
 
                         notifyItemChanged(position);
@@ -885,14 +979,48 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }
 
+    private void flexRestart(String inFolderId){
+        List<NoteOrFolder> allList = new ArrayList<>();
+        List<NoteOrFolder> notPinned = new ArrayList<>();
+
+        for (NoteOrFolder noteOrFolder : dao.getAll()) {
+            if (noteOrFolder.pinned == 1){
+                if (noteOrFolder.in_folder_id.equals(inFolderId)){
+                    allList.add(noteOrFolder);
+                }
+            } else {
+                if (noteOrFolder.in_folder_id.equals(inFolderId)){
+                    notPinned.add(noteOrFolder);
+                }
+            }
+        }
+
+        allList.addAll(notPinned);
+        items.clear();
+        items.addAll(allList);
+
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemViewType(int position) {
+        dao = App.getInstance().getDatabase().noteOrFolderDao();
+
         NoteOrFolder item = items.get(position);
         if (item.is_folder == 0) {
+            if (getPinned(item.id))
+                return NOTE_PINNED;
+
             return NOTE;
         } else if (item.is_folder == 1) {
+            if (getPinned(item.id))
+                return FOLDER_PINNED;
+
             return FOLDER;
         } else if (item.is_folder == 2){
+            if (getPinned(item.id))
+                return NOTIFY_PINNED;
+
             return NOTIFY;
         } else {
             return -1;
