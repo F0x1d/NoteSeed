@@ -35,7 +35,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".receiver.NotifyServiceReceiver"/>
+        <receiver
+            android:enabled="true"
+            android:name=".receiver.NotifyServiceReceiver"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
