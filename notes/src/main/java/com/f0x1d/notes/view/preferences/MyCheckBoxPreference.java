@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
+import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
@@ -41,5 +44,7 @@ public class MyCheckBoxPreference extends CheckBoxPreference {
             checkBox.setButtonTintList(ColorStateList.valueOf(ThemesEngine.accentColor));
             title.setTextColor(ThemesEngine.textColor);
         }
+
+        title.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
     }
 }

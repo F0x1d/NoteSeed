@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
+import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
@@ -32,6 +35,8 @@ public class MyPreferenceCategory extends PreferenceCategory {
         if (UselessUtils.ifCustomTheme()){
             titleView.setTextColor(ThemesEngine.accentColor);
         }
+
+        titleView.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
 
     }
 }

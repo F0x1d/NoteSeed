@@ -11,8 +11,10 @@ import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
@@ -54,6 +56,9 @@ public class MySwitchPreference extends SwitchPreference {
             text.setTextColor(ThemesEngine.textColor);
             text2.setTextColor(ThemesEngine.textColor);
         }
+
+        text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
+        text2.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
     }
 
     private static void colorSwitch(Switch s, int thumbOn) {
