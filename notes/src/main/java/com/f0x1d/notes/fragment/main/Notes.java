@@ -11,11 +11,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -47,6 +49,7 @@ import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.AboutSettings;
 import com.f0x1d.notes.fragment.settings.MainSettings;
+import com.f0x1d.notes.utils.MyGestureListener;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -81,6 +84,8 @@ public class Notes extends Fragment {
     ItemsAdapter adapter;
 
     SlideUp slideUp;
+
+    private GestureDetector gestureDetector;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -127,7 +132,7 @@ public class Notes extends Fragment {
         return v;
     }
 
-    @SuppressLint("WrongConstant")
+    @SuppressLint({"WrongConstant", "ClickableViewAccessibility"})
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -208,22 +213,23 @@ public class Notes extends Fragment {
                 .withLoggingEnabled(true)
                 .withStartState(SlideUp.State.HIDDEN)
                 .withGesturesEnabled(true)
-                .withSlideFromOtherView(openSlide)
+             //   .withSlideFromOtherView(openSlide)
                 .build();
 
-        openSlide.setOnClickListener(new View.OnClickListener() {
-            @Override
-           public void onClick(View view) {
-                slideUp.show();
-            }
-        });
+        gestureDetector = (new GestureDetector(getActivity(), new MyGestureListener(getActivity(), slideUp)));
 
-        closeSlide.setOnClickListener(new View.OnClickListener() {
+        View.OnTouchListener listener = new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                slideUp.hide();
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return true;
             }
-        });
+        };
+
+        slideView.setOnTouchListener(listener);
+        closeSlide.setOnTouchListener(listener);
+        fab.setOnTouchListener(listener);
+        openSlide.setOnTouchListener(listener);
 
         allList = new ArrayList<>();
 
