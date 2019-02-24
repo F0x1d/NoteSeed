@@ -11,11 +11,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -44,6 +46,7 @@ import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.AboutSettings;
 import com.f0x1d.notes.fragment.settings.MainSettings;
+import com.f0x1d.notes.utils.MyGestureListener;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -82,6 +85,8 @@ public class NotesInFolder extends Fragment {
 
     SlideUp slideUp;
 
+    private GestureDetector gestureDetector;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,18 +109,14 @@ public class NotesInFolder extends Fragment {
 
         if (UselessUtils.getBool("night", false)){
             if (UselessUtils.ifCustomTheme()){
-                toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_white_24dp), ThemesEngine.iconsColor));
                 toolbar.getMenu().findItem(R.id.root).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_arrow_upward_white_24dp), ThemesEngine.iconsColor));
             } else {
                 toolbar.getMenu().findItem(R.id.root).setIcon(R.drawable.ic_arrow_upward_white_24dp);
-                toolbar.setNavigationIcon(R.drawable.ic_search_white_24dp);
             }
         } else {
             if (UselessUtils.ifCustomTheme()){
-                toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_black_24dp), ThemesEngine.iconsColor));
                 toolbar.getMenu().findItem(R.id.root).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_arrow_upward_black_24dp), ThemesEngine.iconsColor));
             } else {
-                toolbar.setNavigationIcon(R.drawable.ic_search_black_24dp);
                 toolbar.getMenu().findItem(R.id.root).setIcon(R.drawable.ic_arrow_upward_black_24dp);
             }
         }
@@ -132,17 +133,10 @@ public class NotesInFolder extends Fragment {
         return v;
     }
 
-    @SuppressLint({"WrongConstant", "RestrictedApi"})
+    @SuppressLint({"WrongConstant", "RestrictedApi", "ClickableViewAccessibility"})
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UselessUtils.replace(getActivity(), Search.newInstance(in_folder_id), "search");
-            }
-        });
 
         MyButton fab = view.findViewById(R.id.new_note);
 
@@ -150,16 +144,16 @@ public class NotesInFolder extends Fragment {
         MyImageButton closeSlide = view.findViewById(R.id.close_slide);
 
         MyImageButton settings = view.findViewById(R.id.settings_pic);
-        MyImageButton info = view.findViewById(R.id.info_pic);
+        MyImageButton search = view.findViewById(R.id.search_pic);
 
         if (UselessUtils.getBool("night", false)){
             settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
-            info.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_white_24dp));
+            search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
             openSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
             closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
         } else {
             settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_black_24dp));
-            info.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_black_24dp));
+            search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_black_24dp));
             openSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
             closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
         }
@@ -167,14 +161,16 @@ public class NotesInFolder extends Fragment {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                slideUp.hide();
                 UselessUtils.replace(getActivity(), new MainSettings(), "settings");
             }
         });
 
-        info.setOnClickListener(new View.OnClickListener() {
+        search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(getActivity(), new AboutSettings(), "about");
+                slideUp.hide();
+                UselessUtils.replace(getActivity(), Search.newInstance(in_folder_id), "search");
             }
         });
 
@@ -192,9 +188,6 @@ public class NotesInFolder extends Fragment {
                         openSlide.setAlpha(0 + (percent / 100));
 
                         closeSlide.setAlpha(1 - (percent / 100));
-                        if (percent < 100 && openSlide.getAlpha() < 1) {
-
-                        }
                     }
                     @Override
                     public void onVisibilityChanged(int visibility) {}
@@ -206,19 +199,20 @@ public class NotesInFolder extends Fragment {
                 .withSlideFromOtherView(openSlide)
                 .build();
 
-        openSlide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                slideUp.show();
-            }
-        });
+        gestureDetector = (new GestureDetector(getActivity(), new MyGestureListener(getActivity(), slideUp)));
 
-        closeSlide.setOnClickListener(new View.OnClickListener() {
+        View.OnTouchListener listener = new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                slideUp.hide();
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return false;
             }
-        });
+        };
+
+        slideView.setOnTouchListener(listener);
+        closeSlide.setOnTouchListener(listener);
+        fab.setOnTouchListener(listener);
+     //   openSlide.setOnTouchListener(listener);
 
         allList = new ArrayList<>();
 

@@ -16,6 +16,7 @@ import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
@@ -108,6 +109,8 @@ public class CenteredToolbar extends Toolbar {
 
             setBackgroundColor(ThemesEngine.toolbarColor);
         }
+
+        tvTitle.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
 
         tvSubtitle.setSingleLine();
         tvSubtitle.setEllipsize(TextUtils.TruncateAt.END);

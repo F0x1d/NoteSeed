@@ -30,6 +30,7 @@
             android:id="@+id/textView_title"
             android:layout_width="wrap_content"
             android:layout_alignParentStart="true"
+            android:fontFamily="@font/medium"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="30dp"
             android:elevation="2dp"
@@ -45,6 +46,7 @@
             android:text="text"
             android:singleLine="true"
             android:layout_below="@id/textView_title"
+            android:fontFamily="@font/medium"
             android:elevation="1dp"
             android:id="@+id/textView_text"
             android:layout_marginStart="10dp"
@@ -66,6 +68,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:id="@+id/time"
+            android:fontFamily="@font/medium"
             android:text="21:12 12.01.2019"
             android:layout_below="@id/textView_text"
             android:layout_alignParentEnd="true"

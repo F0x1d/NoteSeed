@@ -99,26 +99,6 @@ public class Notes extends Fragment {
 
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.notes));
-        toolbar.inflateMenu(R.menu.search_menu);
-        toolbar.getMenu().findItem(R.id.settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        if (UselessUtils.getBool("night", false)){
-            if (UselessUtils.ifCustomTheme()){
-                toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_white_24dp), ThemesEngine.iconsColor));
-                toolbar.getMenu().findItem(R.id.settings).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor));
-            } else {
-                toolbar.getMenu().findItem(R.id.settings).setIcon(R.drawable.ic_settings_white_24dp);
-                toolbar.setNavigationIcon(R.drawable.ic_search_white_24dp);
-            }
-        } else {
-            if (UselessUtils.ifCustomTheme()){
-                toolbar.setNavigationIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_search_black_24dp), ThemesEngine.iconsColor));
-                toolbar.getMenu().findItem(R.id.settings).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_settings_black_24dp), ThemesEngine.iconsColor));
-            } else {
-                toolbar.setNavigationIcon(R.drawable.ic_search_black_24dp);
-                toolbar.getMenu().findItem(R.id.settings).setIcon(R.drawable.ic_settings_black_24dp);
-            }
-        }
 
         if (UselessUtils.ifCustomTheme()){
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
@@ -139,13 +119,6 @@ public class Notes extends Fragment {
 
         UselessUtils.clear_back_stack(getActivity());
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UselessUtils.replace(getActivity(), Search.newInstance("def"), "search");
-            }
-        });
-
         /*if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
             if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
                 if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
@@ -160,16 +133,16 @@ public class Notes extends Fragment {
         MyImageButton closeSlide = view.findViewById(R.id.close_slide);
 
         MyImageButton settings = view.findViewById(R.id.settings_pic);
-        MyImageButton info = view.findViewById(R.id.info_pic);
+        MyImageButton search = view.findViewById(R.id.search_pic);
 
         if (UselessUtils.getBool("night", false)){
             settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
-            info.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_white_24dp));
+            search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
             openSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
             closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
         } else {
             settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_black_24dp));
-            info.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_black_24dp));
+            search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_black_24dp));
             openSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
             closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
         }
@@ -177,14 +150,16 @@ public class Notes extends Fragment {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                slideUp.hide();
                 UselessUtils.replace(getActivity(), new MainSettings(), "settings");
             }
         });
 
-        info.setOnClickListener(new View.OnClickListener() {
+        search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(getActivity(), new AboutSettings(), "about");
+                slideUp.hide();
+                UselessUtils.replace(getActivity(), Search.newInstance("def"), "search");
             }
         });
 
@@ -202,9 +177,6 @@ public class Notes extends Fragment {
                         openSlide.setAlpha(0 + (percent / 100));
 
                         closeSlide.setAlpha(1 - (percent / 100));
-                        if (percent < 100 && openSlide.getAlpha() < 1) {
-
-                        }
                     }
                     @Override
                     public void onVisibilityChanged(int visibility) {}
@@ -213,7 +185,7 @@ public class Notes extends Fragment {
                 .withLoggingEnabled(true)
                 .withStartState(SlideUp.State.HIDDEN)
                 .withGesturesEnabled(true)
-             //   .withSlideFromOtherView(openSlide)
+                .withSlideFromOtherView(openSlide)
                 .build();
 
         gestureDetector = (new GestureDetector(getActivity(), new MyGestureListener(getActivity(), slideUp)));
@@ -222,14 +194,14 @@ public class Notes extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 gestureDetector.onTouchEvent(event);
-                return true;
+                return false;
             }
         };
 
         slideView.setOnTouchListener(listener);
         closeSlide.setOnTouchListener(listener);
         fab.setOnTouchListener(listener);
-        openSlide.setOnTouchListener(listener);
+       // openSlide.setOnTouchListener(listener);
 
         allList = new ArrayList<>();
 

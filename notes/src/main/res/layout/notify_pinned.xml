@@ -39,6 +39,7 @@
             android:id="@+id/textView_title"
             android:layout_width="wrap_content"
             android:layout_alignParentStart="true"
+            android:fontFamily="@font/medium"
             android:layout_marginStart="10dp"
             android:elevation="2dp"
             android:layout_marginEnd="60dp"
@@ -59,6 +60,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:fontFamily="@font/medium"
             android:layout_height="wrap_content" />
     </RelativeLayout>
 

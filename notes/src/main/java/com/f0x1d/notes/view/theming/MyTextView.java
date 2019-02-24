@@ -2,12 +2,15 @@ package com.f0x1d.notes.view.theming;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
+import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
@@ -32,12 +35,6 @@ public class MyTextView extends TextView {
         setColor();
     }
 
-    public MyTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-
-        setColor();
-    }
-
     private void setColor(){
         if (UselessUtils.ifCustomTheme()){
             this.setTextColor(ThemesEngine.textColor);
@@ -45,7 +42,10 @@ public class MyTextView extends TextView {
             try {
                 setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
             } catch (Exception e){}
+
         }
+
+        setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
     }
 
     @Override
