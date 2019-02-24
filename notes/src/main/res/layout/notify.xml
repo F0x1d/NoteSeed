@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.f0x1d.notes.view.theming.MyCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.f0x1d.notes.view.theming.ItemCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="9dp"
@@ -62,4 +62,4 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
-</com.f0x1d.notes.view.theming.MyCardView>
+</com.f0x1d.notes.view.theming.ItemCardView>

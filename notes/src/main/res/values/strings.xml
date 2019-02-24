@@ -129,4 +129,5 @@
     <string name="where_themes">Where can I find themes?</string>
     <string name="there_themes">In special Telegram channel</string>
     <string name="no_folders">You do not have folders there!</string>
+    <string name="new_notify">New notify</string>
 </resources>

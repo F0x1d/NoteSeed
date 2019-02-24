@@ -43,7 +43,6 @@ public class ThemesEngine {
     public static int lightColorIconColor;
     public static int darkColorIconColor;
     public static boolean dark;
-    public static boolean toolbarTransparent;
     public static int seekBarColor;
     public static int seekBarThumbColor;
 
@@ -264,12 +263,6 @@ public class ThemesEngine {
             }
 
             try {
-                toolbarTransparent = jsonObject.getBoolean("transparent_toolbar");
-            } catch (Exception e){
-                toolbarTransparent = true;
-            }
-
-            try {
                 fabColor = Color.parseColor(jsonObject.getString("fab_color"));
             } catch (Exception e){
                 fabColor = 0xffffffff;
@@ -413,12 +406,6 @@ public class ThemesEngine {
                 toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
             } catch (Exception e){
                 toolbarTextColor = 0xff000000;
-            }
-
-            try {
-                toolbarTransparent = jsonObject.getBoolean("transparent_toolbar");
-            } catch (Exception e){
-                toolbarTransparent = true;
             }
 
             try {

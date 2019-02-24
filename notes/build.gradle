@@ -103,6 +103,8 @@ dependencies {
     // Dependency for Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
+    compile "com.github.mancj:SlideUp-Android:2.2.8"
+
     // Dependencies for the REST API example
     implementation 'com.google.api-client:google-api-client:1.25.0'
     implementation 'com.google.api-client:google-api-client-android:1.23.0'

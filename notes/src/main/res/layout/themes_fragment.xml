@@ -3,16 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.f0x1d.notes.view.CenteredToolbar
-        android:layout_width="match_parent"
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content">
-    </com.f0x1d.notes.view.CenteredToolbar>
+    <include layout="@layout/toolbar_md2" android:id="@+id/toolbar_place"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/recyclerView"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/toolbar_place"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
 

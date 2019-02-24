@@ -106,9 +106,7 @@ public class CenteredToolbar extends Toolbar {
         if (UselessUtils.ifCustomTheme()){
             tvTitle.setTextColor(ThemesEngine.toolbarTextColor);
 
-            if (!ThemesEngine.toolbarTransparent){
-                setBackgroundColor(ThemesEngine.toolbarColor);
-            }
+            setBackgroundColor(ThemesEngine.toolbarColor);
         }
 
         tvSubtitle.setSingleLine();

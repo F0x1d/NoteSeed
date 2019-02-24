@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,17 +22,20 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.adapter.ItemsAdapter;
@@ -41,12 +45,17 @@ import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
+import com.f0x1d.notes.fragment.settings.AboutSettings;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyButton;
+import com.f0x1d.notes.view.theming.MyImageButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.mancj.slideup.SlideUp;
+import com.mancj.slideup.SlideUpBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,6 +79,8 @@ public class Notes extends Fragment {
     NoteOrFolderDao dao;
 
     ItemsAdapter adapter;
+
+    SlideUp slideUp;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,9 +120,7 @@ public class Notes extends Fragment {
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
 
-            if (ThemesEngine.toolbarTransparent){
-                toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
-            }
+            toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
 
         getActivity().setActionBar(toolbar);
@@ -140,6 +149,82 @@ public class Notes extends Fragment {
             }
         }*/
 
+        MyButton fab = view.findViewById(R.id.new_note);
+
+        MyImageButton openSlide = view.findViewById(R.id.open_slide);
+        MyImageButton closeSlide = view.findViewById(R.id.close_slide);
+
+        MyImageButton settings = view.findViewById(R.id.settings_pic);
+        MyImageButton info = view.findViewById(R.id.info_pic);
+
+        if (UselessUtils.getBool("night", false)){
+            settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
+            info.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_white_24dp));
+            openSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
+            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
+        } else {
+            settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_black_24dp));
+            info.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_black_24dp));
+            openSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
+            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
+        }
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UselessUtils.replace(getActivity(), new MainSettings(), "settings");
+            }
+        });
+
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UselessUtils.replace(getActivity(), new AboutSettings(), "about");
+            }
+        });
+
+        recyclerView = view.findViewById(R.id.notes_view);
+
+        CardView slideView = view.findViewById(R.id.slideView);
+        if (UselessUtils.ifCustomTheme())
+            slideView.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
+
+        slideUp = new SlideUpBuilder(slideView)
+                .withListeners(new SlideUp.Listener.Events() {
+                    @Override
+                    public void onSlide(float percent) {
+                        fab.setAlpha(0 + (percent / 100));
+                        openSlide.setAlpha(0 + (percent / 100));
+
+                        closeSlide.setAlpha(1 - (percent / 100));
+                        if (percent < 100 && openSlide.getAlpha() < 1) {
+
+                        }
+                    }
+                    @Override
+                    public void onVisibilityChanged(int visibility) {}
+                })
+                .withStartGravity(Gravity.BOTTOM)
+                .withLoggingEnabled(true)
+                .withStartState(SlideUp.State.HIDDEN)
+                .withGesturesEnabled(true)
+                .withSlideFromOtherView(openSlide)
+                .build();
+
+        openSlide.setOnClickListener(new View.OnClickListener() {
+            @Override
+           public void onClick(View view) {
+                slideUp.show();
+            }
+        });
+
+        closeSlide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slideUp.hide();
+            }
+        });
+
         allList = new ArrayList<>();
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
@@ -167,8 +252,6 @@ public class Notes extends Fragment {
         } else {
             nothing.setVisibility(View.INVISIBLE);
         }
-
-        recyclerView = view.findViewById(R.id.notes_view);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -220,30 +303,21 @@ public class Notes extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recyclerView);
 
-        MyButton fab = view.findViewById(R.id.new_note);
-
-        ImageButton fab1 = view.findViewById(R.id.new_folder);
-        ImageButton fab2 = view.findViewById(R.id.new_notify);
+        TextView fab1 = view.findViewById(R.id.new_folder);
+        TextView fab2 = view.findViewById(R.id.new_notify);
 
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
         animation.setDuration(400);
         fab.startAnimation(animation);
 
-        Animation animation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in);
-        animation2.setDuration(400);
-        fab1.startAnimation(animation2);
-
-        Animation animation3 = AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_in);
-        animation3.setDuration(400);
-        fab2.startAnimation(animation3);
-
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
-            fab1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp));
+                fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp), null, null, null);
+                fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_white_24dp), null, null, null);
             fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notification_create_white_24dp));
         } else {
-            fab1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_black_24dp));
-            fab2.setImageDrawable(getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp));
+                fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_black_24dp), null, null, null);
+                fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_black_24dp), null, null, null);
+
             if (UselessUtils.ifCustomTheme()){
                 fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             }
@@ -259,6 +333,9 @@ public class Notes extends Fragment {
                             }
                         }
                     }
+                    if (slideUp.isVisible())
+                        slideUp.hide();
+
                     UselessUtils.replace(getActivity(), NoteAdd.newInstance("def"), "add");
                 }
             });
@@ -266,6 +343,9 @@ public class Notes extends Fragment {
             fab.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    if (slideUp.isVisible())
+                        slideUp.hide();
+
                     Toast.makeText(getActivity(), getString(R.string.import_db), Toast.LENGTH_SHORT).show();
                     openFile("*/*", 228, getActivity());
                     return false;
@@ -282,6 +362,9 @@ public class Notes extends Fragment {
                             }
                         }
                     }
+                    if (slideUp.isVisible())
+                        slideUp.hide();
+
                     createFolder();
                 }
             });
@@ -296,6 +379,9 @@ public class Notes extends Fragment {
                             }
                         }
                     }
+                    if (slideUp.isVisible())
+                        slideUp.hide();
+
                     createNotify();
                 }
             });

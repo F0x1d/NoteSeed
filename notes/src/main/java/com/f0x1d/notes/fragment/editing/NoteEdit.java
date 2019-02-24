@@ -153,9 +153,7 @@ public class NoteEdit extends Fragment {
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
 
-            if (ThemesEngine.toolbarTransparent){
-                toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
-            }
+            toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
         return v;
     }
@@ -279,12 +277,6 @@ public class NoteEdit extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if (s.toString().length() == 0){
-                        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("dark_fon", false)){
-                            title.setHintTextColor(Color.GRAY);
-                        }
-                    }
-
                     dao.updateNoteTitle(title.getText().toString(), id);
                     dao.updateNoteTime(System.currentTimeMillis(), id);
                 }

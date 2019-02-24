@@ -10,26 +10,38 @@ import androidx.cardview.widget.CardView;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
-public class MyCardView extends CardView {
+public class ToolbarCardView extends CardView {
 
-    public MyCardView(@NonNull Context context) {
+    public ToolbarCardView(@NonNull Context context) {
         super(context);
+
+        setup();
     }
 
-    public MyCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ToolbarCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
+        setup();
     }
 
-    public MyCardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ToolbarCardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        setup();
     }
 
     @Override
     public void setCardBackgroundColor(int color) {
         if (UselessUtils.ifCustomTheme()){
-            super.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
+            super.setCardBackgroundColor(ThemesEngine.toolbarColor);
         } else {
             super.setCardBackgroundColor(color);
+        }
+    }
+
+    private void setup(){
+        if (UselessUtils.ifCustomTheme()){
+            setCardBackgroundColor(getCardBackgroundColor());
         }
     }
 }
