@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
@@ -44,17 +45,14 @@ import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
-import com.f0x1d.notes.fragment.settings.AboutSettings;
 import com.f0x1d.notes.fragment.settings.MainSettings;
-import com.f0x1d.notes.utils.MyGestureListener;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyButton;
 import com.f0x1d.notes.view.theming.MyImageButton;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
-import com.mancj.slideup.SlideUp;
-import com.mancj.slideup.SlideUpBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -82,10 +80,6 @@ public class NotesInFolder extends Fragment {
     ItemsAdapter adapter;
 
     private String in_folder_id;
-
-    SlideUp slideUp;
-
-    private GestureDetector gestureDetector;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,30 +132,30 @@ public class NotesInFolder extends Fragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        CardView slideView = view.findViewById(R.id.slideView);
+        if (UselessUtils.ifCustomTheme())
+            slideView.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
+
         MyButton fab = view.findViewById(R.id.new_note);
 
-        MyImageButton openSlide = view.findViewById(R.id.open_slide);
-        MyImageButton closeSlide = view.findViewById(R.id.close_slide);
+        MyImageButton closeSlide = slideView.findViewById(R.id.close_slide);
 
-        MyImageButton settings = view.findViewById(R.id.settings_pic);
-        MyImageButton search = view.findViewById(R.id.search_pic);
+        MyImageButton settings = slideView.findViewById(R.id.settings_pic);
+        MyImageButton search = slideView.findViewById(R.id.search_pic);
 
         if (UselessUtils.getBool("night", false)){
             settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
             search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
-            openSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
-            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
+            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
         } else {
             settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_black_24dp));
             search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_black_24dp));
-            openSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
+            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
         }
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                slideUp.hide();
                 UselessUtils.replace(getActivity(), new MainSettings(), "settings");
             }
         });
@@ -169,50 +163,37 @@ public class NotesInFolder extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                slideUp.hide();
                 UselessUtils.replace(getActivity(), Search.newInstance(in_folder_id), "search");
             }
         });
 
         recyclerView = view.findViewById(R.id.notes_view);
 
-        CardView slideView = view.findViewById(R.id.slideView);
-        if (UselessUtils.ifCustomTheme())
-            slideView.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(slideView);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.setPeekHeight(100);
+        bottomSheetBehavior.setHideable(false);
 
-        slideUp = new SlideUpBuilder(slideView)
-                .withListeners(new SlideUp.Listener.Events() {
-                    @Override
-                    public void onSlide(float percent) {
-                        fab.setAlpha(0 + (percent / 100));
-                        openSlide.setAlpha(0 + (percent / 100));
-
-                        closeSlide.setAlpha(1 - (percent / 100));
-                    }
-                    @Override
-                    public void onVisibilityChanged(int visibility) {}
-                })
-                .withStartGravity(Gravity.BOTTOM)
-                .withLoggingEnabled(true)
-                .withStartState(SlideUp.State.HIDDEN)
-                .withGesturesEnabled(true)
-                .withSlideFromOtherView(openSlide)
-                .build();
-
-        gestureDetector = (new GestureDetector(getActivity(), new MyGestureListener(getActivity(), slideUp)));
-
-        View.OnTouchListener listener = new View.OnTouchListener() {
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                gestureDetector.onTouchEvent(event);
-                return false;
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (BottomSheetBehavior.STATE_DRAGGING == newState) {
+                    if (UselessUtils.getBool("night", false)){
+                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
+                    } else {
+                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
+                    }
+                } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+                    if (UselessUtils.getBool("night", false)){
+                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
+                    } else {
+                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
+                    }
+                }
             }
-        };
-
-        slideView.setOnTouchListener(listener);
-        closeSlide.setOnTouchListener(listener);
-        fab.setOnTouchListener(listener);
-     //   openSlide.setOnTouchListener(listener);
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
+        });
 
         allList = new ArrayList<>();
 

@@ -6,6 +6,9 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
+import androidx.core.content.res.ResourcesCompat;
+
+import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
@@ -48,6 +51,8 @@ public class MyEditText extends EditText {
 
             UselessUtils.setCursorColor(this, ThemesEngine.accentColor);
         }
+
+        setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
     }
 
     @Override
