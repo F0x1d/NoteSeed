@@ -1,13 +1,18 @@
 package com.f0x1d.notes.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -19,6 +24,7 @@ import androidx.annotation.StringRes;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
@@ -26,6 +32,8 @@ public class CenteredToolbar extends Toolbar {
 
     private TextView tvTitle;
     private TextView tvSubtitle;
+
+    private LinearLayout linear;
 
     public CenteredToolbar(Context context) {
         super(context);
@@ -78,10 +86,6 @@ public class CenteredToolbar extends Toolbar {
         tvSubtitle.setText(subtitle);
     }
 
-    public void setTypeFace(Typeface face){
-        tvTitle.setTypeface(face);
-    }
-
     @Override
     public CharSequence getTitle() {
         return tvTitle.getText().toString();
@@ -112,15 +116,15 @@ public class CenteredToolbar extends Toolbar {
 
         tvTitle.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
 
-        tvSubtitle.setSingleLine();
-        tvSubtitle.setEllipsize(TextUtils.TruncateAt.END);
-        tvSubtitle.setTextAppearance(getContext(), R.style.TextAppearance_AppCompat_Widget_ActionBar_Subtitle);
-
-        LinearLayout linear = new LinearLayout(getContext());
+        linear = new LinearLayout(getContext());
         linear.setGravity(Gravity.CENTER);
         linear.setOrientation(LinearLayout.VERTICAL);
         linear.addView(tvTitle);
         linear.addView(tvSubtitle);
+
+        tvSubtitle.setSingleLine();
+        tvSubtitle.setEllipsize(TextUtils.TruncateAt.END);
+        tvSubtitle.setTextAppearance(getContext(), R.style.TextAppearance_AppCompat_Widget_ActionBar_Subtitle);
 
         tvSubtitle.setVisibility(GONE);
 
@@ -144,6 +148,60 @@ public class CenteredToolbar extends Toolbar {
                 Log.e("notes_err", e.getLocalizedMessage());
             }
         }
+    }
+
+    public void goAnim(String inFolderId, Activity activity){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    tvTitle.animate()
+                            .translationY(tvTitle.getHeight())
+                            .alpha(0.0f)
+                            .setDuration(300)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    tvTitle.setVisibility(View.GONE);
+                                }
+                            });
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvTitle.setVisibility(View.VISIBLE);
+                            tvTitle.setText(R.string.tap_to_search);
+                            tvTitle.setTextSize(17);
+
+                            LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                            linear.setGravity(Gravity.START);
+                            lp.gravity = Gravity.START;
+                            linear.setLayoutParams(lp);
+
+                            tvTitle.animate()
+                                    .translationY(-(tvTitle.getHeight() / 8))
+                                    .alpha(1.0f)
+                                    .setDuration(300)
+                                    .setListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            super.onAnimationEnd(animation);
+
+                                            setOnClickListener(new OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    UselessUtils.replace(activity, Search.newInstance(inFolderId), "search");
+                                                }
+                                            });
+                                        }
+                                    });
+                        }
+                    }, 500);
+                } catch (Exception e){}
+
+            }
+        }, 1500);
     }
 
 }

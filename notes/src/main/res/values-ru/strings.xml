@@ -130,4 +130,5 @@
     <string name="there_themes">В специальном Telegram канале</string>
     <string name="no_folders">У вас здесь нет папок!</string>
     <string name="new_notify">Новое напоминание</string>
+    <string name="tap_to_search">Поиск заметок</string>
 </resources>

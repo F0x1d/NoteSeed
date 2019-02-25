@@ -130,4 +130,5 @@
     <string name="there_themes">In special Telegram channel</string>
     <string name="no_folders">You do not have folders there!</string>
     <string name="new_notify">New notify</string>
+    <string name="tap_to_search">Search notes</string>
 </resources>

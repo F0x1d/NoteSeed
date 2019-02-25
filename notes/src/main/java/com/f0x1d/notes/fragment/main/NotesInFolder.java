@@ -86,8 +86,6 @@ public class NotesInFolder extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        Log.e("notes_err", in_ids.get(in_ids.size() - 1));
-
         in_folder_id = in_ids.get(in_ids.size() - 1);
     }
 
@@ -98,6 +96,7 @@ public class NotesInFolder extends Fragment {
 
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(in_folder_id);
+        toolbar.goAnim(in_folder_id, getActivity());
         toolbar.inflateMenu(R.menu.in_folder_menu);
         toolbar.getMenu().findItem(R.id.root).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 

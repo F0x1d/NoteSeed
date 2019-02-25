@@ -93,6 +93,7 @@ public class Notes extends Fragment {
 
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.notes));
+        toolbar.goAnim("def", getActivity());
 
         if (UselessUtils.ifCustomTheme()){
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
