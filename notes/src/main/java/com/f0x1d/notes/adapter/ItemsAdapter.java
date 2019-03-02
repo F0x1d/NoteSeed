@@ -571,14 +571,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("lock", false)){
                                     activity.getFragmentManager().beginTransaction()
                                             .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                            android.R.id.content, LockNote.newInstance(args), "lock").addToBackStack(null).commit();
+                                            android.R.id.content, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
                                 } else {
                                     Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 activity.getFragmentManager().beginTransaction()
                                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                        android.R.id.content, NoteEdit.newInstance(args), "edit").addToBackStack(null).commit();
+                                        android.R.id.content, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
                             }
 
                         }

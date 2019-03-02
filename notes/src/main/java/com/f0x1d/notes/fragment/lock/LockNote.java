@@ -201,7 +201,7 @@ public class LockNote extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (pass.getText().toString().equals(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("pass", ""))){
-                    UselessUtils.replaceNoBackStack(getActivity(), NoteEdit.newInstance(args), "edit");
+                    UselessUtils.replace(getActivity(), NoteEdit.newInstance(args), "edit");
                 }
             }
 

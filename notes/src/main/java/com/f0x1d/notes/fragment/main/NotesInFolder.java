@@ -305,7 +305,9 @@ public class NotesInFolder extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(getActivity(), NoteAdd.newInstance(in_folder_id), "add");
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        android.R.id.content, NoteAdd.newInstance(in_folder_id), "add").addToBackStack("editor").commit();
             }
         });
 

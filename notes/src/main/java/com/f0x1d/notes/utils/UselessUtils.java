@@ -26,17 +26,20 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import static com.f0x1d.notes.App.getContext;
 
 public class UselessUtils {
 
     public static SharedPreferences.Editor edit(){
-        return PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit();
+        return PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
     }
 
     public static boolean getBool(String key, boolean defValue){
-        return PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean(key, defValue);
+        return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(key, defValue);
     }
 
     public static boolean ifBrightColor(int color) {
@@ -44,7 +47,7 @@ public class UselessUtils {
     }
 
     public static boolean appInstalledOrNot(String uri) {
-        PackageManager pm = App.getContext().getPackageManager();
+        PackageManager pm = getContext().getPackageManager();
         try {
             pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
             return true;
@@ -61,13 +64,25 @@ public class UselessUtils {
     }
 
     public static boolean ifCustomTheme(){
-        return PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("custom_theme", false);
+        return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("custom_theme", false);
+    }
+
+    public static boolean ifPMSHook(){
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            Field mPmField = pm.getClass().getDeclaredField("mPM");
+            mPmField.setAccessible(true);
+            Object mPm = mPmField.get(pm);
+            return Proxy.isProxyClass(App.getInstance().getClass());
+        } catch (Exception e){
+            return true;
+        }
     }
 
     public static String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
-            Cursor cursor = App.getContext().getContentResolver().query(uri, null, null, null, null);
+            Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
             try {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
@@ -146,7 +161,7 @@ public class UselessUtils {
 
     public static byte[] getSHASignature() {
         try {
-            PackageInfo info = App.getContext().getPackageManager().getPackageInfo(App.getContext().getPackageName(), PackageManager.GET_SIGNATURES);
+            PackageInfo info = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), PackageManager.GET_SIGNATURES);
             if (info.signatures != null && info.signatures.length > 0) {
                 Signature signature = info.signatures[0];
                 MessageDigest sha;

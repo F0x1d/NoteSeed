@@ -2,6 +2,7 @@ package com.f0x1d.notes.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -23,10 +24,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+
+import java.lang.reflect.InvocationHandler;
 
 public class CenteredToolbar extends Toolbar {
 
@@ -114,6 +118,16 @@ public class CenteredToolbar extends Toolbar {
             setBackgroundColor(ThemesEngine.toolbarColor);
         }
 
+        if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+            tvTitle.setText("Перехочешь");
+        }
+        if (InvocationHandler.class.isAssignableFrom(App.class)){
+            tvTitle.setText("Перехочешь");
+        }
+        if (UselessUtils.ifPMSHook()){
+            tvTitle.setText("Перехочешь");
+        }
+
         tvTitle.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
 
         linear = new LinearLayout(getContext());
@@ -135,7 +149,6 @@ public class CenteredToolbar extends Toolbar {
         addView(linear);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-
             try {
                 if (UselessUtils.ifCustomTheme()){
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), ThemesEngine.iconsColor));
@@ -151,6 +164,13 @@ public class CenteredToolbar extends Toolbar {
     }
 
     public void goAnim(String inFolderId, Activity activity){
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UselessUtils.replace(activity, Search.newInstance(inFolderId), "search");
+            }
+        });
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -187,13 +207,6 @@ public class CenteredToolbar extends Toolbar {
                                         @Override
                                         public void onAnimationEnd(Animator animation) {
                                             super.onAnimationEnd(animation);
-
-                                            setOnClickListener(new OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    UselessUtils.replace(activity, Search.newInstance(inFolderId), "search");
-                                                }
-                                            });
                                         }
                                     });
                         }

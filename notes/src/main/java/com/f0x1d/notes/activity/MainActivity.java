@@ -43,6 +43,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.services.drive.DriveScopes;
 
+import static android.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
 public class MainActivity extends AppCompatActivity {
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
             Fragment notesInFolder = getFragmentManager().findFragmentByTag("in_folder");
 
             if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())){
-                getFragmentManager().popBackStack();
+                getFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
 
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
                     SyncUtils.export();

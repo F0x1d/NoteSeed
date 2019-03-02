@@ -46,6 +46,7 @@ import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
+import com.f0x1d.notes.fragment.lock.LockNote;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.AboutSettings;
 import com.f0x1d.notes.fragment.settings.MainSettings;
@@ -62,6 +63,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -294,7 +296,19 @@ public class Notes extends Fragment {
                         }
                     }
 
-                    UselessUtils.replace(getActivity(), NoteAdd.newInstance("def"), "add");
+                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+                        return;
+                    }
+                    if (InvocationHandler.class.isAssignableFrom(App.class)){
+                        return;
+                    }
+                    if (UselessUtils.ifPMSHook()){
+                        return;
+                    }
+
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                            android.R.id.content, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
                 }
             });
 
@@ -318,6 +332,16 @@ public class Notes extends Fragment {
                         }
                     }
 
+                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+                        return;
+                    }
+                    if (InvocationHandler.class.isAssignableFrom(App.class)){
+                        return;
+                    }
+                    if (UselessUtils.ifPMSHook()){
+                        return;
+                    }
+
                     createFolder();
                 }
             });
@@ -331,6 +355,16 @@ public class Notes extends Fragment {
                                 return;
                             }
                         }
+                    }
+
+                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+                        return;
+                    }
+                    if (InvocationHandler.class.isAssignableFrom(App.class)){
+                        return;
+                    }
+                    if (UselessUtils.ifPMSHook()){
+                        return;
                     }
 
                     createNotify();
