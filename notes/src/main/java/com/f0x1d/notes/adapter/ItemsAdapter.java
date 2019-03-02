@@ -41,6 +41,7 @@ import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.choose.ChooseFolder;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
+import com.f0x1d.notes.fragment.lock.LockNote;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
@@ -566,22 +567,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     args.putInt("locked", items.get(position).locked);
                     args.putString("title", items.get(position).title);
 
-                            if (!String.valueOf(items.get(position).in_folder_id).equals("def")){
-                                PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("in_folder_edit", true).apply();
-                            } else {
-                                PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("in_folder_edit", false).apply();
-                            }
-
                             if (items.get(position).locked == 1){
                                 if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("lock", false)){
-                                    Bundle lockargs = new Bundle();
-                                        lockargs.putLong("id", items.get(position).id);
-                                        lockargs.putInt("locked", items.get(position).locked);
-                                        lockargs.putString("title", items.get(position).title);
-                                        lockargs.putBoolean("to_note", true);
-
-                                    activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                            android.R.id.content, LockScreen.newInstance(lockargs), "lock").addToBackStack(null).commit();
+                                    activity.getFragmentManager().beginTransaction()
+                                            .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                                            android.R.id.content, LockNote.newInstance(args), "lock").addToBackStack(null).commit();
                                 } else {
                                     Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                                 }

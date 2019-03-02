@@ -31,7 +31,6 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
@@ -57,7 +56,7 @@ import javax.crypto.SecretKey;
 import static android.content.Context.FINGERPRINT_SERVICE;
 import static android.content.Context.KEYGUARD_SERVICE;
 
-public class LockScreen extends Fragment {
+public class LockNote extends Fragment {
 
     private static final String KEY_NAME = "notes";
     private Cipher cipher;
@@ -68,8 +67,8 @@ public class LockScreen extends Fragment {
     private KeyguardManager keyguardManager;
     Bundle args;
 
-    public static LockScreen newInstance(Bundle args) {
-        LockScreen myFragment = new LockScreen();
+    public static LockNote newInstance(Bundle args) {
+        LockNote myFragment = new LockNote();
         myFragment.setArguments(args);
         return myFragment;
     }
@@ -177,8 +176,7 @@ public class LockScreen extends Fragment {
         animation2.setDuration(400);
 
         ImageView icon = view.findViewById(R.id.icon);
-            icon.startAnimation(animation2);
-
+        icon.startAnimation(animation2);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
             odin.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
@@ -203,9 +201,7 @@ public class LockScreen extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (pass.getText().toString().equals(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("pass", ""))){
-                    getFragmentManager().beginTransaction().remove(LockScreen.this).commit();
-                    getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            android.R.id.content, new Notes(), "notes").commit();
+                    UselessUtils.replaceNoBackStack(getActivity(), NoteEdit.newInstance(args), "edit");
                 }
             }
 
@@ -389,9 +385,7 @@ public class LockScreen extends Fragment {
                 FingerprintManager.AuthenticationResult result) {
 
             try {
-                getFragmentManager().beginTransaction().remove(LockScreen.this).commit();
-                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        android.R.id.content, new Notes(), "notes").commit();
+                UselessUtils.replaceNoBackStack(getActivity(), NoteEdit.newInstance(args), "edit");
             } catch (Exception e){}
         }
     }
