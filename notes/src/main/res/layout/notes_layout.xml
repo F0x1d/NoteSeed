@@ -34,7 +34,7 @@
         android:layout_centerVertical="true"
         android:text="@string/empty" />
 
-        <com.f0x1d.notes.view.theming.MyButton
+        <!--<com.f0x1d.notes.view.theming.MyButton
             android:layout_width="match_parent"
             android:text="@string/new_note"
             android:layout_marginStart="10dp"
@@ -45,10 +45,18 @@
             android:id="@+id/new_note"
             android:layout_marginBottom="40dp"
             android:gravity="center"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content" />-->
 </RelativeLayout>
 
     <include layout="@layout/main_bottom_sheet" />
+
+    <com.f0x1d.notes.view.theming.MyFAB
+        android:layout_width="wrap_content"
+        app:elevation="5dp"
+        android:id="@+id/new_note"
+        android:src="@drawable/ic_add_black_24dp"
+        app:layout_anchor="@+id/slideView"
+        app:layout_anchorGravity="center|top"
+        android:layout_height="wrap_content" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -547,9 +547,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         Date currentDate = new Date(items.get(position).edit_time);
-        DateFormat df = new SimpleDateFormat("HH:mm | dd.MM.yyyy");
-
-        holder.time.setText(df.format(currentDate));
+        try {
+            DateFormat df = new SimpleDateFormat(PreferenceManager.getDefaultSharedPreferences(activity).getString("date", "HH:mm | dd.MM.yyyy"));
+            holder.time.setText(df.format(currentDate));
+        } catch (Exception e){
+            holder.time.setText("Error");
+        }
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

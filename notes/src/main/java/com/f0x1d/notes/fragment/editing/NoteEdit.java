@@ -51,6 +51,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -277,6 +278,16 @@ public class NoteEdit extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
+                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+                        return;
+                    }
+                    if (InvocationHandler.class.isAssignableFrom(App.class)){
+                        return;
+                    }
+                    if (UselessUtils.ifPMSHook()){
+                        return;
+                    }
+
                     dao.updateNoteTitle(title.getText().toString(), id);
                     dao.updateNoteTime(System.currentTimeMillis(), id);
                 }

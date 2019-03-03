@@ -2,6 +2,7 @@ package com.f0x1d.notes.fragment.settings;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.fingerprint.FingerprintManager;
@@ -15,10 +16,12 @@ import android.preference.SwitchPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.f0x1d.notes.App;
@@ -68,6 +71,33 @@ public class MainSettings extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
+
+        Preference date = findPreference("date");
+            date.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_text, null);
+
+                    EditText text = v.findViewById(R.id.edit_text);
+                    text.setBackground(null);
+                    text.setHint("HH:mm | dd.MM.yyyy");
+                    text.setText(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("date", "HH:mm | dd.MM.yyyy"));
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle(R.string.choose_date_appearance);
+                        builder.setView(v);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                                        .putString("date", text.getText().toString())
+                                        .apply();
+                            }
+                        });
+                        builder.show();
+                    return false;
+                }
+            });
 
         Preference sync = findPreference("sync");
             sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

@@ -207,6 +207,36 @@ public class CenteredToolbar extends Toolbar {
                                         @Override
                                         public void onAnimationEnd(Animator animation) {
                                             super.onAnimationEnd(animation);
+                                            tvTitle.animate()
+                                                    .translationYBy(-20f)
+                                                    .setDuration(200)
+                                                    .setListener(new AnimatorListenerAdapter() {
+                                                        @Override
+                                                        public void onAnimationEnd(Animator animation) {
+                                                            super.onAnimationEnd(animation);
+                                                            tvTitle.animate().translationYBy(20f).setDuration(200).setListener(new AnimatorListenerAdapter() {
+                                                                @Override
+                                                                public void onAnimationEnd(Animator animation) {
+                                                                    super.onAnimationEnd(animation);
+                                                                    tvTitle.animate()
+                                                                            .translationYBy(-20f)
+                                                                            .setDuration(200)
+                                                                            .setListener(new AnimatorListenerAdapter() {
+                                                                                @Override
+                                                                                public void onAnimationEnd(Animator animation) {
+                                                                                    super.onAnimationEnd(animation);
+                                                                                    tvTitle.animate().translationYBy(20f).setDuration(200).setListener(new AnimatorListenerAdapter() {
+                                                                                        @Override
+                                                                                        public void onAnimationEnd(Animator animation) {
+                                                                                            super.onAnimationEnd(animation);
+                                                                                        }
+                                                                                    });
+                                                                                }
+                                                                            });
+                                                                }
+                                                            });
+                                                        }
+                                                    });
                                         }
                                     });
                         }

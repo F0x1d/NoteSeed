@@ -54,6 +54,7 @@ import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyButton;
+import com.f0x1d.notes.view.theming.MyFAB;
 import com.f0x1d.notes.view.theming.MyImageButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -128,7 +129,7 @@ public class Notes extends Fragment {
         if (UselessUtils.ifCustomTheme())
             slideView.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
 
-        MyButton fab = view.findViewById(R.id.new_note);
+        FloatingActionButton fab = view.findViewById(R.id.new_note);
 
         MyImageButton closeSlide = slideView.findViewById(R.id.close_slide);
 
@@ -144,6 +145,8 @@ public class Notes extends Fragment {
             search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_black_24dp));
             closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
         }
+
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_black_24dp));
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,7 +187,9 @@ public class Notes extends Fragment {
                 }
             }
             @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                fab.animate().scaleX(1 - slideOffset).scaleY(1 - slideOffset).setDuration(0).start();
+            }
         });
 
         allList = new ArrayList<>();
@@ -273,16 +278,11 @@ public class Notes extends Fragment {
         fab.startAnimation(animation);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
-                fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp), null, null, null);
-                fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_white_24dp), null, null, null);
-            fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
+            fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp), null, null, null);
+            fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_white_24dp), null, null, null);
         } else {
-                fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_black_24dp), null, null, null);
-                fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_black_24dp), null, null, null);
-
-            if (UselessUtils.ifCustomTheme()){
-                fab.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            }
+            fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_black_24dp), null, null, null);
+            fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_black_24dp), null, null, null);
         }
 
             fab.setOnClickListener(new View.OnClickListener() {

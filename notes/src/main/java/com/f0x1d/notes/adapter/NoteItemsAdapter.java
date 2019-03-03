@@ -34,6 +34,7 @@ import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyEditText;
 
+import java.lang.reflect.InvocationHandler;
 import java.util.List;
 
 public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -106,6 +107,16 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void afterTextChanged(Editable s) {
                 try {
+                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+                        return;
+                    }
+                    if (InvocationHandler.class.isAssignableFrom(App.class)){
+                        return;
+                    }
+                    if (UselessUtils.ifPMSHook()){
+                        return;
+                    }
+
                     dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
                 } catch (Exception e){}
@@ -184,6 +195,16 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void afterTextChanged(Editable s) {
                 try {
+                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+                        return;
+                    }
+                    if (InvocationHandler.class.isAssignableFrom(App.class)){
+                        return;
+                    }
+                    if (UselessUtils.ifPMSHook()){
+                        return;
+                    }
+
                     dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
                 } catch (Exception e){}

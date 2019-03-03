@@ -7,6 +7,7 @@
     android:layout_marginBottom="20dp"
     app:cardCornerRadius="15dp"
     android:layout_alignParentBottom="true"
+    app:cardElevation="5dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -22,7 +23,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:background="@null"
             android:clickable="true"
-            android:layout_gravity="center"
+            android:layout_gravity="end|center"
             android:foregroundGravity="center"
             android:layout_weight="1"
             android:src="@drawable/ic_arrow_drop_down_black_24dp"
