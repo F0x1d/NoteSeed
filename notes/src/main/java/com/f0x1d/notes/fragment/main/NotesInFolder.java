@@ -10,20 +10,15 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,11 +44,9 @@ import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
-import com.f0x1d.notes.view.theming.MyButton;
 import com.f0x1d.notes.view.theming.MyImageButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -185,6 +178,12 @@ public class NotesInFolder extends Fragment {
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
                     }
+                } else if (BottomSheetBehavior.STATE_EXPANDED == newState){
+                    if (UselessUtils.getBool("night", false)){
+                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
+                    } else {
+                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
+                    }
                 } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
                     if (UselessUtils.getBool("night", false)){
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
@@ -196,6 +195,16 @@ public class NotesInFolder extends Fragment {
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 fab.animate().scaleX(1 - slideOffset).scaleY(1 - slideOffset).setDuration(0).start();
+            }
+        });
+
+        closeSlide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (BottomSheetBehavior.STATE_COLLAPSED == bottomSheetBehavior.getState())
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                else
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
 
@@ -261,7 +270,7 @@ public class NotesInFolder extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
-                delete(viewHolder.getPosition(), view);
+                delete(viewHolder.getPosition());
             }
 
             @Override
@@ -537,7 +546,7 @@ public class NotesInFolder extends Fragment {
         return id + 1;
     }
 
-    public void delete(int position, View view){
+    public void delete(int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCancelable(false);
         builder.setTitle(R.string.confirm_delete);
@@ -556,7 +565,7 @@ public class NotesInFolder extends Fragment {
 
                 allList.remove(position);
 
-                Snackbar.make(view, R.string.deleted, Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.deleted), Toast.LENGTH_SHORT).show();
 
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
@@ -571,7 +580,7 @@ public class NotesInFolder extends Fragment {
             }
         });
 
-        AlertDialog dialog1337 =  builder.create();
+        AlertDialog dialog1337 = builder.create();
 
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
