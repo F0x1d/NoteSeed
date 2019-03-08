@@ -154,7 +154,8 @@ public class Notes extends Fragment {
 
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(slideView);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehavior.setPeekHeight(100);
+        bottomSheetBehavior.setPeekHeight(100, true);
+        bottomSheetBehavior.setFitToContents(!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("flex_main", false));
         bottomSheetBehavior.setHideable(false);
 
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {

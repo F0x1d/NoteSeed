@@ -38,6 +38,7 @@ import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyButton;
+import com.mattprecious.swirl.SwirlView;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -56,6 +57,7 @@ import javax.crypto.SecretKey;
 
 import static android.content.Context.FINGERPRINT_SERVICE;
 import static android.content.Context.KEYGUARD_SERVICE;
+import static android.view.View.GONE;
 
 public class LockScreen extends Fragment {
 
@@ -67,6 +69,8 @@ public class LockScreen extends Fragment {
     private FingerprintManager fingerprintManager;
     private KeyguardManager keyguardManager;
     Bundle args;
+
+    private SwirlView swirlView;
 
     public static LockScreen newInstance(Bundle args) {
         LockScreen myFragment = new LockScreen();
@@ -107,6 +111,8 @@ public class LockScreen extends Fragment {
         MyButton nol = view.findViewById(R.id.nol);
 
         MyButton back = view.findViewById(R.id.back);
+
+        swirlView = view.findViewById(R.id.swirlView);
 
         final EditText pass = view.findViewById(R.id.pass);
         pass.setRawInputType(0x00000000);
@@ -179,6 +185,7 @@ public class LockScreen extends Fragment {
         ImageView icon = view.findViewById(R.id.icon);
             icon.startAnimation(animation2);
 
+        swirlView.setState(SwirlView.State.ON, true);
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
             odin.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
@@ -203,6 +210,8 @@ public class LockScreen extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (pass.getText().toString().equals(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("pass", ""))){
+                    swirlView.setState(SwirlView.State.OFF, true);
+
                     getFragmentManager().beginTransaction().remove(LockScreen.this).commit();
                     getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                             android.R.id.content, new Notes(), "notes").commit();
@@ -259,14 +268,9 @@ public class LockScreen extends Fragment {
                     }
                 }
             }
+        } else {
+            swirlView.setVisibility(GONE);
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("toNote", false).apply();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -378,6 +382,7 @@ public class LockScreen extends Fragment {
 
         public void onAuthenticationFailed() {
             try {
+                swirlView.setState(SwirlView.State.ERROR, true);
                 Toast.makeText(context, getString(R.string.fingerprint_error), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
             }
@@ -389,6 +394,7 @@ public class LockScreen extends Fragment {
                 FingerprintManager.AuthenticationResult result) {
 
             try {
+                swirlView.setState(SwirlView.State.OFF, true);
                 getFragmentManager().beginTransaction().remove(LockScreen.this).commit();
                 getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         android.R.id.content, new Notes(), "notes").commit();

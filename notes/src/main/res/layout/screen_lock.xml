@@ -197,6 +197,13 @@
                     android:textSize="22sp" />
             </LinearLayout>
         </LinearLayout>
+
+            <com.mattprecious.swirl.SwirlView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/swirlView"
+                />
         </LinearLayout>
     </ScrollView>
 

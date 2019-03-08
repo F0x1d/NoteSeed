@@ -9,6 +9,8 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:navigationBarColor">@android:color/white</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="swirl_ridgeColor">@android:color/darker_gray</item>
+        <item name="swirl_errorColor">?android:attr/colorError</item>
     </style>
 
     <style name="AppTheme_Orange_md2" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -21,6 +23,8 @@
         <item name="android:navigationBarColor">@android:color/white</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="swirl_ridgeColor">@android:color/darker_gray</item>
+        <item name="swirl_errorColor">?android:attr/colorError</item>
     </style>
 
 
@@ -35,6 +39,8 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="swirl_ridgeColor">@android:color/darker_gray</item>
+        <item name="swirl_errorColor">?android:attr/colorError</item>
     </style>
 
     <style name="AppTheme_Orange" parent="Theme.AppCompat.Light.NoActionBar">
@@ -47,7 +53,11 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="swirl_ridgeColor">@android:color/darker_gray</item>
+        <item name="swirl_errorColor">?android:attr/colorError</item>
     </style>
+
+
 
     <style name="NightTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@android:color/white</item>
@@ -58,6 +68,8 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
         <item name="android:windowBackground">@color/statusbar</item>
+        <item name="swirl_ridgeColor">@android:color/white</item>
+        <item name="swirl_errorColor">?android:attr/colorError</item>
     </style>
 
     <style name="NightTheme_md2" parent="Theme.MaterialComponents.NoActionBar">
@@ -69,6 +81,8 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
         <item name="android:windowBackground">@color/statusbar</item>
+        <item name="swirl_ridgeColor">@android:color/white</item>
+        <item name="swirl_errorColor">?android:attr/colorError</item>
     </style>
 
 

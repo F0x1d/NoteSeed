@@ -133,4 +133,5 @@
     <string name="tap_to_search">Поиск заметок</string>
     <string name="date_appearance">Дата на заметке</string>
     <string name="choose_date_appearance">Выберите вид даты</string>
+    <string name="main_menu_flex">Флекс с главным меню</string>
 </resources>
