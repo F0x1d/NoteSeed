@@ -24,6 +24,7 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.model.Theme;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 
 import java.util.List;
 
@@ -136,16 +137,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
                 }
             });
 
-            AlertDialog dialog1337 = builder.create();
-
-            dialog1337.show();
-
-            if (UselessUtils.ifCustomTheme())
-                dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-            else if (UselessUtils.getBool("night", false))
-                dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-            else
-                dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+            ShowAlertDialog.show(builder.create());
         }
     }
 

@@ -47,12 +47,10 @@ android {
         applicationId "com.f0x1d.notes"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 110
-        versionName "5.5.2"
+        versionCode 112
+        versionName "5.6.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {

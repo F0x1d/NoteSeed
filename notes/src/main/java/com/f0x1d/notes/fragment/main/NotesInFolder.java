@@ -44,6 +44,7 @@ import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyImageButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -367,29 +368,7 @@ public class NotesInFolder extends Fragment {
             }
         });
 
-        AlertDialog dialog1337 = builder.create();
-
-        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-                }
-                if (UselessUtils.ifCustomTheme()){
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-                }
-            }
-        });
-
-        dialog1337.show();
-
-        if (UselessUtils.ifCustomTheme())
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-        else if (UselessUtils.getBool("night", false))
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-        else
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+        ShowAlertDialog.show(builder.create());
     }
 
     private void createFolder(){
@@ -403,7 +382,7 @@ public class NotesInFolder extends Fragment {
         builder.setView(v);
         builder.setTitle(getString(R.string.folder_name));
 
-        AlertDialog dialog1337 = builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog228, int which) {
                 if (text.getText().toString().isEmpty()) {
@@ -432,27 +411,7 @@ public class NotesInFolder extends Fragment {
             }
         }).create();
 
-        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-                }
-                if (UselessUtils.ifCustomTheme()){
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-                }
-            }
-        });
-
-        dialog1337.show();
-
-        if (UselessUtils.ifCustomTheme())
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-        else if (UselessUtils.getBool("night", false))
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-        else
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+        ShowAlertDialog.show(builder.create());
     }
 
     public String generateName(){
@@ -595,33 +554,7 @@ public class NotesInFolder extends Fragment {
             }
         });
 
-        AlertDialog dialog1337 = builder.create();
-
-        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
-                }
-                if (UselessUtils.ifCustomTheme()){
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
-                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
-
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-                }
-            }
-        });
-
-        dialog1337.show();
-
-        if (UselessUtils.ifCustomTheme())
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-        else if (UselessUtils.getBool("night", false))
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-        else
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+        ShowAlertDialog.show(builder.create());
     }
 
     @Override

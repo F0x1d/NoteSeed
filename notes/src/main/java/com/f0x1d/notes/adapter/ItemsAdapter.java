@@ -48,6 +48,7 @@ import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.theming.MyColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
@@ -298,16 +299,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             }
                         }
                     });
-                    AlertDialog dialog = builder.create();
-
-                    dialog.show();
-
-                if (UselessUtils.ifCustomTheme())
-                    dialog.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-                else if (UselessUtils.getBool("night", false))
-                    dialog.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-                else
-                    dialog.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+                ShowAlertDialog.show(builder.create());
             }
         });
 
@@ -680,7 +672,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setView(v);
 
-                        AlertDialog dialog1337 = builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog228, int which) {
                                 dao.updateNoteTitle(title.getText().toString(), items.get(position).id);
@@ -690,27 +682,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             }
                         }).create();
 
-                        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
-                            @Override
-                            public void onShow(DialogInterface dialog1) {
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("night", false)){
-                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-                                }
-                                if (UselessUtils.ifCustomTheme()){
-                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
-                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-                                }
-                            }
-                        });
-
-                        dialog1337.show();
-
-                        if (UselessUtils.ifCustomTheme())
-                            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-                        else if (UselessUtils.getBool("night", false))
-                            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-                        else
-                            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+                        ShowAlertDialog.show(builder.create());
                         break;
                     case 1:
                         int pin = 0;
@@ -762,16 +734,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        AlertDialog dialog = builder1.create();
-
-        dialog.show();
-
-        if (UselessUtils.ifCustomTheme())
-            dialog.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-        else if (UselessUtils.getBool("night", false))
-            dialog.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-        else
-            dialog.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+        ShowAlertDialog.show(builder1.create());
     }
 
     private void getFoldersDialog(int position){
@@ -812,7 +775,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         builder.setView(v);
                         builder.setTitle(activity.getString(R.string.folder_name));
 
-                        AlertDialog dialog1337 =  builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog228, int which) {
                                 boolean create = true;
@@ -839,27 +802,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             }
                         }).create();
 
-                        dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
-                            @Override
-                            public void onShow(DialogInterface dialog1) {
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("night", false)){
-                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-                                }
-                                if (UselessUtils.ifCustomTheme()){
-                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
-                                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
-                                }
-                            }
-                        });
-
-                        dialog1337.show();
-
-                        if (UselessUtils.ifCustomTheme())
-                            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-                        else if (UselessUtils.getBool("night", false))
-                            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-                        else
-                            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+                        ShowAlertDialog.show(builder.create());
                         break;
                     case 1:
                         int pin = 0;
@@ -911,16 +854,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        AlertDialog dialog1337 = builder1.create();
-
-        dialog1337.show();
-
-        if (UselessUtils.ifCustomTheme())
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-        else if (UselessUtils.getBool("night", false))
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-        else
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+        ShowAlertDialog.show(builder1.create());
 
     }
 
@@ -1011,16 +945,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        AlertDialog dialog1337 = builder1.create();
-
-        dialog1337.show();
-
-        if (UselessUtils.ifCustomTheme())
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-        else if (UselessUtils.getBool("night", false))
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-        else
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+        ShowAlertDialog.show(builder1.create());
 
     }
 
