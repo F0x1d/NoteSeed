@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
@@ -403,6 +404,13 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         });
 
         dialog1337.show();
+
+        if (UselessUtils.ifCustomTheme())
+            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
+        else if (UselessUtils.getBool("night", false))
+            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
+        else
+            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
     }
 
     private void add(int pos, NoteItem item){

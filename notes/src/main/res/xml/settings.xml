@@ -11,8 +11,6 @@
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/onscreen">
         <com.f0x1d.notes.view.preferences.MyPreference
             android:title="@string/theme" android:key="dayAccent"/>
-        <com.f0x1d.notes.view.preferences.MySwitchPreference
-            android:title="@string/main_menu_flex" android:key="flex_main"/>
             <com.f0x1d.notes.view.preferences.MyPreference
                 android:title="@string/text_size" android:summary="@string/in_editor" android:key="textSize" />
             <com.f0x1d.notes.view.preferences.MySwitchPreference

@@ -1,6 +1,7 @@
 package com.f0x1d.notes.fragment.settings;
 
 import android.app.ProgressDialog;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.SyncUtils;
@@ -108,6 +110,13 @@ public class SyncSettings extends PreferenceFragment {
                     dialog.setCancelable(false);
                     dialog.show();
 
+                    if (UselessUtils.ifCustomTheme())
+                        dialog.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
+                    else if (UselessUtils.getBool("night", false))
+                        dialog.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
+                    else
+                        dialog.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+
                     SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -147,6 +156,13 @@ public class SyncSettings extends PreferenceFragment {
         dialog1.setCancelable(false);
         dialog1.setMessage("Loading...");
         dialog1.show();
+
+        if (UselessUtils.ifCustomTheme())
+            dialog1.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
+        else if (UselessUtils.getBool("night", false))
+            dialog1.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
+        else
+            dialog1.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
 
         SyncUtils.ifBackupExistsOnGDrive(GoogleSignIn.getLastSignedInAccount(getActivity()).getAccount()).addOnCompleteListener(new OnCompleteListener<String>() {
             @Override

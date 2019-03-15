@@ -115,7 +115,6 @@
 
     <style name="AlertDialog.AppTheme.Light" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/dialog_round_corners</item>
-        <item name="android:background">@color/white_for_dialogs</item>
         <item name="android:textColorPrimary">@color/black_text_color_for_dialogs</item>
         <item name="android:textColorSecondary">@color/black_text_color_for_dialogs</item>
         <item name="android:textColor">@color/black_text_color_for_dialogs</item>
@@ -123,7 +122,6 @@
 
     <style name="AlertDialog.AppTheme.Dark" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/dialog_round_corners</item>
-        <item name="android:background">@color/statusbar_for_dialogs</item>
         <item name="android:textColorPrimary">@color/white_text_color_for_dialogs</item>
         <item name="android:textColor">@color/white_text_color_for_dialogs</item>
         <item name="android:textColorSecondary">@color/white_text_color_for_dialogs</item>

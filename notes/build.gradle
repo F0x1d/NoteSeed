@@ -51,6 +51,8 @@ android {
         versionName "5.5.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {

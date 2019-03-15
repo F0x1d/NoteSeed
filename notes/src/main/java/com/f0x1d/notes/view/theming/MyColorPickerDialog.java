@@ -2,6 +2,7 @@ package com.f0x1d.notes.view.theming;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import com.f0x1d.notes.R;
@@ -47,16 +49,23 @@ public class MyColorPickerDialog extends ColorPickerDialog {
         Button positive = getDialog().findViewById(android.R.id.button1);
         Button neutral = getDialog().findViewById(android.R.id.button3);
 
-         if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()){
             positive.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
             positive.setTextColor(ThemesEngine.textColor);
 
             neutral.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
             neutral.setTextColor(ThemesEngine.textColor);
-        } else if (UselessUtils.getBool("night", false)){
-            positive.setTextColor(Color.BLACK);
-            neutral.setTextColor(Color.BLACK);
+        } else if (UselessUtils.getBool("night", false)) {
+             positive.setTextColor(Color.BLACK);
+             neutral.setTextColor(Color.BLACK);
         }
+
+        if (UselessUtils.ifCustomTheme())
+            getDialog().getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
+        else if (UselessUtils.getBool("night", false))
+            getDialog().getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
+        else
+            getDialog().getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
     }
 
     public static final class Builder {
