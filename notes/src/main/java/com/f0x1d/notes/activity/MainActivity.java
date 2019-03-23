@@ -19,11 +19,9 @@ import androidx.fragment.app.Fragment;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.choose.ChooseFolder;
-import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
-import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.utils.PermissionUtils;
@@ -142,20 +140,20 @@ public class MainActivity extends AppCompatActivity {
                     //Toast.makeText(getApplicationContext(), "Theme changed", Toast.LENGTH_SHORT).show();
                     UselessUtils.clear_back_stack();
                     getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            android.R.id.content, new Notes(), "notes").commit();
+                            R.id.container, new Notes(), "notes").commit();
                     getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            android.R.id.content, new MainSettings(), "settings").addToBackStack(null).commit();
+                            R.id.container, new MainSettings(), "settings").addToBackStack(null).commit();
                     getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            android.R.id.content, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
+                            R.id.container, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
                     PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change", false).apply();
                 } else {
 
                     if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false)){
                         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                android.R.id.content, LockScreen.newInstance(lockargs), "lock").commit();
+                                R.id.container, LockScreen.newInstance(lockargs), "lock").commit();
                     } else {
                         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                android.R.id.content, new Notes(), "notes").commit();
+                                R.id.container, new Notes(), "notes").commit();
                     }
                 }
             }

@@ -2,7 +2,6 @@ package com.f0x1d.notes.view.preferences;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -35,14 +34,16 @@ public class MyPreference extends Preference {
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
 
-        TextView text = holder.itemView.findViewById(android.R.id.title);
-        TextView text2 = holder.itemView.findViewById(android.R.id.summary);
-        if (UselessUtils.ifCustomTheme()){
-            text.setTextColor(ThemesEngine.textColor);
-            text2.setTextColor(ThemesEngine.textColor);
-        }
+        try {
+            TextView text = holder.itemView.findViewById(android.R.id.title);
+            TextView text2 = holder.itemView.findViewById(android.R.id.summary);
+            if (UselessUtils.ifCustomTheme()){
+                text.setTextColor(ThemesEngine.textColor);
+                text2.setTextColor(ThemesEngine.textColor);
+            }
 
-        text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
-        text2.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
+            text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
+            text2.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
+        } catch (Exception e){}
     }
 }

@@ -2,11 +2,8 @@ package com.f0x1d.notes.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -67,15 +64,8 @@ public class CenteredToolbar extends Toolbar {
 
     @Override
     public void setTitle(CharSequence title) {
+        setupTextViews();
         tvTitle.setText(title);
-    }
-
-    public void setTitleColor(int color){
-        if (UselessUtils.ifCustomTheme()){
-            tvTitle.setTextColor(ThemesEngine.toolbarTextColor);
-        } else {
-            tvTitle.setTextColor(color);
-        }
     }
 
     @Override
@@ -163,7 +153,7 @@ public class CenteredToolbar extends Toolbar {
         }
     }
 
-    public void goAnim(String inFolderId, Activity activity){
+    public void goAnim(String inFolderId){
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,6 +1,5 @@
 package com.f0x1d.notes.adapter;
 
-import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -117,7 +115,7 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
                 args.putLong("id", note_id);
 
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, ChooseFolder.newInstance(args), "choose_folder")
+                        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(R.id.container, ChooseFolder.newInstance(args), "choose_folder")
                         .addToBackStack(null).commit();
             }
         });

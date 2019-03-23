@@ -32,8 +32,6 @@ import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
-import com.f0x1d.notes.fragment.main.Notes;
-import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyButton;

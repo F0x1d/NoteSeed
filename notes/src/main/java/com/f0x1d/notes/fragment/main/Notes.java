@@ -4,10 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.LightingColorFilter;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,6 +29,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
@@ -88,7 +85,7 @@ public class Notes extends Fragment {
 
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.notes));
-        toolbar.goAnim("def", getActivity());
+        toolbar.goAnim("def");
 
         if (UselessUtils.ifCustomTheme()){
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
@@ -316,7 +313,7 @@ public class Notes extends Fragment {
 
                     MainActivity.instance.getSupportFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            android.R.id.content, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
+                            R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
                 }
             });
 
@@ -601,7 +598,7 @@ public class Notes extends Fragment {
         inflater.inflate(R.menu.search_menu, menu);
 
         MenuItem item = menu.findItem(R.id.settings);
-            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            item.setVisible(false);
 
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
                 item.setIcon(R.drawable.ic_settings_white_24dp);

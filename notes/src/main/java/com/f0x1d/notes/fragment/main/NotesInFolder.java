@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -93,7 +90,7 @@ public class NotesInFolder extends Fragment {
 
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(in_folder_id);
-        toolbar.goAnim(in_folder_id, getActivity());
+        toolbar.goAnim(in_folder_id);
         toolbar.inflateMenu(R.menu.in_folder_menu);
         toolbar.getMenu().findItem(R.id.root).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
@@ -319,7 +316,7 @@ public class NotesInFolder extends Fragment {
             public void onClick(View v) {
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        android.R.id.content, NoteAdd.newInstance(in_folder_id), "add").addToBackStack("editor").commit();
+                        R.id.container, NoteAdd.newInstance(in_folder_id), "add").addToBackStack("editor").commit();
             }
         });
 

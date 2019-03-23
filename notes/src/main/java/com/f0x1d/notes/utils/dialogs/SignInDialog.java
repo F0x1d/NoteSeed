@@ -1,11 +1,7 @@
 package com.f0x1d.notes.utils.dialogs;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -14,8 +10,6 @@ import androidx.appcompat.app.AlertDialog;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.ThemesEngine;
-import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;

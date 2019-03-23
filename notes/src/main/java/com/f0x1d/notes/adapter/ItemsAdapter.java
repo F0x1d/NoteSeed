@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -43,8 +42,6 @@ import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.choose.ChooseFolder;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockNote;
-import com.f0x1d.notes.fragment.lock.LockScreen;
-import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -379,7 +376,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 NotesInFolder.in_ids.add(getFolderNameFromDataBase(items.get(position).id, position));
 
                 MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
-                        .replace(android.R.id.content, new NotesInFolder(), "in_folder").addToBackStack(null).commit();
+                        .replace(R.id.container, new NotesInFolder(), "in_folder").addToBackStack(null).commit();
             }
         });
 
@@ -576,14 +573,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("lock", false)){
                                     MainActivity.instance.getSupportFragmentManager().beginTransaction()
                                             .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                            android.R.id.content, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
+                                            R.id.container, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
                                 } else {
                                     Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
                                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                        android.R.id.content, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
+                                        R.id.container, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
                             }
 
                         }
@@ -933,7 +930,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         MainActivity.instance.getSupportFragmentManager().beginTransaction()
                                 .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                        android.R.id.content, ChooseFolder.newInstance(args), "choose_folder")
+                                        R.id.container, ChooseFolder.newInstance(args), "choose_folder")
                                 .addToBackStack(null).commit();
                         break;
                     case 3:

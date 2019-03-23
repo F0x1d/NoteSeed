@@ -104,17 +104,22 @@ public class UselessUtils {
     }
 
     public static void recreate(Fragment fragment, String tag){
-        MainActivity.instance.getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fragment, tag).commit();
+        MainActivity.instance.getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment, tag).commit();
     }
 
     public static void replace(Fragment fragment, String tag){
         MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                android.R.id.content, fragment, tag).addToBackStack(null).commit();
+                R.id.container, fragment, tag).addToBackStack(null).commit();
+    }
+
+    public static void replaceOld(android.app.Fragment fragment, String tag){
+        MainActivity.instance.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                R.id.container, fragment, tag).addToBackStack(null).commit();
     }
 
     public static void replaceNoBackStack(Fragment fragment, String tag){
         MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                android.R.id.content, fragment, tag).commit();
+                R.id.container, fragment, tag).commit();
     }
 
     public static Drawable setTint(Drawable d, int color) {

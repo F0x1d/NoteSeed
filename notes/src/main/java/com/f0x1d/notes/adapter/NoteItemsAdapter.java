@@ -2,9 +2,7 @@ package com.f0x1d.notes.adapter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
@@ -31,7 +29,6 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
-import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.theming.MyEditText;

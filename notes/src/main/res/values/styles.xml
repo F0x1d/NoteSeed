@@ -11,9 +11,6 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="swirl_ridgeColor">@android:color/darker_gray</item>
         <item name="swirl_errorColor">?android:attr/colorError</item>
-        <item name="preferenceTheme">
-            @style/AppPreferenceTheme
-        </item>
     </style>
 
     <style name="AppTheme_Orange_md2" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -28,9 +25,6 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="swirl_ridgeColor">@android:color/darker_gray</item>
         <item name="swirl_errorColor">?android:attr/colorError</item>
-        <item name="preferenceTheme">
-            @style/AppPreferenceTheme
-        </item>
     </style>
 
 
@@ -47,9 +41,6 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="swirl_ridgeColor">@android:color/darker_gray</item>
         <item name="swirl_errorColor">?android:attr/colorError</item>
-        <item name="preferenceTheme">
-            @style/AppPreferenceTheme
-        </item>
     </style>
 
     <style name="AppTheme_Orange" parent="Theme.AppCompat.Light.NoActionBar">
@@ -64,9 +55,6 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="swirl_ridgeColor">@android:color/darker_gray</item>
         <item name="swirl_errorColor">?android:attr/colorError</item>
-        <item name="preferenceTheme">
-            @style/AppPreferenceTheme
-        </item>
     </style>
 
 
@@ -82,9 +70,6 @@
         <item name="android:windowBackground">@color/statusbar</item>
         <item name="swirl_ridgeColor">@android:color/white</item>
         <item name="swirl_errorColor">?android:attr/colorError</item>
-        <item name="preferenceTheme">
-            @style/AppPreferenceTheme
-        </item>
     </style>
 
     <style name="NightTheme_md2" parent="Theme.MaterialComponents.NoActionBar">
@@ -98,9 +83,6 @@
         <item name="android:windowBackground">@color/statusbar</item>
         <item name="swirl_ridgeColor">@android:color/white</item>
         <item name="swirl_errorColor">?android:attr/colorError</item>
-        <item name="preferenceTheme">
-            @style/AppPreferenceTheme
-        </item>
     </style>
 
 
@@ -143,20 +125,6 @@
         <item name="android:textColorPrimary">@color/white_text_color_for_dialogs</item>
         <item name="android:textColor">@color/white_text_color_for_dialogs</item>
         <item name="android:textColorSecondary">@color/white_text_color_for_dialogs</item>
-    </style>
-
-
-    <!-- Custom Preference Theme -->
-    <style name="AppPreferenceTheme"
-        parent="@style/PreferenceThemeOverlay.v14.Material">
-        <item name="preferenceFragmentCompatStyle">
-            @style/AppPreferenceFragmentCompatStyle
-        </item>
-    </style>
-    <!-- Custom Style for PreferenceFragmentCompat -->
-    <style name="AppPreferenceFragmentCompatStyle"
-        parent="@style/PreferenceFragment.Material">
-        <item name="android:layout">@layout/settings</item>
     </style>
 
 </resources>

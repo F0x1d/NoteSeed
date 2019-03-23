@@ -3,7 +3,6 @@ package com.f0x1d.notes.view.preferences;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
