@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -29,9 +30,13 @@ public class SignInDialog {
 
             builder.setPositiveButton("OK", (dialog, which) -> {
                 if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(App.getContext()) == ConnectionResult.SUCCESS){
-                    Intent signInIntent = client.getSignInIntent();
-                    if (!BuildConfig.DEBUG){
-                        activity.startActivityForResult(signInIntent, 1);
+                    try {
+                        Intent signInIntent = client.getSignInIntent();
+                        if (!BuildConfig.DEBUG){
+                            activity.startActivityForResult(signInIntent, 1);
+                        }
+                    } catch (Exception e){
+                        Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

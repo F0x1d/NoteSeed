@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
 
             Log.e("notes_err", account.name);
 
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("not_want_sign_in", false).apply();
+            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
             BackupDialog.show(this, account);
         } catch (ApiException e) {
             Log.e("notes_err", "handleSignInResult:error \n\n", e);
