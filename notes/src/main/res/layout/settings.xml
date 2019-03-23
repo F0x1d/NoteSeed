@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,16 +10,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"
-        android:cacheColorHint="@android:color/transparent"
-        android:divider="@null"
-        android:clipToPadding="false"
-        android:drawSelectorOnTop="false"
-        android:paddingTop="0dip"
-        android:scrollbarAlwaysDrawVerticalTrack="true" />
+    <FrameLayout
+        android:id="@android:id/list_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="NewApi">
+
+    </FrameLayout>
 
 </LinearLayout>

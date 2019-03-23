@@ -2,7 +2,6 @@ package com.f0x1d.notes.fragment.editing;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -63,8 +63,6 @@ public class NoteEdit extends Fragment {
     EditText title;
     RecyclerView recyclerView;
 
-    FragmentActivity activity;
-
     String id_str;
     long id;
     int locked;
@@ -82,12 +80,6 @@ public class NoteEdit extends Fragment {
     public static int last_pos;
 
     Bundle args;
-
-    @Override
-    public void onAttach(Activity activity) {
-        this.activity = (FragmentActivity) activity;
-        super.onAttach(activity);
-    }
 
     public static NoteEdit newInstance(Bundle args) {
         NoteEdit myFragment = new NoteEdit();
@@ -179,7 +171,7 @@ public class NoteEdit extends Fragment {
             /*PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", item.text)
                     .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();*/
             SetNotify notify = new SetNotify(new Notify(title.getText().toString(), item.text, 0, item.to_id));
-            notify.show(activity.getSupportFragmentManager(), "TAG");
+            notify.show(getActivity().getSupportFragmentManager(), "TAG");
         });
 
         setHasOptionsMenu(true);

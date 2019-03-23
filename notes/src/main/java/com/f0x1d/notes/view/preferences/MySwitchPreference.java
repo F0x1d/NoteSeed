@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.preference.SwitchPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Switch;
@@ -13,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.preference.PreferenceViewHolder;
+import androidx.preference.SwitchPreference;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
@@ -42,16 +43,17 @@ public class MySwitchPreference extends SwitchPreference {
     }
 
     @Override
-    protected void onBindView(View view) {
-        super.onBindView(view);
-        aSwitch = view.findViewById(android.R.id.switch_widget);
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+
+        aSwitch = holder.itemView.findViewById(android.R.id.switch_widget);
 
         if (UselessUtils.ifCustomTheme()){
             colorSwitch(aSwitch, ThemesEngine.accentColor);
         }
 
-        TextView text = view.findViewById(android.R.id.title);
-        TextView text2 = view.findViewById(android.R.id.summary);
+        TextView text = holder.itemView.findViewById(android.R.id.title);
+        TextView text2 = holder.itemView.findViewById(android.R.id.summary);
         if (UselessUtils.ifCustomTheme()){
             text.setTextColor(ThemesEngine.textColor);
             text2.setTextColor(ThemesEngine.textColor);

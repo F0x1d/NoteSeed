@@ -1,7 +1,6 @@
 package com.f0x1d.notes.utils;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -21,9 +20,12 @@ import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
@@ -56,8 +58,8 @@ public class UselessUtils {
         }
     }
 
-    public static void clear_back_stack(Activity context){
-        FragmentManager fm = context.getFragmentManager();
+    public static void clear_back_stack(){
+        FragmentManager fm = MainActivity.instance.getSupportFragmentManager();
         for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
@@ -101,17 +103,17 @@ public class UselessUtils {
         return result;
     }
 
-    public static void recreate(android.app.Fragment fragment, Activity activity, String tag){
-        activity.getFragmentManager().beginTransaction().replace(android.R.id.content, fragment, tag).commit();
+    public static void recreate(Fragment fragment, String tag){
+        MainActivity.instance.getSupportFragmentManager().beginTransaction().replace(android.R.id.content, fragment, tag).commit();
     }
 
-    public static void replace(Activity activity, android.app.Fragment fragment, String tag){
-        activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+    public static void replace(Fragment fragment, String tag){
+        MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                 android.R.id.content, fragment, tag).addToBackStack(null).commit();
     }
 
-    public static void replaceNoBackStack(Activity activity, android.app.Fragment fragment, String tag){
-        activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+    public static void replaceNoBackStack(Fragment fragment, String tag){
+        MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                 android.R.id.content, fragment, tag).commit();
     }
 
@@ -136,22 +138,18 @@ public class UselessUtils {
 
     public static void setCursorColor(EditText view, @ColorInt int color) {
         try {
-            // Get the cursor resource id
             Field field = TextView.class.getDeclaredField("mCursorDrawableRes");
             field.setAccessible(true);
             int drawableResId = field.getInt(view);
 
-            // Get the editor
             field = TextView.class.getDeclaredField("mEditor");
             field.setAccessible(true);
             Object editor = field.get(view);
 
-            // Get the drawable and set a color filter
             Drawable drawable = ContextCompat.getDrawable(view.getContext(), drawableResId);
             drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
             Drawable[] drawables = {drawable, drawable};
 
-            // Set the drawables
             field = editor.getClass().getDeclaredField("mCursorDrawable");
             field.setAccessible(true);
             field.set(editor, drawables);

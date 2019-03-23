@@ -1,7 +1,6 @@
 package com.f0x1d.notes.fragment.main;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,12 +28,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.adapter.NoteItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
@@ -106,7 +107,7 @@ public class Notes extends Fragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        UselessUtils.clear_back_stack(getActivity());
+        //UselessUtils.clear_back_stack();
 
         /*if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
             if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
@@ -142,14 +143,14 @@ public class Notes extends Fragment {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(getActivity(), new MainSettings(), "settings");
+                UselessUtils.replace(new MainSettings(), "settings");
             }
         });
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(getActivity(), Search.newInstance("def"), "search");
+                UselessUtils.replace(Search.newInstance("def"), "search");
             }
         });
 
@@ -313,7 +314,7 @@ public class Notes extends Fragment {
                         return;
                     }
 
-                    getFragmentManager().beginTransaction()
+                    MainActivity.instance.getSupportFragmentManager().beginTransaction()
                             .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                             android.R.id.content, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
                 }
@@ -473,7 +474,7 @@ public class Notes extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.settings:
-                UselessUtils.replace(getActivity(), new MainSettings(), "settings");
+                UselessUtils.replace(new MainSettings(), "settings");
                 break;
         }
 

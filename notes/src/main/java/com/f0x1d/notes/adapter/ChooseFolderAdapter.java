@@ -11,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.choose.ChooseFolder;
@@ -27,14 +29,12 @@ import java.util.List;
 public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapter.folderViewHolder> {
 
     List<NoteOrFolder> items;
-    Activity activity;
     long note_id;
 
     NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
 
-    public ChooseFolderAdapter(List<NoteOrFolder> notes, Activity activity, long note_id){
+    public ChooseFolderAdapter(List<NoteOrFolder> notes, long note_id){
         this.items = notes;
-        this.activity = activity;
         this.note_id = note_id;
     }
 
@@ -55,22 +55,22 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
                 if (UselessUtils.ifCustomTheme()){
                     holder.name.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                    holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
+                    holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
+                    holder.pinned.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
                 } else {
                     holder.name.setTextColor(Color.BLACK);
-                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
-                    holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+                    holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp));
+                    holder.pinned.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
                 if (UselessUtils.ifCustomTheme()){
                     holder.name.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                    holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
+                    holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
+                    holder.pinned.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.name.setTextColor(Color.WHITE);
-                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
-                    holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+                    holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp));
+                    holder.pinned.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_white_24dp));
                 }
             }
         } catch (Exception e){
@@ -81,22 +81,22 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
             if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())){
                 if (UselessUtils.ifCustomTheme()){
                     holder.name.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                    holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
+                    holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
+                    holder.pinned.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
                 } else {
                     holder.name.setTextColor(Color.BLACK);
-                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
-                    holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
+                    holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp));
+                    holder.pinned.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
                 if (UselessUtils.ifCustomTheme()){
                     holder.name.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                    holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
+                    holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
+                    holder.pinned.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.name.setTextColor(Color.WHITE);
-                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
-                    holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
+                    holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp));
+                    holder.pinned.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_white_24dp));
                 }
             }
         }
@@ -116,7 +116,7 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
                 ChooseFolder.in_ids.add(getFolderNameFromDataBase(position));
                 args.putLong("id", note_id);
 
-                activity.getFragmentManager().beginTransaction()
+                MainActivity.instance.getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, ChooseFolder.newInstance(args), "choose_folder")
                         .addToBackStack(null).commit();
             }

@@ -111,7 +111,6 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
                         case 0:
                             try {
                                 if (PreferenceManager.getDefaultSharedPreferences(activity).getString("path_theme", "").equals(themes.get(position).theme_file.getAbsolutePath())){
-
                                     themes.get(position).theme_file.delete();
 
                                     PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", false).apply();

@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.Preference;
+import androidx.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -17,6 +17,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.SyncUtils;
@@ -33,22 +36,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.services.drive.DriveScopes;
 
-public class SyncSettings extends PreferenceFragment {
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        View rootView = getView();
-        if (rootView != null) {
-            ListView list = rootView.findViewById(android.R.id.list);
-            list.setPadding(0, 0, 0, 0);
-            list.setDivider(null);
-        }
-    }
+public class SyncSettings extends PreferenceFragmentCompat {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = LayoutInflater.from(getActivity()).inflate(R.layout.settings, container, false);
+        View v = super.onCreateView(inflater, container, savedInstanceState);
 
         CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.sync));
@@ -65,9 +57,7 @@ public class SyncSettings extends PreferenceFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.sync);
 
         Preference login = findPreference("sign_in");
@@ -149,6 +139,11 @@ public class SyncSettings extends PreferenceFragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        return new MainSettings.CustomPreferenceGroupAdapter(preferenceScreen);
     }
 
     public void importFromGDrive(){

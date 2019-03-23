@@ -1,19 +1,20 @@
 package com.f0x1d.notes.fragment.choose;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ChooseFolderAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
@@ -86,7 +87,7 @@ public class ChooseFolder extends Fragment {
             recyclerView.setLayoutManager(llm);
         }
 
-        ChooseFolderAdapter adapter = new ChooseFolderAdapter(allList, getActivity(), id);
+        ChooseFolderAdapter adapter = new ChooseFolderAdapter(allList, id);
 
         recyclerView.setAdapter(adapter);
 
@@ -96,7 +97,7 @@ public class ChooseFolder extends Fragment {
             @Override
             public void onClick(View v) {
                 dao.updateInFolderIdById(in_id, id);
-                getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         android.R.id.content, new Notes(), "notes").commit();
             }
         });

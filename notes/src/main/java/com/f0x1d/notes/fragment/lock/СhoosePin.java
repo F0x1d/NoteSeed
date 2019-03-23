@@ -1,6 +1,5 @@
 package com.f0x1d.notes.fragment.lock;
 
-import android.app.Fragment;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.main.Notes;
@@ -115,11 +115,9 @@ public class СhoosePin extends Fragment {
                             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("pass", pass.getText().toString()).apply();
                             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("lock", true).apply();
 
-                            UselessUtils.clear_back_stack(getActivity());
-
+                            UselessUtils.clear_back_stack();
                             Toast.makeText(getActivity(), R.string.success, Toast.LENGTH_SHORT).show();
-
-                            getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new Notes(), "notes").commit();
+                            UselessUtils.replaceNoBackStack(new Notes(), "notes");
                         }
                         break;
 

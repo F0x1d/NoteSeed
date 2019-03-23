@@ -1,7 +1,6 @@
 package com.f0x1d.notes.fragment.search;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,12 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
@@ -126,7 +127,7 @@ public class Search extends Fragment {
                 @Override
                 public void onClick(View v) {
                     UselessUtils.hideSoftKeyboard(text, getActivity());
-                    getFragmentManager().popBackStack();
+                    MainActivity.instance.getSupportFragmentManager().popBackStack();
                 }
             });
 

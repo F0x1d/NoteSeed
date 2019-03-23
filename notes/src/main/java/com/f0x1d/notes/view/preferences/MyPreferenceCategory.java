@@ -1,12 +1,13 @@
 package com.f0x1d.notes.view.preferences;
 
 import android.content.Context;
-import android.preference.PreferenceCategory;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceViewHolder;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
@@ -28,15 +29,15 @@ public class MyPreferenceCategory extends PreferenceCategory {
     }
 
     @Override
-    protected void onBindView(View view) {
-        super.onBindView(view);
-        TextView titleView = view.findViewById(android.R.id.title);
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+
+        TextView titleView = holder.itemView.findViewById(android.R.id.title);
 
         if (UselessUtils.ifCustomTheme()){
             titleView.setTextColor(ThemesEngine.accentColor);
         }
 
         titleView.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
-
     }
 }

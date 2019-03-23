@@ -167,7 +167,7 @@ public class CenteredToolbar extends Toolbar {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(activity, Search.newInstance(inFolderId), "search");
+                UselessUtils.replace(Search.newInstance(inFolderId), "search");
             }
         });
 

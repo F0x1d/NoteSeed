@@ -2,7 +2,6 @@ package com.f0x1d.notes.fragment.settings.themes;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -21,6 +20,7 @@ import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -144,7 +144,7 @@ public class ThemesFragment extends Fragment {
         if (data != null){
             new ThemesEngine().importTheme(data.getData(), getActivity());
 
-            UselessUtils.recreate(ThemesFragment.this, getActivity(), "themes");
+            UselessUtils.recreate(ThemesFragment.this, "themes");
         }
     }
 

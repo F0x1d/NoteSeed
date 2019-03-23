@@ -7,10 +7,13 @@ import androidx.room.Room;
 
 import com.crashlytics.android.Crashlytics;
 import com.f0x1d.notes.db.Database;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private Database database;
     private static App instance;
@@ -29,6 +32,7 @@ public class App extends Application {
         super.onCreate();
 
         Fabric.with(this, new Crashlytics());
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         database = Room.databaseBuilder(this, Database.class, "noteseed_db")
                 .allowMainThreadQueries()

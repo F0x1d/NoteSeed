@@ -378,7 +378,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             public void onClick(View v) {
                 NotesInFolder.in_ids.add(getFolderNameFromDataBase(items.get(position).id, position));
 
-                activity.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
+                MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
                         .replace(android.R.id.content, new NotesInFolder(), "in_folder").addToBackStack(null).commit();
             }
         });
@@ -574,14 +574,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                             if (items.get(position).locked == 1){
                                 if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("lock", false)){
-                                    activity.getFragmentManager().beginTransaction()
+                                    MainActivity.instance.getSupportFragmentManager().beginTransaction()
                                             .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                                             android.R.id.content, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
                                 } else {
                                     Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                activity.getFragmentManager().beginTransaction()
+                                MainActivity.instance.getSupportFragmentManager().beginTransaction()
                                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                                         android.R.id.content, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
                             }
@@ -931,7 +931,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                             args.putLong("id", items.get(position).id);
 
-                        activity.getFragmentManager().beginTransaction()
+                        MainActivity.instance.getSupportFragmentManager().beginTransaction()
                                 .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                                         android.R.id.content, ChooseFolder.newInstance(args), "choose_folder")
                                 .addToBackStack(null).commit();

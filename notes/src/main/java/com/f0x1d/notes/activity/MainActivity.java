@@ -2,8 +2,6 @@ package com.f0x1d.notes.activity;
 
 import android.accounts.Account;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -11,20 +9,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.choose.ChooseFolder;
+import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
+import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.utils.PermissionUtils;
@@ -49,9 +48,11 @@ import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 public class MainActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
+    public static MainActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+        instance = this;
         PermissionUtils.requestWriteExternalPermission(this);
 
         if (UselessUtils.ifCustomTheme()){
@@ -138,20 +139,22 @@ public class MainActivity extends AppCompatActivity {
                 lockargs.putBoolean("to_note", false);
 
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)){
-                    UselessUtils.clear_back_stack(this);
-                    getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                    //Toast.makeText(getApplicationContext(), "Theme changed", Toast.LENGTH_SHORT).show();
+                    UselessUtils.clear_back_stack();
+                    getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                             android.R.id.content, new Notes(), "notes").commit();
-                    getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                    getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                             android.R.id.content, new MainSettings(), "settings").addToBackStack(null).commit();
-                    getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                    getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                             android.R.id.content, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
                     PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change", false).apply();
                 } else {
+
                     if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false)){
-                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                                 android.R.id.content, LockScreen.newInstance(lockargs), "lock").commit();
                     } else {
-                        getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                                 android.R.id.content, new Notes(), "notes").commit();
                     }
                 }
@@ -203,14 +206,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-            Fragment notes = getFragmentManager().findFragmentByTag("notes");
-            Fragment edit = getFragmentManager().findFragmentByTag("edit");
-            Fragment add = getFragmentManager().findFragmentByTag("add");
-            Fragment chooseFolder = getFragmentManager().findFragmentByTag("choose_folder");
-            Fragment notesInFolder = getFragmentManager().findFragmentByTag("in_folder");
+            Fragment notes = getSupportFragmentManager().findFragmentByTag("notes");
+            Fragment edit = getSupportFragmentManager().findFragmentByTag("edit");
+            Fragment add = getSupportFragmentManager().findFragmentByTag("add");
+            Fragment chooseFolder = getSupportFragmentManager().findFragmentByTag("choose_folder");
+            Fragment notesInFolder = getSupportFragmentManager().findFragmentByTag("in_folder");
 
             if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())){
-                getFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
 
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
                     SyncUtils.export();
@@ -244,14 +247,14 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
 
-                clear_back_stack(MainActivity.this);
+                clear_back_stack();
                 super.onBackPressed();
                 return;
             }
 
             if (chooseFolder != null && chooseFolder.isVisible()){
                 ChooseFolder.in_ids.remove(ChooseFolder.in_ids.size() - 1);
-                getFragmentManager().popBackStack();
+                getSupportFragmentManager().popBackStack();
                 return;
             }
 
@@ -263,15 +266,15 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("notes_err", "last: " + NotesInFolder.in_ids.get(NotesInFolder.in_ids.size() - 1));
                 } catch (Exception e){}
 
-                getFragmentManager().popBackStack();
+                getSupportFragmentManager().popBackStack();
                 return;
             }
 
-            if (getFragmentManager().getBackStackEntryCount() == 0){
-                clear_back_stack(MainActivity.this);
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0){
+                clear_back_stack();
                 super.onBackPressed();
             } else {
-                getFragmentManager().popBackStack();
+                getSupportFragmentManager().popBackStack();
             }
     }
 

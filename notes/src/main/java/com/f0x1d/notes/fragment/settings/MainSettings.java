@@ -1,5 +1,6 @@
 package com.f0x1d.notes.fragment.settings;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,10 +13,16 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
+import androidx.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.SwitchPreference;
+
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceGroup;
+import androidx.preference.PreferenceGroupAdapter;
+import androidx.preference.PreferenceScreen;
+import androidx.preference.PreferenceViewHolder;
+import androidx.preference.SwitchPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +33,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.fragment.bottomSheet.TextSizeDialog;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
@@ -38,11 +48,11 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.CenteredToolbar;
 
-public class MainSettings extends PreferenceFragment {
+public class MainSettings extends PreferenceFragmentCompat {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.settings, container, false);
+        View v = super.onCreateView(inflater, container, savedInstanceState);
 
         CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.settings));
@@ -60,72 +70,59 @@ public class MainSettings extends PreferenceFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-            View rootView = getView();
-            if (rootView != null) {
-                ListView list = rootView.findViewById(android.R.id.list);
-                list.setPadding(0, 0, 0, 0);
-                list.setDivider(null);
-            }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.settings);
 
         Preference date = findPreference("date");
-            date.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_text, null);
+        date.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_text, null);
 
-                    EditText text = v.findViewById(R.id.edit_text);
-                    text.setBackground(null);
-                    text.setHint("HH:mm | dd.MM.yyyy");
-                    text.setText(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("date", "HH:mm | dd.MM.yyyy"));
+                EditText text = v.findViewById(R.id.edit_text);
+                text.setBackground(null);
+                text.setHint("HH:mm | dd.MM.yyyy");
+                text.setText(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("date", "HH:mm | dd.MM.yyyy"));
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle(R.string.choose_date_appearance);
-                        builder.setView(v);
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-                                        .putString("date", text.getText().toString())
-                                        .apply();
-                            }
-                        });
-                    ShowAlertDialog.show(builder.create());
-                    return false;
-                }
-            });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.choose_date_appearance);
+                builder.setView(v);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                                .putString("date", text.getText().toString())
+                                .apply();
+                    }
+                });
+                ShowAlertDialog.show(builder.create());
+                return false;
+            }
+        });
 
         Preference sync = findPreference("sync");
-            sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new SyncSettings(), "sync").addToBackStack(null).commit();
-                    return false;
-                }
-            });
+        sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new SyncSettings(), "sync").addToBackStack(null).commit();
+                return false;
+            }
+        });
 
         Preference about = findPreference("about");
-            about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new AboutSettings(), "themes").addToBackStack(null).commit();
-                    return false;
-                }
-            });
+        about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new AboutSettings(), "themes").addToBackStack(null).commit();
+                return false;
+            }
+        });
 
         Preference accent = findPreference("dayAccent");
         accent.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, ThemesFragment.newInstance(true), "themes").addToBackStack(null).commit();
+                MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, ThemesFragment.newInstance(true), "themes").addToBackStack(null).commit();
                 return false;
             }
         });
@@ -135,7 +132,7 @@ public class MainSettings extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 TextSizeDialog dialog1 = new TextSizeDialog();
-                dialog1.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "TAG");
+                dialog1.show(MainActivity.instance.getSupportFragmentManager(), "TAG");
 
                 return false;
             }
@@ -157,7 +154,7 @@ public class MainSettings extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)){
-                    getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new СhoosePin(), "choose_pin").addToBackStack(null).commit();
+                    MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(android.R.id.content, new СhoosePin(), "choose_pin").addToBackStack(null).commit();
                     PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("pass", "").apply();
                 }
                 return false;
@@ -204,32 +201,52 @@ public class MainSettings extends PreferenceFragment {
 
     }
 
-    public void openFile(String minmeType, int requestCode, Activity activity) {
+    @Override
+    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        return new CustomPreferenceGroupAdapter(preferenceScreen);
+    }
 
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType(minmeType);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+    @SuppressLint("RestrictedApi")
+    public static class CustomPreferenceGroupAdapter extends PreferenceGroupAdapter {
 
-        // special intent for Samsung file manager
-        Intent sIntent = new Intent("com.f0x1d.notes.main.PICK_DATA");
-        // if you want any file type, you can skip next line
-        sIntent.putExtra("CONTENT_TYPE", minmeType);
-        sIntent.addCategory(Intent.CATEGORY_DEFAULT);
-
-        Intent chooserIntent;
-        if (activity.getPackageManager().resolveActivity(sIntent, 0) != null){
-            // it is device with samsung file manager
-            chooserIntent = Intent.createChooser(sIntent, "Open file");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent});
-        }
-        else {
-            chooserIntent = Intent.createChooser(intent, "Open file");
+        @SuppressLint("RestrictedApi")
+        public CustomPreferenceGroupAdapter(PreferenceGroup preferenceGroup) {
+            super(preferenceGroup);
         }
 
-        try {
-            MainSettings.this.startActivityForResult(chooserIntent, requestCode);
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(activity, "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
+        @SuppressLint("RestrictedApi")
+        @Override
+        public void onBindViewHolder(PreferenceViewHolder holder, int position) {
+            super.onBindViewHolder(holder, position);
+            Preference currentPreference = getItem(position);
+
+            if (position != 0 && currentPreference instanceof PreferenceCategory) {
+                holder.setDividerAllowedAbove(false);
+                holder.setDividerAllowedBelow(false);
+            } else {
+                holder.setDividerAllowedAbove(false);
+                holder.setDividerAllowedBelow(false);
+            }
+
+            if (currentPreference instanceof PreferenceCategory)
+                setZeroPaddingToLayoutChildren(holder.itemView);
+            else {
+                View iconFrame = holder.itemView.findViewById(R.id.icon_frame);
+                if (iconFrame != null) {
+                    iconFrame.setVisibility(currentPreference.getIcon() == null ? View.GONE : View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    private static void setZeroPaddingToLayoutChildren(View view) {
+        if (!(view instanceof ViewGroup))
+            return;
+        ViewGroup viewGroup = (ViewGroup) view;
+        int childCount = viewGroup.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            setZeroPaddingToLayoutChildren(viewGroup.getChildAt(i));
+            viewGroup.setPaddingRelative(0, viewGroup.getPaddingTop(), viewGroup.getPaddingEnd(), viewGroup.getPaddingBottom());
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.f0x1d.notes.fragment.lock;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -29,6 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
@@ -211,10 +211,7 @@ public class LockScreen extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (pass.getText().toString().equals(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("pass", ""))){
                     swirlView.setState(SwirlView.State.OFF, true);
-
-                    getFragmentManager().beginTransaction().remove(LockScreen.this).commit();
-                    getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            android.R.id.content, new Notes(), "notes").commit();
+                    UselessUtils.replaceNoBackStack(new Notes(), "notes");
                 }
             }
 
@@ -395,9 +392,7 @@ public class LockScreen extends Fragment {
 
             try {
                 swirlView.setState(SwirlView.State.OFF, true);
-                getFragmentManager().beginTransaction().remove(LockScreen.this).commit();
-                getActivity().getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        android.R.id.content, new Notes(), "notes").commit();
+                UselessUtils.replaceNoBackStack(new Notes(), "notes");
             } catch (Exception e){}
         }
     }

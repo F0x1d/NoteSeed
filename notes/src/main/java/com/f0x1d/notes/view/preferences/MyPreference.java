@@ -1,12 +1,13 @@
 package com.f0x1d.notes.view.preferences;
 
 import android.content.Context;
-import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
@@ -31,15 +32,15 @@ public class MyPreference extends Preference {
     }
 
     @Override
-    protected void onBindView(View view) {
-        super.onBindView(view);
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
 
-        TextView text = view.findViewById(android.R.id.title);
-        TextView text2 = view.findViewById(android.R.id.summary);
-            if (UselessUtils.ifCustomTheme()){
-                text.setTextColor(ThemesEngine.textColor);
-                text2.setTextColor(ThemesEngine.textColor);
-            }
+        TextView text = holder.itemView.findViewById(android.R.id.title);
+        TextView text2 = holder.itemView.findViewById(android.R.id.summary);
+        if (UselessUtils.ifCustomTheme()){
+            text.setTextColor(ThemesEngine.textColor);
+            text2.setTextColor(ThemesEngine.textColor);
+        }
 
         text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
         text2.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));

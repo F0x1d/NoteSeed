@@ -2,8 +2,8 @@ package com.f0x1d.notes.fragment.settings;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
@@ -18,11 +21,11 @@ import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.CenteredToolbar;
 
-public class AboutSettings extends PreferenceFragment {
+public class AboutSettings extends PreferenceFragmentCompat {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.settings, container, false);
+        View v = super.onCreateView(inflater, container, savedInstanceState);
 
         CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.about));
@@ -40,9 +43,7 @@ public class AboutSettings extends PreferenceFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.about);
 
         Preference preference = findPreference("about_v");
@@ -50,13 +51,7 @@ public class AboutSettings extends PreferenceFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        View rootView = getView();
-        if (rootView != null) {
-            ListView list = rootView.findViewById(android.R.id.list);
-            list.setPadding(0, 0, 0, 0);
-            list.setDivider(null);
-        }
+    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        return new MainSettings.CustomPreferenceGroupAdapter(preferenceScreen);
     }
 }
