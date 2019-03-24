@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -557,12 +558,16 @@ public class NotesInFolder extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.root);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        try {
+            inflater.inflate(R.menu.search_menu, menu);
+            MenuItem item = menu.findItem(R.id.root);
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
-            item.setIcon(R.drawable.ic_arrow_upward_white_24dp);
+            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+                item.setIcon(R.drawable.ic_arrow_upward_white_24dp);
+            }
+        } catch (Exception e){
+            Log.e("notes", e.getLocalizedMessage());
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
