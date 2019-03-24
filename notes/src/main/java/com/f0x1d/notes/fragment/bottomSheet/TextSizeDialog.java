@@ -41,11 +41,13 @@ public class TextSizeDialog extends BottomSheetDialogFragment {
         size.setProgress(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));
 
         text.setTextSize(size.getProgress());
+        text.setText(getString(R.string.text) + " " + size.getProgress());
 
         size.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 text.setTextSize(size.getProgress());
+                text.setText(getString(R.string.text) + " " + size.getProgress());
 
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("text_size", String.valueOf(size.getProgress())).apply();
             }

@@ -134,4 +134,5 @@
     <string name="date_appearance">Date appearance</string>
     <string name="choose_date_appearance">Choose date appearance</string>
     <string name="main_menu_flex">Flex with main menu</string>
+    <string name="notification">Notifications</string>
 </resources>

@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 
@@ -39,9 +41,9 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String name1 = "Напоминания";
+            String name = activity.getString(R.string.notification);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("com.f0x1d.notes", name1, importance);
+            NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
             channel.enableVibration(true);
             channel.enableLights(true);
             NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
@@ -55,9 +57,11 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
                 .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
                 .setAutoCancel(true)
                 .setVibrate(new long[]{1000L, 1000L, 1000L});
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(alarmSound);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    builder.setChannelId("com.f0x1d.notes");
+                    builder.setChannelId("com.f0x1d.notes.notifications");
 
         NotificationManager notificationManager = (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify((int) to_id + 1, builder.build());
@@ -72,7 +76,7 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "noteseed:receiver");
         wl.acquire();
 
         notify(context);
