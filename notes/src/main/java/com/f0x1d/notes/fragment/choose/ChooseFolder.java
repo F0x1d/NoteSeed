@@ -60,6 +60,7 @@ public class ChooseFolder extends Fragment {
         toolbar.setTitle(in_id);
         if (in_id.equals("def"))
             toolbar.setTitle(getString(R.string.notes));
+
         getActivity().setActionBar(toolbar);
 
         recyclerView = v.findViewById(R.id.recyclerView);

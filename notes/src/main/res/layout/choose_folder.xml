@@ -3,8 +3,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.f0x1d.notes.view.CenteredToolbar
+        android:id="@+id/toolbar"
+        android:clipToPadding="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
+        android:layout_below="@id/toolbar"
         android:id="@+id/recyclerView"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>

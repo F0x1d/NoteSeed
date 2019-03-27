@@ -64,7 +64,6 @@ public class CenteredToolbar extends Toolbar {
 
     @Override
     public void setTitle(CharSequence title) {
-        setupTextViews();
         tvTitle.setText(title);
     }
 
