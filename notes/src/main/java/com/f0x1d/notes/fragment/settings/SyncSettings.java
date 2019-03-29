@@ -3,6 +3,7 @@ package com.f0x1d.notes.fragment.settings;
 import android.app.ProgressDialog;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.f0x1d.notes.utils.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.SignInDialog;
+import com.f0x1d.notes.view.CenteredToolbar;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -42,6 +44,15 @@ public class SyncSettings extends PreferenceFragmentCompat {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
+            toolbar.setTitle(R.string.settings);
+            getActivity().setActionBar(toolbar);
+
+            if (UselessUtils.ifCustomTheme())
+                toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
         return v;
     }
@@ -129,11 +140,6 @@ public class SyncSettings extends PreferenceFragmentCompat {
                 return false;
             }
         });
-    }
-
-    @Override
-    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
-        return new MainSettings.CustomPreferenceGroupAdapter(preferenceScreen);
     }
 
     public void importFromGDrive(){

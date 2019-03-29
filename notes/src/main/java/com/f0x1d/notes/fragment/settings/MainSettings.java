@@ -38,6 +38,9 @@ import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
+import com.f0x1d.notes.view.CenteredToolbar;
+
+import java.nio.file.Files;
 
 public class MainSettings extends PreferenceFragmentCompat {
 
@@ -49,6 +52,15 @@ public class MainSettings extends PreferenceFragmentCompat {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
+            toolbar.setTitle(R.string.settings);
+            getActivity().setActionBar(toolbar);
+
+            if (UselessUtils.ifCustomTheme())
+                toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
 
         return v;
@@ -188,7 +200,7 @@ public class MainSettings extends PreferenceFragmentCompat {
 
     @Override
     protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
-        return new CustomPreferenceGroupAdapter(preferenceScreen);
+        return super.onCreateAdapter(preferenceScreen);
     }
 
     @SuppressLint("RestrictedApi")
