@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
             Fragment notesInFolder = getSupportFragmentManager().findFragmentByTag("in_folder");
 
             if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())){
-                getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().popBackStack("editor", POP_BACK_STACK_INCLUSIVE);
 
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
                     SyncUtils.export();
@@ -229,22 +229,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (notes != null && notes.isVisible()){
-                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
-                    SyncUtils.export().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (GoogleSignIn.getLastSignedInAccount(MainActivity.this) != null){
-                                SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Log.e("notes_err", "synced");
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-
                 clear_back_stack();
                 super.onBackPressed();
                 return;
@@ -257,13 +241,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (notesInFolder != null && notesInFolder.isVisible()){
-                Log.e("notes_err", "removed: " + NotesInFolder.in_ids.get(NotesInFolder.in_ids.size() - 1));
                 NotesInFolder.in_ids.remove(NotesInFolder.in_ids.size() - 1);
-
-                try {
-                    Log.e("notes_err", "last: " + NotesInFolder.in_ids.get(NotesInFolder.in_ids.size() - 1));
-                } catch (Exception e){}
-
                 getSupportFragmentManager().popBackStack();
                 return;
             }
@@ -274,11 +252,5 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 getSupportFragmentManager().popBackStack();
             }
-    }
-
-    @Override
-    public Resources getResources() {
-        //return new CustomResources(super.getAssets(), super.getResources().getDisplayMetrics(), super.getResources().getConfiguration());
-        return super.getResources();
     }
 }

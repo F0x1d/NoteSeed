@@ -163,14 +163,11 @@ public class NoteEdit extends Fragment {
                 }
             }
 
-            /*PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("notify_title", title.getText().toString()).putString("notify_text", item.text)
-                    .putInt("notify_id", PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("id", 0)).apply();*/
             SetNotify notify = new SetNotify(new Notify(title.getText().toString(), item.text, 0, item.to_id));
             notify.show(getActivity().getSupportFragmentManager(), "TAG");
         });
 
         setHasOptionsMenu(true);
-
         getActivity().invalidateOptionsMenu();
 
         title = view.findViewById(R.id.edit_title);
@@ -204,7 +201,6 @@ public class NoteEdit extends Fragment {
         last_pos = noteItems.size() - 1;
 
         NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity());
-
         recyclerView.setAdapter(adapter);
 
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
