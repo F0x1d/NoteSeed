@@ -46,9 +46,9 @@ public class SyncSettings extends PreferenceFragmentCompat {
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
-            toolbar.setTitle(R.string.settings);
+            toolbar.setTitle(R.string.sync);
             getActivity().setActionBar(toolbar);
 
             if (UselessUtils.ifCustomTheme())
