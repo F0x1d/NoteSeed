@@ -38,6 +38,7 @@ import com.f0x1d.notes.adapter.NoteItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.fragment.bottomSheet.DeleteDialog;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.MainSettings;
@@ -125,7 +126,7 @@ public class Notes extends Fragment {
         MyImageButton settings = slideView.findViewById(R.id.settings_pic);
         MyImageButton search = slideView.findViewById(R.id.search_pic);
 
-        if (UselessUtils.getBool("night", false)){
+        if (UselessUtils.getBool("night", true)){
             settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
             search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
             closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
@@ -153,7 +154,7 @@ public class Notes extends Fragment {
 
         recyclerView = view.findViewById(R.id.notes_view);
 
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(slideView);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.background_bottom_sheet));
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setPeekHeight(100, true);
         bottomSheetBehavior.setHideable(false);
@@ -162,19 +163,19 @@ public class Notes extends Fragment {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (BottomSheetBehavior.STATE_DRAGGING == newState) {
-                    if (UselessUtils.getBool("night", false)){
+                    if (UselessUtils.getBool("night", true)){
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
                     }
                 } else if (BottomSheetBehavior.STATE_EXPANDED == newState){
-                    if (UselessUtils.getBool("night", false)){
+                    if (UselessUtils.getBool("night", true)){
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
                     }
                 } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
-                    if (UselessUtils.getBool("night", false)){
+                    if (UselessUtils.getBool("night", true)){
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
@@ -282,7 +283,7 @@ public class Notes extends Fragment {
         animation.setDuration(400);
         fab.startAnimation(animation);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
             fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp), null, null, null);
             fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_white_24dp), null, null, null);
         } else {
@@ -559,38 +560,36 @@ public class Notes extends Fragment {
     }
 
     public void delete(int position){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setCancelable(false);
-            builder.setTitle(R.string.confirm_delete);
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (allList.get(position).is_folder == 1){
-                        if (new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position).equals(""))
-                            adapter.deleteFolder(allList.get(position).folder_name);
-                        else
-                            adapter.deleteFolder(new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position));
-                    } else {
-                        adapter.deleteNote(allList.get(position).id);
-                        App.getInstance().getDatabase().noteItemsDao().deleteByToId(allList.get(position).id);
-                    }
-                    allList.remove(position);
-
-                    Toast.makeText(getActivity(), getString(R.string.deleted), Toast.LENGTH_SHORT).show();
-
-                    recyclerView.getAdapter().notifyDataSetChanged();
+        DeleteDialog deleteDialog = new DeleteDialog();
+        deleteDialog.setCancelable(false);
+        deleteDialog.setDeleteListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (allList.get(position).is_folder == 1){
+                    if (new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position).equals(""))
+                        adapter.deleteFolder(allList.get(position).folder_name);
+                    else
+                        adapter.deleteFolder(new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position));
+                } else {
+                    adapter.deleteNote(allList.get(position).id);
+                    App.getInstance().getDatabase().noteItemsDao().deleteByToId(allList.get(position).id);
                 }
-            });
+                allList.remove(position);
+                recyclerView.getAdapter().notifyDataSetChanged();
 
-            builder.setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    recyclerView.getAdapter().notifyItemChanged(position);
-                    dialog.cancel();
-                }
-            });
+                Toast.makeText(getActivity(), getString(R.string.deleted), Toast.LENGTH_SHORT).show();
 
-        ShowAlertDialog.show(builder.create());
+                deleteDialog.dismiss();
+            }
+        });
+        deleteDialog.setCancelListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.getAdapter().notifyItemChanged(position);
+                deleteDialog.dismiss();
+            }
+        });
+        deleteDialog.show(getActivity().getSupportFragmentManager(), "");
     }
 
     @Override
@@ -600,7 +599,7 @@ public class Notes extends Fragment {
         MenuItem item = menu.findItem(R.id.settings);
             item.setVisible(false);
 
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
                 item.setIcon(R.drawable.ic_settings_white_24dp);
             }
 

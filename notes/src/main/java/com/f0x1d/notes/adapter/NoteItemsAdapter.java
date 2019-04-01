@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +29,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
+import com.f0x1d.notes.fragment.bottomSheet.DeleteDialog;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
@@ -345,25 +347,20 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void delete(int position){
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setCancelable(false);
-        builder.setTitle(R.string.confirm_delete);
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+        DeleteDialog deleteDialog = new DeleteDialog();
+        deleteDialog.setCancelable(false);
+        deleteDialog.setDeleteListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 try {
                     for (int i = position + 1; i < noteItems.size(); i++){
                         dao.updateElementPos(i - 1, noteItems.get(i).id);
-
-                        Log.e("notes_err", "updated: " + getText(noteItems.get(i).id) + " to: " + (i - 1));
                         notifyDataSetChanged();
                     }
 
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
 
-                    Log.e("notes_err", "deleted: " + dao.deleteItem(noteItems.get(position).id));
                     remove(position);
-
                     NoteEdit.last_pos = NoteEdit.last_pos - 1;
 
                     notifyDataSetChanged();
@@ -371,18 +368,18 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     Log.e("notes_err", e.getLocalizedMessage());
                     Toast.makeText(activity, "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
+
+                deleteDialog.dismiss();
             }
         });
-
-        builder.setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
+        deleteDialog.setCancelListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 notifyItemChanged(position);
-                dialog.cancel();
+                deleteDialog.dismiss();
             }
         });
-
-        ShowAlertDialog.show(builder.create());
+        deleteDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), "");
     }
 
     private void add(int pos, NoteItem item){

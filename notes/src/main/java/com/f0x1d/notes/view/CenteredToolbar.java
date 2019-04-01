@@ -141,7 +141,7 @@ public class CenteredToolbar extends Toolbar {
             try {
                 if (UselessUtils.ifCustomTheme()){
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), ThemesEngine.iconsColor));
-                } else if (UselessUtils.getBool("night", false)){
+                } else if (UselessUtils.getBool("night", true)){
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.WHITE));
                 } else {
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.BLACK));

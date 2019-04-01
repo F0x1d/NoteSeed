@@ -19,7 +19,7 @@ public class ShowAlertDialog {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", false)){
+                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", true)){
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
                 }
@@ -37,7 +37,7 @@ public class ShowAlertDialog {
 
         if (UselessUtils.ifCustomTheme())
             dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-        else if (UselessUtils.getBool("night", false))
+        else if (UselessUtils.getBool("night", true))
             dialog1337.getWindow().getDecorView().getBackground().setColorFilter(App.getContext().getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
         else
             dialog1337.getWindow().getDecorView().getBackground().setColorFilter(App.getContext().getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);

@@ -1,115 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.f0x1d.notes.view.theming.ItemCardView
-    android:layout_width="match_parent"
-    android:id="@+id/slideView"
-    android:layout_marginStart="20dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginEnd="20dp"
-    android:layout_marginBottom="20dp"
-    android:fitsSystemWindows="true"
-    app:cardCornerRadius="7dp"
-    android:layout_alignParentBottom="true"
-    app:cardElevation="5dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+<RelativeLayout
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_width="wrap_content"
+    android:id="@+id/background_bottom_sheet"
+    android:layout_marginBottom="20dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <com.f0x1d.notes.view.theming.ItemCardView
         android:layout_width="match_parent"
-        android:orientation="vertical"
+        android:id="@+id/slideView"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="7dp"
+        app:cardElevation="5dp"
         android:layout_height="wrap_content">
 
-        <com.f0x1d.notes.view.theming.MyImageButton
-            android:layout_width="50dp"
-            android:id="@+id/close_slide"
-            android:foreground="?attr/selectableItemBackground"
-            android:background="@null"
-            android:clickable="true"
-            android:layout_gravity="end|center"
-            android:foregroundGravity="center"
-            android:layout_weight="1"
-            android:src="@drawable/ic_arrow_drop_down_black_24dp"
-            android:layout_height="50dp" />
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
+            android:orientation="vertical"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:id="@+id/pic"
-                android:src="@mipmap/ic_launcher_round"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="15dp"
+            <com.f0x1d.notes.view.theming.MyImageButton
+                android:layout_width="50dp"
+                android:id="@+id/close_slide"
+                android:foreground="?attr/selectableItemBackground"
+                android:background="@null"
+                android:clickable="true"
+                android:layout_gravity="end|center"
+                android:foregroundGravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/ic_arrow_drop_down_black_24dp"
+                android:layout_height="50dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/pic"
+                    android:src="@mipmap/ic_launcher_round"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_height="wrap_content" />
+
+                <com.f0x1d.notes.view.theming.MyTextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/name"
+                    android:layout_toEndOf="@id/pic"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="15dp"
+                    android:text="@string/app_name"
+                    android:layout_height="wrap_content" />
+
+                <com.f0x1d.notes.view.theming.MyImageButton
+                    android:layout_width="50dp"
+                    android:id="@+id/settings_pic"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:foregroundGravity="center"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_settings_black_24dp"
+                    android:layout_height="50dp" />
+
+                <com.f0x1d.notes.view.theming.MyImageButton
+                    android:layout_width="50dp"
+                    android:id="@+id/search_pic"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="15dp"
+                    android:foregroundGravity="center"
+                    android:layout_toStartOf="@id/settings_pic"
+                    android:src="@drawable/ic_search_black_24dp"
+                    android:layout_height="50dp" />
+            </RelativeLayout>
+
+            <com.f0x1d.notes.view.theming.MyTextView
+                android:drawableLeft="@drawable/ic_notifications_active_black_24dp"
+                android:background="?attr/selectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_marginEnd="3dp"
+                android:drawablePadding="40dp"
+                android:gravity="start|center"
+                android:textSize="15sp"
+                android:layout_marginTop="20dp"
+                android:text="@string/new_notify"
+                android:id="@+id/new_notify"
                 android:layout_marginStart="40dp"
-                android:layout_marginEnd="15dp"
                 android:layout_height="wrap_content" />
 
             <com.f0x1d.notes.view.theming.MyTextView
-                android:layout_width="wrap_content"
-                android:id="@+id/name"
-                android:layout_toEndOf="@id/pic"
-                android:layout_centerVertical="true"
-                android:layout_margin="15dp"
-                android:text="@string/app_name"
+                android:layout_width="match_parent"
+                android:id="@+id/new_folder"
+                android:text="@string/new_folder"
+                android:drawableLeft="@drawable/ic_folder_black_24dp"
+                android:gravity="start|center"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="40dp"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
+                android:drawablePadding="40dp"
                 android:layout_height="wrap_content" />
 
-            <com.f0x1d.notes.view.theming.MyImageButton
-                android:layout_width="50dp"
-                android:id="@+id/settings_pic"
-                android:foreground="?attr/selectableItemBackground"
-                android:background="@null"
-                android:clickable="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
-                android:foregroundGravity="center"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_settings_black_24dp"
-                android:layout_height="50dp" />
+        </LinearLayout>
 
-            <com.f0x1d.notes.view.theming.MyImageButton
-                android:layout_width="50dp"
-                android:id="@+id/search_pic"
-                android:foreground="?attr/selectableItemBackground"
-                android:background="@null"
-                android:clickable="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
-                android:foregroundGravity="center"
-                android:layout_toStartOf="@id/settings_pic"
-                android:src="@drawable/ic_search_black_24dp"
-                android:layout_height="50dp" />
-        </RelativeLayout>
-
-        <com.f0x1d.notes.view.theming.MyTextView
-            android:drawableLeft="@drawable/ic_notifications_active_black_24dp"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="match_parent"
-            android:layout_marginEnd="3dp"
-            android:drawablePadding="40dp"
-            android:gravity="start|center"
-            android:textSize="15sp"
-            android:layout_marginTop="20dp"
-            android:text="@string/new_notify"
-            android:id="@+id/new_notify"
-            android:layout_marginStart="40dp"
-            android:layout_height="wrap_content" />
-
-        <com.f0x1d.notes.view.theming.MyTextView
-            android:layout_width="match_parent"
-            android:id="@+id/new_folder"
-            android:text="@string/new_folder"
-            android:drawableLeft="@drawable/ic_folder_black_24dp"
-            android:gravity="start|center"
-            android:textSize="15sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="40dp"
-            android:background="?attr/selectableItemBackground"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
-            android:drawablePadding="40dp"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-</com.f0x1d.notes.view.theming.ItemCardView>
+    </com.f0x1d.notes.view.theming.ItemCardView>
+</RelativeLayout>

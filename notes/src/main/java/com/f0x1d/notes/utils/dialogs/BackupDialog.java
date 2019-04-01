@@ -34,7 +34,7 @@ public class BackupDialog {
 
             if (UselessUtils.ifCustomTheme())
                 dialog.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-            else if (UselessUtils.getBool("night", false))
+            else if (UselessUtils.getBool("night", true))
                 dialog.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
             else
                 dialog.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
@@ -87,7 +87,7 @@ public class BackupDialog {
 
                                 if (UselessUtils.ifCustomTheme())
                                     dialog1.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-                                else if (UselessUtils.getBool("night", false))
+                                else if (UselessUtils.getBool("night", true))
                                     dialog1.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
                                 else
                                     dialog1.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);

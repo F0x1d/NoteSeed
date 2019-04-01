@@ -108,7 +108,7 @@ public class NoteEdit extends Fragment {
 
         if (UselessUtils.ifCustomTheme()){
             toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
-        } else if (UselessUtils.getBool("night", false)){
+        } else if (UselessUtils.getBool("night", true)){
             toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_white_24dp));
         } else {
             toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
@@ -127,7 +127,7 @@ public class NoteEdit extends Fragment {
 
         if (UselessUtils.ifCustomTheme()){
             pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_add_black_24dp), ThemesEngine.iconsColor));
-        } else if (UselessUtils.getBool("night", false)){
+        } else if (UselessUtils.getBool("night", true)){
             pic.setIcon(R.drawable.ic_add_white_24dp);
         } else {
             pic.setIcon(R.drawable.ic_add_black_24dp);
@@ -543,7 +543,7 @@ public class NoteEdit extends Fragment {
 
         if (UselessUtils.ifCustomTheme()){
             pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_add_black_24dp), ThemesEngine.iconsColor));
-        } else if (UselessUtils.getBool("night", false)){
+        } else if (UselessUtils.getBool("night", true)){
             pic.setIcon(R.drawable.ic_add_white_24dp);
         } else {
             pic.setIcon(R.drawable.ic_add_black_24dp);

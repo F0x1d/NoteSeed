@@ -38,6 +38,7 @@ import com.f0x1d.notes.adapter.NoteItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.fragment.bottomSheet.DeleteDialog;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.MainSettings;
@@ -95,7 +96,7 @@ public class NotesInFolder extends Fragment {
         toolbar.inflateMenu(R.menu.in_folder_menu);
         toolbar.getMenu().findItem(R.id.root).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        if (UselessUtils.getBool("night", false)){
+        if (UselessUtils.getBool("night", true)){
             if (UselessUtils.ifCustomTheme()){
                 toolbar.getMenu().findItem(R.id.root).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_arrow_upward_white_24dp), ThemesEngine.iconsColor));
             } else {
@@ -137,7 +138,7 @@ public class NotesInFolder extends Fragment {
         MyImageButton settings = slideView.findViewById(R.id.settings_pic);
         MyImageButton search = slideView.findViewById(R.id.search_pic);
 
-        if (UselessUtils.getBool("night", false)){
+        if (UselessUtils.getBool("night", true)){
             settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
             search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
             closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
@@ -165,7 +166,7 @@ public class NotesInFolder extends Fragment {
 
         recyclerView = view.findViewById(R.id.notes_view);
 
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(slideView);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.background_bottom_sheet));
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setPeekHeight(100, true);
         bottomSheetBehavior.setHideable(false);
@@ -174,19 +175,19 @@ public class NotesInFolder extends Fragment {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (BottomSheetBehavior.STATE_DRAGGING == newState) {
-                    if (UselessUtils.getBool("night", false)){
+                    if (UselessUtils.getBool("night", true)){
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
                     }
                 } else if (BottomSheetBehavior.STATE_EXPANDED == newState){
-                    if (UselessUtils.getBool("night", false)){
+                    if (UselessUtils.getBool("night", true)){
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
                     }
                 } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
-                    if (UselessUtils.getBool("night", false)){
+                    if (UselessUtils.getBool("night", true)){
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
@@ -295,7 +296,7 @@ public class NotesInFolder extends Fragment {
         animation.setDuration(400);
         fab.startAnimation(animation);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
             fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp), null, null, null);
             fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_white_24dp), null, null, null);
         } else {
@@ -520,12 +521,11 @@ public class NotesInFolder extends Fragment {
     }
 
     public void delete(int position){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setCancelable(false);
-        builder.setTitle(R.string.confirm_delete);
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+        DeleteDialog deleteDialog = new DeleteDialog();
+        deleteDialog.setCancelable(false);
+        deleteDialog.setDeleteListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 if (allList.get(position).is_folder == 1){
                     if (new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position).equals(""))
                         adapter.deleteFolder(allList.get(position).folder_name);
@@ -537,23 +537,21 @@ public class NotesInFolder extends Fragment {
                 }
 
                 allList.remove(position);
+                recyclerView.getAdapter().notifyDataSetChanged();
 
                 Toast.makeText(getActivity(), getString(R.string.deleted), Toast.LENGTH_SHORT).show();
 
-                recyclerView.getAdapter().notifyDataSetChanged();
+                deleteDialog.dismiss();
             }
         });
-
-        builder.setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
+        deleteDialog.setCancelListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
                 recyclerView.getAdapter().notifyItemChanged(position);
-
-                dialog.cancel();
+                deleteDialog.dismiss();
             }
         });
-
-        ShowAlertDialog.show(builder.create());
+        deleteDialog.show(getActivity().getSupportFragmentManager(), "");
     }
 
     @Override
@@ -563,7 +561,7 @@ public class NotesInFolder extends Fragment {
             MenuItem item = menu.findItem(R.id.root);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)){
+            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
                 item.setIcon(R.drawable.ic_arrow_upward_white_24dp);
             }
         } catch (Exception e){

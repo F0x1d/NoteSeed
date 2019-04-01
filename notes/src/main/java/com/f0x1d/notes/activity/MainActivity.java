@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 recreate();
             }
         } else {
-            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", false)){
+            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", true)){
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
                     setTheme(R.style.NightTheme_md2);
                 } else {

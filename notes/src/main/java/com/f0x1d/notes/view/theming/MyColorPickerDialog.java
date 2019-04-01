@@ -54,14 +54,14 @@ public class MyColorPickerDialog extends ColorPickerDialog {
 
             neutral.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
             neutral.setTextColor(ThemesEngine.textColor);
-        } else if (UselessUtils.getBool("night", false)) {
+        } else if (UselessUtils.getBool("night", true)) {
              positive.setTextColor(Color.BLACK);
              neutral.setTextColor(Color.BLACK);
         }
 
         if (UselessUtils.ifCustomTheme())
             getDialog().getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-        else if (UselessUtils.getBool("night", false))
+        else if (UselessUtils.getBool("night", true))
             getDialog().getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
         else
             getDialog().getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
