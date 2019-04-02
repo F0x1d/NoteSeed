@@ -101,19 +101,19 @@ public class CenteredToolbar extends Toolbar {
         tvTitle.setEllipsize(TextUtils.TruncateAt.END);
         tvTitle.setTextAppearance(getContext(), R.style.TextAppearance_AppCompat_Widget_ActionBar_Title);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             tvTitle.setTextColor(ThemesEngine.toolbarTextColor);
 
             setBackgroundColor(ThemesEngine.toolbarColor);
         }
 
-        if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+        if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
             tvTitle.setText("Перехочешь");
         }
-        if (InvocationHandler.class.isAssignableFrom(App.class)){
+        if (InvocationHandler.class.isAssignableFrom(App.class)) {
             tvTitle.setText("Перехочешь");
         }
-        if (UselessUtils.ifPMSHook()){
+        if (UselessUtils.ifPMSHook()) {
             tvTitle.setText("Перехочешь");
         }
 
@@ -137,22 +137,22 @@ public class CenteredToolbar extends Toolbar {
 
         addView(linear);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                if (UselessUtils.ifCustomTheme()){
+                if (UselessUtils.ifCustomTheme()) {
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), ThemesEngine.iconsColor));
-                } else if (UselessUtils.getBool("night", true)){
+                } else if (UselessUtils.getBool("night", true)) {
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.WHITE));
                 } else {
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.BLACK));
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.e("notes_err", e.getLocalizedMessage());
             }
         }
     }
 
-    public void goAnim(String inFolderId){
+    public void goAnim(String inFolderId) {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,7 +200,8 @@ public class CenteredToolbar extends Toolbar {
                                     });
                         }
                     }, 500);
-                } catch (Exception e){}
+                } catch (Exception e) {
+                }
 
             }
         }, 1500);

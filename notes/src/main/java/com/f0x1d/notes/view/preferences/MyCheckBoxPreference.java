@@ -39,7 +39,7 @@ public class MyCheckBoxPreference extends CheckBoxPreference {
         CheckBox checkBox = holder.itemView.findViewById(android.R.id.checkbox);
         TextView title = holder.itemView.findViewById(android.R.id.title);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             checkBox.setButtonTintList(ColorStateList.valueOf(ThemesEngine.accentColor));
             title.setTextColor(ThemesEngine.textColor);
         }

@@ -37,13 +37,14 @@ public class MyPreference extends Preference {
         try {
             TextView text = holder.itemView.findViewById(android.R.id.title);
             TextView text2 = holder.itemView.findViewById(android.R.id.summary);
-            if (UselessUtils.ifCustomTheme()){
+            if (UselessUtils.ifCustomTheme()) {
                 text.setTextColor(ThemesEngine.textColor);
                 text2.setTextColor(ThemesEngine.textColor);
             }
 
             text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
             text2.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
 }

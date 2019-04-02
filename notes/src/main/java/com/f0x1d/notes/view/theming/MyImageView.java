@@ -32,7 +32,7 @@ public class MyImageView extends ImageView {
 
     @Override
     public void setImageDrawable(@Nullable Drawable drawable) {
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             super.setImageDrawable(UselessUtils.setTint(drawable, ThemesEngine.iconsColor));
         } else {
             super.setImageDrawable(drawable);

@@ -42,14 +42,13 @@ public class MyCheckBox extends CheckBox {
     }
 
 
-
     public static void setCheckBoxColor(CheckBox checkBox, int uncheckedColor, int checkedColor) {
         ColorStateList colorStateList = new ColorStateList(
-                new int[][] {
-                        new int[] { -android.R.attr.state_checked }, // unchecked
-                        new int[] {  android.R.attr.state_checked }  // checked
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, // unchecked
+                        new int[]{android.R.attr.state_checked}  // checked
                 },
-                new int[] {
+                new int[]{
                         uncheckedColor,
                         checkedColor
                 }

@@ -41,7 +41,7 @@ public class SyncUtils {
             GoogleAccountCredential credential =
                     GoogleAccountCredential.usingOAuth2(
                             App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
-                credential.setSelectedAccount(account);
+            credential.setSelectedAccount(account);
 
             Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
 
@@ -55,7 +55,7 @@ public class SyncUtils {
                 for (com.google.api.services.drive.model.File file : files.getFiles()) {
                     Log.e("notes_err", "file found: " + file.getName());
 
-                    if (file.getName().equals("database.json")){
+                    if (file.getName().equals("database.json")) {
                         return file.getId();
                     }
                 }
@@ -73,7 +73,7 @@ public class SyncUtils {
                     GoogleAccountCredential.usingOAuth2(
                             App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
 
-                credential.setSelectedAccount(account);
+            credential.setSelectedAccount(account);
 
             Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
 
@@ -107,7 +107,7 @@ public class SyncUtils {
             GoogleAccountCredential credential =
                     GoogleAccountCredential.usingOAuth2(
                             App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
-            if (GoogleSignIn.getLastSignedInAccount(App.getContext()) != null){
+            if (GoogleSignIn.getLastSignedInAccount(App.getContext()) != null) {
                 credential.setSelectedAccount(GoogleSignIn.getLastSignedInAccount(App.getContext()).getAccount());
             }
 
@@ -126,10 +126,10 @@ public class SyncUtils {
         });
     }
 
-    public static Task<Void> export(){
+    public static Task<Void> export() {
         return Tasks.call(mExecutor, () -> {
             File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
-            if (!db.exists()){
+            if (!db.exists()) {
                 db.mkdirs();
             }
 
@@ -139,7 +139,7 @@ public class SyncUtils {
                 JSONArray elements = new JSONArray();
 
                 for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
-                    if (noteItem.to_id == noteOrFolder.id){
+                    if (noteItem.to_id == noteOrFolder.id) {
 
                         JSONObject element = new JSONObject();
                         try {
@@ -148,13 +148,13 @@ public class SyncUtils {
                             element.put("type", noteItem.type);
                             element.put("checked", noteItem.checked);
 
-                            if (noteItem.pic_res == null){
+                            if (noteItem.pic_res == null) {
                                 element.put("pic_res", "null");
                             } else {
                                 element.put("pic_res", noteItem.pic_res);
                             }
 
-                            if (noteItem.text == null){
+                            if (noteItem.text == null) {
                                 element.put("text", "null");
                             } else {
                                 element.put("text", noteItem.text);
@@ -170,7 +170,7 @@ public class SyncUtils {
                 }
 
                 try {
-                    if (noteOrFolder.title == null){
+                    if (noteOrFolder.title == null) {
                         note.put("title", "null");
                     } else {
                         note.put("title", noteOrFolder.title);
@@ -183,14 +183,14 @@ public class SyncUtils {
                     note.put("edit_time", noteOrFolder.edit_time);
                     note.put("in_folder_id", noteOrFolder.in_folder_id);
 
-                    if (noteOrFolder.text == null){
+                    if (noteOrFolder.text == null) {
                         note.put("text", "null");
                     } else {
                         note.put("text", noteOrFolder.text);
                     }
 
                     note.put("color", noteOrFolder.color);
-                    if (noteOrFolder.folder_name == null){
+                    if (noteOrFolder.folder_name == null) {
                         note.put("folder_name", "null");
                     } else {
                         note.put("folder_name", noteOrFolder.folder_name);
@@ -219,7 +219,7 @@ public class SyncUtils {
         });
     }
 
-    public static void importFile(){
+    public static void importFile() {
         File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
         File database = new File(db, "database.noteseed");
 
@@ -227,7 +227,7 @@ public class SyncUtils {
         try {
             BufferedReader br = new BufferedReader(new FileReader(database));
             String strLine;
-            while ((strLine = br.readLine()) != null){
+            while ((strLine = br.readLine()) != null) {
                 all = all + strLine;
             }
         } catch (IOException e) {
@@ -241,7 +241,7 @@ public class SyncUtils {
         try {
             JSONArray main = new JSONArray(all);
 
-            for (int i = 0; i < main.length(); i++){
+            for (int i = 0; i < main.length(); i++) {
                 JSONObject note = main.getJSONObject(i);
                 Log.e("notes_err", note.toString());
 
@@ -251,14 +251,14 @@ public class SyncUtils {
 
                 JSONArray elements = note.getJSONArray("elems");
 
-                for (int j = 0; j < elements.length(); j++){
+                for (int j = 0; j < elements.length(); j++) {
                     JSONObject element = elements.getJSONObject(j);
 
-                    if (element.getString("pic_res").equals("null")){
+                    if (element.getString("pic_res").equals("null")) {
                         App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
                                 element.getLong("to_id"), element.getString("text"), null, element.getInt("position"),
                                 element.getInt("checked"), element.getInt("type")));
-                    } else if (element.getString("text").equals("null")){
+                    } else if (element.getString("text").equals("null")) {
                         App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(element.getLong("id"),
                                 element.getLong("to_id"), null, element.getString("pic_res"), element.getInt("position"),
                                 element.getInt("checked"), element.getInt("type")));

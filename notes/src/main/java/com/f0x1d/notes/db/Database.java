@@ -23,6 +23,8 @@ public abstract class Database extends RoomDatabase {
     };
 
     public abstract NoteOrFolderDao noteOrFolderDao();
+
     public abstract NotifyDao notifyDao();
+
     public abstract NoteItemsDao noteItemsDao();
 }

@@ -16,7 +16,7 @@ public class Notify {
 
     public long to_id;
 
-    public Notify(String title, String text, long time, long to_id){
+    public Notify(String title, String text, long time, long to_id) {
         this.to_id = to_id;
         this.time = time;
         this.text = text;

@@ -1,7 +1,6 @@
 package com.f0x1d.notes.adapter;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -18,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,7 +31,6 @@ import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
-import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.theming.MyEditText;
 
 import java.lang.reflect.InvocationHandler;
@@ -53,7 +49,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     TextWatcher textWatcher = null;
 
-    public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity){
+    public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity) {
         this.noteItems = noteItems;
         this.activity = activity;
 
@@ -67,12 +63,12 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TEXT){
+        if (viewType == TEXT) {
             return new textViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text, parent, false));
-        } else if (viewType == IMAGE){
+        } else if (viewType == IMAGE) {
             return new imageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false));
-        } else if (viewType == CHECKBOX){
-          return new checkBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_checkbox, parent, false));
+        } else if (viewType == CHECKBOX) {
+            return new checkBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_checkbox, parent, false));
         } else {
             return null;
         }
@@ -82,7 +78,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         dao = App.getInstance().getDatabase().noteItemsDao();
 
-        switch (holder.getItemViewType()){
+        switch (holder.getItemViewType()) {
             case TEXT:
                 setupText((textViewHolder) holder, position);
                 break;
@@ -95,7 +91,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    private void setCheckbox(checkBoxViewHolder holder, int position){
+    private void setCheckbox(checkBoxViewHolder holder, int position) {
         textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,19 +106,20 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
                         return;
                     }
-                    if (InvocationHandler.class.isAssignableFrom(App.class)){
+                    if (InvocationHandler.class.isAssignableFrom(App.class)) {
                         return;
                     }
-                    if (UselessUtils.ifPMSHook()){
+                    if (UselessUtils.ifPMSHook()) {
                         return;
                     }
 
                     dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
-                } catch (Exception e){}
+                } catch (Exception e) {
+                }
             }
         };
 
@@ -133,14 +130,14 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
 
         Typeface face;
-        if (UselessUtils.getBool("mono", false)){
+        if (UselessUtils.getBool("mono", false)) {
             face = Typeface.MONOSPACE;
 
             holder.editText.setTypeface(face);
         }
 
         for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == noteItems.get(position).id){
+            if (noteItem.id == noteItems.get(position).id) {
                 holder.editText.setText(getText(noteItems.get(position).id));
 
                 if (getChecked(noteItems.get(position).id) == 0)
@@ -172,7 +169,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.editText.addTextChangedListener(textWatcher);
     }
 
-    private void setupImage(imageViewHolder holder, int position){
+    private void setupImage(imageViewHolder holder, int position) {
         Log.e("notes_err", "image setup: " + position);
 
         RequestOptions options = new RequestOptions()
@@ -183,7 +180,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Glide.with(App.getContext()).load(noteItems.get(position).pic_res).apply(options).into(holder.image);
     }
 
-    private void setupText(textViewHolder holder, int position){
+    private void setupText(textViewHolder holder, int position) {
         textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -198,19 +195,20 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
+                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
                         return;
                     }
-                    if (InvocationHandler.class.isAssignableFrom(App.class)){
+                    if (InvocationHandler.class.isAssignableFrom(App.class)) {
                         return;
                     }
-                    if (UselessUtils.ifPMSHook()){
+                    if (UselessUtils.ifPMSHook()) {
                         return;
                     }
 
                     dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
-                } catch (Exception e){}
+                } catch (Exception e) {
+                }
             }
         };
 
@@ -221,14 +219,14 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
 
         Typeface face;
-        if (UselessUtils.getBool("mono", false)){
+        if (UselessUtils.getBool("mono", false)) {
             face = Typeface.MONOSPACE;
 
             holder.editText.setTypeface(face);
         }
 
         for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == noteItems.get(position).id){
+            if (noteItem.id == noteItems.get(position).id) {
                 holder.editText.setText(getText(noteItems.get(position).id));
                 break;
             }
@@ -237,11 +235,11 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.editText.addTextChangedListener(textWatcher);
     }
 
-    private String getText(long id){
+    private String getText(long id) {
         String text = "";
 
         for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == id){
+            if (noteItem.id == id) {
                 text = noteItem.text;
                 break;
             }
@@ -250,11 +248,11 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return text;
     }
 
-    private int getChecked(long id){
+    private int getChecked(long id) {
         int checked = -1;
 
         for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == id){
+            if (noteItem.id == id) {
                 checked = noteItem.checked;
                 break;
             }
@@ -263,11 +261,11 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return checked;
     }
 
-    private int getPosition(long id){
+    private int getPosition(long id) {
         int pos = 0;
 
         for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == id){
+            if (noteItem.id == id) {
                 pos = noteItem.position;
                 break;
             }
@@ -276,7 +274,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return pos;
     }
 
-    public void onItemMoved(int fromPosition, int toPosition){
+    public void onItemMoved(int fromPosition, int toPosition) {
         dao.updateElementPos(toPosition, noteItems.get(fromPosition).id);
         Log.e("notes_err", "updated: " + getText(noteItems.get(fromPosition).id) + " from: " + fromPosition + " to: " + toPosition);
 
@@ -284,14 +282,14 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         noteItems.remove(fromPosition);
         noteItems.add(toPosition, targetUser);
 
-        if (fromPosition < toPosition){
+        if (fromPosition < toPosition) {
             for (int i = 0; i < noteItems.size(); i++) {
                 if (getPosition(noteItems.get(i).id) != i) {
                     dao.updateElementPos(i, noteItems.get(i).id);
                 }
             }
         } else {
-            for (int i = noteItems.size() - 1; i > 0; i--){
+            for (int i = noteItems.size() - 1; i > 0; i--) {
                 if (getPosition(noteItems.get(i).id) != i) {
                     dao.updateElementPos(i, noteItems.get(i).id);
                 }
@@ -305,12 +303,15 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewRecycled(holder);
 
-        if (holder.getItemViewType() == TEXT){
+        if (holder.getItemViewType() == TEXT) {
             textViewHolder textViewHolder = (NoteItemsAdapter.textViewHolder) holder;
             textViewHolder.editText.clearTextChangedListeners();
-        } else if (holder.getItemViewType() == CHECKBOX){
+        } else if (holder.getItemViewType() == CHECKBOX) {
             checkBoxViewHolder checkBoxViewHolder = (NoteItemsAdapter.checkBoxViewHolder) holder;
             checkBoxViewHolder.editText.clearTextChangedListeners();
+        } else if (holder.getItemViewType() == IMAGE) {
+            imageViewHolder imageViewHolder = (NoteItemsAdapter.imageViewHolder) holder;
+            Glide.with(activity).clear(imageViewHolder.image);
         }
     }
 
@@ -323,24 +324,24 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public int getItemViewType(int position) {
         NoteItem item = noteItems.get(position);
 
-        if (item.type == 0){
-            if (item.pic_res == null){
+        if (item.type == 0) {
+            if (item.pic_res == null) {
                 return TEXT;
             } else {
                 return IMAGE;
             }
-        } else if (item.type == 1){
+        } else if (item.type == 1) {
             return CHECKBOX;
         } else {
             throw new RuntimeException();
         }
     }
 
-    public static long getId(){
+    public static long getId() {
         long max_id = 0;
 
         for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
-            if (noteItem.id > max_id){
+            if (noteItem.id > max_id) {
                 max_id = noteItem.id;
             }
         }
@@ -348,13 +349,13 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return max_id + 1;
     }
 
-    public void delete(int position){
+    public void delete(int position) {
         BottomSheetCreator creator = new BottomSheetCreator((FragmentActivity) activity);
         creator.addElement(new Element(activity.getString(R.string.delete), activity.getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    for (int i = position + 1; i < noteItems.size(); i++){
+                    for (int i = position + 1; i < noteItems.size(); i++) {
                         dao.updateElementPos(i - 1, noteItems.get(i).id);
                         notifyDataSetChanged();
                     }
@@ -366,14 +367,15 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     NoteEdit.last_pos = NoteEdit.last_pos - 1;
 
                     notifyDataSetChanged();
-                } catch (Exception e){
+                } catch (Exception e) {
                     Log.e("notes_err", e.getLocalizedMessage());
                     Toast.makeText(activity, "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e){}
+                } catch (Exception e) {
+                }
             }
         }));
         creator.addElement(new Element(activity.getString(R.string.cancel), activity.getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
@@ -383,24 +385,25 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e){}
+                } catch (Exception e) {
+                }
             }
         }));
         creator.show("", false);
     }
 
-    private void add(int pos, NoteItem item){
+    private void add(int pos, NoteItem item) {
         try {
             noteItems.add(pos, item);
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             add(pos - 1, item);
         }
     }
 
-    private void remove(int pos){
+    private void remove(int pos) {
         try {
             noteItems.remove(pos);
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             remove(pos - 1);
         }
     }

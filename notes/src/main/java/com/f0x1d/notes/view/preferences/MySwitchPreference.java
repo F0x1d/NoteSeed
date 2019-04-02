@@ -47,13 +47,13 @@ public class MySwitchPreference extends SwitchPreference {
 
         aSwitch = holder.itemView.findViewById(android.R.id.switch_widget);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             colorSwitch(aSwitch, ThemesEngine.accentColor);
         }
 
         TextView text = holder.itemView.findViewById(android.R.id.title);
         TextView text2 = holder.itemView.findViewById(android.R.id.summary);
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             text.setTextColor(ThemesEngine.textColor);
             text2.setTextColor(ThemesEngine.textColor);
         }
@@ -74,15 +74,15 @@ public class MySwitchPreference extends SwitchPreference {
         DrawableCompat.setTintList(DrawableCompat.wrap(s.getThumbDrawable()), new ColorStateList(states, thumbColors));
     }
 
-    private void changeColor(boolean checked){
+    private void changeColor(boolean checked) {
         try {
-            sharedPreferences = getContext().getSharedPreferences("settings_data",MODE_PRIVATE);
+            sharedPreferences = getContext().getSharedPreferences("settings_data", MODE_PRIVATE);
             //apply the colors here
             int thumbCheckedColor = sharedPreferences.getInt("theme_color_key", ThemesEngine.accentColor);
             int thumbUncheckedColor = Color.GRAY;
 
             aSwitch.getThumbDrawable().setColorFilter(checked ? thumbCheckedColor : thumbUncheckedColor, PorterDuff.Mode.MULTIPLY);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }

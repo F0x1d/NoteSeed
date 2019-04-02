@@ -16,28 +16,28 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 public class SignInDialog {
 
-    public void show(Activity activity, GoogleSignInClient client){
+    public void show(Activity activity, GoogleSignInClient client) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle(R.string.do_u_want_signin);
-            builder.setMessage(R.string.wihout_sign_in);
-            builder.setCancelable(false);
+        builder.setTitle(R.string.do_u_want_signin);
+        builder.setMessage(R.string.wihout_sign_in);
+        builder.setCancelable(false);
 
-            builder.setPositiveButton("OK", (dialog, which) -> {
-                if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(App.getContext()) == ConnectionResult.SUCCESS){
-                    try {
-                        Intent signInIntent = client.getSignInIntent();
-                        if (!BuildConfig.DEBUG){
-                            activity.startActivityForResult(signInIntent, 1);
-                        }
-                    } catch (Exception e){
-                        Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(App.getContext()) == ConnectionResult.SUCCESS) {
+                try {
+                    Intent signInIntent = client.getSignInIntent();
+                    if (!BuildConfig.DEBUG) {
+                        activity.startActivityForResult(signInIntent, 1);
                     }
+                } catch (Exception e) {
+                    Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });
-            builder.setNeutralButton(R.string.no, (dialog, which) -> {
-                dialog.cancel();
-                PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
-            });
+            }
+        });
+        builder.setNeutralButton(R.string.no, (dialog, which) -> {
+            dialog.cancel();
+            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
+        });
         ShowAlertDialog.show(builder.create());
     }
 }

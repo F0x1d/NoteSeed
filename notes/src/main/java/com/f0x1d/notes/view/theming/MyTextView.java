@@ -34,13 +34,14 @@ public class MyTextView extends TextView {
         setColor();
     }
 
-    private void setColor(){
-        if (UselessUtils.ifCustomTheme()){
+    private void setColor() {
+        if (UselessUtils.ifCustomTheme()) {
             this.setTextColor(ThemesEngine.textColor);
 
             try {
                 setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
-            } catch (Exception e){}
+            } catch (Exception e) {
+            }
 
         }
 
@@ -49,7 +50,7 @@ public class MyTextView extends TextView {
 
     @Override
     public void setTextColor(int color) {
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             color = ThemesEngine.textColor;
             super.setTextColor(color);
         } else {
@@ -59,10 +60,11 @@ public class MyTextView extends TextView {
 
     @Override
     public void setCompoundDrawables(@Nullable Drawable left, @Nullable Drawable top, @Nullable Drawable right, @Nullable Drawable bottom) {
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             try {
                 super.setCompoundDrawables(UselessUtils.setTint(left, ThemesEngine.iconsColor), top, right, bottom);
-            } catch (Exception e){}
+            } catch (Exception e) {
+            }
 
         } else
             super.setCompoundDrawables(left, top, right, bottom);

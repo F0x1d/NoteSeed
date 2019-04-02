@@ -69,7 +69,7 @@ public class ChooseFolder extends Fragment {
         List<NoteOrFolder> allList = new ArrayList<>();
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.is_folder == 1 && noteOrFolder.in_folder_id.equals(in_id)){
+            if (noteOrFolder.is_folder == 1 && noteOrFolder.in_folder_id.equals(in_id)) {
                 allList.add(noteOrFolder);
             }
         }
@@ -82,7 +82,7 @@ public class ChooseFolder extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-        if (UselessUtils.getBool("two_rows", false)){
+        if (UselessUtils.getBool("two_rows", false)) {
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         } else {
             recyclerView.setLayoutManager(llm);

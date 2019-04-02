@@ -23,7 +23,7 @@ public class NoteOrFolder {
 
     public long edit_time;
 
-    public NoteOrFolder(String title, String text, long id, int locked, String in_folder_id, int is_folder, String folder_name, int pinned, String color, long edit_time){
+    public NoteOrFolder(String title, String text, long id, int locked, String in_folder_id, int is_folder, String folder_name, int pinned, String color, long edit_time) {
         this.title = title;
         this.id = id;
         this.locked = locked;

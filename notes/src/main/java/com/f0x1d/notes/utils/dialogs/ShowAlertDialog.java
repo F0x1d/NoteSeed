@@ -15,15 +15,15 @@ import com.f0x1d.notes.utils.UselessUtils;
 
 public class ShowAlertDialog {
 
-    public static void show(AlertDialog dialog1337){
+    public static void show(AlertDialog dialog1337) {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", true)){
+                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", true)) {
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
                 }
-                if (UselessUtils.ifCustomTheme()){
+                if (UselessUtils.ifCustomTheme()) {
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
 

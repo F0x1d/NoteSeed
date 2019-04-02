@@ -30,7 +30,7 @@ public class СhoosePin extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
@@ -57,8 +57,8 @@ public class СhoosePin extends Fragment {
 
         MyButton nol = view.findViewById(R.id.nol);
         ImageButton done = view.findViewById(R.id.done);
-            done.setBackground(null);
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+        done.setBackground(null);
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
             done.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_white_24dp));
         } else {
             done.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_black_24dp));
@@ -71,7 +71,6 @@ public class СhoosePin extends Fragment {
 
         View.OnClickListener oclBtn = new View.OnClickListener() {
             public void onClick(View v) {
-                // по id определеяем кнопку, вызвавшую этот обработчик
                 switch (v.getId()) {
                     case R.id.odin:
                         pass.setText(pass.getText().toString() + "1");
@@ -104,12 +103,12 @@ public class СhoosePin extends Fragment {
                         pass.setText(pass.getText().toString() + "0");
                         break;
                     case R.id.back:
-                        if (!pass.getText().toString().isEmpty()){
+                        if (!pass.getText().toString().isEmpty()) {
                             pass.setText("");
                         }
                         break;
                     case R.id.done:
-                        if (pass.getText().toString().isEmpty()){
+                        if (pass.getText().toString().isEmpty()) {
                             Toast.makeText(getActivity(), R.string.empty_pass, Toast.LENGTH_SHORT).show();
                         } else {
                             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("pass", pass.getText().toString()).apply();
@@ -152,8 +151,7 @@ public class СhoosePin extends Fragment {
         ImageView icon = view.findViewById(R.id.icon);
         icon.startAnimation(animation2);
 
-
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
             odin.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             dva.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             tri.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
@@ -172,7 +170,7 @@ public class СhoosePin extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (pass.getText().toString().isEmpty()){
+        if (pass.getText().toString().isEmpty()) {
             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("lock", false).apply();
         }
     }

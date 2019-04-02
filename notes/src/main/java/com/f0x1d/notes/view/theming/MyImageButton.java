@@ -38,15 +38,15 @@ public class MyImageButton extends ImageButton {
         setup();
     }
 
-    private void setup(){
-        if (UselessUtils.ifCustomTheme()){
+    private void setup() {
+        if (UselessUtils.ifCustomTheme()) {
             setImageDrawable(this.getDrawable());
         }
     }
 
     @Override
     public void setImageDrawable(@Nullable Drawable drawable) {
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             super.setImageDrawable(UselessUtils.setTint(drawable, ThemesEngine.iconsColor));
         } else {
             super.setImageDrawable(drawable);

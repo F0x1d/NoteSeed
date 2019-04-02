@@ -22,7 +22,7 @@ public class App extends Application {
         return instance;
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return instance.getApplicationContext();
     }
 

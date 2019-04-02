@@ -26,9 +26,9 @@ public class TextSizeDialog extends BottomSheetDialogFragment {
 
         LinearLayout layout = view.findViewById(R.id.background);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             layout.setBackgroundColor(ThemesEngine.background);
-        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
             layout.setBackgroundColor(getActivity().getResources().getColor(R.color.statusbar));
         } else {
             layout.setBackgroundColor(Color.WHITE);

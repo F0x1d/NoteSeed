@@ -9,7 +9,7 @@ public class Element {
     public Drawable pic;
     public View.OnClickListener listener;
 
-    public Element(String name, Drawable pic, View.OnClickListener listener){
+    public Element(String name, Drawable pic, View.OnClickListener listener) {
         this.listener = listener;
         this.name = name;
         this.pic = pic;

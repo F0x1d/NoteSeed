@@ -16,8 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceScreen;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.SyncUtils;
@@ -40,7 +38,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
@@ -82,7 +80,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
         import_gdrive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null){
+                if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null) {
                     importFromGDrive();
                 } else {
                     Toast.makeText(getActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
@@ -95,7 +93,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
         export_gdrive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null){
+                if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null) {
                     ProgressDialog dialog = new ProgressDialog(getActivity());
                     dialog.setMessage("Loading...");
                     dialog.setCancelable(false);
@@ -142,7 +140,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
         });
     }
 
-    public void importFromGDrive(){
+    public void importFromGDrive() {
         ProgressDialog dialog1 = new ProgressDialog(getActivity());
         dialog1.setCancelable(false);
         dialog1.setMessage("Loading...");
@@ -174,7 +172,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
                         }
                     });
 
-                } catch (Exception e){
+                } catch (Exception e) {
                     Log.e("notes_err", e.getLocalizedMessage());
                     Toast.makeText(getActivity(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     dialog1.cancel();

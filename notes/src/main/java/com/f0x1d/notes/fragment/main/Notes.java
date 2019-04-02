@@ -89,7 +89,7 @@ public class Notes extends Fragment {
         toolbar.setTitle(getString(R.string.notes));
         toolbar.goAnim("def");
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
@@ -127,7 +127,7 @@ public class Notes extends Fragment {
         MyImageButton settings = slideView.findViewById(R.id.settings_pic);
         MyImageButton search = slideView.findViewById(R.id.search_pic);
 
-        if (UselessUtils.getBool("night", true)){
+        if (UselessUtils.getBool("night", true)) {
             settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
             search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
             closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
@@ -164,25 +164,26 @@ public class Notes extends Fragment {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (BottomSheetBehavior.STATE_DRAGGING == newState) {
-                    if (UselessUtils.getBool("night", true)){
+                    if (UselessUtils.getBool("night", true)) {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
                     }
-                } else if (BottomSheetBehavior.STATE_EXPANDED == newState){
-                    if (UselessUtils.getBool("night", true)){
+                } else if (BottomSheetBehavior.STATE_EXPANDED == newState) {
+                    if (UselessUtils.getBool("night", true)) {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
                     }
                 } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
-                    if (UselessUtils.getBool("night", true)){
+                    if (UselessUtils.getBool("night", true)) {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
                     } else {
                         closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
                     }
                 }
             }
+
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 fab.animate().scaleX(1 - slideOffset).scaleY(1 - slideOffset).setDuration(0).start();
@@ -206,12 +207,12 @@ public class Notes extends Fragment {
         List<NoteOrFolder> notPinned = new ArrayList<>();
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.pinned == 1){
-                if (noteOrFolder.in_folder_id.equals("def")){
+            if (noteOrFolder.pinned == 1) {
+                if (noteOrFolder.in_folder_id.equals("def")) {
                     allList.add(noteOrFolder);
                 }
             } else {
-                if (noteOrFolder.in_folder_id.equals("def")){
+                if (noteOrFolder.in_folder_id.equals("def")) {
                     notPinned.add(noteOrFolder);
                 }
             }
@@ -221,7 +222,7 @@ public class Notes extends Fragment {
 
         nothing = view.findViewById(R.id.nothing);
 
-        if (allList.isEmpty()){
+        if (allList.isEmpty()) {
             nothing.setVisibility(View.VISIBLE);
         } else {
             nothing.setVisibility(View.INVISIBLE);
@@ -230,7 +231,7 @@ public class Notes extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-        if (UselessUtils.getBool("two_rows", false)){
+        if (UselessUtils.getBool("two_rows", false)) {
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         } else {
             recyclerView.setLayoutManager(llm);
@@ -284,7 +285,7 @@ public class Notes extends Fragment {
         animation.setDuration(400);
         fab.startAnimation(animation);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
             fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp), null, null, null);
             fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_white_24dp), null, null, null);
         } else {
@@ -292,94 +293,94 @@ public class Notes extends Fragment {
             fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_black_24dp), null, null, null);
         }
 
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
-                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
-                            if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
-                                return;
-                            }
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")) {
+                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")) {
+                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")) {
+                            return;
                         }
                     }
-
-                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
-                        return;
-                    }
-                    if (InvocationHandler.class.isAssignableFrom(App.class)){
-                        return;
-                    }
-                    if (UselessUtils.ifPMSHook()){
-                        return;
-                    }
-
-                    MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
                 }
-            });
 
-            fab.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Toast.makeText(getActivity(), getString(R.string.import_db), Toast.LENGTH_SHORT).show();
-                    openFile("*/*", 228, getActivity());
-                    return false;
+                if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
+                    return;
                 }
-            });
+                if (InvocationHandler.class.isAssignableFrom(App.class)) {
+                    return;
+                }
+                if (UselessUtils.ifPMSHook()) {
+                    return;
+                }
 
-            fab1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
-                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
-                            if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
-                                return;
-                            }
+                MainActivity.instance.getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
+            }
+        });
+
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getActivity(), getString(R.string.import_db), Toast.LENGTH_SHORT).show();
+                openFile("*/*", 228, getActivity());
+                return false;
+            }
+        });
+
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")) {
+                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")) {
+                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")) {
+                            return;
                         }
                     }
-
-                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
-                        return;
-                    }
-                    if (InvocationHandler.class.isAssignableFrom(App.class)){
-                        return;
-                    }
-                    if (UselessUtils.ifPMSHook()){
-                        return;
-                    }
-
-                    createFolder();
                 }
-            });
 
-            fab2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
-                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
-                            if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
-                                return;
-                            }
+                if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
+                    return;
+                }
+                if (InvocationHandler.class.isAssignableFrom(App.class)) {
+                    return;
+                }
+                if (UselessUtils.ifPMSHook()) {
+                    return;
+                }
+
+                createFolder();
+            }
+        });
+
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")) {
+                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")) {
+                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")) {
+                            return;
                         }
                     }
-
-                    if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")){
-                        return;
-                    }
-                    if (InvocationHandler.class.isAssignableFrom(App.class)){
-                        return;
-                    }
-                    if (UselessUtils.ifPMSHook()){
-                        return;
-                    }
-
-                    createNotify();
                 }
-            });
+
+                if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
+                    return;
+                }
+                if (InvocationHandler.class.isAssignableFrom(App.class)) {
+                    return;
+                }
+                if (UselessUtils.ifPMSHook()) {
+                    return;
+                }
+
+                createNotify();
+            }
+        });
     }
 
-    private void createNotify(){
+    private void createNotify() {
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_two_edit_texts, null);
 
         EditText title = v.findViewById(R.id.edit_text_one);
@@ -411,7 +412,7 @@ public class Notes extends Fragment {
         ShowAlertDialog.show(builder.create());
     }
 
-    private void createFolder(){
+    private void createFolder() {
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_text, null);
 
         EditText text = v.findViewById(R.id.edit_text);
@@ -432,18 +433,18 @@ public class Notes extends Fragment {
                 boolean create = true;
 
                 for (NoteOrFolder noteOrFolder : dao.getAll()) {
-                    if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(text.getText().toString())){
+                    if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(text.getText().toString())) {
                         create = false;
                         Toast.makeText(getActivity(), getString(R.string.folder_error), Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
 
-                if (create){
+                if (create) {
                     long id = genId();
 
-                    dao.insert(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(),  0, "", 0));
-                    allList.add(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(),  0, "", 0));
+                    dao.insert(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(), 0, "", 0));
+                    allList.add(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(), 0, "", 0));
                     recyclerView.getAdapter().notifyDataSetChanged();
 
                     nothing.setVisibility(View.INVISIBLE);
@@ -454,13 +455,13 @@ public class Notes extends Fragment {
         ShowAlertDialog.show(builder.create());
     }
 
-    public String generateName(){
+    public String generateName() {
         int first_number = 1;
 
         String name = getString(R.string.new_folder);
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(name)){
+            if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(name)) {
                 name = getString(R.string.new_folder) + first_number;
                 first_number++;
             }
@@ -471,7 +472,7 @@ public class Notes extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.settings:
                 UselessUtils.replace(new MainSettings(), "settings");
                 break;
@@ -493,12 +494,11 @@ public class Notes extends Fragment {
         sIntent.addCategory(Intent.CATEGORY_DEFAULT);
 
         Intent chooserIntent;
-        if (c.getPackageManager().resolveActivity(sIntent, 0) != null){
+        if (c.getPackageManager().resolveActivity(sIntent, 0) != null) {
             // it is device with samsung file manager
             chooserIntent = Intent.createChooser(sIntent, "Open file");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent});
-        }
-        else {
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{intent});
+        } else {
             chooserIntent = Intent.createChooser(intent, "Open file");
         }
 
@@ -511,8 +511,8 @@ public class Notes extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null){
-            if (requestCode == 228){
+        if (data != null) {
+            if (requestCode == 228) {
                 InputStream fstream = null;
 
                 String title = getFileName(data.getData());
@@ -522,8 +522,8 @@ public class Notes extends Fragment {
                     BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
                     boolean first = true;
                     String strLine;
-                    while ((strLine = br.readLine()) != null){
-                        if (first){
+                    while ((strLine = br.readLine()) != null) {
+                        if (first) {
                             text = strLine;
                             first = false;
                         } else {
@@ -548,11 +548,11 @@ public class Notes extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public static long genId(){
+    public static long genId() {
         long id = 0;
 
         for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.id > id){
+            if (noteOrFolder.id > id) {
                 id = noteOrFolder.id;
             }
         }
@@ -560,12 +560,12 @@ public class Notes extends Fragment {
         return id + 1;
     }
 
-    public void delete(int position){
+    public void delete(int position) {
         BottomSheetCreator creator = new BottomSheetCreator(getActivity());
         creator.addElement(new Element(getString(R.string.delete), getActivity().getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (allList.get(position).is_folder == 1){
+                if (allList.get(position).is_folder == 1) {
                     if (new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position).equals(""))
                         adapter.deleteFolder(allList.get(position).folder_name);
                     else
@@ -581,7 +581,8 @@ public class Notes extends Fragment {
 
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e){}
+                } catch (Exception e) {
+                }
             }
         }));
         creator.addElement(new Element(getString(R.string.cancel), getActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
@@ -591,7 +592,8 @@ public class Notes extends Fragment {
 
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e){}
+                } catch (Exception e) {
+                }
             }
         }));
         creator.show("", false);
@@ -602,11 +604,11 @@ public class Notes extends Fragment {
         inflater.inflate(R.menu.search_menu, menu);
 
         MenuItem item = menu.findItem(R.id.settings);
-            item.setVisible(false);
+        item.setVisible(false);
 
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
-                item.setIcon(R.drawable.ic_settings_white_24dp);
-            }
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
+            item.setIcon(R.drawable.ic_settings_white_24dp);
+        }
 
         super.onCreateOptionsMenu(menu, inflater);
     }

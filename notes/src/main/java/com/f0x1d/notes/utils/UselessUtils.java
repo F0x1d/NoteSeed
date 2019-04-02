@@ -36,11 +36,11 @@ import static com.f0x1d.notes.App.getContext;
 
 public class UselessUtils {
 
-    public static SharedPreferences.Editor edit(){
+    public static SharedPreferences.Editor edit() {
         return PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
     }
 
-    public static boolean getBool(String key, boolean defValue){
+    public static boolean getBool(String key, boolean defValue) {
         return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(key, defValue);
     }
 
@@ -58,25 +58,25 @@ public class UselessUtils {
         }
     }
 
-    public static void clear_back_stack(){
+    public static void clear_back_stack() {
         FragmentManager fm = MainActivity.instance.getSupportFragmentManager();
         for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
     }
 
-    public static boolean ifCustomTheme(){
+    public static boolean ifCustomTheme() {
         return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("custom_theme", false);
     }
 
-    public static boolean ifPMSHook(){
+    public static boolean ifPMSHook() {
         try {
             PackageManager pm = getContext().getPackageManager();
             Field mPmField = pm.getClass().getDeclaredField("mPM");
             mPmField.setAccessible(true);
             Object mPm = mPmField.get(pm);
             return Proxy.isProxyClass(App.getInstance().getClass());
-        } catch (Exception e){
+        } catch (Exception e) {
             return true;
         }
     }
@@ -103,21 +103,21 @@ public class UselessUtils {
         return result;
     }
 
-    public static void recreate(Fragment fragment, String tag){
+    public static void recreate(Fragment fragment, String tag) {
         MainActivity.instance.getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment, tag).commit();
     }
 
-    public static void replace(Fragment fragment, String tag){
+    public static void replace(Fragment fragment, String tag) {
         MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                 R.id.container, fragment, tag).addToBackStack(null).commit();
     }
 
-    public static void replaceOld(android.app.Fragment fragment, String tag){
+    public static void replaceOld(android.app.Fragment fragment, String tag) {
         MainActivity.instance.getFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                 R.id.container, fragment, tag).addToBackStack(null).commit();
     }
 
-    public static void replaceNoBackStack(Fragment fragment, String tag){
+    public static void replaceNoBackStack(Fragment fragment, String tag) {
         MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                 R.id.container, fragment, tag).commit();
     }
@@ -175,10 +175,12 @@ public class UselessUtils {
 
                     return sha.digest();
 
-                } catch (NoSuchAlgorithmException e) {}
+                } catch (NoSuchAlgorithmException e) {
+                }
             }
 
-        } catch (PackageManager.NameNotFoundException e) {}
+        } catch (PackageManager.NameNotFoundException e) {
+        }
         return null;
     }
 

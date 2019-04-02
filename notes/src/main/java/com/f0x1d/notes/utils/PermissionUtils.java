@@ -21,13 +21,13 @@ public class PermissionUtils {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 Toast.makeText(activity, "Write permission is needed to create Excel file ", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         REQUEST_WRITE_EXTERNAL);
 
                 Toast.makeText(activity, "REQUEST LOCATION PERMISSION", Toast.LENGTH_LONG).show();
 
             } else {
-                ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         REQUEST_WRITE_EXTERNAL);
             }
         }

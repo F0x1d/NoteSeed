@@ -3,7 +3,6 @@ package com.f0x1d.notes.utils.bottomSheet;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;

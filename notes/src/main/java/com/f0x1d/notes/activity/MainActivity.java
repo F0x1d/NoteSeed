@@ -3,7 +3,6 @@ package com.f0x1d.notes.activity;
 import android.accounts.Account;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,23 +48,23 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity instance;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         instance = this;
         PermissionUtils.requestWriteExternalPermission(this);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             new ThemesEngine().setupAll();
         }
 
-        if (UselessUtils.ifCustomTheme()){
-            if (ThemesEngine.dark){
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
+        if (UselessUtils.ifCustomTheme()) {
+            if (ThemesEngine.dark) {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     setTheme(R.style.NightTheme_md2);
                 } else {
                     setTheme(R.style.NightTheme);
                 }
             } else {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     setTheme(R.style.AppTheme_md2);
                 } else {
                     setTheme(R.style.AppTheme);
@@ -75,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
             try {
                 getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
                 getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
-            } catch (Exception e){
+            } catch (Exception e) {
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
                 recreate();
             }
         } else {
-            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", true)){
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N){
+            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", true)) {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     setTheme(R.style.NightTheme_md2);
                 } else {
                     setTheme(R.style.NightTheme);
@@ -90,20 +89,20 @@ public class MainActivity extends AppCompatActivity {
                 getWindow().setNavigationBarColor(getResources().getColor(R.color.statusbar));
             } else {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)){
+                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)) {
                         setTheme(R.style.AppTheme_Orange_md2);
                     } else {
                         setTheme(R.style.AppTheme_md2);
                     }
                 } else {
-                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)){
+                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)) {
                         setTheme(R.style.AppTheme_Orange);
                     } else {
                         setTheme(R.style.AppTheme);
                     }
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     getWindow().setStatusBarColor(Color.WHITE);
                 } else {
                     getWindow().setStatusBarColor(Color.GRAY);
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (GoogleSignIn.getLastSignedInAccount(this) == null){
+        if (GoogleSignIn.getLastSignedInAccount(this) == null) {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
@@ -128,39 +127,39 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             savedInstanceState.getString("what_frag");
-        } catch (Exception e){
-                Bundle lockargs = new Bundle();
-                lockargs.putInt("id", 0);
-                lockargs.putInt("locked", 0);
-                lockargs.putString("title", "");
-                lockargs.putString("text", "");
-                lockargs.putBoolean("to_note", false);
+        } catch (Exception e) {
+            Bundle lockargs = new Bundle();
+            lockargs.putInt("id", 0);
+            lockargs.putInt("locked", 0);
+            lockargs.putString("title", "");
+            lockargs.putString("text", "");
+            lockargs.putBoolean("to_note", false);
 
-                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)){
-                    //Toast.makeText(getApplicationContext(), "Theme changed", Toast.LENGTH_SHORT).show();
-                    UselessUtils.clear_back_stack();
+            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)) {
+                //Toast.makeText(getApplicationContext(), "Theme changed", Toast.LENGTH_SHORT).show();
+                UselessUtils.clear_back_stack();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, new Notes(), "notes").commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, new MainSettings(), "settings").addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change", false).apply();
+            } else {
+
+                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false)) {
+                    getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                            R.id.container, LockScreen.newInstance(lockargs), "lock").commit();
+                } else {
                     getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                             R.id.container, new Notes(), "notes").commit();
-                    getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            R.id.container, new MainSettings(), "settings").addToBackStack(null).commit();
-                    getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            R.id.container, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
-                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change", false).apply();
-                } else {
-
-                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false)){
-                        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                R.id.container, LockScreen.newInstance(lockargs), "lock").commit();
-                    } else {
-                        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                R.id.container, new Notes(), "notes").commit();
-                    }
                 }
             }
+        }
     }
 
-    private void signIn(){
-        if (UselessUtils.getBool("want_sign_in", true)){
+    private void signIn() {
+        if (UselessUtils.getBool("want_sign_in", true)) {
             Log.e("notes_err", "want_sign_in: " + UselessUtils.getBool("want_sign_in", true));
 
             new SignInDialog().show(this, mGoogleSignInClient);
@@ -204,53 +203,53 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-            Fragment notes = getSupportFragmentManager().findFragmentByTag("notes");
-            Fragment edit = getSupportFragmentManager().findFragmentByTag("edit");
-            Fragment add = getSupportFragmentManager().findFragmentByTag("add");
-            Fragment chooseFolder = getSupportFragmentManager().findFragmentByTag("choose_folder");
-            Fragment notesInFolder = getSupportFragmentManager().findFragmentByTag("in_folder");
+        Fragment notes = getSupportFragmentManager().findFragmentByTag("notes");
+        Fragment edit = getSupportFragmentManager().findFragmentByTag("edit");
+        Fragment add = getSupportFragmentManager().findFragmentByTag("add");
+        Fragment chooseFolder = getSupportFragmentManager().findFragmentByTag("choose_folder");
+        Fragment notesInFolder = getSupportFragmentManager().findFragmentByTag("in_folder");
 
-            if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())){
-                getSupportFragmentManager().popBackStack("editor", POP_BACK_STACK_INCLUSIVE);
+        if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())) {
+            getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
 
-                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)){
-                    SyncUtils.export();
+            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)) {
+                SyncUtils.export();
 
-                    if (GoogleSignIn.getLastSignedInAccount(this) != null){
-                        SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Log.e("notes_err", "synced");
-                            }
-                        });
-                    }
+                if (GoogleSignIn.getLastSignedInAccount(this) != null) {
+                    SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.e("notes_err", "synced");
+                        }
+                    });
                 }
-                return;
             }
+            return;
+        }
 
-            if (notes != null && notes.isVisible()){
-                clear_back_stack();
-                super.onBackPressed();
-                return;
-            }
+        if (notes != null && notes.isVisible()) {
+            clear_back_stack();
+            super.onBackPressed();
+            return;
+        }
 
-            if (chooseFolder != null && chooseFolder.isVisible()){
-                ChooseFolder.in_ids.remove(ChooseFolder.in_ids.size() - 1);
-                getSupportFragmentManager().popBackStack();
-                return;
-            }
+        if (chooseFolder != null && chooseFolder.isVisible()) {
+            ChooseFolder.in_ids.remove(ChooseFolder.in_ids.size() - 1);
+            getSupportFragmentManager().popBackStack();
+            return;
+        }
 
-            if (notesInFolder != null && notesInFolder.isVisible()){
-                NotesInFolder.in_ids.remove(NotesInFolder.in_ids.size() - 1);
-                getSupportFragmentManager().popBackStack();
-                return;
-            }
+        if (notesInFolder != null && notesInFolder.isVisible()) {
+            NotesInFolder.in_ids.remove(NotesInFolder.in_ids.size() - 1);
+            getSupportFragmentManager().popBackStack();
+            return;
+        }
 
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0){
-                clear_back_stack();
-                super.onBackPressed();
-            } else {
-                getSupportFragmentManager().popBackStack();
-            }
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            clear_back_stack();
+            super.onBackPressed();
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
     }
 }

@@ -1,4 +1,3 @@
-
 package com.f0x1d.notes.fragment.settings;
 
 import android.annotation.SuppressLint;
@@ -40,15 +39,13 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.CenteredToolbar;
 
-import java.nio.file.Files;
-
 public class MainSettings extends PreferenceFragmentCompat {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
@@ -150,7 +147,7 @@ public class MainSettings extends PreferenceFragmentCompat {
         lock.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)){
+                if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)) {
                     MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(R.id.container, new СhoosePin(), "choose_pin").addToBackStack(null).commit();
                     PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("pass", "").apply();
                 }
@@ -158,12 +155,12 @@ public class MainSettings extends PreferenceFragmentCompat {
             }
         });
 
-        if (Build.VERSION.SDK_INT >= 23){
+        if (Build.VERSION.SDK_INT >= 23) {
             FingerprintManager fingerprintManager = (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
-            if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()){
+            if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
                 finger.setEnabled(false);
                 finger.setSummary(getString(R.string.fingerprint_error2));
-            } else if (!fingerprintManager.hasEnrolledFingerprints()){
+            } else if (!fingerprintManager.hasEnrolledFingerprints()) {
                 finger.setEnabled(false);
             }
         } else {

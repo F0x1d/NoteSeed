@@ -43,8 +43,8 @@ public class MyEditText extends EditText {
         setText();
     }
 
-    private void setText(){
-        if (UselessUtils.ifCustomTheme()){
+    private void setText() {
+        if (UselessUtils.ifCustomTheme()) {
             this.setTextColor(ThemesEngine.textColor);
             this.setHintTextColor(ThemesEngine.textHintColor);
             this.setBackground(null);
@@ -57,7 +57,7 @@ public class MyEditText extends EditText {
 
     @Override
     public void setTextColor(int color) {
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             super.setTextColor(ThemesEngine.textColor);
         } else {
             super.setTextColor(color);
@@ -65,7 +65,7 @@ public class MyEditText extends EditText {
     }
 
     @Override
-    public void addTextChangedListener(TextWatcher watcher){
+    public void addTextChangedListener(TextWatcher watcher) {
         if (mListeners == null) {
             mListeners = new ArrayList<TextWatcher>();
         }
@@ -87,7 +87,7 @@ public class MyEditText extends EditText {
     }
 
     public void clearTextChangedListeners() {
-        if(mListeners != null) {
+        if (mListeners != null) {
             for (TextWatcher watcher : mListeners) {
                 super.removeTextChangedListener(watcher);
             }

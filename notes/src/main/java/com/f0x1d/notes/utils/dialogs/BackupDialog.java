@@ -24,12 +24,12 @@ import java.io.File;
 
 public class BackupDialog {
 
-    public static void show(Activity activity, Account account){
+    public static void show(Activity activity, Account account) {
         ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage("Loading...");
         dialog.setCancelable(false);
 
-        if (!PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("restored", false)){
+        if (!PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("restored", false)) {
             dialog.show();
 
             if (UselessUtils.ifCustomTheme())
@@ -47,7 +47,7 @@ public class BackupDialog {
             builder.setMessage(activity.getString(R.string.restore) + "?");
             builder.setCancelable(false);
 
-            if (database.exists()){
+            if (database.exists()) {
                 builder.setPositiveButton(activity.getString(R.string.restore), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -110,7 +110,7 @@ public class BackupDialog {
                                     }
                                 });
 
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 Log.e("notes_err", e.getLocalizedMessage());
                             }
                         }

@@ -75,7 +75,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private NoteOrFolderDao dao;
 
-    public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim){
+    public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim) {
         this.items = items;
         this.activity = activity;
         this.anim = anim;
@@ -93,7 +93,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (viewType == NOTE) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.note, parent, false);
 
-            if (anim){
+            if (anim) {
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
                 animation.setDuration(400);
                 view.startAnimation(animation);
@@ -103,7 +103,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else if (viewType == FOLDER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.folder, parent, false);
 
-            if (anim){
+            if (anim) {
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
                 animation.setDuration(400);
                 view.startAnimation(animation);
@@ -113,7 +113,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else if (viewType == NOTIFY) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notify, parent, false);
 
-            if (anim){
+            if (anim) {
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
                 animation.setDuration(400);
                 view.startAnimation(animation);
@@ -123,7 +123,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else if (viewType == NOTE_PINNED) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.note_pinned, parent, false);
 
-            if (anim){
+            if (anim) {
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
                 animation.setDuration(400);
                 view.startAnimation(animation);
@@ -133,7 +133,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else if (viewType == FOLDER_PINNED) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.folder_pinned, parent, false);
 
-            if (anim){
+            if (anim) {
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
                 animation.setDuration(400);
                 view.startAnimation(animation);
@@ -143,7 +143,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else if (viewType == NOTIFY_PINNED) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notify_pinned, parent, false);
 
-            if (anim){
+            if (anim) {
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
                 animation.setDuration(400);
                 view.startAnimation(animation);
@@ -183,12 +183,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    private void initLayoutNotify(notifyViewHolder holder, int position){
+    private void initLayoutNotify(notifyViewHolder holder, int position) {
         try {
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
-            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
-                if (UselessUtils.ifCustomTheme()){
+            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
+                if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.text.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
@@ -200,7 +200,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()){
+                if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.lightColorIconColor));
@@ -212,13 +212,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
                 }
             }
-        } catch (Exception e){
-            if (UselessUtils.ifCustomTheme()){
+        } catch (Exception e) {
+            if (UselessUtils.ifCustomTheme()) {
                 holder.cardView.setCardBackgroundColor(Color.BLACK);
             }
 
-            if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())){
-                if (UselessUtils.ifCustomTheme()){
+            if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
+                if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.text.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
@@ -230,7 +230,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()){
+                if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.lightColorIconColor));
@@ -247,7 +247,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.title.setText(getNotifyTitle(items.get(position).id));
         holder.text.setText(getNotifyText(items.get(position).id));
 
-        if (items.get(position).pinned == 1){
+        if (items.get(position).pinned == 1) {
             holder.pinned.setVisibility(View.VISIBLE);
         } else {
             holder.pinned.setVisibility(View.INVISIBLE);
@@ -257,45 +257,45 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setItems(new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time)}, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
-                                case 0:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        String name1 = "Напоминания";
-                                        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                                        NotificationChannel channel = new NotificationChannel("com.f0x1d.notes", name1, importance);
-                                        channel.enableVibration(true);
-                                        channel.enableLights(true);
-                                        NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
-                                        notificationManager.createNotificationChannel(channel);
-                                    }
+                builder.setItems(new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time)}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    String name1 = "Напоминания";
+                                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                                    NotificationChannel channel = new NotificationChannel("com.f0x1d.notes", name1, importance);
+                                    channel.enableVibration(true);
+                                    channel.enableLights(true);
+                                    NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
+                                    notificationManager.createNotificationChannel(channel);
+                                }
 
-                                    // Create Notification
-                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
-                                            .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
-                                            .setContentTitle(getNotifyTitle(items.get(position).id))
-                                            .setContentText(getNotifyText(items.get(position).id))
-                                            .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class),
-                                                    PendingIntent.FLAG_CANCEL_CURRENT))
-                                            .setAutoCancel(true)
-                                            .setVibrate(new long[]{1000L, 1000L, 1000L})
-                                            .setChannelId("com.f0x1d.notes");
+                                // Create Notification
+                                NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
+                                        .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
+                                        .setContentTitle(getNotifyTitle(items.get(position).id))
+                                        .setContentText(getNotifyText(items.get(position).id))
+                                        .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class),
+                                                PendingIntent.FLAG_CANCEL_CURRENT))
+                                        .setAutoCancel(true)
+                                        .setVibrate(new long[]{1000L, 1000L, 1000L})
+                                        .setChannelId("com.f0x1d.notes");
 
-                                    NotificationManager notificationManager =
-                                            (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
+                                NotificationManager notificationManager =
+                                        (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
 
-                                    notificationManager.notify((int) items.get(position).id, builder.build());
-                                    break;
-                                case 1:
-                                    FragmentActivity activity1 = (FragmentActivity) activity;
-                                    SetNotify notify = new SetNotify(new Notify(getNotifyTitle(items.get(position).id), getNotifyText(items.get(position).id), 0, items.get(position).id));
-                                    notify.show(activity1.getSupportFragmentManager(), "TAG");
-                                    break;
-                            }
+                                notificationManager.notify((int) items.get(position).id, builder.build());
+                                break;
+                            case 1:
+                                FragmentActivity activity1 = (FragmentActivity) activity;
+                                SetNotify notify = new SetNotify(new Notify(getNotifyTitle(items.get(position).id), getNotifyText(items.get(position).id), 0, items.get(position).id));
+                                notify.show(activity1.getSupportFragmentManager(), "TAG");
+                                break;
                         }
-                    });
+                    }
+                });
                 ShowAlertDialog.show(builder.create());
             }
         });
@@ -313,8 +313,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
-            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
-                if (UselessUtils.ifCustomTheme()){
+            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
+                if (UselessUtils.ifCustomTheme()) {
                     holder.name.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
@@ -324,7 +324,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()){
+                if (UselessUtils.ifCustomTheme()) {
                     holder.name.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
@@ -334,13 +334,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_white_24dp));
                 }
             }
-        } catch (Exception e){
-            if (UselessUtils.ifCustomTheme()){
+        } catch (Exception e) {
+            if (UselessUtils.ifCustomTheme()) {
                 holder.cardView.setCardBackgroundColor(Color.BLACK);
             }
 
-            if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())){
-                if (UselessUtils.ifCustomTheme()){
+            if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
+                if (UselessUtils.ifCustomTheme()) {
                     holder.name.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
@@ -350,7 +350,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.pinned.setImageDrawable(activity.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()){
+                if (UselessUtils.ifCustomTheme()) {
                     holder.name.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
                     holder.pinned.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
@@ -362,7 +362,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         }
 
-        if (items.get(position).pinned == 1){
+        if (items.get(position).pinned == 1) {
             holder.pinned.setVisibility(View.VISIBLE);
         } else {
             holder.pinned.setVisibility(View.INVISIBLE);
@@ -389,27 +389,27 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         });
     }
 
-    public void deleteNote(long id){
+    public void deleteNote(long id) {
         dao.deleteNote(id);
     }
 
-    public void deleteFolder(final String folder_name){
+    public void deleteFolder(final String folder_name) {
         try {
             dao.deleteFolder(folder_name);
             dao.deleteFolder2(folder_name);
 
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private String getColorFromDataBase(int position){
+    private String getColorFromDataBase(int position) {
         long id = items.get(position).id;
 
         String color = "0xffffffff";
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.id == id){
+            if (noteOrFolder.id == id) {
                 color = noteOrFolder.color;
             }
         }
@@ -417,11 +417,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return color;
     }
 
-    public String getFolderNameFromDataBase(long id, int pos){
+    public String getFolderNameFromDataBase(long id, int pos) {
         String name = "";
 
         for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.id == id){
+            if (noteOrFolder.id == id) {
                 name = noteOrFolder.folder_name;
                 break;
             }
@@ -437,8 +437,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             holder.note_card.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
-            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))){
-                if (UselessUtils.ifCustomTheme()){
+            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
+                if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.text.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.time.setTextColor(ThemesEngine.lightColorTextColor);
@@ -452,7 +452,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()){
+                if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.time.setTextColor(ThemesEngine.darkColorTextColor);
@@ -466,13 +466,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
                 }
             }
-        } catch (Exception e){
-            if (UselessUtils.ifCustomTheme()){
+        } catch (Exception e) {
+            if (UselessUtils.ifCustomTheme()) {
                 holder.note_card.setCardBackgroundColor(Color.BLACK);
             }
 
-            if (UselessUtils.ifBrightColor(holder.note_card.getCardBackgroundColor().getDefaultColor())){
-                if (UselessUtils.ifCustomTheme()){
+            if (UselessUtils.ifBrightColor(holder.note_card.getCardBackgroundColor().getDefaultColor())) {
+                if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.text.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.time.setTextColor(ThemesEngine.lightColorTextColor);
@@ -486,7 +486,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()){
+                if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.time.setTextColor(ThemesEngine.darkColorTextColor);
@@ -504,7 +504,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         holder.title.setText(items.get(position).title);
 
-        if (items.get(position).pinned == 1){
+        if (items.get(position).pinned == 1) {
             holder.pinned.setVisibility(View.VISIBLE);
         } else {
             holder.pinned.setVisibility(View.INVISIBLE);
@@ -514,8 +514,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         NoteItemsDao dao = App.getInstance().getDatabase().noteItemsDao();
         for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.to_id == items.get(position).id){
-                if (noteItem.position == 0){
+            if (noteItem.to_id == items.get(position).id) {
+                if (noteItem.position == 0) {
                     text = noteItem.text;
                     break;
                 }
@@ -528,20 +528,21 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             oneLine = !Pattern.compile("\\r?\\n").matcher(text).find();
 
             for (String retval : text.split("\\r?\\n")) {
-                if (oneLine){
+                if (oneLine) {
                     holder.text.setText(retval);
                 } else {
                     holder.text.setText(retval + "\n...");
                 }
                 break;
             }
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
 
-        if (holder.text.getText().toString().equals("")){
+        if (holder.text.getText().toString().equals("")) {
             holder.text.setText(Html.fromHtml("<i>" + activity.getString(R.string.empty_note) + "</i>"));
         }
 
-        if (items.get(position).locked == 1){
+        if (items.get(position).locked == 1) {
             holder.text.setText(Html.fromHtml("<i>" + activity.getString(R.string.blocked) + "</i>"));
         }
 
@@ -549,7 +550,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             DateFormat df = new SimpleDateFormat(PreferenceManager.getDefaultSharedPreferences(activity).getString("date", "HH:mm | dd.MM.yyyy"));
             holder.time.setText(df.format(currentDate));
-        } catch (Exception e){
+        } catch (Exception e) {
             holder.time.setText("Error");
         }
 
@@ -565,29 +566,29 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                    args.putLong("id", items.get(position).id);
-                    args.putInt("locked", items.get(position).locked);
-                    args.putString("title", items.get(position).title);
+                args.putLong("id", items.get(position).id);
+                args.putInt("locked", items.get(position).locked);
+                args.putString("title", items.get(position).title);
 
-                            if (items.get(position).locked == 1){
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("lock", false)){
-                                    MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                                            .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                            R.id.container, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
-                                } else {
-                                    Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                                        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                        R.id.container, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
-                            }
+                if (items.get(position).locked == 1) {
+                    if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("lock", false)) {
+                        MainActivity.instance.getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                                R.id.container, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
+                    } else {
+                        Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    MainActivity.instance.getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                            R.id.container, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
+                }
 
-                        }
+            }
         });
     }
 
-    private String getNotifyTitle(long id){
+    private String getNotifyTitle(long id) {
         String flex = "null";
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
@@ -600,15 +601,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return flex;
     }
 
-    private boolean getPinned(long id){
+    private boolean getPinned(long id) {
         boolean flex = false;
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (id == noteOrFolder.id){
-                if (noteOrFolder.pinned == 1)
-                    flex = true;
-                else
-                    flex = false;
+            if (id == noteOrFolder.id) {
+                flex = noteOrFolder.pinned == 1;
 
                 break;
             }
@@ -617,7 +615,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return flex;
     }
 
-    private String getNotifyText(long id){
+    private String getNotifyText(long id) {
         String flex = "null";
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
@@ -630,19 +628,19 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return flex;
     }
 
-    private void getNotifyDialog(int position){
+    private void getNotifyDialog(int position) {
         String[] hm;
 
         try {
             Color.parseColor(getColorFromDataBase(position));
 
-            if (getPinned(items.get(position).id)){
+            if (getPinned(items.get(position).id)) {
                 hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             } else {
                 hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             }
-        } catch (Exception e){
-            if (getPinned(items.get(position).id)){
+        } catch (Exception e) {
+            if (getPinned(items.get(position).id)) {
                 hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.unpin), activity.getString(R.string.color)};
             } else {
                 hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.pin), activity.getString(R.string.color)};
@@ -654,7 +652,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         builder1.setItems(hm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case 0:
                         View v = LayoutInflater.from(activity).inflate(R.layout.dialog_two_edit_texts, null);
 
@@ -684,7 +682,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     case 1:
                         int pin = 0;
 
-                        if (!getPinned(items.get(position).id)){
+                        if (!getPinned(items.get(position).id)) {
                             pin = 1;
                         }
 
@@ -698,7 +696,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         try {
                             currentColor = Color.parseColor(getColorFromDataBase(position));
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             currentColor = 0xffffffff;
                         }
 
@@ -734,19 +732,19 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ShowAlertDialog.show(builder1.create());
     }
 
-    private void getFoldersDialog(int position){
+    private void getFoldersDialog(int position) {
         String[] hm;
 
         try {
             Color.parseColor(getColorFromDataBase(position));
 
-            if (getPinned(items.get(position).id)){
+            if (getPinned(items.get(position).id)) {
                 hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             } else {
                 hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
             }
-        } catch (Exception e){
-            if (getPinned(items.get(position).id)){
+        } catch (Exception e) {
+            if (getPinned(items.get(position).id)) {
                 hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.unpin), activity.getString(R.string.color)};
             } else {
                 hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.pin), activity.getString(R.string.color)};
@@ -758,7 +756,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         builder1.setItems(hm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case 0:
                         View v = LayoutInflater.from(activity).inflate(R.layout.dialog_edit_text, null);
 
@@ -778,16 +776,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 boolean create = true;
 
                                 for (NoteOrFolder noteOrFolder : dao.getAll()) {
-                                    if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(text.getText().toString())){
+                                    if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(text.getText().toString())) {
                                         create = false;
                                         Toast.makeText(App.getContext(), activity.getString(R.string.folder_error), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                 }
 
-                                if (create){
+                                if (create) {
                                     for (NoteOrFolder noteOrFolder : dao.getAll()) {
-                                        if (noteOrFolder.in_folder_id.equals(getFolderNameFromDataBase(items.get(position).id, position))){
+                                        if (noteOrFolder.in_folder_id.equals(getFolderNameFromDataBase(items.get(position).id, position))) {
                                             dao.updateInFolderIdById(text.getText().toString(), noteOrFolder.id);
                                         }
                                     }
@@ -804,7 +802,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     case 1:
                         int pin = 0;
 
-                        if (!getPinned(items.get(position).id)){
+                        if (!getPinned(items.get(position).id)) {
                             pin = 1;
                         }
 
@@ -817,7 +815,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         try {
                             currentColor = Color.parseColor(getColorFromDataBase(position));
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             currentColor = 0xffffffff;
                         }
 
@@ -865,7 +863,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             } else {
                 hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.pin), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             if (getPinned(items.get(position).id)) {
                 hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.unpin), activity.getString(R.string.move_ro_folder)};
             } else {
@@ -885,35 +883,35 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         try {
                             currentColor = Color.parseColor(getColorFromDataBase(position));
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             currentColor = 0xffffffff;
                         }
 
                         MyColorPickerDialog colorPickerDialog = MyColorPickerDialog.newBuilderNew().setColor(currentColor).create();
-                            colorPickerDialog.setColorPickerDialogListener(new ColorPickerDialogListener() {
-                                @Override
-                                public void onColorSelected(int dialogId, int color) {
-                                    Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color) + " id: " + items.get(position).id);
+                        colorPickerDialog.setColorPickerDialogListener(new ColorPickerDialogListener() {
+                            @Override
+                            public void onColorSelected(int dialogId, int color) {
+                                Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color) + " id: " + items.get(position).id);
 
-                                    dao.updateNoteColor("#" + Integer.toHexString(color), items.get(position).id);
+                                dao.updateNoteColor("#" + Integer.toHexString(color), items.get(position).id);
 
-                                    notifyItemChanged(position);
-                                }
+                                notifyItemChanged(position);
+                            }
 
-                                @Override
-                                public void onDialogDismissed(int dialogId) {
+                            @Override
+                            public void onDialogDismissed(int dialogId) {
 
-                                }
-                            });
+                            }
+                        });
 
-                            FragmentActivity fragmentActivity = (FragmentActivity) activity;
+                        FragmentActivity fragmentActivity = (FragmentActivity) activity;
 
-                            colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
+                        colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
                     case 1:
                         int pin = 0;
 
-                        if (!getPinned(items.get(position).id)){
+                        if (!getPinned(items.get(position).id)) {
                             pin = 1;
                         }
 
@@ -923,14 +921,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         break;
                     case 2:
                         Bundle args = new Bundle();
-                            ChooseFolder.in_ids.clear();
-                            ChooseFolder.in_ids.add("def");
+                        ChooseFolder.in_ids.clear();
+                        ChooseFolder.in_ids.add("def");
 
-                            args.putLong("id", items.get(position).id);
+                        args.putLong("id", items.get(position).id);
 
                         MainActivity.instance.getSupportFragmentManager().beginTransaction()
                                 .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                        R.id.container, ChooseFolder.newInstance(args), "choose_folder")
+                                R.id.container, ChooseFolder.newInstance(args), "choose_folder")
                                 .addToBackStack(null).commit();
                         break;
                     case 3:
@@ -946,17 +944,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }
 
-    private void flexRestart(String inFolderId){
+    private void flexRestart(String inFolderId) {
         List<NoteOrFolder> allList = new ArrayList<>();
         List<NoteOrFolder> notPinned = new ArrayList<>();
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.pinned == 1){
-                if (noteOrFolder.in_folder_id.equals(inFolderId)){
+            if (noteOrFolder.pinned == 1) {
+                if (noteOrFolder.in_folder_id.equals(inFolderId)) {
                     allList.add(noteOrFolder);
                 }
             } else {
-                if (noteOrFolder.in_folder_id.equals(inFolderId)){
+                if (noteOrFolder.in_folder_id.equals(inFolderId)) {
                     notPinned.add(noteOrFolder);
                 }
             }
@@ -984,7 +982,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 return FOLDER_PINNED;
 
             return FOLDER;
-        } else if (item.is_folder == 2){
+        } else if (item.is_folder == 2) {
             if (getPinned(item.id))
                 return NOTIFY_PINNED;
 
@@ -999,7 +997,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return items.size();
     }
 
-    class folderViewHolder extends RecyclerView.ViewHolder{
+    class folderViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
         CardView cardView;

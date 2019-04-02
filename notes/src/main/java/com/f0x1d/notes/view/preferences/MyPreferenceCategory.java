@@ -33,7 +33,7 @@ public class MyPreferenceCategory extends PreferenceCategory {
 
         TextView titleView = holder.itemView.findViewById(android.R.id.title);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             titleView.setTextColor(ThemesEngine.accentColor);
         }
 

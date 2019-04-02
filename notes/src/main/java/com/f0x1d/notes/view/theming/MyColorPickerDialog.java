@@ -35,7 +35,7 @@ public class MyColorPickerDialog extends ColorPickerDialog {
     private static final String ARG_CUSTOM_BUTTON_TEXT = "customButtonText";
     private static final String ARG_SELECTED_BUTTON_TEXT = "selectedButtonText";
 
-    public static Builder newBuilderNew(){
+    public static Builder newBuilderNew() {
         return new Builder();
     }
 
@@ -48,15 +48,15 @@ public class MyColorPickerDialog extends ColorPickerDialog {
         Button positive = getDialog().findViewById(android.R.id.button1);
         Button neutral = getDialog().findViewById(android.R.id.button3);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             positive.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
             positive.setTextColor(ThemesEngine.textColor);
 
             neutral.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
             neutral.setTextColor(ThemesEngine.textColor);
         } else if (UselessUtils.getBool("night", true)) {
-             positive.setTextColor(Color.BLACK);
-             neutral.setTextColor(Color.BLACK);
+            positive.setTextColor(Color.BLACK);
+            neutral.setTextColor(Color.BLACK);
         }
 
         if (UselessUtils.ifCustomTheme())
@@ -70,11 +70,16 @@ public class MyColorPickerDialog extends ColorPickerDialog {
     public static final class Builder {
 
         ColorPickerDialogListener colorPickerDialogListener;
-        @StringRes int dialogTitle = R.string.cpv_default_title;
-        @StringRes int presetsButtonText = R.string.cpv_presets;
-        @StringRes int customButtonText = R.string.cpv_custom;
-        @StringRes int selectedButtonText = R.string.cpv_select;
-        @DialogType int dialogType = TYPE_PRESETS;
+        @StringRes
+        int dialogTitle = R.string.cpv_default_title;
+        @StringRes
+        int presetsButtonText = R.string.cpv_presets;
+        @StringRes
+        int customButtonText = R.string.cpv_custom;
+        @StringRes
+        int selectedButtonText = R.string.cpv_select;
+        @DialogType
+        int dialogType = TYPE_PRESETS;
         int[] presets = MATERIAL_COLORS;
         @ColorInt
         int color = Color.BLACK;

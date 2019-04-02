@@ -10,7 +10,7 @@ import com.f0x1d.notes.R;
 
 public class AnimUtils {
 
-    public static void animRotate(View view){
+    public static void animRotate(View view) {
         view.animate()
                 .scaleX(1f)
                 .scaleY(1f)
@@ -19,9 +19,9 @@ public class AnimUtils {
                 .start();
     }
 
-    public static void animPushUp(View view){
+    public static void animPushUp(View view) {
         Animation animation = AnimationUtils.loadAnimation(App.getContext(), R.anim.push_up);
-            animation.setDuration(300);
+        animation.setDuration(300);
         view.startAnimation(animation);
     }
 }

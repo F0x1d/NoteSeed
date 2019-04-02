@@ -21,7 +21,7 @@ public class BottomSheetItemsAdapter extends RecyclerView.Adapter<BottomSheetIte
 
     private List<Element> elements = new ArrayList<>();
 
-    public BottomSheetItemsAdapter(List<Element> elements){
+    public BottomSheetItemsAdapter(List<Element> elements) {
         this.elements = elements;
     }
 

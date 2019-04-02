@@ -46,13 +46,13 @@ public class ThemesEngine {
     public static int seekBarColor;
     public static int seekBarThumbColor;
 
-    public void importTheme(Uri uri, Activity activity){
+    public void importTheme(Uri uri, Activity activity) {
 
         Log.e("notes_err", "OPA, tut import");
 
         File theme = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/theme");
 
-        if (!theme.exists()){
+        if (!theme.exists()) {
             theme.mkdirs();
         }
 
@@ -63,7 +63,7 @@ public class ThemesEngine {
             fstream = App.getInstance().getContentResolver().openInputStream(uri);
             BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
             String strLine;
-            while ((strLine = br.readLine()) != null){
+            while ((strLine = br.readLine()) != null) {
                 all = all + strLine;
             }
         } catch (IOException e) {
@@ -88,25 +88,25 @@ public class ThemesEngine {
             activity.startActivity(i);
             activity.finish();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
             Log.e("notes_err", e.getLocalizedMessage());
         }
     }
 
-    public List<Theme> getThemes(){
+    public List<Theme> getThemes() {
         File theme = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/theme");
 
-        if (!theme.exists()){
+        if (!theme.exists()) {
             theme.mkdirs();
         }
 
         List<Theme> themes = new ArrayList<>();
 
         File[] listFiles = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/theme/").listFiles();
-        if (listFiles != null){
+        if (listFiles != null) {
             for (File listFile : listFiles) {
-                if (listFile != null){
+                if (listFile != null) {
                     FileInputStream fstream1 = null;
 
                     String allnew = null;
@@ -117,8 +117,8 @@ public class ThemesEngine {
                         BufferedReader br1 = new BufferedReader(new InputStreamReader(fstream1));
                         boolean first = true;
                         String strLine;
-                        while ((strLine = br1.readLine()) != null){
-                            if (first){
+                        while ((strLine = br1.readLine()) != null) {
+                            if (first) {
                                 allnew = strLine;
                                 first = false;
                             } else {
@@ -144,22 +144,22 @@ public class ThemesEngine {
 
                     try {
                         name = jsonObject.getString("name");
-                    } catch (Exception e){
+                    } catch (Exception e) {
                     }
 
                     try {
                         author = jsonObject.getString("author");
-                    } catch (Exception e){
+                    } catch (Exception e) {
                     }
 
                     try {
                         card_color = jsonObject.getString("card_color");
-                    } catch (Exception e){
+                    } catch (Exception e) {
                     }
 
                     try {
                         card_text_color = jsonObject.getString("card_text_color");
-                    } catch (Exception e){
+                    } catch (Exception e) {
                     }
 
                     themes.add(new Theme(listFile, name, author, Color.parseColor(card_color), Color.parseColor(card_text_color)));
@@ -170,7 +170,7 @@ public class ThemesEngine {
         return themes;
     }
 
-    public void setupAll(){
+    public void setupAll() {
         try {
             String all = "";
             File path = new File(PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("path_theme", ""));
@@ -179,8 +179,8 @@ public class ThemesEngine {
                 BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
                 boolean first = true;
                 String strLine;
-                while ((strLine = br.readLine()) != null){
-                    if (first){
+                while ((strLine = br.readLine()) != null) {
+                    if (first) {
                         all = strLine;
                         first = false;
                     } else {
@@ -204,124 +204,124 @@ public class ThemesEngine {
 
             try {
                 background = Color.parseColor(jsonObject.getString("background"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 background = 0xffffffff;
             }
 
             try {
                 statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 statusBarColor = 0xffffffff;
             }
 
             try {
                 textColor = Color.parseColor(jsonObject.getString("text_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 textColor = 0xff000000;
             }
 
             try {
                 accentColor = Color.parseColor(jsonObject.getString("accent"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 accentColor = 0xff00ff00;
             }
 
             try {
                 navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 navBarColor = 0xff000000;
             }
 
             try {
                 iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 iconsColor = 0xff000000;
             }
 
             try {
                 textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 textHintColor = Color.GRAY;
             }
 
             try {
                 dark = jsonObject.getBoolean("dark");
-            } catch (Exception e){
+            } catch (Exception e) {
                 dark = false;
             }
 
             try {
                 toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 toolbarColor = Color.TRANSPARENT;
             }
 
             try {
                 toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 toolbarTextColor = 0xff000000;
             }
 
             try {
                 fabColor = Color.parseColor(jsonObject.getString("fab_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 fabColor = 0xffffffff;
             }
 
             try {
                 fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 fabIconColor = 0xff000000;
             }
 
             try {
                 defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 defaultNoteColor = 0xffffffff;
             }
 
             try {
                 lightColorTextColor = Color.parseColor(jsonObject.getString("lightColorTextColor"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 lightColorTextColor = 0xff000000;
             }
 
             try {
                 darkColorTextColor = Color.parseColor(jsonObject.getString("darkColorTextColor"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 darkColorTextColor = 0xffffffff;
             }
 
             try {
                 lightColorIconColor = Color.parseColor(jsonObject.getString("lightColorIconColor"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 lightColorIconColor = 0xff000000;
             }
 
             try {
                 darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 darkColorIconColor = 0xffffffff;
             }
 
             try {
                 seekBarColor = Color.parseColor(jsonObject.getString("seekbar_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 seekBarColor = 0xffffffff;
             }
 
             try {
                 seekBarThumbColor = Color.parseColor(jsonObject.getString("seekbar_thumb_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 seekBarThumbColor = 0xff888888;
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
         }
     }
 
-    public void setTheme(File path, Activity activity){
+    public void setTheme(File path, Activity activity) {
         String all = "";
 
         try {
@@ -329,8 +329,8 @@ public class ThemesEngine {
             BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
             boolean first = true;
             String strLine;
-            while ((strLine = br.readLine()) != null){
-                if (first){
+            while ((strLine = br.readLine()) != null) {
+                if (first) {
                     all = strLine;
                     first = false;
                 } else {
@@ -350,119 +350,119 @@ public class ThemesEngine {
 
             try {
                 background = Color.parseColor(jsonObject.getString("background"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 background = 0xffffffff;
             }
 
             try {
                 statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 statusBarColor = 0xffffffff;
             }
 
             try {
                 textColor = Color.parseColor(jsonObject.getString("text_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 textColor = 0xff000000;
             }
 
             try {
                 accentColor = Color.parseColor(jsonObject.getString("accent"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 accentColor = 0xff00ff00;
             }
 
             try {
                 navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 navBarColor = 0xff000000;
             }
 
             try {
                 iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 iconsColor = 0xff000000;
             }
 
             try {
                 textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 textHintColor = Color.GRAY;
             }
 
             try {
                 dark = jsonObject.getBoolean("dark");
-            } catch (Exception e){
+            } catch (Exception e) {
                 dark = false;
             }
 
             try {
                 toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 toolbarColor = Color.TRANSPARENT;
             }
 
             try {
                 toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 toolbarTextColor = 0xff000000;
             }
 
             try {
                 fabColor = Color.parseColor(jsonObject.getString("fab_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 fabColor = 0xffffffff;
             }
 
             try {
                 fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 fabIconColor = 0xff000000;
             }
 
             try {
                 defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 defaultNoteColor = 0xffffffff;
             }
 
             try {
                 lightColorTextColor = Color.parseColor(jsonObject.getString("lightColorTextColor"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 lightColorTextColor = 0xff000000;
             }
 
             try {
                 darkColorTextColor = Color.parseColor(jsonObject.getString("darkColorTextColor"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 darkColorTextColor = 0xffffffff;
             }
 
             try {
                 lightColorIconColor = Color.parseColor(jsonObject.getString("lightColorIconColor"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 lightColorIconColor = 0xff000000;
             }
 
             try {
                 darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 darkColorIconColor = 0xffffffff;
             }
 
             try {
                 seekBarColor = Color.parseColor(jsonObject.getString("seekbar_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 seekBarColor = 0xffffffff;
             }
 
             try {
                 seekBarThumbColor = Color.parseColor(jsonObject.getString("seekbar_thumb_color"));
-            } catch (Exception e){
+            } catch (Exception e) {
                 seekBarThumbColor = 0xff888888;
             }
 
-            if (dark){
+            if (dark) {
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", true).apply();
             } else {
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", false).apply();

@@ -36,8 +36,8 @@ public class MySeekBar extends SeekBar {
         start();
     }
 
-    private void start(){
-        if (UselessUtils.ifCustomTheme()){
+    private void start() {
+        if (UselessUtils.ifCustomTheme()) {
             getProgressDrawable().setColorFilter(ThemesEngine.seekBarColor, PorterDuff.Mode.SRC_ATOP);
             getThumb().setColorFilter(ThemesEngine.seekBarThumbColor, PorterDuff.Mode.SRC_ATOP);
         }

@@ -20,7 +20,7 @@ public class NoteItem {
     public int checked;
     public int type;
 
-    public NoteItem(long id, long to_id, String text, String pic_res, int position, int checked, int type){
+    public NoteItem(long id, long to_id, String text, String pic_res, int position, int checked, int type) {
         this.pic_res = pic_res;
         this.text = text;
         this.id = id;

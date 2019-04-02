@@ -40,8 +40,8 @@ public class MyButton extends Button {
         setText();
     }
 
-    private void setText(){
-        if (UselessUtils.ifCustomTheme()){
+    private void setText() {
+        if (UselessUtils.ifCustomTheme()) {
             this.setTextColor(ThemesEngine.textColor);
             this.setBackgroundTintList(ColorStateList.valueOf(ThemesEngine.accentColor));
         }
@@ -51,7 +51,7 @@ public class MyButton extends Button {
 
     @Override
     public void setBackgroundTintList(@Nullable ColorStateList tint) {
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             super.setBackgroundTintList(ColorStateList.valueOf(ThemesEngine.accentColor));
         } else {
             super.setBackgroundTintList(tint);

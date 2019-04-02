@@ -65,7 +65,7 @@ public class SetNotify extends BottomSheetDialogFragment {
 
     Notify notify;
 
-    public SetNotify(Notify notify){
+    public SetNotify(Notify notify) {
         this.notify = notify;
     }
 
@@ -80,9 +80,9 @@ public class SetNotify extends BottomSheetDialogFragment {
 
         LinearLayout layout = v.findViewById(R.id.background);
 
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             layout.setBackgroundColor(ThemesEngine.background);
-        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)){
+        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
             layout.setBackgroundColor(getActivity().getResources().getColor(R.color.statusbar));
         } else {
             layout.setBackgroundColor(Color.WHITE);
@@ -92,54 +92,54 @@ public class SetNotify extends BottomSheetDialogFragment {
         choose_time = v.findViewById(R.id.choose_time_layout);
 
         time = v.findViewById(R.id.choose_time);
-            choose_time.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Calendar c = Calendar.getInstance();
-                    myHour = c.get(Calendar.HOUR_OF_DAY);
-                    myMinute = c.get(Calendar.MINUTE);
+        choose_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar c = Calendar.getInstance();
+                myHour = c.get(Calendar.HOUR_OF_DAY);
+                myMinute = c.get(Calendar.MINUTE);
 
-                    if (UselessUtils.getBool("night", true)){
-                        TimePickerDialog tpd = new TimePickerDialog(getActivity(), R.style.TimePicker, myCallBack, myHour, myMinute, true);
-                        tpd.show();
-                    } else {
-                        TimePickerDialog tpd = new TimePickerDialog(getActivity(), myCallBack, myHour, myMinute, true);
-                        tpd.show();
-                    }
+                if (UselessUtils.getBool("night", true)) {
+                    TimePickerDialog tpd = new TimePickerDialog(getActivity(), R.style.TimePicker, myCallBack, myHour, myMinute, true);
+                    tpd.show();
+                } else {
+                    TimePickerDialog tpd = new TimePickerDialog(getActivity(), myCallBack, myHour, myMinute, true);
+                    tpd.show();
                 }
-            });
+            }
+        });
 
         date = v.findViewById(R.id.choose_date);
-            choose_date.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Calendar c = Calendar.getInstance();
-                    myDay = c.get(Calendar.DATE);
-                    myMonth = c.get(Calendar.MONTH);
-                    myYear = c.get(Calendar.YEAR);
+        choose_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar c = Calendar.getInstance();
+                myDay = c.get(Calendar.DATE);
+                myMonth = c.get(Calendar.MONTH);
+                myYear = c.get(Calendar.YEAR);
 
-                    if (UselessUtils.getBool("night", true)){
-                        DatePickerDialog dpd = new DatePickerDialog(getActivity(), R.style.DatePicker, myCallBack2, myYear, myMonth, myDay);
-                        dpd.show();
-                    } else {
-                        DatePickerDialog dpd = new DatePickerDialog(getActivity(), myCallBack2, myYear, myMonth, myDay);
-                        dpd.show();
-                    }
+                if (UselessUtils.getBool("night", true)) {
+                    DatePickerDialog dpd = new DatePickerDialog(getActivity(), R.style.DatePicker, myCallBack2, myYear, myMonth, myDay);
+                    dpd.show();
+                } else {
+                    DatePickerDialog dpd = new DatePickerDialog(getActivity(), myCallBack2, myYear, myMonth, myDay);
+                    dpd.show();
                 }
-            });
+            }
+        });
 
         ok = v.findViewById(R.id.ok);
         delete = v.findViewById(R.id.delete);
-            if (UselessUtils.getBool("night", true)){
-                ok.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
-                delete.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
+        if (UselessUtils.getBool("night", true)) {
+            ok.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
+            delete.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
 
-                date.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_date_range_white_24dp, 0, 0, 0);
-                time.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_access_time_white_24dp, 0, 0, 0);
-            } else {
-                date.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_date_range_black_24dp, 0, 0, 0);
-                time.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_access_time_black_24dp, 0, 0, 0);
-            }
+            date.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_date_range_white_24dp, 0, 0, 0);
+            time.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_access_time_white_24dp, 0, 0, 0);
+        } else {
+            date.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_date_range_black_24dp, 0, 0, 0);
+            time.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_access_time_black_24dp, 0, 0, 0);
+        }
 
         for (Notify notify : dao.getAll()) {
             if (this.notify.to_id == notify.to_id) {
@@ -153,7 +153,7 @@ public class SetNotify extends BottomSheetDialogFragment {
             }
         }
 
-        if (exists){
+        if (exists) {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -171,64 +171,63 @@ public class SetNotify extends BottomSheetDialogFragment {
             delete.setVisibility(View.GONE);
         }
 
-            ok.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!exists){
-                        if (!date.getText().toString().equals(getActivity().getString(R.string.choose_date)) && !time.getText().toString().equals(getActivity().getString(R.string.choose_time))){
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!exists) {
+                    if (!date.getText().toString().equals(getActivity().getString(R.string.choose_date)) && !time.getText().toString().equals(getActivity().getString(R.string.choose_time))) {
 
-                            notify.time = myCalendar.getTimeInMillis();
+                        notify.time = myCalendar.getTimeInMillis();
 
-                            dao.insert(notify);
+                        dao.insert(notify);
 
-                            Intent myIntent = new Intent(getActivity(), NotifyServiceReceiver.class);
-                            PendingIntent service = PendingIntent.getBroadcast(getActivity(), (int) notify.to_id,
-                                    myIntent, 0);
+                        Intent myIntent = new Intent(getActivity(), NotifyServiceReceiver.class);
+                        PendingIntent service = PendingIntent.getBroadcast(getActivity(), (int) notify.to_id,
+                                myIntent, 0);
 
-                            AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
-                            } else {
-                                am.setExact(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
-                            }
-
-                            Log.e("notes_err", "notify time: " + notify.time);
-
-                            dialog.dismiss();
+                        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
                         } else {
-                            Toast.makeText(getActivity(), "Hmmmmm...", Toast.LENGTH_SHORT).show();
+                            am.setExact(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
                         }
+
+                        Log.e("notes_err", "notify time: " + notify.time);
+
+                        dialog.dismiss();
                     } else {
-                        if (!date.getText().toString().equals(getActivity().getString(R.string.choose_date)) && !time.getText().toString().equals(getActivity().getString(R.string.choose_time))){
+                        Toast.makeText(getActivity(), "Hmmmmm...", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (!date.getText().toString().equals(getActivity().getString(R.string.choose_date)) && !time.getText().toString().equals(getActivity().getString(R.string.choose_time))) {
 
-                            delete(id);
+                        delete(id);
 
-                            notify.time = myCalendar.getTimeInMillis();
+                        notify.time = myCalendar.getTimeInMillis();
 
-                            dao.insert(notify);
+                        dao.insert(notify);
 
-                            Intent myIntent = new Intent(getActivity(), NotifyServiceReceiver.class);
-                            PendingIntent service = PendingIntent.getBroadcast(getActivity(), (int) notify.to_id,
-                                    myIntent, 0);
+                        Intent myIntent = new Intent(getActivity(), NotifyServiceReceiver.class);
+                        PendingIntent service = PendingIntent.getBroadcast(getActivity(), (int) notify.to_id,
+                                myIntent, 0);
 
-                            AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
-                            am.cancel(service);
+                        am.cancel(service);
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
-                            } else {
-                                am.setExact(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
-                            }
-
-                            dialog.dismiss();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
                         } else {
-                            Toast.makeText(getActivity(), "Hmmmmm...", Toast.LENGTH_SHORT).show();
+                            am.setExact(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
                         }
+
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(getActivity(), "Hmmmmm...", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
-
+            }
+        });
 
 
         dialog.setContentView(v);
@@ -263,7 +262,7 @@ public class SetNotify extends BottomSheetDialogFragment {
         }
     };
 
-    public void delete(long id){
+    public void delete(long id) {
         dao.delete(id);
     }
 }

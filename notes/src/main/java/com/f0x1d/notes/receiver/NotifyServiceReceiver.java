@@ -32,7 +32,7 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
             long time = noteOrFolder.time / (1000 * 30);
             long system_time = System.currentTimeMillis() / (1000 * 30);
 
-            if (system_time >= time){
+            if (system_time >= time) {
                 title = noteOrFolder.title;
                 text = noteOrFolder.text;
                 id = noteOrFolder.id;
@@ -60,16 +60,16 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(alarmSound);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    builder.setChannelId("com.f0x1d.notes.notifications");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            builder.setChannelId("com.f0x1d.notes.notifications");
 
         NotificationManager notificationManager = (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify((int) to_id + 1, builder.build());
+        notificationManager.notify((int) to_id + 1, builder.build());
 
         delete(id);
     }
 
-    public void delete(long id){
+    public void delete(long id) {
         App.getInstance().getDatabase().notifyDao().delete(id);
     }
 

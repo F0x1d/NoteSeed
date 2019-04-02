@@ -11,7 +11,7 @@ public class Theme {
 
     public File theme_file;
 
-    public Theme(File theme_file, String name, String author, int card_color, int card_text_color){
+    public Theme(File theme_file, String name, String author, int card_color, int card_text_color) {
         this.name = name;
         this.card_color = card_color;
         this.author = author;

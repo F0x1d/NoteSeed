@@ -1,6 +1,7 @@
 package com.f0x1d.notes.view.theming;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -32,16 +33,19 @@ public class ItemCardView extends CardView {
 
     @Override
     public void setCardBackgroundColor(int color) {
-        if (UselessUtils.ifCustomTheme()){
+        if (UselessUtils.ifCustomTheme()) {
             super.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
-        } else {
-            super.setCardBackgroundColor(color);
-        }
+        } else if (UselessUtils.getBool("night", true))
+            super.setCardBackgroundColor(Color.parseColor("#424242"));
+        //super.setCardBackgroundColor(color);
     }
 
-    private void setup(){
-        if (UselessUtils.ifCustomTheme()){
+    private void setup() {
+        if (UselessUtils.ifCustomTheme()) {
+            setCardBackgroundColor(getCardBackgroundColor());
+        } else if (UselessUtils.getBool("night", true)) {
             setCardBackgroundColor(getCardBackgroundColor());
         }
+        //setCardBackgroundColor(Color.);
     }
 }
