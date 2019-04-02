@@ -1,5 +1,7 @@
 package com.f0x1d.notes.fragment.editing;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -568,13 +570,27 @@ public class NoteEdit extends Fragment {
 
     public static void copy(InputStream in, File dst) throws IOException {
             try (OutputStream out = new FileOutputStream(dst)) {
-                // Transfer bytes from in to out
                 byte[] buf = new byte[1024];
                 int len;
                 while ((len = in.read(buf)) > 0) {
                     out.write(buf, 0, len);
                 }
             }
+    }
+
+    @Override
+    public void onDestroyView() {
+        recyclerView.animate()
+                .alpha(0.0f)
+                .setDuration(250)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        recyclerView.setVisibility(View.GONE);
+                    }
+                });
+        super.onDestroyView();
     }
 
     @Override

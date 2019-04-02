@@ -1,5 +1,7 @@
 package com.f0x1d.notes.fragment.editing;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -532,5 +534,20 @@ public class NoteAdd extends Fragment {
         }
 
         return name;
+    }
+
+    @Override
+    public void onDestroyView() {
+        recyclerView.animate()
+                .alpha(0.0f)
+                .setDuration(250)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        recyclerView.setVisibility(View.GONE);
+                    }
+                });
+        super.onDestroyView();
     }
 }

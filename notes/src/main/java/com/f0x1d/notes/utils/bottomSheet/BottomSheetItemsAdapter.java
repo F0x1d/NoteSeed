@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,7 @@ public class BottomSheetItemsAdapter extends RecyclerView.Adapter<BottomSheetIte
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.text.setText(elements.get(position).name);
-        holder.text.setOnClickListener(elements.get(position).listener);
+        holder.background.setOnClickListener(elements.get(position).listener);
 
         if (UselessUtils.getBool("custom", false))
             holder.text.setCompoundDrawablesWithIntrinsicBounds(UselessUtils.setTint(elements.get(position).pic, ThemesEngine.iconsColor), null, null, null);
@@ -51,11 +52,13 @@ public class BottomSheetItemsAdapter extends RecyclerView.Adapter<BottomSheetIte
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
         public TextView text;
+        public LinearLayout background;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             text = itemView.findViewById(R.id.item);
+            background = itemView.findViewById(R.id.item_background);
         }
     }
 }
