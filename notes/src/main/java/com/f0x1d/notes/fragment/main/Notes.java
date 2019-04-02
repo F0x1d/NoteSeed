@@ -38,12 +38,13 @@ import com.f0x1d.notes.adapter.NoteItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
-import com.f0x1d.notes.fragment.bottomSheet.DeleteDialog;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
+import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyImageButton;
@@ -560,9 +561,8 @@ public class Notes extends Fragment {
     }
 
     public void delete(int position){
-        DeleteDialog deleteDialog = new DeleteDialog();
-        deleteDialog.setCancelable(false);
-        deleteDialog.setDeleteListener(new View.OnClickListener() {
+        BottomSheetCreator creator = new BottomSheetCreator(getActivity());
+        creator.addElement(new Element(getString(R.string.delete), getActivity().getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (allList.get(position).is_folder == 1){
@@ -579,17 +579,22 @@ public class Notes extends Fragment {
 
                 Toast.makeText(getActivity(), getString(R.string.deleted), Toast.LENGTH_SHORT).show();
 
-                deleteDialog.dismiss();
+                try {
+                    creator.customBottomSheet.dismiss();
+                } catch (Exception e){}
             }
-        });
-        deleteDialog.setCancelListener(new View.OnClickListener() {
+        }));
+        creator.addElement(new Element(getString(R.string.cancel), getActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recyclerView.getAdapter().notifyItemChanged(position);
-                deleteDialog.dismiss();
+
+                try {
+                    creator.customBottomSheet.dismiss();
+                } catch (Exception e){}
             }
-        });
-        deleteDialog.show(getActivity().getSupportFragmentManager(), "");
+        }));
+        creator.show("", false);
     }
 
     @Override

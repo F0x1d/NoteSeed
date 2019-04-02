@@ -39,6 +39,8 @@ import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
+import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.CenteredToolbar;
 
@@ -384,6 +386,46 @@ public class NoteEdit extends Fragment {
 
                 break;
             case R.id.attach:
+                BottomSheetCreator creator = new BottomSheetCreator(getActivity());
+                creator.addElement(new Element(getString(R.string.text), getActivity().getDrawable(R.drawable.ic_text_fields_white_24dp), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        last_pos = last_pos + 1;
+                        NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), id, "", null, last_pos, 0, 0);
+                        noteItemsDao.insert(noteItem);
+                        add(last_pos, noteItem);
+
+                        Log.e("notes_err", "last pos: " + last_pos);
+
+                        recyclerView.getAdapter().notifyDataSetChanged();
+
+                        try {
+                            creator.customBottomSheet.dismiss();
+                        } catch (Exception e){}
+                    }
+                }));
+                creator.addElement(new Element(getString(R.string.picture), getActivity().getDrawable(R.drawable.ic_image_white_24dp), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            creator.customBottomSheet.dismiss();
+                        } catch (Exception e){}
+
+                        openFile("image/*", 228, getActivity());
+                    }
+                }));
+                creator.addElement(new Element(getString(R.string.item_checkbox), getActivity().getDrawable(R.drawable.ic_work_white_24dp), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addThisTODOs();
+
+                        try {
+                            creator.customBottomSheet.dismiss();
+                        } catch (Exception e){}
+                    }
+                }));
+                creator.show("", true);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setItems(new String[]{getString(R.string.text), getString(R.string.picture), getString(R.string.item_checkbox)}, new DialogInterface.OnClickListener() {
                         @Override
@@ -409,7 +451,7 @@ public class NoteEdit extends Fragment {
                         }
                     });
 
-                ShowAlertDialog.show(builder.create());
+                //ShowAlertDialog.show(builder.create());
                 break;
             case R.id.lock:
                 if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)){

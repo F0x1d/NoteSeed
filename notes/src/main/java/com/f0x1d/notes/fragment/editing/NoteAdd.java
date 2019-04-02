@@ -41,6 +41,8 @@ import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
+import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.CenteredToolbar;
 
@@ -353,30 +355,43 @@ public class NoteAdd extends Fragment {
 
                 break;
             case R.id.attach:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setItems(new String[]{getString(R.string.text), getString(R.string.picture), getString(R.string.item_checkbox)}, new DialogInterface.OnClickListener() {
+                BottomSheetCreator creator = new BottomSheetCreator(getActivity());
+                creator.addElement(new Element(getString(R.string.text), getActivity().getDrawable(R.drawable.ic_text_fields_white_24dp), new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case 0:
-                                last_pos = last_pos + 1;
-                                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, last_pos, 0, 0);
-                                noteItemsDao.insert(noteItem);
-                                add(last_pos, noteItem);
+                    public void onClick(View v) {
+                        last_pos = last_pos + 1;
+                        NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, last_pos, 0, 0);
+                        noteItemsDao.insert(noteItem);
+                        add(last_pos, noteItem);
 
-                                recyclerView.getAdapter().notifyDataSetChanged();
-                                break;
-                            case 1:
-                                openFile("image/*", 228, getActivity());
-                                break;
-                            case 2:
-                                addThisTODOs();
-                                break;
-                        }
+                        recyclerView.getAdapter().notifyDataSetChanged();
+
+                        try {
+                            creator.customBottomSheet.dismiss();
+                        } catch (Exception e){}
                     }
-                });
+                }));
+                creator.addElement(new Element(getString(R.string.picture), getActivity().getDrawable(R.drawable.ic_image_white_24dp), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            creator.customBottomSheet.dismiss();
+                        } catch (Exception e){}
 
-                ShowAlertDialog.show(builder.create());
+                        openFile("image/*", 228, getActivity());
+                    }
+                }));
+                creator.addElement(new Element(getString(R.string.item_checkbox), getActivity().getDrawable(R.drawable.ic_work_white_24dp), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addThisTODOs();
+
+                        try {
+                            creator.customBottomSheet.dismiss();
+                        } catch (Exception e){}
+                    }
+                }));
+                creator.show("", true);
                 break;
             case R.id.lock:
                 if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)){

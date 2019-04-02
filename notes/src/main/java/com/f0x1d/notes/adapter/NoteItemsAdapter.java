@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -29,9 +30,10 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
-import com.f0x1d.notes.fragment.bottomSheet.DeleteDialog;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
+import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.theming.MyEditText;
 
@@ -347,9 +349,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void delete(int position){
-        DeleteDialog deleteDialog = new DeleteDialog();
-        deleteDialog.setCancelable(false);
-        deleteDialog.setDeleteListener(new View.OnClickListener() {
+        BottomSheetCreator creator = new BottomSheetCreator((FragmentActivity) activity);
+        creator.addElement(new Element(activity.getString(R.string.delete), activity.getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -359,6 +360,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     }
 
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
+                    dao.deleteItem(noteItems.get(position).id);
 
                     remove(position);
                     NoteEdit.last_pos = NoteEdit.last_pos - 1;
@@ -369,17 +371,22 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     Toast.makeText(activity, "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                deleteDialog.dismiss();
+                try {
+                    creator.customBottomSheet.dismiss();
+                } catch (Exception e){}
             }
-        });
-        deleteDialog.setCancelListener(new View.OnClickListener() {
+        }));
+        creator.addElement(new Element(activity.getString(R.string.cancel), activity.getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 notifyItemChanged(position);
-                deleteDialog.dismiss();
+
+                try {
+                    creator.customBottomSheet.dismiss();
+                } catch (Exception e){}
             }
-        });
-        deleteDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), "");
+        }));
+        creator.show("", false);
     }
 
     private void add(int pos, NoteItem item){
