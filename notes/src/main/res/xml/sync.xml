@@ -11,6 +11,9 @@
             android:title="@string/import_gdrive" android:key="import_g"/>
         <com.f0x1d.notes.view.preferences.MyPreference
             android:title="@string/export_gdrive" android:key="export_g"/>
+
+        <com.f0x1d.notes.view.preferences.MySwitchPreference
+            android:title="@string/automatic_sync" android:key="auto_s" android:defaultValue="true"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/file">

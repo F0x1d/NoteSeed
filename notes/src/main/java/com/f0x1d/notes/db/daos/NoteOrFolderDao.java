@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface NoteOrFolderDao {
 
-    @Query("SELECT * FROM NoteOrFolder")
+    @Query("SELECT * FROM NoteOrFolder order by position asc")
     List<NoteOrFolder> getAll();
 
     @Query("SELECT * FROM NoteOrFolder WHERE id = :id")
@@ -22,6 +22,9 @@ public interface NoteOrFolderDao {
 
     @Query("UPDATE NoteOrFolder SET title=:title WHERE id = :id")
     void updateNoteTitle(String title, long id);
+
+    @Query("UPDATE NoteOrFolder SET position=:position WHERE id = :id")
+    void updatePosition(int position, long id);
 
     @Query("UPDATE NoteOrFolder SET text=:text WHERE id = :id")
     void updateNoteText(String text, long id);

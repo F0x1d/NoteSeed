@@ -297,6 +297,9 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         notifyItemMoved(fromPosition, toPosition);
+        notifyItemChanged(fromPosition);
+        notifyItemChanged(toPosition);
+        notifyDataSetChanged();
     }
 
     @Override

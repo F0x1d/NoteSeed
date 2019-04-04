@@ -54,7 +54,8 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class)
+                        .putExtra("id", to_id).putExtra("title", title), PendingIntent.FLAG_CANCEL_CURRENT))
                 .setAutoCancel(true)
                 .setVibrate(new long[]{1000L, 1000L, 1000L});
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

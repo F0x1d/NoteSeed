@@ -135,4 +135,6 @@
     <string name="choose_date_appearance">Choose date appearance</string>
     <string name="main_menu_flex">Flex with main menu</string>
     <string name="notification">Notifications</string>
+    <string name="syncing">Syncing</string>
+    <string name="automatic_sync">Automatic synchronization</string>
 </resources>

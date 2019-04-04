@@ -34,8 +34,6 @@ public class ChooseFolder extends Fragment {
         return fragment;
     }
 
-    public static List<String> in_ids = new ArrayList<>();
-
     private RecyclerView recyclerView;
     private CenteredToolbar toolbar;
     private FloatingActionButton fab;
@@ -48,7 +46,7 @@ public class ChooseFolder extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        in_id = in_ids.get(in_ids.size() - 1);
+        in_id = getArguments().getString("in_id");
         id = getArguments().getLong("id");
     }
 

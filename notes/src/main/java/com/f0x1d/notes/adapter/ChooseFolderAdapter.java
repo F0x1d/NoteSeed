@@ -111,8 +111,8 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                ChooseFolder.in_ids.add(getFolderNameFromDataBase(position));
                 args.putLong("id", note_id);
+                args.putString("in_id", getFolderNameFromDataBase(position));
 
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(R.id.container, ChooseFolder.newInstance(args), "choose_folder")

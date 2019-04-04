@@ -65,13 +65,11 @@ public class LockScreen extends Fragment {
     private FingerprintManager.CryptoObject cryptoObject;
     private FingerprintManager fingerprintManager;
     private KeyguardManager keyguardManager;
-    Bundle args;
 
     private SwirlView swirlView;
 
-    public static LockScreen newInstance(Bundle args) {
+    public static LockScreen newInstance() {
         LockScreen myFragment = new LockScreen();
-        myFragment.setArguments(args);
         return myFragment;
     }
 
@@ -90,8 +88,6 @@ public class LockScreen extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        args = getArguments();
 
         MyButton odin = view.findViewById(R.id.odin);
         MyButton dva = view.findViewById(R.id.dva);

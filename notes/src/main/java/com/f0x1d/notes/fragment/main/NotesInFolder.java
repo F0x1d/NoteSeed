@@ -35,6 +35,7 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.adapter.NoteItemsAdapter;
+import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
@@ -62,8 +63,6 @@ import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 
 public class NotesInFolder extends Fragment {
 
-    public static List<String> in_ids = new ArrayList<>();
-
     public static RecyclerView recyclerView;
 
     private List<NoteOrFolder> allList;
@@ -71,19 +70,26 @@ public class NotesInFolder extends Fragment {
     TextView nothing;
 
     CenteredToolbar toolbar;
-
     NoteOrFolderDao dao;
-
     ItemsAdapter adapter;
 
-    private String in_folder_id;
+    public String in_folder_id;
+
+    public static NotesInFolder newInstance(String in_folder_id) {
+        Bundle args = new Bundle();
+        args.putString("in_id", in_folder_id);
+
+        NotesInFolder fragment = new NotesInFolder();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        in_folder_id = in_ids.get(in_ids.size() - 1);
+        in_folder_id = getArguments().getString("in_id");
     }
 
     @Override
@@ -218,21 +224,11 @@ public class NotesInFolder extends Fragment {
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
 
-        List<NoteOrFolder> notPinned = new ArrayList<>();
-
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.pinned == 1) {
-                if (noteOrFolder.in_folder_id.equals(in_folder_id)) {
-                    allList.add(noteOrFolder);
-                }
-            } else {
-                if (noteOrFolder.in_folder_id.equals(in_folder_id)) {
-                    notPinned.add(noteOrFolder);
-                }
+            if (noteOrFolder.in_folder_id.equals(in_folder_id)) {
+                allList.add(noteOrFolder);
             }
         }
-
-        allList.addAll(notPinned);
 
         if (allList.isEmpty()) {
             nothing.setVisibility(View.VISIBLE);
@@ -268,7 +264,7 @@ public class NotesInFolder extends Fragment {
                 int fromPosition = h1.getAdapterPosition();
                 int toPosition = h2.getAdapterPosition();
 
-                recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+                adapter.onItemsChanged(fromPosition, toPosition);
                 return true;
             }
 
@@ -279,7 +275,7 @@ public class NotesInFolder extends Fragment {
 
             @Override
             public boolean isLongPressDragEnabled() {
-                return false;
+                return true;
             }
 
             @Override
@@ -359,11 +355,12 @@ public class NotesInFolder extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 long id = genId();
+                int position = Database.getLastPosition(in_folder_id);
 
                 dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, in_folder_id, 2, null,
-                        0, "", System.currentTimeMillis()));
+                        0, "", System.currentTimeMillis(), position));
                 allList.add(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, in_folder_id, 2, null,
-                        0, "", System.currentTimeMillis()));
+                        0, "", System.currentTimeMillis(), position));
                 recyclerView.getAdapter().notifyDataSetChanged();
 
                 nothing.setVisibility(View.INVISIBLE);
@@ -403,9 +400,10 @@ public class NotesInFolder extends Fragment {
 
                 if (create) {
                     long id = genId();
+                    int position = Database.getLastPosition(in_folder_id);
 
-                    dao.insert(new NoteOrFolder(null, null, id, 0, in_folder_id, 1, text.getText().toString(), 0, "", 0));
-                    allList.add(new NoteOrFolder(null, null, id, 0, in_folder_id, 1, text.getText().toString(), 0, "", 0));
+                    dao.insert(new NoteOrFolder(null, null, id, 0, in_folder_id, 1, text.getText().toString(), 0, "", 0, position));
+                    allList.add(new NoteOrFolder(null, null, id, 0, in_folder_id, 1, text.getText().toString(), 0, "", 0, position));
                     recyclerView.getAdapter().notifyDataSetChanged();
 
                     nothing.setVisibility(View.INVISIBLE);
@@ -431,12 +429,24 @@ public class NotesInFolder extends Fragment {
         return name;
     }
 
+    public long getIdByInFolderId(String in_folder_id){
+        for (NoteOrFolder noteOrFolder : dao.getAll()) {
+            if (noteOrFolder.folder_name != null && noteOrFolder.folder_name.equals(in_folder_id))
+                return noteOrFolder.id;
+        }
+
+        return -1;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.root:
                 UselessUtils.clear_back_stack();
                 UselessUtils.replaceNoBackStack(new Notes(), "notes");
+                break;
+            case R.id.settings:
+                new ItemsAdapter(null, getActivity(), true).getFoldersDialog(getIdByInFolderId(in_folder_id), this);
                 break;
         }
 
@@ -495,7 +505,8 @@ public class NotesInFolder extends Fragment {
                     Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                NoteOrFolder noteOrFolder = new NoteOrFolder(title, null, genId(), 0, in_folder_id, 0, null, 0, "", System.currentTimeMillis());
+                int position = Database.getLastPosition(in_folder_id);
+                NoteOrFolder noteOrFolder = new NoteOrFolder(title, null, genId(), 0, in_folder_id, 0, null, 0, "", System.currentTimeMillis(), position);
 
                 dao.insert(noteOrFolder);
                 allList.add(noteOrFolder);

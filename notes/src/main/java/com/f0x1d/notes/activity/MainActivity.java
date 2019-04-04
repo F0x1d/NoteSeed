@@ -2,6 +2,9 @@ package com.f0x1d.notes.activity;
 
 import android.accounts.Account;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -13,11 +16,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.choose.ChooseFolder;
+import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
@@ -128,15 +133,13 @@ public class MainActivity extends AppCompatActivity {
         try {
             savedInstanceState.getString("what_frag");
         } catch (Exception e) {
-            Bundle lockargs = new Bundle();
-            lockargs.putInt("id", 0);
-            lockargs.putInt("locked", 0);
-            lockargs.putString("title", "");
-            lockargs.putString("text", "");
-            lockargs.putBoolean("to_note", false);
+            if (getIntent().getExtras() != null){
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, NoteEdit.newInstance(getIntent().getExtras()), "edit").commit();
+                return;
+            }
 
             if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)) {
-                //Toast.makeText(getApplicationContext(), "Theme changed", Toast.LENGTH_SHORT).show();
                 UselessUtils.clear_back_stack();
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         R.id.container, new Notes(), "notes").commit();
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false)) {
                     getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            R.id.container, LockScreen.newInstance(lockargs), "lock").commit();
+                            R.id.container, LockScreen.newInstance(), "lock").commit();
                 } else {
                     getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                             R.id.container, new Notes(), "notes").commit();
@@ -169,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putString("what_frag", "other");
     }
 
@@ -206,8 +208,6 @@ public class MainActivity extends AppCompatActivity {
         Fragment notes = getSupportFragmentManager().findFragmentByTag("notes");
         Fragment edit = getSupportFragmentManager().findFragmentByTag("edit");
         Fragment add = getSupportFragmentManager().findFragmentByTag("add");
-        Fragment chooseFolder = getSupportFragmentManager().findFragmentByTag("choose_folder");
-        Fragment notesInFolder = getSupportFragmentManager().findFragmentByTag("in_folder");
 
         if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())) {
             getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
@@ -216,9 +216,28 @@ public class MainActivity extends AppCompatActivity {
                 SyncUtils.export();
 
                 if (GoogleSignIn.getLastSignedInAccount(this) != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        String name = getString(R.string.sync);
+                        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                        NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.sync", name, importance);
+                        channel.enableVibration(true);
+                        channel.enableLights(true);
+                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                        notificationManager.createNotificationChannel(channel);
+                    }
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                    builder.setContentTitle(getString(R.string.sync));
+                    builder.setContentText(getString(R.string.syncing));
+                    builder.setSmallIcon(R.drawable.ic_sync_black_24dp);
+                    builder.setChannelId("com.f0x1d.notes.sync");
+
+                    ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(2, builder.build());
+
                     SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(2);
                             Log.e("notes_err", "synced");
                         }
                     });
@@ -230,18 +249,6 @@ public class MainActivity extends AppCompatActivity {
         if (notes != null && notes.isVisible()) {
             clear_back_stack();
             super.onBackPressed();
-            return;
-        }
-
-        if (chooseFolder != null && chooseFolder.isVisible()) {
-            ChooseFolder.in_ids.remove(ChooseFolder.in_ids.size() - 1);
-            getSupportFragmentManager().popBackStack();
-            return;
-        }
-
-        if (notesInFolder != null && notesInFolder.isVisible()) {
-            NotesInFolder.in_ids.remove(NotesInFolder.in_ids.size() - 1);
-            getSupportFragmentManager().popBackStack();
             return;
         }
 

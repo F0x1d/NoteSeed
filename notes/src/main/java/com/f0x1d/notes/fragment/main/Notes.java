@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +36,7 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.adapter.NoteItemsAdapter;
+import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
@@ -204,21 +206,13 @@ public class Notes extends Fragment {
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
 
-        List<NoteOrFolder> notPinned = new ArrayList<>();
-
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.pinned == 1) {
-                if (noteOrFolder.in_folder_id.equals("def")) {
-                    allList.add(noteOrFolder);
-                }
-            } else {
-                if (noteOrFolder.in_folder_id.equals("def")) {
-                    notPinned.add(noteOrFolder);
-                }
+            if (noteOrFolder.in_folder_id.equals("def")) {
+                allList.add(noteOrFolder);
             }
-        }
 
-        allList.addAll(notPinned);
+            Log.e("notes_err", String.valueOf(noteOrFolder.position));
+        }
 
         nothing = view.findViewById(R.id.nothing);
 
@@ -251,11 +245,11 @@ public class Notes extends Fragment {
             }
 
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder h1, RecyclerView.ViewHolder h2) {
+            public boolean onMove(RecyclerView recyclerView2, RecyclerView.ViewHolder h1, RecyclerView.ViewHolder h2) {
                 int fromPosition = h1.getAdapterPosition();
                 int toPosition = h2.getAdapterPosition();
 
-                recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+                adapter.onItemsChanged(fromPosition, toPosition);
                 return true;
             }
 
@@ -266,7 +260,7 @@ public class Notes extends Fragment {
 
             @Override
             public boolean isLongPressDragEnabled() {
-                return false;
+                return true;
             }
 
             @Override
@@ -398,11 +392,12 @@ public class Notes extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 long id = genId();
+                int position = Database.getLastPosition("def");
 
                 dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, "def", 2,
-                        null, 0, "", System.currentTimeMillis()));
+                        null, 0, "", System.currentTimeMillis(), position));
                 allList.add(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, "def", 2,
-                        null, 0, "", System.currentTimeMillis()));
+                        null, 0, "", System.currentTimeMillis(), position));
                 recyclerView.getAdapter().notifyDataSetChanged();
 
                 nothing.setVisibility(View.INVISIBLE);
@@ -442,9 +437,10 @@ public class Notes extends Fragment {
 
                 if (create) {
                     long id = genId();
+                    int position = Database.getLastPosition("def");
 
-                    dao.insert(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(), 0, "", 0));
-                    allList.add(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(), 0, "", 0));
+                    dao.insert(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(), 0, "", 0, position));
+                    allList.add(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(), 0, "", 0, position));
                     recyclerView.getAdapter().notifyDataSetChanged();
 
                     nothing.setVisibility(View.INVISIBLE);
@@ -533,8 +529,8 @@ public class Notes extends Fragment {
                 } catch (IOException e) {
                     Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
-
-                NoteOrFolder noteOrFolder = new NoteOrFolder(title, null, genId(), 0, "def", 0, null, 0, "", System.currentTimeMillis());
+                int position = Database.getLastPosition("def");
+                NoteOrFolder noteOrFolder = new NoteOrFolder(title, null, genId(), 0, "def", 0, null, 0, "", System.currentTimeMillis(), position);
 
                 dao.insert(noteOrFolder);
                 allList.add(noteOrFolder);

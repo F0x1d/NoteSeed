@@ -135,4 +135,6 @@
     <string name="choose_date_appearance">Выберите вид даты</string>
     <string name="main_menu_flex">Флекс с главным меню</string>
     <string name="notification">Напоминания</string>
+    <string name="syncing">Синхронизирую</string>
+    <string name="automatic_sync">Автоматическая синхронизация</string>
 </resources>

@@ -33,7 +33,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.adapter.NoteItemsAdapter;
+import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
@@ -148,7 +150,7 @@ public class NoteAdd extends Fragment {
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
         rowID = dao.insert(new NoteOrFolder(generateName(), null, Notes.genId(), 0, id,
-                0, null, 0, "", System.currentTimeMillis()));
+                0, null, 0, "", System.currentTimeMillis(), Database.getLastPosition(id)));
 
         noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
 
@@ -419,6 +421,9 @@ public class NoteAdd extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.settings:
+                new ItemsAdapter(null, getActivity(), true).getNotesDialog(rowID);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -540,20 +545,5 @@ public class NoteAdd extends Fragment {
         }
 
         return name;
-    }
-
-    @Override
-    public void onDestroyView() {
-        recyclerView.animate()
-                .alpha(0.0f)
-                .setDuration(250)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        recyclerView.setVisibility(View.GONE);
-                    }
-                });
-        super.onDestroyView();
     }
 }

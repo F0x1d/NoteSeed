@@ -78,7 +78,12 @@ public class SyncUtils {
             Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
 
             File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+            if (!db.exists())
+                db.mkdirs();
+            
             File database = new File(db, "database.noteseed");
+            if (!database.exists())
+                database.createNewFile();
 
             FileOutputStream stream = new FileOutputStream(database);
 
@@ -97,8 +102,16 @@ public class SyncUtils {
 
     public static Task<Void> exportToGDrive() {
         return Tasks.call(mExecutor, () -> {
+            if (!UselessUtils.getBool("auto_s", true))
+                return null;
+
             File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+            if (!db.exists())
+                db.mkdirs();
+
             File database = new File(db, "database.noteseed");
+            if (!database.exists())
+                return null;
 
             com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
             fileMetadata.setName("database.json");
@@ -128,6 +141,9 @@ public class SyncUtils {
 
     public static Task<Void> export() {
         return Tasks.call(mExecutor, () -> {
+            if (!UselessUtils.getBool("auto_s", true))
+                return null;
+
             File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
             if (!db.exists()) {
                 db.mkdirs();
@@ -140,8 +156,8 @@ public class SyncUtils {
 
                 for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
                     if (noteItem.to_id == noteOrFolder.id) {
-
                         JSONObject element = new JSONObject();
+
                         try {
                             element.put("id", noteItem.id);
                             element.put("to_id", noteItem.to_id);
@@ -182,6 +198,7 @@ public class SyncUtils {
                     note.put("pinned", noteOrFolder.pinned);
                     note.put("edit_time", noteOrFolder.edit_time);
                     note.put("in_folder_id", noteOrFolder.in_folder_id);
+                    note.put("position", noteOrFolder.position);
 
                     if (noteOrFolder.text == null) {
                         note.put("text", "null");
@@ -221,7 +238,11 @@ public class SyncUtils {
 
     public static void importFile() {
         File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
+        if (!db.exists())
+            db.mkdirs();
         File database = new File(db, "database.noteseed");
+        if (!database.exists())
+            return;
 
         String all = "";
         try {
@@ -247,7 +268,7 @@ public class SyncUtils {
 
                 App.getInstance().getDatabase().noteOrFolderDao().insert(new NoteOrFolder(note.getString("title"),
                         note.getString("text"), note.getLong("id"), note.getInt("locked"), note.getString("in_folder_id"), note.getInt("is_folder"),
-                        note.getString("folder_name"), note.getInt("pinned"), note.getString("color"), note.getLong("edit_time")));
+                        note.getString("folder_name"), note.getInt("pinned"), note.getString("color"), note.getLong("edit_time"), note.getInt("position")));
 
                 JSONArray elements = note.getJSONArray("elems");
 

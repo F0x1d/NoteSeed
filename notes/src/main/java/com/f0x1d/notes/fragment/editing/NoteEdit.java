@@ -33,10 +33,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.adapter.NoteItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
+import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.utils.ThemesEngine;
@@ -93,22 +95,20 @@ public class NoteEdit extends Fragment {
         setHasOptionsMenu(true);
 
         if (getArguments() != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    titleStr = getArguments().getString("title");
+            titleStr = getArguments().getString("title");
 
-                    id = getArguments().getLong("id");
-                    id_str = String.valueOf(getArguments().getLong("id"));
-                    locked = getArguments().getInt("locked");
-                }
-            }).start();
+            id = getArguments().getLong("id");
+            id_str = String.valueOf(getArguments().getLong("id"));
+            try {
+                locked = getArguments().getInt("locked");
+            } catch (Exception e){
+                locked = getLocked(id);
+            }
         }
 
         toolbar = v.findViewById(R.id.toolbar);
 
         toolbar.inflateMenu(R.menu.edit_menu);
-
 
         if (UselessUtils.ifCustomTheme()) {
             toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
@@ -118,7 +118,7 @@ public class NoteEdit extends Fragment {
             toolbar.setNavigationIcon(getActivity().getDrawable(R.drawable.ic_timer_black_24dp));
         }
 
-        if (getArguments().getInt("locked") == 1) {
+        if (locked == 1) {
             MenuItem myItem = toolbar.getMenu().findItem(R.id.lock);
             myItem.setChecked(true);
         } else {
@@ -138,8 +138,6 @@ public class NoteEdit extends Fragment {
         }
 
         toolbar.setTitle(getString(R.string.editing));
-
-        Log.e("notes_err", "listener set");
 
         getActivity().setActionBar(toolbar);
 
@@ -292,6 +290,15 @@ public class NoteEdit extends Fragment {
         }
     }
 
+    private int getLocked(long id){
+        for (NoteOrFolder noteOrFolder : dao.getAll()) {
+            if (noteOrFolder.id == id)
+                return noteOrFolder.locked;
+        }
+
+        return -1;
+    }
+
     private void remove(int pos) {
         try {
             noteItems.remove(pos);
@@ -335,8 +342,6 @@ public class NoteEdit extends Fragment {
                     NoteItem noteItem2 = new NoteItem(NoteItemsAdapter.getId(), id, "", null, last_pos, 0, 1);
                     noteItemsDao.insert(noteItem2);
                     add(last_pos, noteItem2);
-
-                    Log.e("notes_err", "last pos: " + last_pos);
                 }
 
                 recyclerView.getAdapter().notifyDataSetChanged();
@@ -401,8 +406,6 @@ public class NoteEdit extends Fragment {
                         noteItemsDao.insert(noteItem);
                         add(last_pos, noteItem);
 
-                        Log.e("notes_err", "last pos: " + last_pos);
-
                         recyclerView.getAdapter().notifyDataSetChanged();
 
                         try {
@@ -434,33 +437,6 @@ public class NoteEdit extends Fragment {
                     }
                 }));
                 creator.show("", true);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setItems(new String[]{getString(R.string.text), getString(R.string.picture), getString(R.string.item_checkbox)}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                last_pos = last_pos + 1;
-                                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), id, "", null, last_pos, 0, 0);
-                                noteItemsDao.insert(noteItem);
-                                add(last_pos, noteItem);
-
-                                Log.e("notes_err", "last pos: " + last_pos);
-
-                                recyclerView.getAdapter().notifyDataSetChanged();
-                                break;
-                            case 1:
-                                openFile("image/*", 228, getActivity());
-                                break;
-                            case 2:
-                                addThisTODOs();
-                                break;
-                        }
-                    }
-                });
-
-                //ShowAlertDialog.show(builder.create());
                 break;
             case R.id.lock:
                 if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)) {
@@ -481,6 +457,9 @@ public class NoteEdit extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                 }
 
+                break;
+            case R.id.settings:
+                new ItemsAdapter(null, getActivity(), true).getNotesDialog(id);
                 break;
         }
 
@@ -582,21 +561,6 @@ public class NoteEdit extends Fragment {
                 out.write(buf, 0, len);
             }
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        recyclerView.animate()
-                .alpha(0.0f)
-                .setDuration(250)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        recyclerView.setVisibility(View.GONE);
-                    }
-                });
-        super.onDestroyView();
     }
 
     @Override
