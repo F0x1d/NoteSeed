@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -218,19 +219,23 @@ public class MainActivity extends AppCompatActivity {
                 if (GoogleSignIn.getLastSignedInAccount(this) != null) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         String name = getString(R.string.sync);
-                        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                        int importance = NotificationManager.IMPORTANCE_LOW;
                         NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.sync", name, importance);
-                        channel.enableVibration(true);
-                        channel.enableLights(true);
+                        channel.enableVibration(false);
+                        channel.enableLights(false);
                         NotificationManager notificationManager = getSystemService(NotificationManager.class);
                         notificationManager.createNotificationChannel(channel);
                     }
 
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                    Notification.Builder builder = new Notification.Builder(getApplicationContext());
                     builder.setContentTitle(getString(R.string.sync));
                     builder.setContentText(getString(R.string.syncing));
                     builder.setSmallIcon(R.drawable.ic_sync_black_24dp);
-                    builder.setChannelId("com.f0x1d.notes.sync");
+                    builder.setCategory(NotificationCompat.CATEGORY_SERVICE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        builder.setChannelId("com.f0x1d.notes.sync");
+                    builder.setOngoing(true);
+                    builder.setDefaults(0).setVibrate(new long[]{0L});
 
                     ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(2, builder.build());
 
