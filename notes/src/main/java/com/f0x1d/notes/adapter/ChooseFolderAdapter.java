@@ -54,21 +54,17 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
                 if (UselessUtils.ifCustomTheme()) {
                     holder.name.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                    holder.pinned.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
                 } else {
                     holder.name.setTextColor(Color.BLACK);
                     holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp));
-                    holder.pinned.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
                 if (UselessUtils.ifCustomTheme()) {
                     holder.name.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                    holder.pinned.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.name.setTextColor(Color.WHITE);
                     holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp));
-                    holder.pinned.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_white_24dp));
                 }
             }
         } catch (Exception e) {
@@ -80,29 +76,19 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
                 if (UselessUtils.ifCustomTheme()) {
                     holder.name.setTextColor(ThemesEngine.lightColorTextColor);
                     holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                    holder.pinned.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_black_24dp), ThemesEngine.lightColorIconColor));
                 } else {
                     holder.name.setTextColor(Color.BLACK);
                     holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp));
-                    holder.pinned.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_black_24dp));
                 }
             } else {
                 if (UselessUtils.ifCustomTheme()) {
                     holder.name.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                    holder.pinned.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.name.setTextColor(Color.WHITE);
                     holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp));
-                    holder.pinned.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_priority_high_white_24dp));
                 }
             }
-        }
-
-        if (items.get(position).pinned == 1) {
-            holder.pinned.setVisibility(View.VISIBLE);
-        } else {
-            holder.pinned.setVisibility(View.INVISIBLE);
         }
 
         holder.name.setText(getFolderNameFromDataBase(position));
@@ -159,7 +145,6 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
         TextView name;
         CardView cardView;
         ImageView folder_image;
-        ImageView pinned;
 
         folderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -167,7 +152,6 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
             folder_image = itemView.findViewById(R.id.folder_image);
             cardView = itemView.findViewById(R.id.note_card);
             name = itemView.findViewById(R.id.name);
-            pinned = itemView.findViewById(R.id.pinned);
         }
     }
 }

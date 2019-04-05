@@ -19,15 +19,6 @@
         android:gravity="center_horizontal"
         android:layout_height="wrap_content">
 
-        <com.f0x1d.notes.view.theming.MyImageView
-            android:layout_width="wrap_content"
-            android:id="@+id/pinned"
-            android:src="@drawable/ic_priority_high_black_24dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
-            android:layout_height="wrap_content" />
-
         <TextView
             android:id="@+id/textView_title"
             android:layout_width="wrap_content"

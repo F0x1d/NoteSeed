@@ -102,7 +102,7 @@ public class SyncUtils {
 
     public static Task<Void> exportToGDrive() {
         return Tasks.call(mExecutor, () -> {
-            if (!UselessUtils.getBool("auto_s", true))
+            if (!UselessUtils.getBool("auto_s", false))
                 return null;
 
             File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
@@ -141,7 +141,7 @@ public class SyncUtils {
 
     public static Task<Void> export() {
         return Tasks.call(mExecutor, () -> {
-            if (!UselessUtils.getBool("auto_s", true))
+            if (!UselessUtils.getBool("auto_s", false))
                 return null;
 
             File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");

@@ -44,8 +44,7 @@ public class ItemCardView extends CardView {
         if (UselessUtils.ifCustomTheme()) {
             setCardBackgroundColor(getCardBackgroundColor());
         } else if (UselessUtils.getBool("night", true)) {
-            setCardBackgroundColor(getCardBackgroundColor());
+            setCardBackgroundColor(Color.parseColor("#424242"));
         }
-        //setCardBackgroundColor(Color.);
     }
 }

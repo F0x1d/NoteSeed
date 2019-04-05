@@ -2,6 +2,7 @@ package com.f0x1d.notes.fragment.choose;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ChooseFolderAdapter;
+import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.main.Notes;
@@ -89,13 +91,15 @@ public class ChooseFolder extends Fragment {
         ChooseFolderAdapter adapter = new ChooseFolderAdapter(allList, id);
 
         recyclerView.setAdapter(adapter);
-
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_black_24dp));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dao.updateInFolderIdById(in_id, id);
+                dao.updatePosition(Database.getLastPosition(in_id), id);
+
+                UselessUtils.clear_back_stack();
                 MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         R.id.container, new Notes(), "notes").commit();
             }
