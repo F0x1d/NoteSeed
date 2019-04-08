@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,11 +21,9 @@ import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.fragment.choose.ChooseFolder;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.main.Notes;
-import com.f0x1d.notes.fragment.main.NotesInFolder;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.utils.PermissionUtils;
@@ -64,13 +61,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (UselessUtils.ifCustomTheme()) {
             if (ThemesEngine.dark) {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     setTheme(R.style.NightTheme_md2);
                 } else {
                     setTheme(R.style.NightTheme);
                 }
             } else {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     setTheme(R.style.AppTheme_md2);
                 } else {
                     setTheme(R.style.AppTheme);
@@ -86,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", true)) {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     setTheme(R.style.NightTheme_md2);
                 } else {
                     setTheme(R.style.NightTheme);
@@ -94,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
                 getWindow().setNavigationBarColor(getResources().getColor(R.color.statusbar));
             } else {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)) {
                         setTheme(R.style.AppTheme_Orange_md2);
                     } else {
@@ -141,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)) {
-                UselessUtils.clear_back_stack();
+                clear_back_stack();
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         R.id.container, new Notes(), "notes").commit();
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
