@@ -38,5 +38,9 @@
             android:title="murleek" android:summary="@string/murleek">
             <intent android:action="android.intent.action.VIEW" android:data="https://t.me/murleek" />
         </com.f0x1d.notes.view.preferences.MyPreference>
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:title="Mr_Ikso" android:summary="@string/murleek">
+            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/Mr_Ikso" />
+        </com.f0x1d.notes.view.preferences.MyPreference>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 </PreferenceScreen>

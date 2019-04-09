@@ -45,6 +45,7 @@ public class ThemesEngine {
     public static boolean dark;
     public static int seekBarColor;
     public static int seekBarThumbColor;
+    public static float shadows;
 
     public void importTheme(Uri uri, Activity activity) {
 
@@ -316,6 +317,12 @@ public class ThemesEngine {
                 seekBarThumbColor = 0xff888888;
             }
 
+            try {
+                shadows = Float.parseFloat(jsonObject.getString("shadows"));
+            } catch (Exception e) {
+                shadows = 1.0f;
+            }
+
         } catch (Exception e) {
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
         }
@@ -460,6 +467,12 @@ public class ThemesEngine {
                 seekBarThumbColor = Color.parseColor(jsonObject.getString("seekbar_thumb_color"));
             } catch (Exception e) {
                 seekBarThumbColor = 0xff888888;
+            }
+
+            try {
+                shadows = Float.parseFloat(jsonObject.getString("shadows"));
+            } catch (Exception e) {
+                shadows = 1.0f;
             }
 
             if (dark) {

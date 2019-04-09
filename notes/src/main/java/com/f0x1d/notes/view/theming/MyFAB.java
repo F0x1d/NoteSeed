@@ -41,6 +41,7 @@ public class MyFAB extends FloatingActionButton {
         if (UselessUtils.ifCustomTheme()) {
             setBackgroundTintList(ColorStateList.valueOf(ThemesEngine.fabColor));
             setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
+            setCompatElevation(ThemesEngine.shadows);
         } else if (UselessUtils.getBool("night", true)) {
             setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
         } else if (UselessUtils.getBool("orange", false)) {
