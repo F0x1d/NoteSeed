@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockScreen;
+import com.f0x1d.notes.fragment.lock.LockTickerScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e("notes", "onCreate");
         instance = this;
         PermissionUtils.requestWriteExternalPermission(this);
 
@@ -206,6 +209,13 @@ public class MainActivity extends AppCompatActivity {
         Fragment notes = getSupportFragmentManager().findFragmentByTag("notes");
         Fragment edit = getSupportFragmentManager().findFragmentByTag("edit");
         Fragment add = getSupportFragmentManager().findFragmentByTag("add");
+        Fragment lockTicked = getSupportFragmentManager().findFragmentByTag("lockTicked");
+
+        if (lockTicked != null && lockTicked.isVisible()){
+            UselessUtils.edit().putLong("lockTicker", 0).apply();
+            super.onBackPressed();
+            return;
+        }
 
         if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())) {
             getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
@@ -260,5 +270,47 @@ public class MainActivity extends AppCompatActivity {
         } else {
             getSupportFragmentManager().popBackStack();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        UselessUtils.edit().putLong("lockTicker", System.currentTimeMillis()).apply();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false))
+            return;
+
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getLong("lockTicker", 0) == 0)
+            return;
+
+        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getLong("lockTicker", 0) > 60000){
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                    R.id.container, LockTickerScreen.newInstance(new LockTickerScreen.Callback() {
+                        @Override
+                        public int describeContents() { return 0; }
+                        @Override
+                        public void writeToParcel(Parcel dest, int flags) {}
+                        @Override
+                        public void onSuccess(LockTickerScreen screen) {
+                            UselessUtils.edit().putLong("lockTicker", 0).apply();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.container, new Notes(), "notes").commit();
+                        }
+                    }), "lockTicked").commit();
+        }
+
+
+    }
+
+    public Fragment getCurrentFragment(){
+        return getSupportFragmentManager().findFragmentById(R.id.container);
     }
 }

@@ -49,7 +49,7 @@
     <string name="blocked">Заблокировано!</string>
     <string name="saved">Успешно! Сохранено по пути: </string>
     <string name="new_folder">Новая папка</string>
-    <string name="folder_error">Папка с таким именем уже сущесвует</string>
+    <string name="folder_error">Папка с таким именем уже существует</string>
     <string name="folder_error2">Имя папки не может быть пустым!</string>
     <string name="folder_name">Введите имя папки</string>
     <string name="folder_in_folder">Папки в папках</string>
