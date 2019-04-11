@@ -10,11 +10,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -264,5 +270,35 @@ public class SetNotify extends BottomSheetDialogFragment {
 
     public void delete(long id) {
         dao.delete(id);
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return super.onCreateDialog(savedInstanceState);
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            window.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+            GradientDrawable dimDrawable = new GradientDrawable();
+
+            GradientDrawable navigationBarDrawable = new GradientDrawable();
+            navigationBarDrawable.setShape(GradientDrawable.RECTANGLE);
+            navigationBarDrawable.setColor(UselessUtils.getNavColor());
+
+            Drawable[] layers = {dimDrawable, navigationBarDrawable};
+
+            LayerDrawable windowBackground = new LayerDrawable(layers);
+            windowBackground.setLayerInsetTop(1, metrics.heightPixels);
+
+            window.setBackgroundDrawable(windowBackground);
+        }
+
+        return dialog;
     }
 }

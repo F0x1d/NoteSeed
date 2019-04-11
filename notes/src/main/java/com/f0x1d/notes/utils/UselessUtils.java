@@ -7,9 +7,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.view.inputmethod.InputMethodManager;
@@ -67,6 +69,28 @@ public class UselessUtils {
 
     public static boolean ifCustomTheme() {
         return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("custom_theme", false);
+    }
+
+    public static int getThemeColor(int themeColor){
+        if (UselessUtils.ifCustomTheme())
+            return themeColor;
+        else if (UselessUtils.getBool("night", true))
+            return Color.WHITE;
+        else
+            return Color.BLACK;
+    }
+
+    public static int getNavColor(){
+        if (UselessUtils.ifCustomTheme())
+            return ThemesEngine.navBarColor;
+        else if (UselessUtils.getBool("night", true))
+            return App.getContext().getResources().getColor(R.color.statusbar);
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
+                return Color.WHITE;
+
+            return Color.BLACK;
+        }
     }
 
     public static boolean ifPMSHook() {

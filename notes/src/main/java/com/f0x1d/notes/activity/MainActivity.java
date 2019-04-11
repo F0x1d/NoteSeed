@@ -278,6 +278,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false))
+            UselessUtils.edit().putLong("lockTicker", 0).apply();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         UselessUtils.edit().putLong("lockTicker", System.currentTimeMillis()).apply();
@@ -286,6 +293,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        //if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false))
+          //  return;
+
         if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false))
             return;
 
@@ -308,9 +318,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    }
-
-    public Fragment getCurrentFragment(){
-        return getSupportFragmentManager().findFragmentById(R.id.container);
     }
 }
