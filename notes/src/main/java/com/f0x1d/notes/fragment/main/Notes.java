@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,6 +41,8 @@ import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.db.entities.Notify;
+import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.MainSettings;
@@ -401,6 +404,25 @@ public class Notes extends Fragment {
                 recyclerView.getAdapter().notifyDataSetChanged();
 
                 nothing.setVisibility(View.INVISIBLE);
+            }
+        });
+        builder.setNeutralButton(R.string.set_time, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                long id = genId();
+                int position = Database.getLastPosition("def");
+
+                NoteOrFolder noteOrFolder = new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, "def", 2,
+                        null, 0, "", System.currentTimeMillis(), position);
+
+                dao.insert(noteOrFolder);
+                allList.add(noteOrFolder);
+                recyclerView.getAdapter().notifyDataSetChanged();
+
+                nothing.setVisibility(View.INVISIBLE);
+
+                SetNotify notify = new SetNotify(new Notify(noteOrFolder.title, noteOrFolder.text, 0, noteOrFolder.id));
+                notify.show(getActivity().getSupportFragmentManager(), "TAG");
             }
         });
 

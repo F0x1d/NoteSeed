@@ -207,9 +207,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         switch (which) {
                             case 0:
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    String name1 = "Напоминания";
+                                    String name1 = activity.getString(R.string.notification);
                                     int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                                    NotificationChannel channel = new NotificationChannel("com.f0x1d.notes", name1, importance);
+                                    NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name1, importance);
                                     channel.enableVibration(true);
                                     channel.enableLights(true);
                                     NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
@@ -224,7 +224,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                                 PendingIntent.FLAG_CANCEL_CURRENT))
                                         .setAutoCancel(true)
                                         .setVibrate(new long[]{1000L, 1000L, 1000L})
-                                        .setChannelId("com.f0x1d.notes");
+                                        .setChannelId("com.f0x1d.notes.notifications");
 
                                 NotificationManager notificationManager =
                                         (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
