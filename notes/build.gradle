@@ -18,6 +18,58 @@ repositories {
 }
 
 
+import java.nio.file.Files
+import java.security.SecureRandom
+import java.util.stream.Collectors
+import java.util.stream.Stream
+
+import static java.util.stream.IntStream.rangeClosed
+
+task generateDictionary {
+    doLast {
+        int total = 20000
+        Random random = new SecureRandom()
+
+        List<String> javaKeywords = Arrays.asList("do", "if", "for", "int", "new", "try", "byte", "case", "char", "else", "goto",
+                "long", "this", "void", "break", "catch", "class", "const", "final", "float", "short", "super", "throw", "while",
+                "double", "import", "native", "public", "return", "static", "switch", "throws", "boolean", "default", "extends",
+                "finally", "package", "private", "abstract", "continue", "strictfp", "volatile", "interface", "protected",
+                "transient", "implements", "instanceof", "synchronized")
+        Collections.shuffle(javaKeywords, random)
+
+        List<String> arabic = Stream.of(rangeClosed(0x0610, 0x061A), rangeClosed(0x064B, 0x065F), rangeClosed(0x06D6, 0x06DC), rangeClosed(0x06DF, 0x06E8))
+                .flatMap { stream -> stream.mapToObj { b -> Character.toString((char) b) } }
+                .collect(Collectors.toList())
+
+        int size = arabic.size()
+        char prefix = (char) ((int) 'a' + (173 % 26))
+
+        List<String> dictionary = new ArrayList<>(total)
+        for (int i = 0; i <= total; i++) {
+            int value = i
+            StringBuilder builder = new StringBuilder()
+            while ({
+                int remainder = value % size
+                builder.append(arabic.get(remainder))
+                value = value / size
+                value > 0
+            }())
+                continue
+            dictionary.add(builder.append(prefix).reverse().toString())
+        }
+        Collections.shuffle(dictionary)
+
+        StringBuilder builder = new StringBuilder()
+        javaKeywords.forEach { s -> builder.append(s).append('\n') }
+        dictionary.forEach { s -> builder.append(s).append('\n') }
+
+        Files.write(new File("$projectDir/proguard-dictionary.txt").toPath(), builder.toString().getBytes("UTF-8"))
+    }
+}
+
+extractProguardFiles.dependsOn generateDictionary
+
+
 android {
 
     lintOptions {

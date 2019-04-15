@@ -24,6 +24,14 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-renamesourcefileattribute SourceFile
+-repackageclasses 'defpackage'
+-allowaccessmodification
+
+-obfuscationdictionary proguard-dictionary.txt
+-packageobfuscationdictionary proguard-dictionary.txt
+-classobfuscationdictionary proguard-dictionary.txt
+
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
 -keep class com.f0x1d.notes.utils.SyncUtils {
