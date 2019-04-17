@@ -25,7 +25,7 @@
 #-renamesourcefileattribute SourceFile
 
 -renamesourcefileattribute SourceFile
--repackageclasses 'defpackage'
+-repackageclasses 'flex'
 -allowaccessmodification
 
 -obfuscationdictionary proguard-dictionary.txt
@@ -34,7 +34,7 @@
 
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
--keep class com.f0x1d.notes.utils.SyncUtils {
+-keep class com.f0x1d.notes.utils.sync.SyncUtils {
     *;
 }
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {

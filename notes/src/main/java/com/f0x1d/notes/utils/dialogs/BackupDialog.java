@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.SyncUtils;
+import com.f0x1d.notes.utils.sync.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.gms.tasks.OnCompleteListener;

@@ -17,7 +17,6 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-
 import java.nio.file.Files
 import java.security.SecureRandom
 import java.util.stream.Collectors
@@ -27,7 +26,7 @@ import static java.util.stream.IntStream.rangeClosed
 
 task generateDictionary {
     doLast {
-        int total = 20000
+        int total = 20000    //dictionary size
         Random random = new SecureRandom()
 
         List<String> javaKeywords = Arrays.asList("do", "if", "for", "int", "new", "try", "byte", "case", "char", "else", "goto",
@@ -53,7 +52,7 @@ task generateDictionary {
                 builder.append(arabic.get(remainder))
                 value = value / size
                 value > 0
-            }())
+            }()) //noinspection GroovyUnnecessaryContinue
                 continue
             dictionary.add(builder.append(prefix).reverse().toString())
         }
@@ -68,7 +67,6 @@ task generateDictionary {
 }
 
 extractProguardFiles.dependsOn generateDictionary
-
 
 android {
 
@@ -99,8 +97,8 @@ android {
         applicationId "com.f0x1d.notes"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 129
-        versionName "5.9.3"
+        versionCode 130
+        versionName "5.9.4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

@@ -26,9 +26,9 @@ public class SignInDialog {
             if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(App.getContext()) == ConnectionResult.SUCCESS) {
                 try {
                     Intent signInIntent = client.getSignInIntent();
-                    if (!BuildConfig.DEBUG) {
+                    //if (!BuildConfig.DEBUG) {
                         activity.startActivityForResult(signInIntent, 1);
-                    }
+                    //}
                 } catch (Exception e) {
                     Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }

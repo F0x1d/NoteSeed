@@ -29,7 +29,8 @@ import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.utils.PermissionUtils;
-import com.f0x1d.notes.utils.SyncUtils;
+import com.f0x1d.notes.utils.sync.SyncService;
+import com.f0x1d.notes.utils.sync.SyncUtils;
 import com.f0x1d.notes.utils.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.BackupDialog;
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
 
             if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)) {
-                SyncUtils.export();
+                /*SyncUtils.export();
 
                 if (GoogleSignIn.getLastSignedInAccount(this) != null) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -242,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                         builder.setChannelId("com.f0x1d.notes.sync");
                     builder.setOngoing(true);
-                    builder.setDefaults(0).setVibrate(new long[]{0L});
+                    builder.setDefaults(0);
 
                     ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(2, builder.build());
 
@@ -253,7 +254,9 @@ public class MainActivity extends AppCompatActivity {
                             Log.e("notes_err", "synced");
                         }
                     });
-                }
+                }*/
+
+                startService(new Intent(this, SyncService.class));
             }
             return;
         }
@@ -293,9 +296,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false))
-          //  return;
-
         if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false))
             return;
 

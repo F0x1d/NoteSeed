@@ -578,21 +578,41 @@ public class Notes extends Fragment {
         return id + 1;
     }
 
+    private int getPosition(long id) {
+        int pos = 0;
+
+        for (NoteOrFolder noteItem : dao.getAll()) {
+            if (noteItem.id == id) {
+                pos = noteItem.position;
+                break;
+            }
+        }
+
+        return pos;
+    }
+
     public void delete(int position) {
         BottomSheetCreator creator = new BottomSheetCreator(getActivity());
         creator.addElement(new Element(getString(R.string.delete), getActivity().getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (allList.get(position).is_folder == 1) {
-                    if (new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position).equals(""))
+                    if (ItemsAdapter.getFolderNameFromDataBaseStatic(allList.get(position).id, position).equals(""))
                         adapter.deleteFolder(allList.get(position).folder_name);
                     else
-                        adapter.deleteFolder(new ItemsAdapter(allList, getActivity(), true).getFolderNameFromDataBase(allList.get(position).id, position));
+                        adapter.deleteFolder(ItemsAdapter.getFolderNameFromDataBaseStatic(allList.get(position).id, position));
                 } else {
                     adapter.deleteNote(allList.get(position).id);
                     App.getInstance().getDatabase().noteItemsDao().deleteByToId(allList.get(position).id);
                 }
                 allList.remove(position);
+
+                for (int i = 0; i < allList.size(); i++) {
+                    if (getPosition(allList.get(i).id) != i) {
+                        dao.updatePosition(i, allList.get(i).id);
+                    }
+                }
+
                 recyclerView.getAdapter().notifyDataSetChanged();
 
                 Toast.makeText(getActivity(), getString(R.string.deleted), Toast.LENGTH_SHORT).show();

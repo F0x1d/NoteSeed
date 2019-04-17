@@ -358,15 +358,17 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void onClick(View v) {
                 try {
-                    for (int i = position + 1; i < noteItems.size(); i++) {
-                        dao.updateElementPos(i - 1, noteItems.get(i).id);
-                        notifyDataSetChanged();
+                    dao.deleteItem(noteItems.get(position).id);
+                    remove(position);
+
+                    for (int i = 0; i < noteItems.size(); i++) {
+                        if (getPosition(noteItems.get(i).id) != i) {
+                            dao.updateElementPos(i, noteItems.get(i).id);
+                        }
                     }
 
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
-                    dao.deleteItem(noteItems.get(position).id);
 
-                    remove(position);
                     NoteEdit.last_pos = NoteEdit.last_pos - 1;
 
                     notifyDataSetChanged();
@@ -377,8 +379,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
             }
         }));
         creator.addElement(new Element(activity.getString(R.string.cancel), activity.getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {

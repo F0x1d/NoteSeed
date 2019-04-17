@@ -369,6 +369,19 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return color;
     }
 
+    public static String getFolderNameFromDataBaseStatic(long id, int pos) {
+        String name = "";
+
+        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
+            if (noteOrFolder.id == id) {
+                name = noteOrFolder.folder_name;
+                break;
+            }
+        }
+
+        return name;
+    }
+
     public String getFolderNameFromDataBase(long id, int pos) {
         String name = "";
 
@@ -807,7 +820,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return color;
     }
 
-    public String getFolderNameFromDataBase(long id) {
+    public static String getFolderNameFromDataBase(long id) {
         String name = "";
 
         for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
