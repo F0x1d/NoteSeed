@@ -137,4 +137,6 @@
     <string name="notification">Напоминания</string>
     <string name="syncing">Синхронизирую</string>
     <string name="automatic_sync">Автоматическая синхронизация</string>
+    <string name="gallery">Галерея</string>
+    <string name="camera">Камера</string>
 </resources>

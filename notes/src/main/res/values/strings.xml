@@ -137,4 +137,6 @@
     <string name="notification">Notifications</string>
     <string name="syncing">Syncing</string>
     <string name="automatic_sync">Automatic synchronization</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
 </resources>

@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("notes", "onCreate");
         instance = this;
-        PermissionUtils.requestWriteExternalPermission(this);
+        PermissionUtils.requestPermissions(this);
 
         if (UselessUtils.ifCustomTheme()) {
             new ThemesEngine().setupAll();
@@ -137,7 +137,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             if (getIntent().getExtras() != null){
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, NoteEdit.newInstance(getIntent().getExtras()), "edit").commit();
+                        R.id.container, new Notes(), "notes").commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, NoteEdit.newInstance(getIntent().getExtras()), "edit").addToBackStack("editor").commit();
                 return;
             }
 
@@ -151,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
                         R.id.container, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change", false).apply();
             } else {
-
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false)) {
                     getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                             R.id.container, LockScreen.newInstance(), "lock").commit();
@@ -165,8 +166,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void signIn() {
         if (UselessUtils.getBool("want_sign_in", true)) {
-            Log.e("notes_err", "want_sign_in: " + UselessUtils.getBool("want_sign_in", true));
-
             new SignInDialog().show(this, mGoogleSignInClient);
         }
     }
@@ -222,41 +221,11 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
 
             if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)) {
-                /*SyncUtils.export();
 
-                if (GoogleSignIn.getLastSignedInAccount(this) != null) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        String name = getString(R.string.sync);
-                        int importance = NotificationManager.IMPORTANCE_LOW;
-                        NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.sync", name, importance);
-                        channel.enableVibration(false);
-                        channel.enableLights(false);
-                        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-                        notificationManager.createNotificationChannel(channel);
-                    }
-
-                    Notification.Builder builder = new Notification.Builder(getApplicationContext());
-                    builder.setContentTitle(getString(R.string.sync));
-                    builder.setContentText(getString(R.string.syncing));
-                    builder.setSmallIcon(R.drawable.ic_sync_black_24dp);
-                    builder.setCategory(NotificationCompat.CATEGORY_SERVICE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                        builder.setChannelId("com.f0x1d.notes.sync");
-                    builder.setOngoing(true);
-                    builder.setDefaults(0);
-
-                    ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(2, builder.build());
-
-                    SyncUtils.exportToGDrive().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(2);
-                            Log.e("notes_err", "synced");
-                        }
-                    });
-                }*/
-
-                startService(new Intent(this, SyncService.class));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    startForegroundService(new Intent(this, SyncService.class));
+                else
+                    startService(new Intent(this, SyncService.class));
             }
             return;
         }

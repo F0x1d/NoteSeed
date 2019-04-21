@@ -6,10 +6,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +31,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -49,6 +55,7 @@ import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.view.CenteredToolbar;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -56,7 +63,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class NoteEdit extends Fragment {
@@ -410,19 +419,13 @@ public class NoteEdit extends Fragment {
 
                         try {
                             creator.customBottomSheet.dismiss();
-                        } catch (Exception e) {
-                        }
+                        } catch (Exception e) {}
                     }
                 }));
                 creator.addElement(new Element(getString(R.string.picture), getActivity().getDrawable(R.drawable.ic_image_white_24dp), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try {
-                            creator.customBottomSheet.dismiss();
-                        } catch (Exception e) {
-                        }
-
-                        openFile("image/*", 228, getActivity());
+                        openChoosePicture();
                     }
                 }));
                 creator.addElement(new Element(getString(R.string.item_checkbox), getActivity().getDrawable(R.drawable.ic_work_white_24dp), new View.OnClickListener() {
@@ -432,8 +435,7 @@ public class NoteEdit extends Fragment {
 
                         try {
                             creator.customBottomSheet.dismiss();
-                        } catch (Exception e) {
-                        }
+                        } catch (Exception e) {}
                     }
                 }));
                 creator.show("", true);
@@ -466,6 +468,59 @@ public class NoteEdit extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void openChoosePicture(){
+        BottomSheetCreator creator = new BottomSheetCreator(getActivity());
+        creator.addElement(new Element(getString(R.string.camera), getResources().getDrawable(R.drawable.ic_camera_alt_white_24dp), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    creator.customBottomSheet.dismiss();
+                } catch (Exception e) {}
+
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException ex) {
+                        Toast.makeText(getActivity(), ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    if (photoFile != null) {
+                        Uri photoURI = FileProvider.getUriForFile(getActivity(), "com.f0x1d.notes.fileprovider", photoFile);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(takePictureIntent, 1337);
+                    }
+                }
+            }
+        }));
+        creator.addElement(new Element(getString(R.string.gallery), getResources().getDrawable(R.drawable.ic_image_white_24dp), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    creator.customBottomSheet.dismiss();
+                } catch (Exception e) {}
+
+                openFile("image/*", 228, getActivity());
+            }
+        }));
+        creator.show("TAG", true);
+    }
+
+    String currentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/pics");
+        if (!storageDir.exists())
+            storageDir.mkdirs();
+        File image = new File(storageDir, imageFileName + ".jpg");
+        image.createNewFile();
+
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
     public void openFile(String minmeType, int requestCode, Context c) {
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -496,6 +551,31 @@ public class NoteEdit extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null && requestCode == 1337){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        last_pos = last_pos + 1;
+                        NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), id, null, currentPhotoPath, last_pos, 0, 0);
+                        noteItemsDao.insert(noteItem);
+                        noteItems.add(last_pos, noteItem);
+                    } catch (IndexOutOfBoundsException e) {
+                        Log.e("notes_err", e.getLocalizedMessage());
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.getAdapter().notifyDataSetChanged();
+                        }
+                    });
+
+                    dao.updateNoteTime(System.currentTimeMillis(), id);
+                }
+            }).start();
+        }
+
         if (data != null && requestCode == 228) {
             new Thread(new Runnable() {
                 @Override

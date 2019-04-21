@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -26,7 +27,7 @@
             android:label="@string/app_name"/>
 
         <activity
-            android:name=".activity.Splash"
+            android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -44,5 +45,15 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="739e07b685d16d7a41340eaca4fe3c5d9c8907ac" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.f0x1d.notes.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 </manifest>
