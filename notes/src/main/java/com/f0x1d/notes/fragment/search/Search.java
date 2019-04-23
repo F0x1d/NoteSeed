@@ -159,9 +159,13 @@ public class Search extends Fragment {
                         boolean add = false;
 
                         for (NoteItem noteItem : noteItemsDao.getAll()){
-                            if (menuItem.id == noteItem.to_id && (noteItem.text != null && noteItem.text.toLowerCase().contains(s.toString().toLowerCase()))){
-                                add = true;
-                                break;
+                            if (menuItem.id == noteItem.to_id){
+                                if (noteItem.text != null && !noteItem.text.equals("null")){
+                                    if (noteItem.text.toLowerCase().contains(s.toString().toLowerCase())){
+                                        add = true;
+                                        break;
+                                    }
+                                }
                             }
                         }
 
@@ -175,10 +179,8 @@ public class Search extends Fragment {
                             }
                         }
 
-                        if (!add)
-                            return;
-
-                        searchedList.add(menuItem);
+                        if (add)
+                            searchedList.add(menuItem);
                     }
                 }
 
