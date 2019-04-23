@@ -184,11 +184,8 @@ public class Search extends Fragment {
                     }
                 }
 
-                recyclerView.getAdapter().notifyDataSetChanged();
-
-                //ItemsAdapter adapter = new ItemsAdapter(searchedList, getActivity(), false);
-
-                //recyclerView.setAdapter(adapter);
+                ItemsAdapter adapter = new ItemsAdapter(searchedList, getActivity(), false);
+                recyclerView.setAdapter(adapter);
             }
         });
     }
