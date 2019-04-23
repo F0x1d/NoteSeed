@@ -15,7 +15,7 @@ import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SwitchPreference;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
 import static android.content.Context.MODE_PRIVATE;

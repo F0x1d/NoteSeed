@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.sync.SyncUtils;
-import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

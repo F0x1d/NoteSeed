@@ -7,7 +7,7 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.CheckBox;
 
-import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
 @SuppressLint("AppCompatCustomView")

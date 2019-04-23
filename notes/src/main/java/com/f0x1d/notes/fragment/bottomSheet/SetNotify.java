@@ -33,7 +33,7 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NotifyDao;
 import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.receiver.NotifyServiceReceiver;
-import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.view.theming.MyButton;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;

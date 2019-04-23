@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentManager;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;

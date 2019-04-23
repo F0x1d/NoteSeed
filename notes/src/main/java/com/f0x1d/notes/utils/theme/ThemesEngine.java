@@ -1,4 +1,4 @@
-package com.f0x1d.notes.utils;
+package com.f0x1d.notes.utils.theme;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,7 +10,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.f0x1d.notes.App;
-import com.f0x1d.notes.model.Theme;
+import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.theme.Theme;
 
 import org.json.JSONObject;
 
@@ -48,9 +49,6 @@ public class ThemesEngine {
     public static float shadows;
 
     public void importTheme(Uri uri, Activity activity) {
-
-        Log.e("notes_err", "OPA, tut import");
-
         File theme = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/theme");
 
         if (!theme.exists()) {

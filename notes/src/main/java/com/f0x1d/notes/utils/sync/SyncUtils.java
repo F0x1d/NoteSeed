@@ -89,8 +89,7 @@ public class SyncUtils {
             FileOutputStream stream = new FileOutputStream(database);
 
             try {
-                driveService.files().get(id)
-                        .executeMediaAndDownloadTo(stream);
+                driveService.files().get(id).executeMediaAndDownloadTo(stream);
 
                 stream.close();
             } catch (IOException e) {

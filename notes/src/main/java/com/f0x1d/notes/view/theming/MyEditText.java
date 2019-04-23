@@ -9,7 +9,7 @@ import android.widget.EditText;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
 import java.util.ArrayList;

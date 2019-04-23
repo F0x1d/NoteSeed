@@ -31,7 +31,9 @@ public class Element implements Parcelable {
         this.pic = pic;
     }
 
-    protected Element(Parcel in) {}
+    protected Element(Parcel in) {
+        name = in.readString();
+    }
 
     @Override
     public int describeContents() {
@@ -39,5 +41,7 @@ public class Element implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {}
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+    }
 }

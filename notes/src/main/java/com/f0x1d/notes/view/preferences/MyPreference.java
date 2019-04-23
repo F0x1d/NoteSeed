@@ -9,7 +9,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
 public class MyPreference extends Preference {
@@ -44,7 +44,6 @@ public class MyPreference extends Preference {
 
             text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
             text2.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 }

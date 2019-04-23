@@ -27,7 +27,7 @@ import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
-import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
 import java.util.ArrayList;
@@ -138,15 +138,9 @@ public class Search extends Fragment {
         text.startAnimation(animation);
         text.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().isEmpty()) {
@@ -162,29 +156,37 @@ public class Search extends Fragment {
                             searchedList.add(menuItem);
                         }
                     } else {
-                        NoteItem item = null;
-                        for (NoteItem noteItem : noteItemsDao.getAll()) {
-                            if (menuItem.id == noteItem.to_id && noteItem.position == 0) {
-                                item = noteItem;
+                        boolean add = false;
+
+                        for (NoteItem noteItem : noteItemsDao.getAll()){
+                            if (menuItem.id == noteItem.to_id && (noteItem.text != null && noteItem.text.toLowerCase().contains(s.toString().toLowerCase()))){
+                                add = true;
+                                break;
                             }
                         }
 
                         if (menuItem.text != null) {
                             if (menuItem.text.toLowerCase().contains(s.toString().toLowerCase()) || menuItem.title.toLowerCase().contains(s.toString().toLowerCase())) {
-                                searchedList.add(menuItem);
+                                add = true;
                             }
                         } else {
-                            if (menuItem.title.toLowerCase().contains(s.toString().toLowerCase())
-                                    || item.text.toLowerCase().contains(s.toString().toLowerCase())) {
-                                searchedList.add(menuItem);
+                            if (menuItem.title.toLowerCase().contains(s.toString().toLowerCase())) {
+                                add = true;
                             }
                         }
+
+                        if (!add)
+                            return;
+
+                        searchedList.add(menuItem);
                     }
                 }
 
-                ItemsAdapter adapter = new ItemsAdapter(searchedList, getActivity(), false);
+                recyclerView.getAdapter().notifyDataSetChanged();
 
-                recyclerView.setAdapter(adapter);
+                //ItemsAdapter adapter = new ItemsAdapter(searchedList, getActivity(), false);
+
+                //recyclerView.setAdapter(adapter);
             }
         });
     }

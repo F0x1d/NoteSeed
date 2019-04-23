@@ -9,7 +9,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceViewHolder;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 
 public class MyPreferenceCategory extends PreferenceCategory {
@@ -22,8 +22,7 @@ public class MyPreferenceCategory extends PreferenceCategory {
         super(context, attrs);
     }
 
-    public MyPreferenceCategory(Context context, AttributeSet attrs,
-                                int defStyle) {
+    public MyPreferenceCategory(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

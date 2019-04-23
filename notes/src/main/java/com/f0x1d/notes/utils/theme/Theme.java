@@ -1,4 +1,4 @@
-package com.f0x1d.notes.model;
+package com.f0x1d.notes.utils.theme;
 
 import java.io.File;
 
