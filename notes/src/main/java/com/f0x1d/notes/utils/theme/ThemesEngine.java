@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.utils.UselessUtils;
-import com.f0x1d.notes.utils.theme.Theme;
 
 import org.json.JSONObject;
 

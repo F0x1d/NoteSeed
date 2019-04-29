@@ -139,4 +139,5 @@
     <string name="automatic_sync">Автоматична синхронізація</string>
     <string name="gallery">Галерея</string>
     <string name="camera">Камера</string>
+    <string name="show_skolko_thing_on_folder">Показувати скільки заміток в теці</string>
 </resources>

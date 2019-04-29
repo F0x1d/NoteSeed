@@ -8,7 +8,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.f0x1d.notes.App;
-import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.ConnectionResult;

@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 
 public class AboutSettings extends PreferenceFragmentCompat {
@@ -48,5 +50,10 @@ public class AboutSettings extends PreferenceFragmentCompat {
 
         Preference preference = findPreference("about_v");
         preference.setSummary(Html.fromHtml("Version: <b>" + BuildConfig.VERSION_NAME + "</b>"));
+    }
+
+    @Override
+    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        return new MainSettings.CustomPreferenceGroupAdapter(preferenceScreen);
     }
 }

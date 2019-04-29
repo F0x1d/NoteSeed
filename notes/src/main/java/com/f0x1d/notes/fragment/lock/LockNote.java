@@ -33,8 +33,8 @@ import androidx.fragment.app.Fragment;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.theming.MyButton;
 import com.mattprecious.swirl.SwirlView;
 

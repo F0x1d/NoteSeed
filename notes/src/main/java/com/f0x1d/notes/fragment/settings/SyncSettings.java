@@ -16,12 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.sync.SyncUtils;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.SignInDialog;
+import com.f0x1d.notes.utils.sync.SyncUtils;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -138,6 +140,11 @@ public class SyncSettings extends PreferenceFragmentCompat {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        return new MainSettings.CustomPreferenceGroupAdapter(preferenceScreen);
     }
 
     public void importFromGDrive() {

@@ -34,9 +34,10 @@ import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.fragment.bottomSheet.TextSizeDialog;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.ColorUtils;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 
 public class MainSettings extends PreferenceFragmentCompat {
@@ -61,6 +62,16 @@ public class MainSettings extends PreferenceFragmentCompat {
         }
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SwitchPreference lock = (SwitchPreference) findPreference("lock");
+        lock.setChecked(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false));
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("pass", "").equals(""))
+            lock.setChecked(false);
     }
 
     @Override
@@ -191,13 +202,11 @@ public class MainSettings extends PreferenceFragmentCompat {
                 delete = false;
             }
         }, 2000);
-
-
     }
 
     @Override
     protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
-        return super.onCreateAdapter(preferenceScreen);
+        return new CustomPreferenceGroupAdapter(preferenceScreen);
     }
 
     @SuppressLint("RestrictedApi")
@@ -214,13 +223,8 @@ public class MainSettings extends PreferenceFragmentCompat {
             super.onBindViewHolder(holder, position);
             Preference currentPreference = getItem(position);
 
-            if (position != 0 && currentPreference instanceof PreferenceCategory) {
-                holder.setDividerAllowedAbove(false);
-                holder.setDividerAllowedBelow(false);
-            } else {
-                holder.setDividerAllowedAbove(false);
-                holder.setDividerAllowedBelow(false);
-            }
+            holder.setDividerAllowedAbove(false);
+            holder.setDividerAllowedBelow(false);
 
             if (currentPreference instanceof PreferenceCategory)
                 setZeroPaddingToLayoutChildren(holder.itemView);

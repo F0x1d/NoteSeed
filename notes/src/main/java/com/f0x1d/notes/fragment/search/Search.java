@@ -27,8 +27,8 @@ import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 
 import java.util.ArrayList;
 import java.util.List;

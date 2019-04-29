@@ -24,6 +24,9 @@
             android:title="@string/date_appearance"
             android:summary="@string/choose_date_appearance"
             android:key="date"/>
+        <com.f0x1d.notes.view.preferences.MySwitchPreference
+            android:title="@string/show_skolko_thing_on_folder"
+            android:key="show_things"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/security">

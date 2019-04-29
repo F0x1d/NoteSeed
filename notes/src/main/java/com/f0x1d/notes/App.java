@@ -2,7 +2,6 @@ package com.f0x1d.notes;
 
 import android.app.Application;
 import android.content.Context;
-import android.provider.ContactsContract;
 
 import androidx.room.Room;
 

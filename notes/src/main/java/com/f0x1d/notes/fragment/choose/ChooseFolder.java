@@ -2,7 +2,6 @@ package com.f0x1d.notes.fragment.choose;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

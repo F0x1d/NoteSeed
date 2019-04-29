@@ -44,11 +44,11 @@ import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.main.Notes;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 
 import java.io.File;

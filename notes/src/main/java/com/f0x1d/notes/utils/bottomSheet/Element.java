@@ -5,8 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
 
-import java.io.Serializable;
-
 public class Element implements Parcelable {
 
     public static final Creator<Element> CREATOR = new Creator<Element>() {

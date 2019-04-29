@@ -139,4 +139,5 @@
     <string name="automatic_sync">Automatic synchronization</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
+    <string name="show_skolko_thing_on_folder">Show how many notes folder includes</string>
 </resources>

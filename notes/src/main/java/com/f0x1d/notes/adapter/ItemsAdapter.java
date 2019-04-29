@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
+import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
@@ -43,9 +44,9 @@ import com.f0x1d.notes.fragment.choose.ChooseFolder;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockNote;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.theming.MyColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
@@ -330,6 +331,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         holder.name.setText(getFolderNameFromDataBase(items.get(position).id, position));
+
+        if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("show_things", false))
+            holder.name.setText(getFolderNameFromDataBase(items.get(position).id, position) + " | " + Database.thingsInFolder(getFolderNameFromDataBase(items.get(position).id, position)));
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

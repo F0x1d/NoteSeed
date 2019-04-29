@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 
 import java.util.ArrayList;
 import java.util.List;

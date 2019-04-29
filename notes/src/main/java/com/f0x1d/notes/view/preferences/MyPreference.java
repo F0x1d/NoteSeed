@@ -1,7 +1,11 @@
 package com.f0x1d.notes.view.preferences;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -9,8 +13,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.ColorUtils;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 
 public class MyPreference extends Preference {
 

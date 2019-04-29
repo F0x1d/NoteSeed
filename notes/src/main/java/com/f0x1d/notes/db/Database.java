@@ -14,7 +14,6 @@ import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
 
 import java.util.List;
-import java.util.StringTokenizer;
 
 @androidx.room.Database(entities = {NoteOrFolder.class, Notify.class, NoteItem.class}, version = 10, exportSchema = false)
 public abstract class Database extends RoomDatabase {
@@ -53,5 +52,20 @@ public abstract class Database extends RoomDatabase {
         }
 
         return lastPos;
+    }
+
+    public static int thingsInFolder(String inFolderId){
+        NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
+
+        List<NoteOrFolder> things = dao.getAll();
+
+        int thingsInFolder = 0;
+
+        for (int i = 0; i < things.size(); i++){
+            if (things.get(i).in_folder_id.equals(inFolderId))
+                thingsInFolder++;
+        }
+
+        return thingsInFolder;
     }
 }

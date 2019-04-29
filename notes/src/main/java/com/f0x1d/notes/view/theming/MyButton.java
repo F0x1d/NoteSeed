@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.theme.ThemesEngine;
 
 @SuppressLint("AppCompatCustomView")
 public class MyButton extends Button {
