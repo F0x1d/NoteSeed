@@ -198,8 +198,6 @@ public class SetNotify extends BottomSheetDialogFragment {
                             am.setExact(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), service);
                         }
 
-                        Log.e("notes_err", "notify time: " + notify.time);
-
                         dialog.dismiss();
                     } else {
                         Toast.makeText(getActivity(), "Hmmmmm...", Toast.LENGTH_SHORT).show();
@@ -247,7 +245,17 @@ public class SetNotify extends BottomSheetDialogFragment {
 
             myHour = hourOfDay;
             myMinute = minute;
-            time.setText(myHour + ":" + myMinute);
+
+            String minutes = String.valueOf(myMinute);
+            String hour = String.valueOf(myHour);
+
+            if (String.valueOf(myMinute).length() <= 1)
+                minutes = "0" + minutes;
+
+            if (String.valueOf(myHour).length() <= 1)
+                hour = "0" + hour;
+
+            time.setText(hour + ":" + minutes);
         }
     };
 

@@ -517,18 +517,18 @@ public class NoteAdd extends Fragment {
                     if (new File(currentPhotoPath).length() < 10)
                         return;
 
-                    try {
-                        last_pos = last_pos + 1;
-                        NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, currentPhotoPath, last_pos, 0, 0);
-                        noteItemsDao.insert(noteItem);
-                        noteItems.add(last_pos, noteItem);
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.e("notes_err", e.getLocalizedMessage());
-                    }
-
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            try {
+                                last_pos = last_pos + 1;
+                                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, currentPhotoPath, last_pos, 0, 0);
+                                noteItemsDao.insert(noteItem);
+                                noteItems.add(last_pos, noteItem);
+                            } catch (IndexOutOfBoundsException e) {
+                                Log.e("notes_err", e.getLocalizedMessage());
+                            }
+
                             recyclerView.getAdapter().notifyDataSetChanged();
                         }
                     });
@@ -572,18 +572,19 @@ public class NoteAdd extends Fragment {
 
                     Log.e("notes_err", "saved: " + fleks.getPath());
 
-                    try {
-                        last_pos = last_pos + 1;
-                        NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, fleks.getPath(), last_pos, 0, 0);
-                        noteItemsDao.insert(noteItem);
-                        add(last_pos, noteItem);
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.e("notes_err", e.getLocalizedMessage());
-                    }
-
+                    File finalFleks = fleks;
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            try {
+                                last_pos = last_pos + 1;
+                                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, finalFleks.getPath(), last_pos, 0, 0);
+                                noteItemsDao.insert(noteItem);
+                                add(last_pos, noteItem);
+                            } catch (IndexOutOfBoundsException e) {
+                                Log.e("notes_err", e.getLocalizedMessage());
+                            }
+
                             recyclerView.getAdapter().notifyDataSetChanged();
                         }
                     });
@@ -600,6 +601,7 @@ public class NoteAdd extends Fragment {
         inflater.inflate(R.menu.edit_menu, menu);
 
         MenuItem pic = menu.findItem(R.id.attach);
+        pic.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         if (UselessUtils.ifCustomTheme()) {
             pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_add_black_24dp), ThemesEngine.iconsColor));

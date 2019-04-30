@@ -139,5 +139,7 @@
     <string name="automatic_sync">Автоматична синхронізація</string>
     <string name="gallery">Галерея</string>
     <string name="camera">Камера</string>
-    <string name="show_skolko_thing_on_folder">Показувати скільки заміток в теці</string>
+    <string name="show_skolko_thing_on_folder">Показувати скільки нотаток в теці</string>
+    <string name="shakal">Стискати прикріплені зображення</string>
+    <string name="shakal_summary">Це може збільшити продуктивність</string>
 </resources>

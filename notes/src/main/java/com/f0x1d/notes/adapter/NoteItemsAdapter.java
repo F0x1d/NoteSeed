@@ -1,5 +1,6 @@
 package com.f0x1d.notes.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -118,14 +119,11 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                     dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
             }
         };
 
         holder.editText.clearTextChangedListeners();
-
-        Log.e("notes_err", "checkbox setup: " + position);
 
         holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
 
@@ -154,13 +152,9 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     dao.updateIsChecked(1, noteItems.get(position).id);
-                    Log.e("notes_err", "put: " + 1);
                 } else {
                     dao.updateIsChecked(0, noteItems.get(position).id);
-                    Log.e("notes_err", "put: " + 0);
                 }
-
-                Log.e("notes_err", "checkbox checked: " + isChecked);
 
                 dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
             }
@@ -169,13 +163,16 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.editText.addTextChangedListener(textWatcher);
     }
 
+    @SuppressLint("CheckResult")
     private void setupImage(imageViewHolder holder, int position) {
-        Log.e("notes_err", "image setup: " + position);
-
         RequestOptions options = new RequestOptions()
-                .placeholder(new ColorDrawable(Color.WHITE))
-                .dontTransform()
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+                .placeholder(new ColorDrawable(Color.WHITE));
+        if (!PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("shakal", true)){
+            options
+                    .dontTransform()
+                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+        } else
+            options.fitCenter();
 
         Glide.with(App.getContext()).load(noteItems.get(position).pic_res).apply(options).into(holder.image);
     }
@@ -207,14 +204,11 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                     dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
                     dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
             }
         };
 
         holder.editText.clearTextChangedListeners();
-
-        Log.e("notes_err", "text setup: " + position);
 
         holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
 
@@ -358,6 +352,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void onClick(View v) {
                 try {
+                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
+
                     dao.deleteItem(noteItems.get(position).id);
                     remove(position);
 
@@ -366,8 +362,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                             dao.updateElementPos(i, noteItems.get(i).id);
                         }
                     }
-
-                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
 
                     NoteEdit.last_pos = NoteEdit.last_pos - 1;
 

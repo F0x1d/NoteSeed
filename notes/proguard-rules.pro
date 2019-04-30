@@ -25,7 +25,7 @@
 #-renamesourcefileattribute SourceFile
 
 -renamesourcefileattribute SourceFile
--repackageclasses 'flex'
+-repackageclasses 'noteseed'
 -allowaccessmodification
 
 -obfuscationdictionary proguard-dictionary.txt
