@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
+import android.text.Html;
 
 import androidx.core.app.NotificationCompat;
 import androidx.legacy.content.WakefulBroadcastReceiver;
@@ -52,8 +53,8 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
                 .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
-                .setContentTitle(title)
-                .setContentText(text)
+                .setContentTitle(Html.fromHtml(title))
+                .setContentText(Html.fromHtml(text))
                 .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class)
                         .putExtra("id", to_id).putExtra("title", title), PendingIntent.FLAG_CANCEL_CURRENT))
                 .setAutoCancel(true)

@@ -187,7 +187,7 @@ public class NoteEdit extends Fragment {
                 }
             }
 
-            SetNotify notify = new SetNotify(new Notify(title.getText().toString(), item.text, 0, item.to_id));
+            SetNotify notify = new SetNotify(new Notify(((NoteItemsAdapter) recyclerView.getAdapter()).getText(id), item.text, 0, item.to_id));
             notify.show(getActivity().getSupportFragmentManager(), "TAG");
         });
 

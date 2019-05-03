@@ -286,7 +286,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    private String getText(long id) {
+    public String getText(long id) {
         String text = "";
 
         for (NoteItem noteItem : dao.getAll()) {
