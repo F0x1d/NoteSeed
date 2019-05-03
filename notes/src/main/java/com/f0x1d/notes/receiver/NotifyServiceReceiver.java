@@ -53,8 +53,8 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
                 .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
-                .setContentTitle(Html.fromHtml(title))
-                .setContentText(Html.fromHtml(text))
+                .setContentTitle(Html.fromHtml(title.replace("\n", "<br />")))
+                .setContentText(Html.fromHtml(text.replace("\n", "<br />")))
                 .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class)
                         .putExtra("id", to_id).putExtra("title", title), PendingIntent.FLAG_CANCEL_CURRENT))
                 .setAutoCancel(true)

@@ -152,16 +152,17 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if (editMode){
                     holder.editText.setText(getText(noteItems.get(position).id));
                 } else {
-                    holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id)));
+                    holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
                     holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                         @Override
                         public void onFocusChange(View v, boolean hasFocus) {
                             if (editMode)
                                 return;
 
-                            if (hasFocus)
+                            if (hasFocus) {
                                 ((NoteEdit) fragment).enterEditMode();
-                            UselessUtils.hideSoftKeyboard(holder.editText, activity);
+                                UselessUtils.hideSoftKeyboard(holder.editText, activity);
+                            }
                         }
                     });
                 }
@@ -258,16 +259,17 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if (editMode){
                     holder.editText.setText(getText(noteItems.get(position).id));
                 } else {
-                    holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id)));
+                    holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
                     holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                         @Override
                         public void onFocusChange(View v, boolean hasFocus) {
                             if (editMode)
                                 return;
 
-                            if (hasFocus)
+                            if (hasFocus) {
                                 ((NoteEdit) fragment).enterEditMode();
-                            UselessUtils.hideSoftKeyboard(holder.editText, activity);
+                                UselessUtils.hideSoftKeyboard(holder.editText, activity);
+                            }
                         }
                     });
                 }

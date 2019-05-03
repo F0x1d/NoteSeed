@@ -228,7 +228,7 @@ public class NoteEdit extends Fragment {
         recyclerView.setAdapter(adapter);
 
         if (getArguments() != null) {
-            title.setText(Html.fromHtml(getArguments().getString("title")));
+            title.setText(Html.fromHtml(getArguments().getString("title").replace("\n", "<br />")));
             args = getArguments();
         }
 
@@ -238,9 +238,10 @@ public class NoteEdit extends Fragment {
                 if (editMode)
                     return;
 
-                if (hasFocus)
+                if (hasFocus) {
                     enterEditMode();
-                UselessUtils.hideSoftKeyboard(title, getActivity());
+                    UselessUtils.hideSoftKeyboard(title, getActivity());
+                }
             }
         });
 
