@@ -38,6 +38,8 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
         this.activity = activity;
         this.themes = themes;
         this.anim = anim;
+
+        setHasStableIds(true);
     }
 
     @Override
@@ -54,8 +56,12 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ThemeViewHolder holder, int position) {
+    public long getItemId(int position) {
+        return (long) themes.get(position).hashCode();
+    }
 
+    @Override
+    public void onBindViewHolder(@NonNull ThemeViewHolder holder, int position) {
         if (!UselessUtils.ifBrightColor(themes.get(position).card_color)) {
             holder.name.setTextColor(Color.WHITE);
             holder.author.setTextColor(Color.WHITE);
@@ -126,8 +132,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
                                 } else {
                                     themes.get(position).theme_file.delete();
                                 }
-                            } catch (Exception e) {
-                            }
+                            } catch (Exception e) {}
 
                             themes.remove(position);
                             notifyDataSetChanged();

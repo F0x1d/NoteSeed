@@ -462,7 +462,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         }
 
-        holder.title.setText(items.get(position).title);
+        holder.title.setText(Html.fromHtml(items.get(position).title));
 
         String text = "null";
 
@@ -483,9 +483,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             for (String retval : text.split("\\r?\\n")) {
                 if (oneLine) {
-                    holder.text.setText(retval);
+                    holder.text.setText(Html.fromHtml(retval));
                 } else {
-                    holder.text.setText(retval + "\n...");
+                    holder.text.setText(Html.fromHtml(retval + "\n..."));
                 }
                 break;
             }

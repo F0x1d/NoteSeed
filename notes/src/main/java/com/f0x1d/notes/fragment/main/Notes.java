@@ -67,17 +67,14 @@ import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 
 public class Notes extends Fragment {
 
-    public static RecyclerView recyclerView;
-
-    static List<NoteOrFolder> allList;
-
-    TextView nothing;
-
-    CenteredToolbar toolbar;
-
+    private List<NoteOrFolder> allList;
     NoteOrFolderDao dao;
 
+    TextView nothing;
+    CenteredToolbar toolbar;
+
     ItemsAdapter adapter;
+    public static RecyclerView recyclerView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

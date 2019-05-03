@@ -97,24 +97,13 @@ public class CenteredToolbar extends Toolbar {
         animation.setDuration(300);
         tvTitle.startAnimation(animation);
 
-        tvTitle.setSingleLine();
+        //tvTitle.setSingleLine();
         tvTitle.setEllipsize(TextUtils.TruncateAt.END);
         tvTitle.setTextAppearance(getContext(), R.style.TextAppearance_AppCompat_Widget_ActionBar_Title);
 
         if (UselessUtils.ifCustomTheme()) {
             tvTitle.setTextColor(ThemesEngine.toolbarTextColor);
-
             setBackgroundColor(ThemesEngine.toolbarColor);
-        }
-
-        if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
-            tvTitle.setText("Перехочешь");
-        }
-        if (InvocationHandler.class.isAssignableFrom(App.class)) {
-            tvTitle.setText("Перехочешь");
-        }
-        if (UselessUtils.ifPMSHook()) {
-            tvTitle.setText("Перехочешь");
         }
 
         tvTitle.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));

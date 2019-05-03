@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -72,18 +73,15 @@ public class NoteEdit extends Fragment {
     int locked;
 
     NoteOrFolderDao dao;
-
     String titleStr;
-
     NoteItemsDao noteItemsDao;
-
     CenteredToolbar toolbar;
-
     List<NoteItem> noteItems;
 
     public static int last_pos;
-
     Bundle args;
+
+    private boolean editMode = false;
 
     public static NoteEdit newInstance(Bundle args) {
         NoteEdit myFragment = new NoteEdit();
@@ -140,7 +138,7 @@ public class NoteEdit extends Fragment {
             pic.setIcon(R.drawable.ic_add_black_24dp);
         }
 
-        toolbar.setTitle(getString(R.string.editing));
+        toolbar.setTitle(getString(R.string.checking));
 
         getActivity().setActionBar(toolbar);
 
@@ -152,6 +150,27 @@ public class NoteEdit extends Fragment {
             toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
         return v;
+    }
+
+    public void enterEditMode(){
+        String editing = getString(R.string.editing);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.warning);
+        builder.setMessage(R.string.enter_edit_mode);
+        builder.setPositiveButton(R.string.enter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                editMode = true;
+                ((NoteItemsAdapter) recyclerView.getAdapter()).setEditing(true);
+
+                toolbar.setTitle(editing);
+
+                attachHelper();
+                title.setText(titleStr);
+            }
+        });
+        ShowAlertDialog.show(builder.create());
     }
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
@@ -205,56 +224,25 @@ public class NoteEdit extends Fragment {
 
         last_pos = noteItems.size() - 1;
 
-        NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity());
+        NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity(), this);
         recyclerView.setAdapter(adapter);
 
-        ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
-            @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-                return makeMovementFlags(dragFlags, swipeFlags);
-            }
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder h1, RecyclerView.ViewHolder h2) {
-                int fromPosition = h1.getAdapterPosition();
-                int toPosition = h2.getAdapterPosition();
-
-                if (fromPosition != 0 && toPosition != 0)
-                    adapter.onItemMoved(fromPosition, toPosition);
-                else
-                    Toast.makeText(getActivity(), "Nope.", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
-                if (viewHolder.getPosition() == 0) {
-                    recyclerView.getAdapter().notifyItemChanged(viewHolder.getPosition());
-                    Toast.makeText(getActivity(), "Nope.", Toast.LENGTH_SHORT).show();
-                } else
-                    adapter.delete(viewHolder.getPosition());
-            }
-
-            @Override
-            public boolean isLongPressDragEnabled() {
-                return true;
-            }
-
-            @Override
-            public boolean isItemViewSwipeEnabled() {
-                return true;
-            }
-        };
-
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
-
         if (getArguments() != null) {
-            title.setText(getArguments().getString("title"));
+            title.setText(Html.fromHtml(getArguments().getString("title")));
             args = getArguments();
         }
+
+        title.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (editMode)
+                    return;
+
+                if (hasFocus)
+                    enterEditMode();
+                UselessUtils.hideSoftKeyboard(title, getActivity());
+            }
+        });
 
         title.addTextChangedListener(new TextWatcher() {
             @Override
@@ -283,6 +271,51 @@ public class NoteEdit extends Fragment {
                 dao.updateNoteTime(System.currentTimeMillis(), id);
             }
         });
+    }
+
+    private void attachHelper(){
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder h1, RecyclerView.ViewHolder h2) {
+                int fromPosition = h1.getAdapterPosition();
+                int toPosition = h2.getAdapterPosition();
+
+                if (fromPosition != 0 && toPosition != 0)
+                    ((NoteItemsAdapter) recyclerView.getAdapter()).onItemMoved(fromPosition, toPosition);
+                else
+                    Toast.makeText(getActivity(), "Nope.", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
+                if (viewHolder.getPosition() == 0) {
+                    recyclerView.getAdapter().notifyItemChanged(viewHolder.getPosition());
+                    Toast.makeText(getActivity(), "Nope.", Toast.LENGTH_SHORT).show();
+                } else
+                    ((NoteItemsAdapter) recyclerView.getAdapter()).delete(viewHolder.getPosition());
+            }
+
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return true;
+            }
+
+            @Override
+            public boolean isItemViewSwipeEnabled() {
+                return true;
+            }
+        };
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
     }
 
     private void add(int pos, NoteItem item) {
@@ -400,6 +433,11 @@ public class NoteEdit extends Fragment {
 
                 break;
             case R.id.attach:
+                if (!editMode){
+                    enterEditMode();
+                    break;
+                }
+
                 BottomSheetCreator creator = new BottomSheetCreator(getActivity());
                 creator.addElement(new Element(getString(R.string.text), getActivity().getDrawable(R.drawable.ic_text_fields_white_24dp), new View.OnClickListener() {
                     @Override
@@ -439,6 +477,11 @@ public class NoteEdit extends Fragment {
                 creator.show("", true);
                 break;
             case R.id.lock:
+                if (!editMode){
+                    enterEditMode();
+                    break;
+                }
+
                 if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("lock", false)) {
                     if (item.isChecked()) {
                         item.setChecked(false);
@@ -459,6 +502,11 @@ public class NoteEdit extends Fragment {
 
                 break;
             case R.id.settings:
+                if (!editMode){
+                    enterEditMode();
+                    break;
+                }
+
                 new ItemsAdapter(null, getActivity(), true).getNotesDialog(id);
                 break;
         }

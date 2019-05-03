@@ -142,4 +142,8 @@
     <string name="show_skolko_thing_on_folder">Show how many notes folder includes</string>
     <string name="shakal">Compress attached images</string>
     <string name="shakal_summary">May increase performance</string>
+    <string name="enter_edit_mode">You are going to enter edit mode</string>
+    <string name="warning">Warning!</string>
+    <string name="enter">Enter</string>
+    <string name="checking">View</string>
 </resources>

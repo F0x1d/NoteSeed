@@ -142,4 +142,8 @@
     <string name="show_skolko_thing_on_folder">Показувати скільки нотаток в теці</string>
     <string name="shakal">Стискати прикріплені зображення</string>
     <string name="shakal_summary">Це може збільшити продуктивність</string>
+    <string name="checking">Перегляд</string>
+    <string name="enter_edit_mode">Ви збираєтеся ввійти в режим редагування</string>
+    <string name="warning">Попередження!</string>
+    <string name="enter">Ввійти</string>
 </resources>

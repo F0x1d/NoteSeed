@@ -184,7 +184,7 @@ public class NoteAdd extends Fragment {
             }
         }
 
-        NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity());
+        NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity(), this);
 
         recyclerView.setAdapter(adapter);
 

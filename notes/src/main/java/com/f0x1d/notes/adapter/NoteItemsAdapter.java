@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +30,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
+import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
@@ -50,9 +53,14 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     TextWatcher textWatcher = null;
 
-    public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity) {
+    public boolean editMode = false;
+
+    Fragment fragment;
+
+    public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity, Fragment fragment) {
         this.noteItems = noteItems;
         this.activity = activity;
+        this.fragment = fragment;
 
         setHasStableIds(true);
     }
@@ -77,6 +85,9 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (fragment instanceof NoteAdd)
+            editMode = true;
+
         dao = App.getInstance().getDatabase().noteItemsDao();
 
         switch (holder.getItemViewType()) {
@@ -96,7 +107,9 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                if (!editMode){
+                    ((NoteEdit) fragment).enterEditMode();
+                }
             }
 
             @Override
@@ -136,7 +149,22 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.id == noteItems.get(position).id) {
-                holder.editText.setText(getText(noteItems.get(position).id));
+                if (editMode){
+                    holder.editText.setText(getText(noteItems.get(position).id));
+                } else {
+                    holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id)));
+                    holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (editMode)
+                                return;
+
+                            if (hasFocus)
+                                ((NoteEdit) fragment).enterEditMode();
+                            UselessUtils.hideSoftKeyboard(holder.editText, activity);
+                        }
+                    });
+                }
 
                 if (getChecked(noteItems.get(position).id) == 0)
                     holder.checkBox.setChecked(false);
@@ -150,6 +178,12 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!editMode){
+                    ((NoteEdit) fragment).enterEditMode();
+                    holder.checkBox.setChecked(!isChecked);
+                    return;
+                }
+
                 if (isChecked) {
                     dao.updateIsChecked(1, noteItems.get(position).id);
                 } else {
@@ -221,12 +255,35 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.id == noteItems.get(position).id) {
-                holder.editText.setText(getText(noteItems.get(position).id));
+                if (editMode){
+                    holder.editText.setText(getText(noteItems.get(position).id));
+                } else {
+                    holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id)));
+                    holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if (editMode)
+                                return;
+
+                            if (hasFocus)
+                                ((NoteEdit) fragment).enterEditMode();
+                            UselessUtils.hideSoftKeyboard(holder.editText, activity);
+                        }
+                    });
+                }
                 break;
             }
         }
 
         holder.editText.addTextChangedListener(textWatcher);
+    }
+
+    public void setEditing(boolean editing){
+        editMode = editing;
+
+        for (int i = 0; i < noteItems.size(); i++){
+            notifyItemChanged(i);
+        }
     }
 
     private String getText(long id) {
