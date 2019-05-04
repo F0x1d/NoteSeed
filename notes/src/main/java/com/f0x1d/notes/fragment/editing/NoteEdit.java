@@ -171,7 +171,6 @@ public class NoteEdit extends Fragment {
                 attachHelper();
 
                 title.setText(titleStr);
-                title.setInputType(InputType.TYPE_CLASS_TEXT);
                 title.setFocusableInTouchMode(true);
                 title.setFocusable(true);
                 title.setOnClickListener(null);
@@ -239,7 +238,6 @@ public class NoteEdit extends Fragment {
             args = getArguments();
         }
 
-        title.setInputType(InputType.TYPE_NULL);
         title.setFocusableInTouchMode(false);
         title.setFocusable(false);
         title.setOnClickListener(new View.OnClickListener() {

@@ -485,7 +485,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (oneLine) {
                     holder.text.setText(Html.fromHtml(retval));
                 } else {
-                    holder.text.setText(Html.fromHtml(retval + "\n..."));
+                    holder.text.setText(Html.fromHtml(retval + "..."));
                 }
                 break;
             }

@@ -152,9 +152,9 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (noteItem.id == noteItems.get(position).id) {
                 if (editMode){
                     holder.editText.setText(getText(noteItems.get(position).id));
+                    holder.editText.setOnClickListener(null);
                 } else {
                     holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
-                    holder.editText.setInputType(InputType.TYPE_NULL);
                     holder.editText.setFocusableInTouchMode(false);
                     holder.editText.setFocusable(false);
                     holder.editText.setOnClickListener(new View.OnClickListener() {
@@ -256,9 +256,9 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (noteItem.id == noteItems.get(position).id) {
                 if (editMode){
                     holder.editText.setText(getText(noteItems.get(position).id));
+                    holder.editText.setOnClickListener(null);
                 } else {
                     holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
-                    holder.editText.setInputType(InputType.TYPE_NULL);
                     holder.editText.setFocusableInTouchMode(false);
                     holder.editText.setFocusable(false);
                     holder.editText.setOnClickListener(new View.OnClickListener() {
