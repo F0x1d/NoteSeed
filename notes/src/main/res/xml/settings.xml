@@ -32,6 +32,10 @@
             android:defaultValue="true"
             android:title="@string/shakal"
             android:summary="@string/shakal_summary"/>
+        <com.f0x1d.notes.view.preferences.MySwitchPreference
+            android:title="@string/auto_editmode"
+            android:key="auto_editmode"/>
+
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/security">

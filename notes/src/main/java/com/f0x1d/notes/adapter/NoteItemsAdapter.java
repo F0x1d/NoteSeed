@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,6 +88,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (fragment instanceof NoteAdd)
             editMode = true;
+        else if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("auto_editmode", false))
+            editMode = true;
 
         dao = App.getInstance().getDatabase().noteItemsDao();
 
@@ -107,9 +110,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (!editMode){
-                    ((NoteEdit) fragment).enterEditMode();
-                }
+
             }
 
             @Override
@@ -153,16 +154,13 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     holder.editText.setText(getText(noteItems.get(position).id));
                 } else {
                     holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
-                    holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    holder.editText.setInputType(InputType.TYPE_NULL);
+                    holder.editText.setFocusableInTouchMode(false);
+                    holder.editText.setFocusable(false);
+                    holder.editText.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
-                            if (editMode)
-                                return;
-
-                            if (hasFocus) {
-                                ((NoteEdit) fragment).enterEditMode();
-                                UselessUtils.hideSoftKeyboard(holder.editText, activity);
-                            }
+                        public void onClick(View v) {
+                            ((NoteEdit) fragment).enterEditMode();
                         }
                     });
                 }
@@ -260,16 +258,13 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     holder.editText.setText(getText(noteItems.get(position).id));
                 } else {
                     holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
-                    holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    holder.editText.setInputType(InputType.TYPE_NULL);
+                    holder.editText.setFocusableInTouchMode(false);
+                    holder.editText.setFocusable(false);
+                    holder.editText.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onFocusChange(View v, boolean hasFocus) {
-                            if (editMode)
-                                return;
-
-                            if (hasFocus) {
-                                ((NoteEdit) fragment).enterEditMode();
-                                UselessUtils.hideSoftKeyboard(holder.editText, activity);
-                            }
+                        public void onClick(View v) {
+                            ((NoteEdit) fragment).enterEditMode();
                         }
                     });
                 }

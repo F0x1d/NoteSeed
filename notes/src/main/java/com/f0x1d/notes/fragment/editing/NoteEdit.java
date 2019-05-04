@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -138,7 +139,10 @@ public class NoteEdit extends Fragment {
             pic.setIcon(R.drawable.ic_add_black_24dp);
         }
 
-        toolbar.setTitle(getString(R.string.checking));
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("auto_editmode", false))
+            toolbar.setTitle(getString(R.string.editing));
+        else
+            toolbar.setTitle(getString(R.string.checking));
 
         getActivity().setActionBar(toolbar);
 
@@ -153,8 +157,6 @@ public class NoteEdit extends Fragment {
     }
 
     public void enterEditMode(){
-        String editing = getString(R.string.editing);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.warning);
         builder.setMessage(R.string.enter_edit_mode);
@@ -164,10 +166,15 @@ public class NoteEdit extends Fragment {
                 editMode = true;
                 ((NoteItemsAdapter) recyclerView.getAdapter()).setEditing(true);
 
-                toolbar.setTitle(editing);
+                toolbar.setTitle(getString(R.string.editing));
 
                 attachHelper();
+
                 title.setText(titleStr);
+                title.setInputType(InputType.TYPE_CLASS_TEXT);
+                title.setFocusableInTouchMode(true);
+                title.setFocusable(true);
+                title.setOnClickListener(null);
             }
         });
         ShowAlertDialog.show(builder.create());
@@ -232,16 +239,13 @@ public class NoteEdit extends Fragment {
             args = getArguments();
         }
 
-        title.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        title.setInputType(InputType.TYPE_NULL);
+        title.setFocusableInTouchMode(false);
+        title.setFocusable(false);
+        title.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (editMode)
-                    return;
-
-                if (hasFocus) {
-                    enterEditMode();
-                    UselessUtils.hideSoftKeyboard(title, getActivity());
-                }
+            public void onClick(View v) {
+                enterEditMode();
             }
         });
 

@@ -139,11 +139,12 @@
     <string name="automatic_sync">Автоматическая синхронизация</string>
     <string name="gallery">Галерея</string>
     <string name="camera">Камера</string>
-    <string name="show_skolko_thing_on_folder">Показывать сколько заметок в папке</string>
+    <string name="show_skolko_thing_on_folder">Показывать количество заметок в папке</string>
     <string name="shakal">Сжимать прикрепляемые изображения</string>
     <string name="shakal_summary">Это может повысить производительность</string>
     <string name="enter_edit_mode">Вы собираетесь войти в режим редактирования</string>
     <string name="warning">Внимание!</string>
     <string name="enter">Войти</string>
     <string name="checking">Просмотр</string>
+    <string name="auto_editmode">Сразу входить в режим редактирования</string>
 </resources>

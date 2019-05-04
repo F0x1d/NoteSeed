@@ -146,4 +146,5 @@
     <string name="warning">Warning!</string>
     <string name="enter">Enter</string>
     <string name="checking">View</string>
+    <string name="auto_editmode">Enter edit mode without view mode</string>
 </resources>

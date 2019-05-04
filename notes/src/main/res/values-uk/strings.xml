@@ -146,4 +146,5 @@
     <string name="enter_edit_mode">Ви збираєтеся ввійти в режим редагування</string>
     <string name="warning">Попередження!</string>
     <string name="enter">Ввійти</string>
+    <string name="auto_editmode">Enter edit mode without view mode</string>
 </resources>
