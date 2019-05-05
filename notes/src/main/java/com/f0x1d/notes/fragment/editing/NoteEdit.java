@@ -139,10 +139,7 @@ public class NoteEdit extends Fragment {
             pic.setIcon(R.drawable.ic_add_black_24dp);
         }
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("auto_editmode", false))
-            toolbar.setTitle(getString(R.string.editing));
-        else
-            toolbar.setTitle(getString(R.string.checking));
+        toolbar.setTitle(getString(R.string.checking));
 
         getActivity().setActionBar(toolbar);
 
@@ -163,20 +160,24 @@ public class NoteEdit extends Fragment {
         builder.setPositiveButton(R.string.enter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                editMode = true;
-                ((NoteItemsAdapter) recyclerView.getAdapter()).setEditing(true);
-
-                toolbar.setTitle(getString(R.string.editing));
-
-                attachHelper();
-
-                title.setText(titleStr);
-                title.setFocusableInTouchMode(true);
-                title.setFocusable(true);
-                title.setOnClickListener(null);
+                editModeSetup();
             }
         });
         ShowAlertDialog.show(builder.create());
+    }
+
+    private void editModeSetup(){
+        editMode = true;
+        ((NoteItemsAdapter) recyclerView.getAdapter()).setEditing(true);
+
+        toolbar.setTitle(getString(R.string.editing));
+
+        attachHelper();
+
+        title.setText(titleStr);
+        title.setFocusableInTouchMode(true);
+        title.setFocusable(true);
+        title.setOnClickListener(null);
     }
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
@@ -274,6 +275,9 @@ public class NoteEdit extends Fragment {
                 dao.updateNoteTime(System.currentTimeMillis(), id);
             }
         });
+
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("auto_editmode", false))
+            editModeSetup();
     }
 
     private void attachHelper(){

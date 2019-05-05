@@ -462,7 +462,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         }
 
-        holder.title.setText(Html.fromHtml(items.get(position).title));
+        holder.title.setText(Html.fromHtml(items.get(position).title.replace("\n", "<br />")));
 
         String text = "null";
 
