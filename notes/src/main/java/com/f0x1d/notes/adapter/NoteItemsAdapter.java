@@ -177,12 +177,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!editMode){
-                    ((NoteEdit) fragment).enterEditMode();
-                    holder.checkBox.setChecked(!isChecked);
-                    return;
-                }
-
                 if (isChecked) {
                     dao.updateIsChecked(1, noteItems.get(position).id);
                 } else {
