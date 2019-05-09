@@ -26,8 +26,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
+import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 
 import java.lang.reflect.Field;
@@ -72,15 +74,6 @@ public class UselessUtils {
         return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("custom_theme", false);
     }
 
-    public static int getThemeColor(int themeColor){
-        if (UselessUtils.ifCustomTheme())
-            return themeColor;
-        else if (UselessUtils.getBool("night", true))
-            return Color.WHITE;
-        else
-            return Color.BLACK;
-    }
-
     public static int getNavColor(){
         if (UselessUtils.ifCustomTheme())
             return ThemesEngine.navBarColor;
@@ -91,18 +84,6 @@ public class UselessUtils {
                 return Color.WHITE;
 
             return Color.BLACK;
-        }
-    }
-
-    public static boolean ifPMSHook() {
-        try {
-            PackageManager pm = getContext().getPackageManager();
-            Field mPmField = pm.getClass().getDeclaredField("mPM");
-            mPmField.setAccessible(true);
-            Object mPm = mPmField.get(pm);
-            return Proxy.isProxyClass(App.getInstance().getClass());
-        } catch (Exception e) {
-            return true;
         }
     }
 
@@ -189,24 +170,53 @@ public class UselessUtils {
 
     public static byte[] getSHASignature() {
         try {
-            PackageInfo info = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), PackageManager.GET_SIGNATURES);
-            if (info.signatures != null && info.signatures.length > 0) {
-                Signature signature = info.signatures[0];
-                MessageDigest sha;
+            Object context = Class.forName(new String(new byte[]{99, 111, 109, 46, 102, 48, 120, 49, 100, 46, 110, 111, 116, 101, 115, 46, 65, 112, 112})).getMethod(
+                    new String(new byte[]{103, 101, 116, 67, 111, 110, 116, 101, 120, 116})).invoke(null);
 
-                try {
-                    sha = MessageDigest.getInstance("SHA");
-                    sha.update(signature.toByteArray());
+            Object packageManager = context.getClass().getMethod(new String(new byte[]{103, 101, 116, 80, 97, 99, 107, 97, 103, 101, 77, 97, 110, 97, 103, 101, 114})).invoke(context);
+            Object packageInfo = packageManager.getClass().getMethod(new String(new byte[]{103, 101, 116, 80, 97, 99, 107, 97, 103, 101, 73, 110, 102, 111}), String.class, int.class)
+                    .invoke(packageManager, BuildConfig.APPLICATION_ID, 0x00000040);
 
-                    return sha.digest();
-
-                } catch (NoSuchAlgorithmException e) {
-                }
+            if (isGetHooked() || Notes.isInvokeHooked() != 0){
+                Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
+                        .invoke(null, 0);
             }
 
-        } catch (PackageManager.NameNotFoundException e) {
+            Object[] signatures = (Object[]) packageInfo.getClass().getField(new String(new byte[]{115, 105, 103, 110, 97, 116, 117, 114, 101, 115})).get(packageInfo);
+
+            if (signatures != null && signatures.length > 0) {
+                Signature signature = (Signature) signatures[0];
+                MessageDigest sha = MessageDigest.getInstance(new String(new char[]{'S', 'H', 'A'}));
+                sha.update((byte[]) signature.getClass().getMethod(new String(new byte[]{116, 111, 66, 121, 116, 101, 65, 114, 114, 97, 121})).invoke(signature));
+                return sha.digest();
+            }
+
+        } catch (Exception e) {
+            System.exit(0);
         }
         return null;
     }
 
+    public static boolean isGetHooked() {
+        PackageInfo packageInfo = new PackageInfo();
+        packageInfo.packageName = BuildConfig.APPLICATION_ID;
+        packageInfo.signatures = new Signature[0];
+        try {
+            int length = ((Object[]) PackageInfo.class.getField(new String(new byte[]{115, 105, 103, 110, 97, 116, 117, 114, 101, 115})).get(packageInfo)).length;
+            return length != 0;
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    public static String encodeToString(byte[] bytes){
+        try {
+            return (String) Class.forName(new String(new byte[]{97, 110, 100, 114, 111, 105, 100, 46, 117, 116, 105, 108, 46, 66, 97, 115, 101, 54, 52}))
+                    .getMethod(new String(new byte[]{101, 110, 99, 111, 100, 101, 84, 111, 83, 116, 114, 105, 110, 103}), byte[].class, int.class)
+                    .invoke(null, bytes, 0);
+        } catch (Exception e){
+            System.exit(0);
+        }
+        return null;
+    }
 }

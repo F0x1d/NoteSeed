@@ -107,15 +107,33 @@ public class Notes extends Fragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //UselessUtils.clear_back_stack();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (!(boolean) String.class.getMethod(new String(new byte[]{99, 111, 110, 116, 97, 105, 110, 115}), CharSequence.class)
+                            .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
+                                    new String(new byte[]{73, 85, 67, 89, 52, 50, 85, 79, 90, 54, 83, 97, 67, 72, 115, 88, 98, 101, 66, 76, 56, 103, 107, 89, 43, 103, 56, 61}))){
 
-        /*if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")){
-            if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")){
-                if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")){
-                    Toast.makeText(getActivity(), "Please, bro...", Toast.LENGTH_SHORT).show();
+                        if (!(boolean) String.class.getMethod(new String(new byte[]{99, 111, 110, 116, 97, 105, 110, 115}), CharSequence.class)
+                                .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
+                                        new String(new byte[]{80, 99, 54, 110, 100, 76, 71, 111, 85, 74, 116, 83, 88, 102, 109, 54, 111, 113, 87, 74, 43, 48, 108, 85, 83, 101, 85, 61}))){
+
+                            if (!(boolean) String.class.getMethod(new String(new byte[]{99, 111, 110, 116, 97, 105, 110, 115}), CharSequence.class)
+                                    .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
+                                            new String(new byte[]{90, 101, 106, 52, 77, 80, 115, 85, 84, 102, 79, 119, 76, 86, 88, 70, 67, 49, 116, 48, 43, 71, 118, 81, 89, 107, 99, 61}))){
+
+                                Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109}))
+                                        .getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
+                                        .invoke(null, 0);
+                            }
+                        }
+                    }
+                } catch (Exception e){
+                    System.exit(0);
                 }
             }
-        }*/
+        }).start();
 
         CardView slideView = view.findViewById(R.id.slideView);
         if (UselessUtils.ifCustomTheme())
@@ -209,8 +227,6 @@ public class Notes extends Fragment {
             if (noteOrFolder.in_folder_id.equals("def")) {
                 allList.add(noteOrFolder);
             }
-
-            Log.e("notes_err", String.valueOf(noteOrFolder.position));
         }
 
         nothing = view.findViewById(R.id.nothing);
@@ -297,16 +313,6 @@ public class Notes extends Fragment {
                     }
                 }
 
-                if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
-                    return;
-                }
-                if (InvocationHandler.class.isAssignableFrom(App.class)) {
-                    return;
-                }
-                if (UselessUtils.ifPMSHook()) {
-                    return;
-                }
-
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
@@ -333,16 +339,6 @@ public class Notes extends Fragment {
                     }
                 }
 
-                if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
-                    return;
-                }
-                if (InvocationHandler.class.isAssignableFrom(App.class)) {
-                    return;
-                }
-                if (UselessUtils.ifPMSHook()) {
-                    return;
-                }
-
                 createFolder();
             }
         });
@@ -356,16 +352,6 @@ public class Notes extends Fragment {
                             return;
                         }
                     }
-                }
-
-                if (!App.getInstance().getClass().getName().equals("com.f0x1d.notes.App")) {
-                    return;
-                }
-                if (InvocationHandler.class.isAssignableFrom(App.class)) {
-                    return;
-                }
-                if (UselessUtils.ifPMSHook()) {
-                    return;
                 }
 
                 createNotify();
@@ -645,5 +631,20 @@ public class Notes extends Fragment {
         }
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    public static int isInvokeHooked() {
+        try {
+            return (int) InvokeHookTarget.class.getDeclaredMethods()[0].invoke(null, Thread.currentThread().getStackTrace().length);
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
+    private static class InvokeHookTarget {
+
+        public static int depthDiff(int depth) {
+            return Thread.currentThread().getStackTrace().length - depth - 2;
+        }
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
-public class App extends Application {
+public final class App extends Application {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
