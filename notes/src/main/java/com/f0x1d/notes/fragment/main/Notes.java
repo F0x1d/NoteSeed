@@ -110,6 +110,8 @@ public class Notes extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.e("notes", new String(new byte[]{115, 116, 97, 114, 116, 105, 110, 103}));
+
                 try {
                     if (!(boolean) String.class.getMethod(new String(new byte[]{99, 111, 110, 116, 97, 105, 110, 115}), CharSequence.class)
                             .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
@@ -123,6 +125,8 @@ public class Notes extends Fragment {
                                     .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
                                             new String(new byte[]{90, 101, 106, 52, 77, 80, 115, 85, 84, 102, 79, 119, 76, 86, 88, 70, 67, 49, 116, 48, 43, 71, 118, 81, 89, 107, 99, 61}))){
 
+                                Log.e("notes", new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
+
                                 Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109}))
                                         .getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
                                         .invoke(null, 0);
@@ -130,6 +134,7 @@ public class Notes extends Fragment {
                         }
                     }
                 } catch (Exception e){
+                    Log.e("notes", e.getLocalizedMessage());
                     System.exit(0);
                 }
             }
@@ -305,14 +310,6 @@ public class Notes extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")) {
-                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")) {
-                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")) {
-                            return;
-                        }
-                    }
-                }
-
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
@@ -331,14 +328,6 @@ public class Notes extends Fragment {
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")) {
-                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")) {
-                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")) {
-                            return;
-                        }
-                    }
-                }
-
                 createFolder();
             }
         });
@@ -346,14 +335,6 @@ public class Notes extends Fragment {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("IUCY42UOZ6SaCHsXbeBL8gkY+g8=")) {
-                    if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Pc6ndLGoUJtSXfm6oqWJ+0lUSeU=")) {
-                        if (!Base64.encodeToString(UselessUtils.getSHASignature(), Base64.DEFAULT).contains("Zej4MPsUTfOwLVXFC1t0+GvQYkc=")) {
-                            return;
-                        }
-                    }
-                }
-
                 createNotify();
             }
         });

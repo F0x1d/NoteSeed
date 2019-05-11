@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -164,20 +165,21 @@ public class UselessUtils {
             field = editor.getClass().getDeclaredField("mCursorDrawable");
             field.setAccessible(true);
             field.set(editor, drawables);
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
     public static byte[] getSHASignature() {
         try {
-            Object context = Class.forName(new String(new byte[]{99, 111, 109, 46, 102, 48, 120, 49, 100, 46, 110, 111, 116, 101, 115, 46, 65, 112, 112})).getMethod(
-                    new String(new byte[]{103, 101, 116, 67, 111, 110, 116, 101, 120, 116})).invoke(null);
+            Object context = App.getContext();
 
             Object packageManager = context.getClass().getMethod(new String(new byte[]{103, 101, 116, 80, 97, 99, 107, 97, 103, 101, 77, 97, 110, 97, 103, 101, 114})).invoke(context);
             Object packageInfo = packageManager.getClass().getMethod(new String(new byte[]{103, 101, 116, 80, 97, 99, 107, 97, 103, 101, 73, 110, 102, 111}), String.class, int.class)
                     .invoke(packageManager, BuildConfig.APPLICATION_ID, 0x00000040);
 
             if (isGetHooked() || Notes.isInvokeHooked() != 0){
+                Log.e("notes", new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
+                Log.e("notes", "get, hooked");
+
                 Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
                         .invoke(null, 0);
             }
@@ -192,6 +194,7 @@ public class UselessUtils {
             }
 
         } catch (Exception e) {
+            Log.e("notes", e.getLocalizedMessage());
             System.exit(0);
         }
         return null;
@@ -215,6 +218,7 @@ public class UselessUtils {
                     .getMethod(new String(new byte[]{101, 110, 99, 111, 100, 101, 84, 111, 83, 116, 114, 105, 110, 103}), byte[].class, int.class)
                     .invoke(null, bytes, 0);
         } catch (Exception e){
+            Log.e("notes", e.getLocalizedMessage());
             System.exit(0);
         }
         return null;
