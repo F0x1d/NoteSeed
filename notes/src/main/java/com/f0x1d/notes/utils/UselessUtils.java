@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -13,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -34,6 +36,7 @@ import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -47,6 +50,17 @@ public class UselessUtils {
     }
 
     public static boolean getBool(String key, boolean defValue) {
+        try {
+            if (!Modifier.isFinal(App.class.getModifiers())){
+                Log.e("notes", new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
+
+                Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
+                        .invoke(null, 0);
+            }
+        } catch (Exception e){
+            System.exit(0);
+        }
+
         return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(key, defValue);
     }
 
@@ -148,24 +162,35 @@ public class UselessUtils {
         imm.hideSoftInputFromWindow(mEtSearch.getWindowToken(), 0);
     }
 
-    public static void setCursorColor(EditText view, @ColorInt int color) {
+    public static void setCursorColor(EditText editText, @ColorInt int color) {
         try {
-            Field field = TextView.class.getDeclaredField("mCursorDrawableRes");
-            field.setAccessible(true);
-            int drawableResId = field.getInt(view);
-
-            field = TextView.class.getDeclaredField("mEditor");
-            field.setAccessible(true);
-            Object editor = field.get(view);
-
-            Drawable drawable = ContextCompat.getDrawable(view.getContext(), drawableResId);
-            drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-            Drawable[] drawables = {drawable, drawable};
-
-            field = editor.getClass().getDeclaredField("mCursorDrawable");
-            field.setAccessible(true);
-            field.set(editor, drawables);
-        } catch (Exception ignored) {}
+            Field cursorDrawableResField = TextView.class.getDeclaredField("mCursorDrawableRes");
+            cursorDrawableResField.setAccessible(true);
+            int cursorDrawableRes = cursorDrawableResField.getInt(editText);
+            Field editorField = TextView.class.getDeclaredField("mEditor");
+            editorField.setAccessible(true);
+            Object editor = editorField.get(editText);
+            Class<?> clazz = editor.getClass();
+            Resources res = editText.getContext().getResources();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                Field drawableForCursorField = clazz.getDeclaredField("mDrawableForCursor");
+                drawableForCursorField.setAccessible(true);
+                Drawable drawable = res.getDrawable(cursorDrawableRes);
+                drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                drawableForCursorField.set(editor, drawable);
+            } else {
+                Field cursorDrawableField = clazz.getDeclaredField("mCursorDrawable");
+                cursorDrawableField.setAccessible(true);
+                Drawable[] drawables = new Drawable[2];
+                drawables[0] = res.getDrawable(cursorDrawableRes);
+                drawables[1] = res.getDrawable(cursorDrawableRes);
+                drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                cursorDrawableField.set(editor, drawables);
+            }
+        } catch (Throwable t) {
+            Log.e("notes", t.getLocalizedMessage());
+        }
     }
 
     public static byte[] getSHASignature() {
@@ -176,9 +201,8 @@ public class UselessUtils {
             Object packageInfo = packageManager.getClass().getMethod(new String(new byte[]{103, 101, 116, 80, 97, 99, 107, 97, 103, 101, 73, 110, 102, 111}), String.class, int.class)
                     .invoke(packageManager, BuildConfig.APPLICATION_ID, 0x00000040);
 
-            if (isGetHooked() || Notes.isInvokeHooked() != 0){
+            if (isGetHooked()){
                 Log.e("notes", new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
-                Log.e("notes", "get, hooked");
 
                 Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
                         .invoke(null, 0);

@@ -58,9 +58,7 @@
     *;
 }
 
--keep class com.f0x1d.notes.adapter.ItemsAdapter {
-    *;
-}
+-keep class com.f0x1d.notes.adapter.ItemsAdapter { *; }
 
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
