@@ -16,9 +16,6 @@
         <com.f0x1d.notes.view.preferences.MyPreference android:title="@string/telegram">
             <intent android:action="android.intent.action.VIEW" android:data="https://t.me/f0x3d"/>
         </com.f0x1d.notes.view.preferences.MyPreference>
-        <com.f0x1d.notes.view.preferences.MyPreference android:title="Z1" android:summary="@string/z1">
-            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/teamzo"/>
-        </com.f0x1d.notes.view.preferences.MyPreference>
 
         <com.f0x1d.notes.view.preferences.MyPreference android:title="EasyAPK">
             <intent android:action="android.intent.action.VIEW" android:data="https://t.me/EasyAPK"/>

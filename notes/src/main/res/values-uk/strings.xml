@@ -147,4 +147,6 @@
     <string name="warning">Попередження!</string>
     <string name="enter">Ввійти</string>
     <string name="auto_editmode">Зразу входити в режим редагування</string>
+    <string name="pin_in_status_bar">Закріпити в рядку сповіщень</string>
+    <string name="unpin_from_status_bar">Открепить из строки уведомлений</string>
 </resources>

@@ -147,4 +147,6 @@
     <string name="enter">Enter</string>
     <string name="checking">View</string>
     <string name="auto_editmode">Enter edit mode without view mode</string>
+    <string name="pin_in_status_bar">Pin in status bar</string>
+    <string name="unpin_from_status_bar">Unpin from status bar</string>
 </resources>

@@ -163,34 +163,7 @@ public class UselessUtils {
     }
 
     public static void setCursorColor(EditText editText, @ColorInt int color) {
-        try {
-            Field cursorDrawableResField = TextView.class.getDeclaredField("mCursorDrawableRes");
-            cursorDrawableResField.setAccessible(true);
-            int cursorDrawableRes = cursorDrawableResField.getInt(editText);
-            Field editorField = TextView.class.getDeclaredField("mEditor");
-            editorField.setAccessible(true);
-            Object editor = editorField.get(editText);
-            Class<?> clazz = editor.getClass();
-            Resources res = editText.getContext().getResources();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                Field drawableForCursorField = clazz.getDeclaredField("mDrawableForCursor");
-                drawableForCursorField.setAccessible(true);
-                Drawable drawable = res.getDrawable(cursorDrawableRes);
-                drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-                drawableForCursorField.set(editor, drawable);
-            } else {
-                Field cursorDrawableField = clazz.getDeclaredField("mCursorDrawable");
-                cursorDrawableField.setAccessible(true);
-                Drawable[] drawables = new Drawable[2];
-                drawables[0] = res.getDrawable(cursorDrawableRes);
-                drawables[1] = res.getDrawable(cursorDrawableRes);
-                drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
-                drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
-                cursorDrawableField.set(editor, drawables);
-            }
-        } catch (Throwable t) {
-            Log.e("notes", t.getLocalizedMessage());
-        }
+        // TODO: this))0)
     }
 
     public static byte[] getSHASignature() {

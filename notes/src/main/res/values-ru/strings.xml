@@ -147,4 +147,6 @@
     <string name="enter">Войти</string>
     <string name="checking">Просмотр</string>
     <string name="auto_editmode">Сразу входить в режим редактирования</string>
+    <string name="pin_in_status_bar">Закрепить в строке уведомлений</string>
+    <string name="unpin_from_status_bar">Открепить из строки уведомлений</string>
 </resources>

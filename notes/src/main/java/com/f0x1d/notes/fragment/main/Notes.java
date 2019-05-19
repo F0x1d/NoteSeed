@@ -586,8 +586,7 @@ public class Notes extends Fragment {
 
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
             }
         }));
         creator.addElement(new Element(getString(R.string.cancel), getActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
@@ -597,8 +596,7 @@ public class Notes extends Fragment {
 
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
             }
         }));
         creator.show("", false);

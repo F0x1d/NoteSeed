@@ -15,11 +15,13 @@
                 android:title="@string/text_size" android:summary="@string/in_editor" android:key="textSize" />
             <com.f0x1d.notes.view.preferences.MySwitchPreference
                 android:title="@string/use_mono" android:summary="@string/in_editor" android:key="mono"/>
-            <com.f0x1d.notes.view.preferences.MySwitchPreference
-                android:title="@string/two_rows" android:key="two_rows"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/notes">
+
+        <com.f0x1d.notes.view.preferences.MySwitchPreference
+            android:title="@string/two_rows"
+            android:key="two_rows"/>
         <com.f0x1d.notes.view.preferences.MyPreference
             android:title="@string/date_appearance"
             android:summary="@string/choose_date_appearance"

@@ -1,5 +1,6 @@
 package com.f0x1d.notes.receiver;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.text.Html;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.legacy.content.WakefulBroadcastReceiver;
@@ -17,6 +19,7 @@ import androidx.legacy.content.WakefulBroadcastReceiver;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
+import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -41,6 +44,17 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
             }
         }
 
+        String inFolderId = "";
+
+        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
+            if (to_id == noteOrFolder.id) {
+                if (noteOrFolder.in_folder_id.equals("def"))
+                    break;
+                inFolderId = noteOrFolder.in_folder_id + ": ";
+                break;
+            }
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String name = activity.getString(R.string.notification);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -51,14 +65,17 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
             notificationManager.createNotificationChannel(channel);
         }
 
+        Log.e("notes", title);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
                 .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
-                .setContentTitle(Html.fromHtml(title.replace("\n", "<br />")))
+                .setContentTitle(Html.fromHtml(inFolderId + title.replace("\n", "<br />")))
                 .setContentText(Html.fromHtml(text.replace("\n", "<br />")))
                 .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class)
                         .putExtra("id", to_id).putExtra("title", title), PendingIntent.FLAG_CANCEL_CURRENT))
                 .setAutoCancel(true)
-                .setVibrate(new long[]{1000L, 1000L, 1000L});
+                .setVibrate(new long[]{1000L, 1000L, 1000L})
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(Html.fromHtml(text.replace("\n", "<br />"))));
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(alarmSound);
 

@@ -14,6 +14,9 @@
         android:title="@string/export"
         android:id="@+id/export"/>
     <item
+        android:title="@string/pin_in_status_bar"
+        android:id="@+id/pin_status"/>
+    <item
         android:title="@string/settings"
         android:id="@+id/settings"/>
 </menu>

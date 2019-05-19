@@ -1,12 +1,16 @@
 package com.f0x1d.notes.fragment.editing;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -28,6 +32,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -83,6 +88,7 @@ public class NoteEdit extends Fragment {
     Bundle args;
 
     private boolean editMode = false;
+    private boolean pinned = false;
 
     public static NoteEdit newInstance(Bundle args) {
         NoteEdit myFragment = new NoteEdit();
@@ -108,6 +114,8 @@ public class NoteEdit extends Fragment {
             }
         }
 
+        pinned = getActivity().getSharedPreferences("notifications", Context.MODE_PRIVATE).getBoolean("note " + id, false);
+
         toolbar = v.findViewById(R.id.toolbar);
 
         toolbar.inflateMenu(R.menu.edit_menu);
@@ -127,6 +135,9 @@ public class NoteEdit extends Fragment {
             MenuItem myItem = toolbar.getMenu().findItem(R.id.lock);
             myItem.setChecked(false);
         }
+
+        if (pinned)
+            toolbar.getMenu().findItem(R.id.pin_status).setTitle(R.string.unpin_from_status_bar);
 
         MenuItem pic = toolbar.getMenu().findItem(R.id.attach);
         pic.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -194,7 +205,7 @@ public class NoteEdit extends Fragment {
                 }
             }
 
-            SetNotify notify = new SetNotify(new Notify(((NoteItemsAdapter) recyclerView.getAdapter()).getText(id), item.text, 0, item.to_id));
+            SetNotify notify = new SetNotify(new Notify(title.getText().toString(), item.text, 0, item.to_id));
             notify.show(getActivity().getSupportFragmentManager(), "TAG");
         });
 
@@ -505,6 +516,50 @@ public class NoteEdit extends Fragment {
                 }
 
                 new ItemsAdapter(null, getActivity(), true).getNotesDialog(id);
+                break;
+            case R.id.pin_status:
+                NotificationManager manager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+                if (pinned){
+                    manager.cancel((int) id + 1);
+                    toolbar.getMenu().findItem(R.id.pin_status).setTitle(R.string.pin_in_status_bar);
+                    pinned = false;
+                    getActivity().getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("note " + id, false).apply();
+                    break;
+                }
+
+                NoteItem flexNoteItem = null;
+                for (NoteItem noteItem : noteItemsDao.getAll()) {
+                    if (id == noteItem.to_id && noteItem.position == 0) {
+                        flexNoteItem = noteItem;
+                    }
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    String name = getActivity().getString(R.string.notification);
+                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                    NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
+                    channel.enableVibration(true);
+                    channel.enableLights(true);
+                    NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+                    notificationManager.createNotificationChannel(channel);
+                }
+
+                Notification.Builder builder = new Notification.Builder(getActivity());
+                builder.setSmallIcon(R.drawable.ic_notifications_active_black_24dp);
+                builder.setContentTitle(Html.fromHtml(title.getText().toString().replace("\n", "<br />")));
+                builder.setContentText(Html.fromHtml(flexNoteItem.text.replace("\n", "<br />")));
+                builder.setOngoing(true);
+                builder.setStyle(new Notification.BigTextStyle().bigText(Html.fromHtml(flexNoteItem.text.replace("\n", "<br />"))));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    builder.setChannelId("com.f0x1d.notes.notifications");
+
+                manager.notify((int) id + 1, builder.build());
+
+                toolbar.getMenu().findItem(R.id.pin_status).setTitle(R.string.unpin_from_status_bar);
+                pinned = true;
+
+                getActivity().getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("note " + id, true).apply();
                 break;
         }
 
