@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.adapter.NoteItemsAdapter;
 import com.f0x1d.notes.db.Database;
@@ -462,6 +464,8 @@ public class NoteAdd extends Fragment {
                 builder.setContentText(Html.fromHtml(flexNoteItem.text.replace("\n", "<br />")));
                 builder.setOngoing(true);
                 builder.setStyle(new Notification.BigTextStyle().bigText(Html.fromHtml(flexNoteItem.text.replace("\n", "<br />"))));
+                builder.setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class)
+                    .putExtra("id", rowID).putExtra("title", title.getText().toString()), 0));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                     builder.setChannelId("com.f0x1d.notes.notifications");
 

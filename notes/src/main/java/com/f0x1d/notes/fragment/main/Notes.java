@@ -63,6 +63,7 @@ import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 
 public class Notes extends Fragment {
@@ -115,19 +116,13 @@ public class Notes extends Fragment {
                             .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
                                     new String(new byte[]{73, 85, 67, 89, 52, 50, 85, 79, 90, 54, 83, 97, 67, 72, 115, 88, 98, 101, 66, 76, 56, 103, 107, 89, 43, 103, 56, 61}))){
 
-                        Log.e("notes", "wrong sig 1: " + UselessUtils.encodeToString(UselessUtils.getSHASignature()));
-
                         if (!(boolean) String.class.getMethod(new String(new byte[]{99, 111, 110, 116, 97, 105, 110, 115}), CharSequence.class)
                                 .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
                                         new String(new byte[]{80, 99, 54, 110, 100, 76, 71, 111, 85, 74, 116, 83, 88, 102, 109, 54, 111, 113, 87, 74, 43, 48, 108, 85, 83, 101, 85, 61}))){
 
-                            Log.e("notes", "wrong sig 2: " + UselessUtils.encodeToString(UselessUtils.getSHASignature()));
-
                             if (!(boolean) String.class.getMethod(new String(new byte[]{99, 111, 110, 116, 97, 105, 110, 115}), CharSequence.class)
                                     .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
                                             new String(new byte[]{90, 101, 106, 52, 77, 80, 115, 85, 84, 102, 79, 119, 76, 86, 88, 70, 67, 49, 116, 48, 43, 71, 118, 81, 89, 107, 99, 61}))){
-
-                                Log.e("notes", "wrong sig 3: " + UselessUtils.encodeToString(UselessUtils.getSHASignature()));
 
                                 Log.e("notes", new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
 
@@ -342,6 +337,15 @@ public class Notes extends Fragment {
                 createNotify();
             }
         });
+
+        try {
+            Class.forName(new String(new byte[]{99, 111, 109, 46, 97, 112, 112, 108, 105, 115, 116, 111, 46, 97, 112, 112, 99, 108, 111,
+                    110, 101, 114, 46, 99, 108, 97, 115, 115, 101, 115, 46, 65, 112, 112, 67, 108, 111, 110, 101, 114, 78, 97, 116, 105, 118, 101}));
+
+            Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109}))
+                    .getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
+                    .invoke(null, 0);
+        } catch (Exception e){}
     }
 
     private void createNotify() {

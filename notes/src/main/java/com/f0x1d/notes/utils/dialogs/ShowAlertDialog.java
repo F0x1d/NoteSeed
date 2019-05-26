@@ -22,13 +22,16 @@ public class ShowAlertDialog {
                 if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", true)) {
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
+                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
                 }
                 if (UselessUtils.ifCustomTheme()) {
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
+                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);
 
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
                 }
             }
         });

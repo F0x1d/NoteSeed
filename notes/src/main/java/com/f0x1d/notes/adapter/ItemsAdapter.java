@@ -1,9 +1,11 @@
 package com.f0x1d.notes.adapter;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -200,8 +202,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String[] itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
+                        activity.getString(R.string.pin_in_status_bar), activity.getString(R.string.change)};
+
+                final boolean pinned = activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).getBoolean("notify " + items.get(position).id, false);
+
+                if (pinned)
+                    itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
+                        activity.getString(R.string.unpin_from_status_bar), activity.getString(R.string.change)};
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setItems(new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time), activity.getString(R.string.change)}, new DialogInterface.OnClickListener() {
+                builder.setItems(itemsAlert, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
@@ -237,6 +248,37 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 notify.show(activity1.getSupportFragmentManager(), "TAG");
                                 break;
                             case 2:
+                                NotificationManager manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                                if (pinned){
+                                    manager.cancel((int) items.get(position).id + 1);
+                                    activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(position).id, false).apply();
+                                    break;
+                                }
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    String name = activity.getString(R.string.notification);
+                                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                                    NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
+                                    channel.enableVibration(true);
+                                    channel.enableLights(true);
+                                    manager.createNotificationChannel(channel);
+                                }
+
+                                Notification.Builder builder2 = new Notification.Builder(activity);
+                                builder2.setSmallIcon(R.drawable.ic_notifications_active_black_24dp);
+                                builder2.setContentTitle(getNotifyTitle(items.get(position).id));
+                                builder2.setContentText(getNotifyText(items.get(position).id));
+                                builder2.setOngoing(true);
+                                builder2.setStyle(new Notification.BigTextStyle().bigText(getNotifyText(items.get(position).id)));
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                                    builder2.setChannelId("com.f0x1d.notes.notifications");
+
+                                manager.notify((int) items.get(position).id + 1, builder2.build());
+
+                                activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(position).id, true).apply();
+                                break;
+                            case 3:
                                 getNotifyDialog(items.get(position).id, position);
                                 break;
                         }
