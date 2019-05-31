@@ -181,12 +181,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleSignInResult(@Nullable Task<GoogleSignInAccount> completedTask) {
-        Log.e("notes_err", "handleSignInResult:" + completedTask.isSuccessful());
-
         try {
             Account account = completedTask.getResult(ApiException.class).getAccount();
-
-            Log.e("notes_err", account.name);
 
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
             BackupDialog.show(this, account);
@@ -244,19 +240,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false))
-            UselessUtils.edit().putLong("lockTicker", 0).apply();
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)) {
+            if (UselessUtils.getBool("autolock", true))
+                UselessUtils.edit().putLong("lockTicker", 0).apply();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        UselessUtils.edit().putLong("lockTicker", System.currentTimeMillis()).apply();
+        if (UselessUtils.getBool("autolock", true))
+            UselessUtils.edit().putLong("lockTicker", System.currentTimeMillis()).apply();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        if (!UselessUtils.getBool("autolock", true))
+            return;
+
         if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false))
             return;
 
@@ -264,6 +266,7 @@ public class MainActivity extends AppCompatActivity {
             return;
 
         if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getLong("lockTicker", 0) > 60000){
+            UselessUtils.clear_back_stack();
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                     R.id.container, LockTickerScreen.newInstance(new LockTickerScreen.Callback() {
                         @Override

@@ -1,5 +1,6 @@
 package com.f0x1d.notes.fragment.editing;
 
+import android.animation.FloatEvaluator;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -60,9 +62,11 @@ import com.f0x1d.notes.view.CenteredToolbar;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -519,14 +523,20 @@ public class NoteAdd extends Fragment {
         creator.show("TAG", true);
     }
 
-    String currentPhotoPath;
+    private String currentPhotoPath;
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
+
         File storageDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/pics");
         if (!storageDir.exists())
             storageDir.mkdirs();
+
+        File nomedia = new File(storageDir, ".nomedia");
+        if (!nomedia.exists())
+            nomedia.createNewFile();
+
         File image = new File(storageDir, imageFileName + ".jpg");
         image.createNewFile();
 
@@ -568,7 +578,7 @@ public class NoteAdd extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (new File(currentPhotoPath).length() < 10)
+                    if (new File(currentPhotoPath).length() < 1)
                         return;
 
                     getActivity().runOnUiThread(new Runnable() {
@@ -580,6 +590,7 @@ public class NoteAdd extends Fragment {
                                 noteItemsDao.insert(noteItem);
                                 noteItems.add(last_pos, noteItem);
                             } catch (IndexOutOfBoundsException e) {
+                                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                 Log.e("notes_err", e.getLocalizedMessage());
                             }
 
@@ -590,9 +601,8 @@ public class NoteAdd extends Fragment {
                     dao.updateNoteTime(System.currentTimeMillis(), rowID);
                 }
             }).start();
-        }
 
-        if (data != null && requestCode == 228) {
+        } else if (data != null && requestCode == 228) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {

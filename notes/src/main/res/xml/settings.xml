@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.f0x1d.notes.view.preferences.MyPreference
         android:title="NoteSeed" android:summary="Made by F0x1d">
         <intent android:action="android.intent.action.VIEW" android:data="https://t.me/noteseed_app"/>
@@ -7,6 +8,11 @@
 
     <com.f0x1d.notes.view.preferences.MyPreference
         android:title="@string/about" android:key="about"/>
+
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/sync">
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:title="@string/sync" android:key="sync"/>
+    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/onscreen">
         <com.f0x1d.notes.view.preferences.MyPreference
@@ -45,11 +51,8 @@
             android:title="@string/use_pin" android:key="lock"/>
         <com.f0x1d.notes.view.preferences.MySwitchPreference
             android:title="@string/use_finger" android:key="finger"/>
-    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
-
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/sync">
-        <com.f0x1d.notes.view.preferences.MyPreference
-            android:title="@string/sync" android:key="sync"/>
+        <com.f0x1d.notes.view.preferences.MySwitchPreference
+            android:title="@string/autolock" android:key="autolock" android:defaultValue="true"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/debug">

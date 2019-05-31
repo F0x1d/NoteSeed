@@ -188,6 +188,7 @@ public class MainSettings extends PreferenceFragmentCompat {
             NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
             dao.nukeTable();
             dao.nukeTable2();
+            dao.nukeTable3();
 
             Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
             return;

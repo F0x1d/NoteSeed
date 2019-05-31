@@ -591,6 +591,7 @@ public class NoteEdit extends Fragment {
                         Uri photoURI = FileProvider.getUriForFile(getActivity(), "com.f0x1d.notes.fileprovider", photoFile);
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                         startActivityForResult(takePictureIntent, 1337);
+                        Log.e("notes", "started intent");
                     }
                 }
             }
@@ -608,16 +609,24 @@ public class NoteEdit extends Fragment {
         creator.show("TAG", true);
     }
 
-    String currentPhotoPath;
+    private String currentPhotoPath;
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
+
         File storageDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/pics");
         if (!storageDir.exists())
             storageDir.mkdirs();
+
+        File nomedia = new File(storageDir, ".nomedia");
+        if (!nomedia.exists())
+            nomedia.createNewFile();
+
         File image = new File(storageDir, imageFileName + ".jpg");
         image.createNewFile();
+
+        Log.e("notes", "created temp file");
 
         currentPhotoPath = image.getAbsolutePath();
         return image;
@@ -654,11 +663,15 @@ public class NoteEdit extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null && requestCode == 1337){
+            Log.e("notes", "got onActivityResult after taking photo");
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     if (new File(currentPhotoPath).length() < 10)
                         return;
+
+                    Log.e("notes", "photo is bigger then 0");
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -667,12 +680,16 @@ public class NoteEdit extends Fragment {
                                 last_pos = last_pos + 1;
                                 NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), id, null, currentPhotoPath, last_pos, 0, 0);
                                 noteItemsDao.insert(noteItem);
+                                Log.e("notes", "inserted in db");
                                 noteItems.add(last_pos, noteItem);
+                                Log.e("notes", "inserted in recycler");
                             } catch (IndexOutOfBoundsException e) {
+                                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                 Log.e("notes_err", e.getLocalizedMessage());
                             }
 
                             recyclerView.getAdapter().notifyDataSetChanged();
+                            Log.e("notes", "adapter notified");
                         }
                     });
 
