@@ -2,6 +2,7 @@ package com.f0x1d.notes.fragment.editing;
 
 import android.animation.FloatEvaluator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -41,6 +42,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
@@ -503,8 +505,14 @@ public class NoteAdd extends Fragment {
                         Toast.makeText(getActivity(), ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                     if (photoFile != null) {
-                        Uri photoURI = FileProvider.getUriForFile(getActivity(), "com.f0x1d.notes.fileprovider", photoFile);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        Uri photoURI = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", photoFile);
+                        if (Build.VERSION.SDK_INT >= 24) {
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        } else {
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        }
                         startActivityForResult(takePictureIntent, 1337);
                     }
                 }
@@ -574,7 +582,8 @@ public class NoteAdd extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null && requestCode == 1337){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == 1337){
             if (new File(currentPhotoPath).length() < 1)
                 return;
 
@@ -647,7 +656,6 @@ public class NoteAdd extends Fragment {
                 }
             }).start();
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
