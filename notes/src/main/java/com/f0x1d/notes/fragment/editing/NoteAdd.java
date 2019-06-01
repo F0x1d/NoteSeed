@@ -575,32 +575,22 @@ public class NoteAdd extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null && requestCode == 1337){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (new File(currentPhotoPath).length() < 1)
-                        return;
+            if (new File(currentPhotoPath).length() < 1)
+                return;
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                last_pos = last_pos + 1;
-                                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, currentPhotoPath, last_pos, 0, 0);
-                                noteItemsDao.insert(noteItem);
-                                noteItems.add(last_pos, noteItem);
-                            } catch (IndexOutOfBoundsException e) {
-                                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                Log.e("notes_err", e.getLocalizedMessage());
-                            }
+            try {
+                last_pos = last_pos + 1;
+                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, currentPhotoPath, last_pos, 0, 0);
+                noteItemsDao.insert(noteItem);
+                noteItems.add(last_pos, noteItem);
+            } catch (IndexOutOfBoundsException e) {
+                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("notes_err", e.getLocalizedMessage());
+            }
 
-                            recyclerView.getAdapter().notifyDataSetChanged();
-                        }
-                    });
+            recyclerView.getAdapter().notifyDataSetChanged();
 
-                    dao.updateNoteTime(System.currentTimeMillis(), rowID);
-                }
-            }).start();
+            dao.updateNoteTime(System.currentTimeMillis(), rowID);
 
         } else if (data != null && requestCode == 228) {
             new Thread(new Runnable() {

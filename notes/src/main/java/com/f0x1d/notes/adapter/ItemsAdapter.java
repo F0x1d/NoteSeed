@@ -392,11 +392,22 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void deleteFolder(final String folder_name) {
         try {
-            dao.deleteFolder(folder_name);
-            dao.deleteFolder2(folder_name);
+            deleteFolderFull(folder_name);
 
         } catch (IndexOutOfBoundsException e) {
             Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void deleteFolderFull(String folderName){
+        dao.deleteFolder(folderName);
+        for (NoteOrFolder noteOrFolder : dao.getByInFolderId(folderName)){
+            if (noteOrFolder.is_folder == 1){
+                deleteFolderFull(noteOrFolder.folder_name);
+                dao.deleteFolder(noteOrFolder.folder_name);
+            } else {
+                dao.deleteNote(noteOrFolder.id);
+            }
         }
     }
 

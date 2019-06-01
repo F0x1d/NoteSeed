@@ -13,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -58,9 +59,12 @@ import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -665,37 +669,27 @@ public class NoteEdit extends Fragment {
         if (data != null && requestCode == 1337){
             Log.e("notes", "got onActivityResult after taking photo");
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (new File(currentPhotoPath).length() < 10)
-                        return;
+            if (new File(currentPhotoPath).length() < 10)
+                return;
 
-                    Log.e("notes", "photo is bigger then 0");
+            Log.e("notes", "photo is bigger then 0");
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                last_pos = last_pos + 1;
-                                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), id, null, currentPhotoPath, last_pos, 0, 0);
-                                noteItemsDao.insert(noteItem);
-                                Log.e("notes", "inserted in db");
-                                noteItems.add(last_pos, noteItem);
-                                Log.e("notes", "inserted in recycler");
-                            } catch (IndexOutOfBoundsException e) {
-                                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                Log.e("notes_err", e.getLocalizedMessage());
-                            }
+            try {
+                last_pos = last_pos + 1;
+                NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), id, null, currentPhotoPath, last_pos, 0, 0);
+                noteItemsDao.insert(noteItem);
+                Log.e("notes", "inserted in db");
+                noteItems.add(last_pos, noteItem);
+                Log.e("notes", "inserted in recycler");
+            } catch (IndexOutOfBoundsException e) {
+                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("notes_err", e.getLocalizedMessage());
+            }
 
-                            recyclerView.getAdapter().notifyDataSetChanged();
-                            Log.e("notes", "adapter notified");
-                        }
-                    });
+            recyclerView.getAdapter().notifyDataSetChanged();
+            Log.e("notes", "adapter notified");
 
-                    dao.updateNoteTime(System.currentTimeMillis(), id);
-                }
-            }).start();
+            dao.updateNoteTime(System.currentTimeMillis(), id);
         }
 
         if (data != null && requestCode == 228) {

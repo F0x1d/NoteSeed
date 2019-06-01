@@ -17,6 +17,9 @@ public interface NoteOrFolderDao {
     @Query("SELECT * FROM NoteOrFolder WHERE id = :id")
     NoteOrFolder getById(long id);
 
+    @Query("SELECT * FROM NoteOrFolder WHERE in_folder_id = :inFolderId")
+    List<NoteOrFolder> getByInFolderId(String inFolderId);
+
     @Insert
     long insert(NoteOrFolder NoteOrFolder);
 
