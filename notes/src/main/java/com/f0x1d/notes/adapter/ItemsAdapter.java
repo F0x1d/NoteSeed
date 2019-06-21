@@ -46,6 +46,7 @@ import com.f0x1d.notes.fragment.choose.ChooseFolder;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockNote;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
@@ -57,6 +58,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -393,9 +395,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void deleteFolder(final String folder_name) {
         try {
             deleteFolderFull(folder_name);
-
         } catch (IndexOutOfBoundsException e) {
-            Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            Logger.log(e);
         }
     }
 
@@ -534,15 +535,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             oneLine = !Pattern.compile("\\r?\\n").matcher(text).find();
 
-            for (String retval : text.split("\\r?\\n")) {
-                if (oneLine) {
-                    holder.text.setText(Html.fromHtml(retval));
-                } else {
-                    holder.text.setText(Html.fromHtml(retval + "..."));
-                }
-                break;
+            if (oneLine) {
+                holder.text.setText(Html.fromHtml(text.split("\\r?\\n")[0]));
+            } else {
+                holder.text.setText(Html.fromHtml(text.split("\\r?\\n")[0] + "..."));
             }
         } catch (Exception e) {
+            Logger.log(e);
         }
 
         if (holder.text.getText().toString().equals("")) {
@@ -555,7 +554,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         Date currentDate = new Date(items.get(position).edit_time);
         try {
-            DateFormat df = new SimpleDateFormat(PreferenceManager.getDefaultSharedPreferences(activity).getString("date", "HH:mm | dd.MM.yyyy"));
+            DateFormat df = new SimpleDateFormat(PreferenceManager.getDefaultSharedPreferences(activity).getString("date", "HH:mm | dd.MM.yyyy"), Locale.US);
             holder.time.setText(df.format(currentDate));
         } catch (Exception e) {
             holder.time.setText("Error");
@@ -672,8 +671,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         colorPickerDialog.setColorPickerDialogListener(new ColorPickerDialogListener() {
                             @Override
                             public void onColorSelected(int dialogId, int color) {
-                                Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color));
-
                                 App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("#" + Integer.toHexString(color), id);
 
                                 notifyItemChanged(position);
@@ -772,8 +769,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         colorPickerDialog.setColorPickerDialogListener(new ColorPickerDialogListener() {
                             @Override
                             public void onColorSelected(int dialogId, int color) {
-                                Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color));
-
+                                Logger.log("onColorSelected: " + "#" + Integer.toHexString(color));
                                 App.getInstance().getDatabase().noteOrFolderDao().updateFolderColor("#" + Integer.toHexString(color), getFolderNameFromDataBase(id));
                             }
 
@@ -784,9 +780,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         });
 
                         FragmentActivity fragmentActivity = (FragmentActivity) activity;
-
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
-
                         break;
                     case 2:
                         App.getInstance().getDatabase().noteOrFolderDao().updateFolderColor("", getFolderNameFromDataBase(id));
@@ -828,7 +822,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         colorPickerDialog.setColorPickerDialogListener(new ColorPickerDialogListener() {
                             @Override
                             public void onColorSelected(int dialogId, int color) {
-                                Log.e("notes_err", "onColorSelected: " + "#" + Integer.toHexString(color) + " id: " + id);
+                                Logger.log("onColorSelected: " + "#" + Integer.toHexString(color) + " id: " + id);
 
                                 App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("#" + Integer.toHexString(color), id);
                             }

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.f0x1d.notes.App;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 
 import org.json.JSONObject;
@@ -65,7 +66,7 @@ public class ThemesEngine {
                 all = all + strLine;
             }
         } catch (IOException e) {
-            Log.e("notes_err", e.getLocalizedMessage());
+            Logger.log(e);
         }
 
         try {
@@ -88,7 +89,7 @@ public class ThemesEngine {
 
         } catch (Exception e) {
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
-            Log.e("notes_err", e.getLocalizedMessage());
+            Logger.log(e);
         }
     }
 
@@ -124,7 +125,7 @@ public class ThemesEngine {
                             }
                         }
                     } catch (IOException e) {
-                        Log.e("notes_err", e.getLocalizedMessage());
+                        Logger.log(e);
                     }
 
                     String name = "error!";
@@ -137,7 +138,7 @@ public class ThemesEngine {
                     try {
                         jsonObject = new JSONObject(allnew);
                     } catch (Exception e) {
-                        Log.e("notes_err", e.getLocalizedMessage());
+                        Logger.log(e);
                     }
 
                     try {
@@ -186,7 +187,7 @@ public class ThemesEngine {
                     }
                 }
             } catch (IOException e) {
-                Log.e("notes_err", e.getLocalizedMessage());
+                Logger.log(e);
 
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
             }
@@ -342,7 +343,7 @@ public class ThemesEngine {
                 }
             }
         } catch (IOException e) {
-            Log.e("notes_err", e.getLocalizedMessage());
+            Logger.log(e);
         }
 
         try {
@@ -487,6 +488,7 @@ public class ThemesEngine {
 
         } catch (Exception e) {
             Toast.makeText(App.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            Logger.log(e);
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
         }
     }

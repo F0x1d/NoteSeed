@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.utils.Logger;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -25,11 +26,9 @@ public class SignInDialog {
             if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(App.getContext()) == ConnectionResult.SUCCESS) {
                 try {
                     Intent signInIntent = client.getSignInIntent();
-                    //if (!BuildConfig.DEBUG) {
-                        activity.startActivityForResult(signInIntent, 1);
-                    //}
+                    activity.startActivityForResult(signInIntent, 1);
                 } catch (Exception e) {
-                    Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    Logger.log(e);
                 }
             }
         });

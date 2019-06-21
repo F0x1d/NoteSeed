@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.main.Notes;
+import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.theming.MyButton;
@@ -29,19 +30,13 @@ public class СhoosePin extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.lock_choose, container, false);
 
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
-
-        return inflater.inflate(R.layout.lock_choose, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         MyButton odin = view.findViewById(R.id.odin);
         MyButton dva = view.findViewById(R.id.dva);
@@ -117,6 +112,7 @@ public class СhoosePin extends Fragment {
                             UselessUtils.clear_back_stack();
                             Toast.makeText(getActivity(), R.string.success, Toast.LENGTH_SHORT).show();
                             UselessUtils.replaceNoBackStack(new Notes(), "notes");
+                            UselessUtils.replace(new MainSettings(), "settings");
                         }
                         break;
 
@@ -165,6 +161,7 @@ public class СhoosePin extends Fragment {
             back.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             done.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
         }
+        return view;
     }
 
     @Override

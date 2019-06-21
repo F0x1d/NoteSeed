@@ -20,6 +20,7 @@ import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.SignInDialog;
 import com.f0x1d.notes.utils.sync.SyncUtils;
@@ -74,6 +75,41 @@ public class SyncSettings extends PreferenceFragmentCompat {
                 GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
                 new SignInDialog().show(getActivity(), mGoogleSignInClient);
+                return false;
+            }
+        });
+
+        Preference logout = findPreference("sign_out");
+        logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (GoogleSignIn.getLastSignedInAccount(getContext()) == null) {
+                    Toast.makeText(getActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
+                    Logger.log("error, sign in please");
+                }
+
+                ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setCancelable(false);
+                dialog.setMessage("Loading...");
+                dialog.show();
+
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                        .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
+                        .build();
+
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+                mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        dialog.cancel();
+                        if (task.isSuccessful())
+                            Logger.log("logout success!");
+                        else
+                            Logger.log("logout not success!");
+                    }
+                });
                 return false;
             }
         });
@@ -174,13 +210,13 @@ public class SyncSettings extends PreferenceFragmentCompat {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "error: " + e, Toast.LENGTH_SHORT).show();
                             dialog1.cancel();
                         }
                     });
 
                 } catch (Exception e) {
-                    Log.e("notes_err", e.getLocalizedMessage());
+                    Logger.log(e);
                     Toast.makeText(getActivity(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     dialog1.cancel();
                 }

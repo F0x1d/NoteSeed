@@ -43,8 +43,6 @@ public class MyColorPickerDialog extends ColorPickerDialog {
     public void onStart() {
         super.onStart();
 
-        Log.e("notes_err", "onStart");
-
         Button positive = getDialog().findViewById(android.R.id.button1);
         Button neutral = getDialog().findViewById(android.R.id.button3);
 

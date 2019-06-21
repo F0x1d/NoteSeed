@@ -33,6 +33,7 @@ import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
@@ -298,7 +299,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void onItemMoved(int fromPosition, int toPosition) {
         dao.updateElementPos(toPosition, noteItems.get(fromPosition).id);
-        Log.e("notes_err", "updated: " + getText(noteItems.get(fromPosition).id) + " from: " + fromPosition + " to: " + toPosition);
 
         NoteItem targetUser = noteItems.get(fromPosition);
         noteItems.remove(fromPosition);
@@ -395,8 +395,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                     notifyDataSetChanged();
                 } catch (Exception e) {
-                    Log.e("notes_err", e.getLocalizedMessage());
-                    Toast.makeText(activity, "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    Logger.log(e);
+                    Toast.makeText(activity, "error: " + e, Toast.LENGTH_SHORT).show();
                 }
 
                 try {

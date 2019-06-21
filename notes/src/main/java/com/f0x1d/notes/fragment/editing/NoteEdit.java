@@ -54,6 +54,7 @@ import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
@@ -106,7 +107,7 @@ public class NoteEdit extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.notes_editing_layout, container, false);
+        View view = inflater.inflate(R.layout.notes_editing_layout, container, false);
 
         setHasOptionsMenu(true);
 
@@ -124,8 +125,7 @@ public class NoteEdit extends Fragment {
 
         pinned = getActivity().getSharedPreferences("notifications", Context.MODE_PRIVATE).getBoolean("note " + id, false);
 
-        toolbar = v.findViewById(R.id.toolbar);
-
+        toolbar = view.findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.edit_menu);
 
         if (UselessUtils.ifCustomTheme()) {
@@ -169,40 +169,6 @@ public class NoteEdit extends Fragment {
 
             toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
-        return v;
-    }
-
-    public void enterEditMode(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.warning);
-        builder.setMessage(R.string.enter_edit_mode);
-        builder.setPositiveButton(R.string.enter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                editModeSetup();
-            }
-        });
-        ShowAlertDialog.show(builder.create());
-    }
-
-    private void editModeSetup(){
-        editMode = true;
-        ((NoteItemsAdapter) recyclerView.getAdapter()).setEditing(true);
-
-        toolbar.setTitle(getString(R.string.editing));
-
-        attachHelper();
-
-        title.setText(titleStr);
-        title.setFocusableInTouchMode(true);
-        title.setFocusable(true);
-        title.setOnClickListener(null);
-    }
-
-    @SuppressLint({"RestrictedApi", "WrongConstant"})
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         toolbar.setNavigationOnClickListener(v1 -> {
             NoteItem item = null;
@@ -287,6 +253,35 @@ public class NoteEdit extends Fragment {
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("auto_editmode", false))
             editModeSetup();
+
+        return view;
+    }
+
+    public void enterEditMode(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.warning);
+        builder.setMessage(R.string.enter_edit_mode);
+        builder.setPositiveButton(R.string.enter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                editModeSetup();
+            }
+        });
+        ShowAlertDialog.show(builder.create());
+    }
+
+    private void editModeSetup(){
+        editMode = true;
+        ((NoteItemsAdapter) recyclerView.getAdapter()).setEditing(true);
+
+        toolbar.setTitle(getString(R.string.editing));
+
+        attachHelper();
+
+        title.setText(titleStr);
+        title.setFocusableInTouchMode(true);
+        title.setFocusable(true);
+        title.setOnClickListener(null);
     }
 
     private void attachHelper(){
@@ -441,7 +436,7 @@ public class NoteEdit extends Fragment {
                             writer.close();
                             Toast.makeText(getActivity(), getString(R.string.saved) + " " + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
-                            Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            Logger.log(e);
                         }
                     }
                 });
@@ -591,7 +586,7 @@ public class NoteEdit extends Fragment {
                     try {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
-                        Toast.makeText(getActivity(), ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        Logger.log(ex);
                     }
                     if (photoFile != null) {
                         Uri photoURI = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", photoFile);
@@ -603,7 +598,7 @@ public class NoteEdit extends Fragment {
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                         }
                         startActivityForResult(takePictureIntent, 1337);
-                        Log.e("notes", "started intent!");
+                        Logger.log("started intent!");
                     }
                 }
             }
@@ -637,8 +632,6 @@ public class NoteEdit extends Fragment {
 
         File image = new File(storageDir, imageFileName + ".jpg");
         image.createNewFile();
-
-        Log.e("notes", "created temp file");
 
         currentPhotoPath = image.getAbsolutePath();
         return image;
@@ -675,30 +668,22 @@ public class NoteEdit extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("notes", "got onActivityResult");
+        Logger.log("got onActivityResult");
 
         if (resultCode == Activity.RESULT_OK && requestCode == 1337){
-            Log.e("notes", "got onActivityResult after taking photo");
-
             if (new File(currentPhotoPath).length() < 10)
                 return;
-
-            Log.e("notes", "photo is bigger then 0");
 
             try {
                 last_pos = last_pos + 1;
                 NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), id, null, currentPhotoPath, last_pos, 0, 0);
                 noteItemsDao.insert(noteItem);
-                Log.e("notes", "inserted in db");
                 noteItems.add(last_pos, noteItem);
-                Log.e("notes", "inserted in recycler");
             } catch (IndexOutOfBoundsException e) {
-                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("notes_err", e.getLocalizedMessage());
+                Logger.log(e);
             }
 
             recyclerView.getAdapter().notifyDataSetChanged();
-            Log.e("notes", "adapter notified");
 
             dao.updateNoteTime(System.currentTimeMillis(), id);
         }
@@ -730,12 +715,12 @@ public class NoteEdit extends Fragment {
 
                         copy(inputStream, fleks);
                     } catch (FileNotFoundException e) {
-                        Log.e("notes_err", e.getLocalizedMessage());
+                        Logger.log(e);
                     } catch (IOException e) {
-                        Log.e("notes_err", e.getLocalizedMessage());
+                        Logger.log(e);
                     }
 
-                    Log.e("notes_err", "saved: " + fleks.getPath());
+                    Logger.log("saved: " + fleks.getPath());
 
                     File finalFleks = fleks;
                     getActivity().runOnUiThread(new Runnable() {
@@ -747,7 +732,7 @@ public class NoteEdit extends Fragment {
                                 noteItemsDao.insert(noteItem);
                                 noteItems.add(last_pos, noteItem);
                             } catch (IndexOutOfBoundsException e) {
-                                Log.e("notes_err", e.getLocalizedMessage());
+                                Logger.log(e);
                             }
 
                             recyclerView.getAdapter().notifyDataSetChanged();

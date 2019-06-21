@@ -55,6 +55,7 @@ import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.main.Notes;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
@@ -106,11 +107,11 @@ public class NoteAdd extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.notes_editing_layout, container, false);
+        View view = inflater.inflate(R.layout.notes_editing_layout, container, false);
 
         id = getArguments().getString("id");
 
-        toolbar = v.findViewById(R.id.toolbar);
+        toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.new_note));
 
         getActivity().setActionBar(toolbar);
@@ -157,13 +158,6 @@ public class NoteAdd extends Fragment {
 
             toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
-        return v;
-    }
-
-    @SuppressLint({"RestrictedApi", "WrongConstant"})
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
         rowID = dao.insert(new NoteOrFolder(generateName(), null, Notes.genId(), 0, id,
@@ -270,6 +264,7 @@ public class NoteAdd extends Fragment {
                 dao.updateNoteTime(System.currentTimeMillis(), rowID);
             }
         });
+        return view;
     }
 
     private void add(int pos, NoteItem item) {
@@ -323,8 +318,6 @@ public class NoteAdd extends Fragment {
                     NoteItem noteItem2 = new NoteItem(NoteItemsAdapter.getId(), rowID, "", null, last_pos, 0, 1);
                     noteItemsDao.insert(noteItem2);
                     add(last_pos, noteItem2);
-
-                    Log.e("notes_err", "last pos: " + last_pos);
                 }
 
                 recyclerView.getAdapter().notifyDataSetChanged();
@@ -372,7 +365,7 @@ public class NoteAdd extends Fragment {
                             writer.close();
                             Toast.makeText(getActivity(), getString(R.string.saved) + " " + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
-                            Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            Logger.log(e);
                         }
                     }
                 });
@@ -502,7 +495,7 @@ public class NoteAdd extends Fragment {
                     try {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
-                        Toast.makeText(getActivity(), ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        Logger.log(ex);
                     }
                     if (photoFile != null) {
                         Uri photoURI = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", photoFile);
@@ -593,8 +586,7 @@ public class NoteAdd extends Fragment {
                 noteItemsDao.insert(noteItem);
                 noteItems.add(last_pos, noteItem);
             } catch (IndexOutOfBoundsException e) {
-                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("notes_err", e.getLocalizedMessage());
+                Logger.log(e);
             }
 
             recyclerView.getAdapter().notifyDataSetChanged();
@@ -628,12 +620,12 @@ public class NoteAdd extends Fragment {
 
                         copy(inputStream, fleks);
                     } catch (FileNotFoundException e) {
-                        Log.e("notes_err", e.getLocalizedMessage());
+                        Logger.log(e);
                     } catch (IOException e) {
-                        Log.e("notes_err", e.getLocalizedMessage());
+                        Logger.log(e);
                     }
 
-                    Log.e("notes_err", "saved: " + fleks.getPath());
+                    Logger.log("saved: " + fleks.getPath());
 
                     File finalFleks = fleks;
                     getActivity().runOnUiThread(new Runnable() {
@@ -645,7 +637,7 @@ public class NoteAdd extends Fragment {
                                 noteItemsDao.insert(noteItem);
                                 add(last_pos, noteItem);
                             } catch (IndexOutOfBoundsException e) {
-                                Log.e("notes_err", e.getLocalizedMessage());
+                                Logger.log(e);
                             }
 
                             recyclerView.getAdapter().notifyDataSetChanged();

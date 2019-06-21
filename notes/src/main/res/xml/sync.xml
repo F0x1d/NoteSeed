@@ -4,6 +4,8 @@
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/account">
         <com.f0x1d.notes.view.preferences.MyPreference
             android:title="@string/sign_in" android:key="sign_in"/>
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:title="@string/sign_out" android:key="sign_out"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="GDrive">

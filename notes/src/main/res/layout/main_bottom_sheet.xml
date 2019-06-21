@@ -86,34 +86,48 @@
                     android:layout_height="50dp" />
             </RelativeLayout>
 
-            <com.f0x1d.notes.view.theming.MyTextView
-                android:drawableLeft="@drawable/ic_notifications_active_black_24dp"
-                android:background="?attr/selectableItemBackground"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginEnd="3dp"
-                android:drawablePadding="40dp"
-                android:gravity="start|center"
-                android:textSize="15sp"
                 android:layout_marginTop="20dp"
-                android:text="@string/new_notify"
-                android:id="@+id/new_notify"
-                android:layout_marginStart="40dp"
-                android:layout_height="wrap_content" />
+                android:foreground="?attr/selectableItemBackground"
+                android:id="@+id/new_notify_layout"
+                android:clickable="true"
+                android:layout_height="wrap_content">
 
-            <com.f0x1d.notes.view.theming.MyTextView
+                <com.f0x1d.notes.view.theming.MyTextView
+                    android:drawableLeft="@drawable/ic_notifications_active_black_24dp"
+                    android:layout_width="match_parent"
+                    android:layout_marginEnd="40dp"
+                    android:drawablePadding="40dp"
+                    android:gravity="start|center"
+                    android:id="@+id/new_notify"
+                    android:textSize="15sp"
+                    android:text="@string/new_notify"
+                    android:layout_marginStart="40dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:id="@+id/new_folder"
-                android:text="@string/new_folder"
-                android:drawableLeft="@drawable/ic_folder_black_24dp"
-                android:gravity="start|center"
-                android:textSize="15sp"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="40dp"
-                android:background="?attr/selectableItemBackground"
-                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="20dp"
-                android:drawablePadding="40dp"
-                android:layout_height="wrap_content" />
+                android:layout_marginTop="10dp"
+                android:id="@+id/new_folder_layout"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:layout_height="wrap_content">
+
+                <com.f0x1d.notes.view.theming.MyTextView
+                    android:layout_width="match_parent"
+                    android:text="@string/new_folder"
+                    android:drawableLeft="@drawable/ic_folder_black_24dp"
+                    android:gravity="start|center"
+                    android:id="@+id/new_folder"
+                    android:textSize="15sp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:drawablePadding="40dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -75,19 +75,13 @@ public class LockScreen extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.screen_lock, container, false);
 
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
-
-        return inflater.inflate(R.layout.screen_lock, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         MyButton odin = view.findViewById(R.id.odin);
         MyButton dva = view.findViewById(R.id.dva);
@@ -214,7 +208,6 @@ public class LockScreen extends Fragment {
             }
         });
 
-
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("finger", false)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 keyguardManager =
@@ -241,6 +234,7 @@ public class LockScreen extends Fragment {
         } else {
             swirlView.setVisibility(GONE);
         }
+        return view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

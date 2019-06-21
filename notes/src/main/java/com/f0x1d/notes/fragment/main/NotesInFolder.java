@@ -44,6 +44,7 @@ import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.MainSettings;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
@@ -95,10 +96,9 @@ public class NotesInFolder extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.notes_layout, container, false);
 
-        View v = inflater.inflate(R.layout.notes_layout, container, false);
-
-        toolbar = v.findViewById(R.id.toolbar);
+        toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(in_folder_id);
         toolbar.goAnim(in_folder_id);
         toolbar.inflateMenu(R.menu.in_folder_menu);
@@ -127,13 +127,6 @@ public class NotesInFolder extends Fragment {
         }
 
         getActivity().setActionBar(toolbar);
-        return v;
-    }
-
-    @SuppressLint({"WrongConstant", "RestrictedApi", "ClickableViewAccessibility"})
-    @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         CardView slideView = view.findViewById(R.id.slideView);
         if (UselessUtils.ifCustomTheme())
@@ -336,6 +329,7 @@ public class NotesInFolder extends Fragment {
                 createNotify();
             }
         });
+        return view;
     }
 
     private void createNotify() {
@@ -522,7 +516,7 @@ public class NotesInFolder extends Fragment {
                         }
                     }
                 } catch (IOException e) {
-                    Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    Logger.log(e);
                 }
 
                 int position = Database.getLastPosition(in_folder_id);
@@ -622,7 +616,7 @@ public class NotesInFolder extends Fragment {
                 item.setIcon(R.drawable.ic_arrow_upward_white_24dp);
             }
         } catch (Exception e) {
-            Log.e("notes", e.getLocalizedMessage());
+            Logger.log(e);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }

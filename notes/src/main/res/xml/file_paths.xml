@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path name="Notes/pics" path="Notes/pics" />
+    <external-path name="pictures" path="Notes/pics" />
     <root-path name="external_files" path="/storage/" />
 </paths>

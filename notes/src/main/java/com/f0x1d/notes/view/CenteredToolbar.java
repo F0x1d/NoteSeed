@@ -24,6 +24,7 @@ import androidx.core.content.res.ResourcesCompat;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.search.Search;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 
@@ -97,7 +98,6 @@ public class CenteredToolbar extends Toolbar {
         animation.setDuration(300);
         tvTitle.startAnimation(animation);
 
-        //tvTitle.setSingleLine();
         tvTitle.setEllipsize(TextUtils.TruncateAt.END);
         tvTitle.setTextAppearance(getContext(), R.style.TextAppearance_AppCompat_Widget_ActionBar_Title);
 
@@ -136,7 +136,7 @@ public class CenteredToolbar extends Toolbar {
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.BLACK));
                 }
             } catch (Exception e) {
-                Log.e("notes_err", e.getLocalizedMessage());
+                Logger.log(e);
             }
         }
     }
@@ -189,8 +189,7 @@ public class CenteredToolbar extends Toolbar {
                                     });
                         }
                     }, 500);
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
 
             }
         }, 1500);

@@ -52,7 +52,7 @@ public class UselessUtils {
     public static boolean getBool(String key, boolean defValue) {
         try {
             if (!Modifier.isFinal(App.class.getModifiers())){
-                Log.e("notes", new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
+                Logger.log(new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
 
                 Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
                         .invoke(null, 0);
@@ -175,7 +175,7 @@ public class UselessUtils {
                     .invoke(packageManager, BuildConfig.APPLICATION_ID, 0x00000040);
 
             if (isGetHooked()){
-                Log.e("notes", new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
+                Logger.log(new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
 
                 Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
                         .invoke(null, 0);
@@ -191,7 +191,7 @@ public class UselessUtils {
             }
 
         } catch (Exception e) {
-            Log.e("notes", e.getLocalizedMessage());
+            Logger.log(e);
             System.exit(0);
         }
         return null;
@@ -215,7 +215,7 @@ public class UselessUtils {
                     .getMethod(new String(new byte[]{101, 110, 99, 111, 100, 101, 84, 111, 83, 116, 114, 105, 110, 103}), byte[].class, int.class)
                     .invoke(null, bytes, 0);
         } catch (Exception e){
-            Log.e("notes", e.getLocalizedMessage());
+            Logger.log(e);
             System.exit(0);
         }
         return null;

@@ -23,12 +23,14 @@ import com.f0x1d.notes.fragment.lock.LockTickerScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.PermissionUtils;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.BackupDialog;
 import com.f0x1d.notes.utils.dialogs.SignInDialog;
 import com.f0x1d.notes.utils.sync.SyncService;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.view.CenteredToolbar;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
     public static MainActivity instance;
+    public CenteredToolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (UselessUtils.ifCustomTheme()) {
             if (ThemesEngine.dark) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    setTheme(R.style.NightTheme_md2);
-                } else {
-                    setTheme(R.style.NightTheme);
-                }
+                setTheme(R.style.NightTheme);
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    setTheme(R.style.AppTheme_md2);
-                } else {
-                    setTheme(R.style.AppTheme);
-                }
+                setTheme(R.style.AppTheme);
             }
 
             try {
@@ -79,26 +74,13 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", true)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    setTheme(R.style.NightTheme_md2);
-                } else {
-                    setTheme(R.style.NightTheme);
-                }
-
+                setTheme(R.style.NightTheme);
                 getWindow().setNavigationBarColor(getResources().getColor(R.color.statusbar));
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)) {
-                        setTheme(R.style.AppTheme_Orange_md2);
-                    } else {
-                        setTheme(R.style.AppTheme_md2);
-                    }
+                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)) {
+                    setTheme(R.style.AppTheme_Orange);
                 } else {
-                    if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)) {
-                        setTheme(R.style.AppTheme_Orange);
-                    } else {
-                        setTheme(R.style.AppTheme);
-                    }
+                    setTheme(R.style.AppTheme);
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -111,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toolbar = findViewById(R.id.toolbar);
+        setActionBar(toolbar);
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null) {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -187,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
             BackupDialog.show(this, account);
         } catch (ApiException e) {
-            Log.e("notes_err", "handleSignInResult:error \n\n", e);
+            Logger.log(e);
             Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
     }
@@ -209,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
 
             if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)) {
+                if (!UselessUtils.getBool("auto_s", false))
+                    return;
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                     startForegroundService(new Intent(this, SyncService.class));

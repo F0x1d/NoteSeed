@@ -65,8 +65,6 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
             notificationManager.createNotificationChannel(channel);
         }
 
-        Log.e("notes", title);
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
                 .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
                 .setContentTitle(Html.fromHtml(inFolderId + title.replace("\n", "<br />")))

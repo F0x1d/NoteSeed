@@ -80,19 +80,13 @@ public class LockTickerScreen extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.screen_lock, container, false);
 
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
-
-        return inflater.inflate(R.layout.screen_lock, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         callback = (Callback) getArguments().get("callback");
 
@@ -221,7 +215,6 @@ public class LockTickerScreen extends Fragment {
             }
         });
 
-
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("finger", false)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 keyguardManager =
@@ -248,6 +241,7 @@ public class LockTickerScreen extends Fragment {
         } else {
             swirlView.setVisibility(GONE);
         }
+        return view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

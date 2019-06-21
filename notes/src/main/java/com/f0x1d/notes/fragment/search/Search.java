@@ -1,6 +1,5 @@
 package com.f0x1d.notes.fragment.search;
 
-import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -29,6 +29,7 @@ import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.view.CenteredToolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class Search extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
+        View view = inflater.inflate(R.layout.search, container, false);
         id = getArguments().getString("id");
 
         if (UselessUtils.ifCustomTheme()) {
@@ -65,14 +66,6 @@ public class Search extends Fragment {
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
-
-        return inflater.inflate(R.layout.search, container, false);
-    }
-
-    @SuppressLint("WrongConstant")
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         searchedList = new ArrayList<>();
         allList = new ArrayList<>();
@@ -92,7 +85,6 @@ public class Search extends Fragment {
             if (noteOrFolder.in_folder_id.equals(id)) {
                 allList.add(noteOrFolder);
             }
-
         }
 
         ItemsAdapter adapter = new ItemsAdapter(allList, getActivity(), false);
@@ -188,5 +180,6 @@ public class Search extends Fragment {
                 recyclerView.setAdapter(adapter);
             }
         });
+        return view;
     }
 }

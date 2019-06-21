@@ -97,8 +97,8 @@ android {
         applicationId "com.f0x1d.notes"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 152
-        versionName "6.3.2"
+        versionCode 154
+        versionName "6.4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -153,12 +153,10 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:16.0.6'
 
-    // Dependency for Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0'
 
-    // Dependencies for the REST API example
     implementation 'com.google.api-client:google-api-client:1.25.0'
     implementation 'com.google.api-client:google-api-client-android:1.23.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'

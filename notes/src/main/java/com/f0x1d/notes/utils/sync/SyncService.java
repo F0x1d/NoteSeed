@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.utils.Logger;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -58,7 +59,10 @@ public class SyncService extends Service {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     stopForeground(true);
-                    Log.e("notes_err", "synced");
+                    if (task.isSuccessful())
+                        Logger.log("synced successfully");
+                    else
+                        Logger.log("synced not successfully");
                     stopSelf();
                 }
             });

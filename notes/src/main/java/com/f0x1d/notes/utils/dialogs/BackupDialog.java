@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.sync.SyncUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
@@ -70,7 +71,7 @@ public class BackupDialog {
                 @Override
                 public void onComplete(@NonNull Task<String> task) {
                     if (task.getResult() == null) {
-                        Log.e("notes_err", "gdrive error");
+                        Logger.log("gdrive error");
                         dialog.cancel();
                         ShowAlertDialog.show(builder.create());
                         return;
@@ -104,14 +105,14 @@ public class BackupDialog {
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.e("notes_err", e.getLocalizedMessage());
+                                        Logger.log(e);
                                         dialog1.cancel();
                                         dialog.cancel();
                                     }
                                 });
 
                             } catch (Exception e) {
-                                Log.e("notes_err", e.getLocalizedMessage());
+                                Logger.log(e);
                             }
                         }
                     });
@@ -122,7 +123,7 @@ public class BackupDialog {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.e("notes_err", e.getLocalizedMessage());
+                    Logger.log(e);
                     dialog.cancel();
                     ShowAlertDialog.show(builder.create());
                 }

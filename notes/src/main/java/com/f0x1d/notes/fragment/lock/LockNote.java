@@ -78,19 +78,12 @@ public class LockNote extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
+        View view = inflater.inflate(R.layout.screen_lock, container, false);
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
-
-        return inflater.inflate(R.layout.screen_lock, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         args = getArguments();
 
@@ -221,10 +214,9 @@ public class LockNote extends Fragment {
             }
         });
 
-
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("finger", false)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { keyguardManager =
-                        (KeyguardManager) getActivity().getSystemService(KEYGUARD_SERVICE);
+                    (KeyguardManager) getActivity().getSystemService(KEYGUARD_SERVICE);
                 fingerprintManager =
                         (FingerprintManager) getActivity().getSystemService(FINGERPRINT_SERVICE);
 
@@ -247,6 +239,7 @@ public class LockNote extends Fragment {
         } else {
             swirlView.setVisibility(GONE);
         }
+        return view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

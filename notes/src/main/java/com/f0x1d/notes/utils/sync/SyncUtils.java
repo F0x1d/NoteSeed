@@ -7,6 +7,7 @@ import android.util.Log;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.tasks.Task;
@@ -54,14 +55,14 @@ public class SyncUtils {
                         .execute();
 
                 for (com.google.api.services.drive.model.File file : files.getFiles()) {
-                    Log.e("notes_err", "file found: " + file.getName());
+                    Logger.log("file found: " + file.getName());
 
                     if (file.getName().equals("database.json")) {
                         return file.getId();
                     }
                 }
             } catch (Exception e) {
-                Log.e("notes_err", e.getLocalizedMessage());
+                Logger.log(e);
             }
 
             return null;
@@ -93,7 +94,7 @@ public class SyncUtils {
 
                 stream.close();
             } catch (IOException e) {
-                Log.e("notes_err", e.getLocalizedMessage());
+                Logger.log(e);
             }
 
             return null;
@@ -102,9 +103,6 @@ public class SyncUtils {
 
     public static Task<Void> exportToGDrive() {
         return Tasks.call(mExecutor, () -> {
-            if (!UselessUtils.getBool("auto_s", false))
-                return null;
-
             File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
             if (!db.exists())
                 db.mkdirs();
@@ -132,7 +130,7 @@ public class SyncUtils {
                         .setFields("id")
                         .execute();
             } catch (IOException e) {
-                Log.e("notes_err", e.getLocalizedMessage());
+                Logger.log(e);
             }
 
             return null;
@@ -141,9 +139,6 @@ public class SyncUtils {
 
     public static Task<Void> export() {
         return Tasks.call(mExecutor, () -> {
-            if (!UselessUtils.getBool("auto_s", false))
-                return null;
-
             File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
             if (!db.exists()) {
                 db.mkdirs();
@@ -252,7 +247,7 @@ public class SyncUtils {
                 all = all + strLine;
             }
         } catch (IOException e) {
-            Log.e("notes_err", e.getLocalizedMessage());
+            Logger.log(e);
         }
 
         App.getInstance().getDatabase().noteOrFolderDao().nukeTable();
@@ -264,7 +259,6 @@ public class SyncUtils {
 
             for (int i = 0; i < main.length(); i++) {
                 JSONObject note = main.getJSONObject(i);
-                Log.e("notes_err", note.toString());
 
                 App.getInstance().getDatabase().noteOrFolderDao().insert(new NoteOrFolder(note.getString("title"),
                         note.getString("text"), note.getLong("id"), note.getInt("locked"), note.getString("in_folder_id"), note.getInt("is_folder"),
@@ -291,7 +285,7 @@ public class SyncUtils {
                 }
             }
         } catch (JSONException e) {
-            Log.e("notes_err", e.getLocalizedMessage());
+            Logger.log(e);
         }
     }
 }

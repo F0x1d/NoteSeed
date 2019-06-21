@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.fragment.settings.MainSettings;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
@@ -85,9 +87,9 @@ public class Notes extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.notes_layout, container, false);
+        View view = inflater.inflate(R.layout.notes_layout, container, false);
 
-        toolbar = v.findViewById(R.id.toolbar);
+        toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.notes));
         toolbar.goAnim("def");
 
@@ -100,13 +102,6 @@ public class Notes extends Fragment {
         }
 
         getActivity().setActionBar(toolbar);
-        return v;
-    }
-
-    @SuppressLint({"WrongConstant", "ClickableViewAccessibility"})
-    @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         new Thread(new Runnable() {
             @Override
@@ -124,7 +119,7 @@ public class Notes extends Fragment {
                                     .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
                                             new String(new byte[]{90, 101, 106, 52, 77, 80, 115, 85, 84, 102, 79, 119, 76, 86, 88, 70, 67, 49, 116, 48, 43, 71, 118, 81, 89, 107, 99, 61}))){
 
-                                Log.e("notes", new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
+                                Logger.log(new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
 
                                 Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109}))
                                         .getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
@@ -133,7 +128,7 @@ public class Notes extends Fragment {
                         }
                     }
                 } catch (Exception e){
-                    Log.e("notes", e.getLocalizedMessage());
+                    Logger.log(e);
                     System.exit(0);
                 }
             }
@@ -294,6 +289,9 @@ public class Notes extends Fragment {
         TextView fab1 = view.findViewById(R.id.new_folder);
         TextView fab2 = view.findViewById(R.id.new_notify);
 
+        LinearLayout newFolder = view.findViewById(R.id.new_folder_layout);
+        LinearLayout newNotify = view.findViewById(R.id.new_notify_layout);
+
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
         animation.setDuration(400);
         fab.startAnimation(animation);
@@ -324,14 +322,14 @@ public class Notes extends Fragment {
             }
         });
 
-        fab1.setOnClickListener(new View.OnClickListener() {
+        newFolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createFolder();
             }
         });
 
-        fab2.setOnClickListener(new View.OnClickListener() {
+        newNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createNotify();
@@ -346,6 +344,7 @@ public class Notes extends Fragment {
                     .getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
                     .invoke(null, 0);
         } catch (Exception e){}
+        return view;
     }
 
     private void createNotify() {
@@ -521,6 +520,7 @@ public class Notes extends Fragment {
                     }
                 } catch (IOException e) {
                     Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    Logger.log(e);
                 }
                 int position = Database.getLastPosition("def");
                 NoteOrFolder noteOrFolder = new NoteOrFolder(title, null, genId(), 0, "def", 0, null, 0, "", System.currentTimeMillis(), position);
