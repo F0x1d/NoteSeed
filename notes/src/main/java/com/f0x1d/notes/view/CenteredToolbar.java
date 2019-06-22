@@ -103,7 +103,7 @@ public class CenteredToolbar extends Toolbar {
 
         if (UselessUtils.ifCustomTheme()) {
             tvTitle.setTextColor(ThemesEngine.toolbarTextColor);
-            setBackgroundColor(ThemesEngine.toolbarColor);
+            setBackgroundColor(Color.TRANSPARENT);
         }
 
         tvTitle.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
@@ -154,7 +154,6 @@ public class CenteredToolbar extends Toolbar {
             public void run() {
                 try {
                     tvTitle.animate()
-                            .translationY(tvTitle.getHeight())
                             .alpha(0.0f)
                             .setDuration(300)
                             .setListener(new AnimatorListenerAdapter() {
@@ -168,7 +167,7 @@ public class CenteredToolbar extends Toolbar {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            tvTitle.setVisibility(View.VISIBLE);
+                            tvTitle.setVisibility(VISIBLE);
                             tvTitle.setText(R.string.tap_to_search);
                             tvTitle.setTextSize(17);
 
@@ -178,7 +177,7 @@ public class CenteredToolbar extends Toolbar {
                             linear.setLayoutParams(lp);
 
                             tvTitle.animate()
-                                    .translationY(-(tvTitle.getHeight() / 8))
+                                    .alpha(0.0f)
                                     .alpha(1.0f)
                                     .setDuration(300)
                                     .setListener(new AnimatorListenerAdapter() {

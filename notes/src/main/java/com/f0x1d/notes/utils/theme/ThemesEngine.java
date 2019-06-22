@@ -197,6 +197,7 @@ public class ThemesEngine {
             try {
                 jsonObject = new JSONObject(all);
             } catch (Exception e) {
+                Logger.log(e);
                 Toast.makeText(App.getContext(), "Error!", Toast.LENGTH_SHORT).show();
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
             }

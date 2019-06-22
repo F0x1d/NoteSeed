@@ -54,7 +54,7 @@ public class UselessUtils {
             if (!Modifier.isFinal(App.class.getModifiers())){
                 Logger.log(new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
 
-                Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
+                Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new byte[]{101, 120, 105, 116}), int.class)
                         .invoke(null, 0);
             }
         } catch (Exception e){
@@ -177,7 +177,7 @@ public class UselessUtils {
             if (isGetHooked()){
                 Logger.log(new String(new byte[]{119, 114, 111, 110, 103, 32, 115, 105, 103, 110, 97, 116, 117, 114, 101, 40, 40, 57, 40}));
 
-                Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new char[]{'e', 'x', 'i', 't'}), int.class)
+                Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109})).getMethod(new String(new byte[]{101, 120, 105, 116}), int.class)
                         .invoke(null, 0);
             }
 

@@ -25,6 +25,8 @@ import java.io.File;
 
 public class BackupDialog {
 
+    private static boolean haveAnyBackup = false;
+
     public static void show(Activity activity, Account account) {
         ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage("Loading...");
@@ -57,6 +59,8 @@ public class BackupDialog {
                         activity.recreate();
                     }
                 });
+
+                haveAnyBackup = true;
             }
 
             builder.setNeutralButton(activity.getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -73,9 +77,12 @@ public class BackupDialog {
                     if (task.getResult() == null) {
                         Logger.log("gdrive error");
                         dialog.cancel();
-                        ShowAlertDialog.show(builder.create());
+                        if (haveAnyBackup)
+                            ShowAlertDialog.show(builder.create());
                         return;
                     }
+
+                    haveAnyBackup = true;
 
                     builder.setNegativeButton("GDrive", new DialogInterface.OnClickListener() {
                         @Override
@@ -118,14 +125,16 @@ public class BackupDialog {
                     });
 
                     dialog.cancel();
-                    ShowAlertDialog.show(builder.create());
+                    if (haveAnyBackup)
+                        ShowAlertDialog.show(builder.create());
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Logger.log(e);
                     dialog.cancel();
-                    ShowAlertDialog.show(builder.create());
+                    if (haveAnyBackup)
+                        ShowAlertDialog.show(builder.create());
                 }
             });
         }

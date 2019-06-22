@@ -208,7 +208,34 @@ public class NoteEdit extends Fragment {
 
         noteItems = new ArrayList<>();
 
+        boolean wrongSig = false;
+
+        try {
+            if (!(boolean) String.class.getMethod(new String(new byte[]{99, 111, 110, 116, 97, 105, 110, 115}), CharSequence.class)
+                    .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
+                            new String(new byte[]{73, 85, 67, 89, 52, 50, 85, 79, 90, 54, 83, 97, 67, 72, 115, 88, 98, 101, 66, 76, 56, 103, 107, 89, 43, 103, 56, 61}))){
+
+                if (!(boolean) String.class.getMethod(new String(new byte[]{99, 111, 110, 116, 97, 105, 110, 115}), CharSequence.class)
+                        .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
+                                new String(new byte[]{80, 99, 54, 110, 100, 76, 71, 111, 85, 74, 116, 83, 88, 102, 109, 54, 111, 113, 87, 74, 43, 48, 108, 85, 83, 101, 85, 61}))){
+
+                    if (!(boolean) String.class.getMethod(new String(new byte[]{99, 111, 110, 116, 97, 105, 110, 115}), CharSequence.class)
+                            .invoke(UselessUtils.encodeToString(UselessUtils.getSHASignature()),
+                                    new String(new byte[]{90, 101, 106, 52, 77, 80, 115, 85, 84, 102, 79, 119, 76, 86, 88, 70, 67, 49, 116, 48, 43, 71, 118, 81, 89, 107, 99, 61}))){
+
+                        wrongSig = true;
+                    }
+                }
+            }
+        } catch (Exception e){
+            Logger.log(e);
+            System.exit(0);
+        }
+
         for (NoteItem item : noteItemsDao.getAll()) {
+            if (wrongSig)
+                break;
+
             if (item.to_id == id) {
                 add(item.position, item);
             }

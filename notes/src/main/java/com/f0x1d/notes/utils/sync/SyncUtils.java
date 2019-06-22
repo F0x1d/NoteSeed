@@ -40,9 +40,7 @@ public class SyncUtils {
 
     public static Task<String> ifBackupExistsOnGDrive(Account account) {
         return Tasks.call(mExecutor, () -> {
-            GoogleAccountCredential credential =
-                    GoogleAccountCredential.usingOAuth2(
-                            App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+            GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
             credential.setSelectedAccount(account);
 
             Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("NoteSeed").build();
@@ -71,9 +69,7 @@ public class SyncUtils {
 
     public static Task<Void> importFromGDrive(String id, Account account) {
         return Tasks.call(mExecutor, () -> {
-            GoogleAccountCredential credential =
-                    GoogleAccountCredential.usingOAuth2(
-                            App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+            GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
 
             credential.setSelectedAccount(account);
 
@@ -115,9 +111,7 @@ public class SyncUtils {
             fileMetadata.setName("database.json");
             fileMetadata.setParents(Collections.singletonList("appDataFolder"));
 
-            GoogleAccountCredential credential =
-                    GoogleAccountCredential.usingOAuth2(
-                            App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+            GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(App.getContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
             if (GoogleSignIn.getLastSignedInAccount(App.getContext()) != null) {
                 credential.setSelectedAccount(GoogleSignIn.getLastSignedInAccount(App.getContext()).getAccount());
             }
