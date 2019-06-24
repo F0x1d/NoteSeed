@@ -16,7 +16,7 @@
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
--dontobfuscate
+#-dontobfuscate
 
 -renamesourcefileattribute SourceFile
 -repackageclasses 'noteseed'

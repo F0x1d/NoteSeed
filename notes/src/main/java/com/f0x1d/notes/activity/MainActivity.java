@@ -46,7 +46,6 @@ import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 public class MainActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
-    public static MainActivity instance;
     public CenteredToolbar toolbar;
 
     @Override
@@ -93,9 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        toolbar = findViewById(R.id.toolbar);
-        setActionBar(toolbar);
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null) {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
