@@ -46,7 +46,7 @@ import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 public class MainActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
-    public CenteredToolbar toolbar;
+    public static MainActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
