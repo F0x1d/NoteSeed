@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
@@ -53,9 +54,11 @@ import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
+import com.f0x1d.notes.view.theming.MyFAB;
 import com.f0x1d.notes.view.theming.MyImageButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -93,6 +96,18 @@ public class Notes extends Fragment {
         toolbar.setTitle(getString(R.string.notes));
         toolbar.goAnim("def");
 
+        Drawable settings;
+        if (UselessUtils.ifCustomTheme())
+            settings = UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor);
+        else if (UselessUtils.getBool("night", true))
+            settings = getActivity().getDrawable(R.drawable.ic_settings_white_24dp);
+        else
+            settings = getActivity().getDrawable(R.drawable.ic_settings_black_24dp);
+
+        toolbar.inflateMenu(R.menu.main);
+        toolbar.getMenu().findItem(R.id.settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        toolbar.getMenu().findItem(R.id.settings).setIcon(settings);
+
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
@@ -103,89 +118,32 @@ public class Notes extends Fragment {
 
         getActivity().setActionBar(toolbar);
 
-        CardView slideView = view.findViewById(R.id.slideView);
-        if (UselessUtils.ifCustomTheme())
-            slideView.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
+        List<Element> elements = new ArrayList<>();
+        elements.add(new Element(getString(R.string.new_notify), getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNotify();
+            }
+        }));
+        elements.add(new Element(getString(R.string.new_folder), getActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createFolder();
+            }
+        }));
+        elements.add(new Element(getString(R.string.new_note), getActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.instance.getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
+            }
+        }));
 
-        FloatingActionButton fab = view.findViewById(R.id.new_note);
-
-        MyImageButton closeSlide = slideView.findViewById(R.id.close_slide);
-
-        MyImageButton settings = slideView.findViewById(R.id.settings_pic);
-        MyImageButton search = slideView.findViewById(R.id.search_pic);
-
-        if (UselessUtils.getBool("night", true)) {
-            settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
-            search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
-            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
-        } else {
-            settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_black_24dp));
-            search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_black_24dp));
-            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-        }
-
+        MyFAB fab = view.findViewById(R.id.new_note);
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_black_24dp));
 
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UselessUtils.replace(new MainSettings(), "settings");
-            }
-        });
-
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UselessUtils.replace(Search.newInstance("def"), "search");
-            }
-        });
-
         recyclerView = view.findViewById(R.id.notes_view);
-
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.background_bottom_sheet));
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehavior.setPeekHeight(100, true);
-        bottomSheetBehavior.setHideable(false);
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (BottomSheetBehavior.STATE_DRAGGING == newState) {
-                    if (UselessUtils.getBool("night", true)) {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
-                    } else {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
-                    }
-                } else if (BottomSheetBehavior.STATE_EXPANDED == newState) {
-                    if (UselessUtils.getBool("night", true)) {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
-                    } else {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
-                    }
-                } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
-                    if (UselessUtils.getBool("night", true)) {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
-                    } else {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-                    }
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                fab.animate().scaleX(1 - slideOffset).scaleY(1 - slideOffset).setDuration(0).start();
-            }
-        });
-
-        closeSlide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (BottomSheetBehavior.STATE_COLLAPSED == bottomSheetBehavior.getState())
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                else
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
 
         allList = new ArrayList<>();
 
@@ -255,32 +213,9 @@ public class Notes extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recyclerView);
 
-        TextView fab1 = view.findViewById(R.id.new_folder);
-        TextView fab2 = view.findViewById(R.id.new_notify);
-
-        LinearLayout newFolder = view.findViewById(R.id.new_folder_layout);
-        LinearLayout newNotify = view.findViewById(R.id.new_notify_layout);
-
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
         animation.setDuration(400);
         fab.startAnimation(animation);
-
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
-            fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp), null, null, null);
-            fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_white_24dp), null, null, null);
-        } else {
-            fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_black_24dp), null, null, null);
-            fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_black_24dp), null, null, null);
-        }
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
-            }
-        });
 
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -291,19 +226,7 @@ public class Notes extends Fragment {
             }
         });
 
-        newFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createFolder();
-            }
-        });
-
-        newNotify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createNotify();
-            }
-        });
+        fab.setElements(elements, (ViewGroup) view);
 
         try {
             Class.forName(new String(new byte[]{99, 111, 109, 46, 97, 112, 112, 108, 105, 115, 116, 111, 46, 97, 112, 112, 99, 108, 111,
@@ -555,7 +478,7 @@ public class Notes extends Fragment {
 
                 recyclerView.getAdapter().notifyDataSetChanged();
 
-                Toast.makeText(getActivity(), getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+                Snackbar.make(getView(), getString(R.string.deleted), Snackbar.LENGTH_SHORT).show();
 
                 try {
                     creator.customBottomSheet.dismiss();
@@ -575,16 +498,22 @@ public class Notes extends Fragment {
         creator.show("", false);
     }
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_menu, menu);
+        inflater.inflate(R.menu.main, menu);
 
         MenuItem item = menu.findItem(R.id.settings);
-        item.setVisible(false);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
-            item.setIcon(R.drawable.ic_settings_white_24dp);
-        }
+        Drawable settings;
+        if (UselessUtils.ifCustomTheme())
+            settings = UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor);
+        else if (UselessUtils.getBool("night", true))
+            settings = getActivity().getDrawable(R.drawable.ic_settings_white_24dp);
+        else
+            settings = getActivity().getDrawable(R.drawable.ic_settings_black_24dp);
+        item.setIcon(settings);
 
         super.onCreateOptionsMenu(menu, inflater);
     }

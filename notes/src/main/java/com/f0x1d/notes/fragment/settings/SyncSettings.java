@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,8 +38,14 @@ import com.google.api.services.drive.DriveScopes;
 
 public class SyncSettings extends PreferenceFragmentCompat {
 
+    public static SyncSettings instance;
+    private Preference login;
+    private Preference logout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        instance = this;
+
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
         if (UselessUtils.ifCustomTheme()) {
@@ -58,11 +65,25 @@ public class SyncSettings extends PreferenceFragmentCompat {
         return v;
     }
 
+    public void updateSignedState(){
+        if (GoogleSignIn.getLastSignedInAccount(getContext()) == null){
+            login.setVisible(true);
+            logout.setVisible(false);
+        } else {
+            login.setVisible(false);
+            logout.setVisible(true);
+        }
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.sync);
 
-        Preference login = findPreference("sign_in");
+        login = findPreference("sign_in");
+        logout = findPreference("sign_out");
+
+        updateSignedState();
+
         login.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -79,7 +100,6 @@ public class SyncSettings extends PreferenceFragmentCompat {
             }
         });
 
-        Preference logout = findPreference("sign_out");
         logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -108,6 +128,8 @@ public class SyncSettings extends PreferenceFragmentCompat {
                             Logger.log("logout success!");
                         else
                             Logger.log("logout not success!");
+
+                        updateSignedState();
                     }
                 });
                 return false;

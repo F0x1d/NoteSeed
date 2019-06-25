@@ -38,7 +38,7 @@ public class Logger {
         }
 
         Log.e("noteseed", e.getLocalizedMessage());
-        e.printStackTrace(System.out);
+        e.printStackTrace();
     }
 
     public static void log(String s){

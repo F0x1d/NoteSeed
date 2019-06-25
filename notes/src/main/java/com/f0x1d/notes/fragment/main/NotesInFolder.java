@@ -51,6 +51,7 @@ import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
+import com.f0x1d.notes.view.theming.MyFAB;
 import com.f0x1d.notes.view.theming.MyImageButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -128,96 +129,12 @@ public class NotesInFolder extends Fragment {
 
         getActivity().setActionBar(toolbar);
 
-        CardView slideView = view.findViewById(R.id.slideView);
-        if (UselessUtils.ifCustomTheme())
-            slideView.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
-
-        FloatingActionButton fab = view.findViewById(R.id.new_note);
-
-        MyImageButton closeSlide = slideView.findViewById(R.id.close_slide);
-
-        MyImageButton settings = slideView.findViewById(R.id.settings_pic);
-        MyImageButton search = slideView.findViewById(R.id.search_pic);
-
-        if (UselessUtils.getBool("night", true)) {
-            settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
-            search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
-            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
-        } else {
-            settings.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_black_24dp));
-            search.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_black_24dp));
-            closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-        }
-
-        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_black_24dp));
-
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UselessUtils.replace(new MainSettings(), "settings");
-            }
-        });
-
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UselessUtils.replace(Search.newInstance(in_folder_id), "search");
-            }
-        });
-
         recyclerView = view.findViewById(R.id.notes_view);
-
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.background_bottom_sheet));
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehavior.setPeekHeight(100, true);
-        bottomSheetBehavior.setHideable(false);
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (BottomSheetBehavior.STATE_DRAGGING == newState) {
-                    if (UselessUtils.getBool("night", true)) {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
-                    } else {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
-                    }
-                } else if (BottomSheetBehavior.STATE_EXPANDED == newState) {
-                    if (UselessUtils.getBool("night", true)) {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_white_24dp));
-                    } else {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
-                    }
-                } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
-                    if (UselessUtils.getBool("night", true)) {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_white_24dp));
-                    } else {
-                        closeSlide.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-                    }
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                fab.animate().scaleX(1 - slideOffset).scaleY(1 - slideOffset).setDuration(0).start();
-            }
-        });
-
-        closeSlide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (BottomSheetBehavior.STATE_COLLAPSED == bottomSheetBehavior.getState())
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                else
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
-
         allList = new ArrayList<>();
 
         nothing = view.findViewById(R.id.nothing);
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
-
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
             if (noteOrFolder.in_folder_id.equals(in_folder_id)) {
                 allList.add(noteOrFolder);
@@ -281,38 +198,37 @@ public class NotesInFolder extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recyclerView);
 
-        TextView fab1 = view.findViewById(R.id.new_folder);
-        TextView fab2 = view.findViewById(R.id.new_notify);
-
         Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
         animation.setDuration(400);
+
+        MyFAB fab = view.findViewById(R.id.new_note);
         fab.startAnimation(animation);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
-            fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_white_24dp), null, null, null);
-            fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_white_24dp), null, null, null);
-        } else {
-            fab1.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_create_new_folder_black_24dp), null, null, null);
-            fab2.setCompoundDrawablesWithIntrinsicBounds(getActivity().getResources().getDrawable(R.drawable.ic_notification_create_black_24dp), null, null, null);
-        }
-
-
-        fab1.setOnClickListener(new View.OnClickListener() {
+        List<Element> elements = new ArrayList<>();
+        elements.add(new Element(getString(R.string.new_notify), getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNotify();
+            }
+        }));
+        elements.add(new Element(getString(R.string.new_folder), getActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createFolder();
             }
-        });
-
-
-        fab.setOnClickListener(new View.OnClickListener() {
+        }));
+        elements.add(new Element(getString(R.string.new_note), getActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, NoteAdd.newInstance(in_folder_id), "add").addToBackStack("editor").commit();
+                        R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
             }
-        });
+        }));
+
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_black_24dp));
+
+        fab.setElements(elements, (ViewGroup) view);
 
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -320,13 +236,6 @@ public class NotesInFolder extends Fragment {
                 Toast.makeText(getActivity(), getString(R.string.import_db), Toast.LENGTH_SHORT).show();
                 openFile("*/*", 228, getActivity());
                 return false;
-            }
-        });
-
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createNotify();
             }
         });
         return view;
@@ -608,7 +517,7 @@ public class NotesInFolder extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         try {
-            inflater.inflate(R.menu.search_menu, menu);
+            inflater.inflate(R.menu.in_folder_menu, menu);
             MenuItem item = menu.findItem(R.id.root);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 

@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.f0x1d.notes.activity.MainActivity">
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:id="@+id/background"
-    android:layout_height="match_parent">
 
     <include
         layout="@layout/toolbar"
@@ -34,17 +29,14 @@
         android:elevation="2dp"
         android:layout_centerVertical="true"
         android:text="@string/empty" />
-</RelativeLayout>
-
-    <include layout="@layout/main_bottom_sheet" />
 
     <com.f0x1d.notes.view.theming.MyFAB
         android:layout_width="wrap_content"
         app:elevation="5dp"
         android:id="@+id/new_note"
         android:src="@drawable/ic_add_black_24dp"
-        app:layout_anchor="@+id/slideView"
-        app:layout_anchorGravity="center|top"
-        android:layout_height="wrap_content" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

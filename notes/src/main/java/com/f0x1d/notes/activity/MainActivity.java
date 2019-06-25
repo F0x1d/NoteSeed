@@ -22,6 +22,7 @@ import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.lock.LockTickerScreen;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.settings.MainSettings;
+import com.f0x1d.notes.fragment.settings.SyncSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.PermissionUtils;
@@ -166,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
             Account account = completedTask.getResult(ApiException.class).getAccount();
 
             PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
+            if (SyncSettings.instance != null)
+                SyncSettings.instance.updateSignedState();
             BackupDialog.show(this, account);
         } catch (ApiException e) {
             Logger.log(e);
