@@ -311,7 +311,7 @@ public class NoteEdit extends Fragment {
                     recyclerView.getAdapter().notifyItemChanged(viewHolder.getPosition());
                     Toast.makeText(getActivity(), "Nope.", Toast.LENGTH_SHORT).show();
                 } else
-                    ((NoteItemsAdapter) recyclerView.getAdapter()).delete(viewHolder.getPosition());
+                    ((NoteItemsAdapter) recyclerView.getAdapter()).delete(viewHolder.getPosition(), getView());
             }
 
             @Override

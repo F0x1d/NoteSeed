@@ -118,17 +118,21 @@ public class Notes extends Fragment {
 
         getActivity().setActionBar(toolbar);
 
+        MyFAB fab = view.findViewById(R.id.new_note);
+
         List<Element> elements = new ArrayList<>();
         elements.add(new Element(getString(R.string.new_notify), getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createNotify();
+                fab.closeList();
             }
         }));
         elements.add(new Element(getString(R.string.new_folder), getActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createFolder();
+                fab.closeList();
             }
         }));
         elements.add(new Element(getString(R.string.new_note), getActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
@@ -137,10 +141,10 @@ public class Notes extends Fragment {
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
+                fab.closeList();
             }
         }));
 
-        MyFAB fab = view.findViewById(R.id.new_note);
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_black_24dp));
 
         recyclerView = view.findViewById(R.id.notes_view);

@@ -38,6 +38,7 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.view.theming.MyEditText;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.reflect.InvocationHandler;
 import java.util.List;
@@ -374,7 +375,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return max_id + 1;
     }
 
-    public void delete(int position) {
+    public void delete(int position, View rootView) {
         BottomSheetCreator creator = new BottomSheetCreator((FragmentActivity) activity);
         creator.addElement(new Element(activity.getString(R.string.delete), activity.getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
@@ -398,6 +399,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     Logger.log(e);
                     Toast.makeText(activity, "error: " + e, Toast.LENGTH_SHORT).show();
                 }
+
+                Snackbar.make(rootView, activity.getString(R.string.deleted), Snackbar.LENGTH_SHORT).show();
 
                 try {
                     creator.customBottomSheet.dismiss();

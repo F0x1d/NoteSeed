@@ -34,6 +34,7 @@ public class MyFAB extends FloatingActionButton {
     private boolean clicked = false;
     private List<MyFAB> miniFabs = new ArrayList<>();
     private List<MyTextView> textViews = new ArrayList<>();
+    private ViewGroup rootView;
 
     public MyFAB(Context context) {
         super(context);
@@ -61,6 +62,8 @@ public class MyFAB extends FloatingActionButton {
         if (elements.isEmpty())
             return;
 
+        this.rootView = rootView;
+
         for (int i = 0; i < elements.size(); i++){
             Element element = elements.get(i);
 
@@ -69,6 +72,7 @@ public class MyFAB extends FloatingActionButton {
             fab.setOnClickListener(element.listener);
             fab.setImageDrawable(element.pic);
             fab.setSize(SIZE_MINI);
+
             rootView.addView(fab);
 
             MyTextView textView = new MyTextView(getContext());
@@ -89,136 +93,144 @@ public class MyFAB extends FloatingActionButton {
                 clicked = true;
 
                 if (opened){
-                    opened = false;
-                    for (int i = 0; i < miniFabs.size(); i++){
-                        MyFAB fab = miniFabs.get(i);
-                        fab.setClickable(false);
-
-                        MyTextView textView = textViews.get(i);
-
-                        for (int j = 0; j < rootView.getChildCount(); j++){
-                            View child = rootView.getChildAt(j);
-                            if (!(child instanceof MyFAB) && !(child instanceof MyTextView)){
-                                child.animate()
-                                        .alpha(0.5f)
-                                        .alpha(1.0f)
-                                        .setDuration(200)
-                                        .start();
-                            }
-                        }
-
-                        animate()
-                                .scaleX(1f)
-                                .scaleY(1f)
-                                .rotation(-90f)
-                                .setInterpolator(new DecelerateInterpolator())
-                                .start();
-
-                        ViewCompat.animate(fab)
-                                .alpha(1.0f)
-                                .alpha(0.0f)
-                                .translationYBy(getHeight() * (i + 1) + 100)
-                                .setDuration(300)
-                                .setListener(new ViewPropertyAnimatorListener() {
-                                    @Override
-                                    public void onAnimationStart(View view) {}
-                                    @Override
-                                    public void onAnimationEnd(View view) {
-                                        fab.setVisibility(View.INVISIBLE);
-                                        clicked = false;
-                                    }
-                                    @Override
-                                    public void onAnimationCancel(View view) {}
-                                }).start();
-
-                        ViewCompat.animate(textView)
-                                .alpha(1.0f)
-                                .alpha(0.0f)
-                                .translationYBy(getHeight() * (i + 1) + 100)
-                                .setDuration(300)
-                                .setListener(new ViewPropertyAnimatorListener() {
-                                    @Override
-                                    public void onAnimationStart(View view) {}
-                                    @Override
-                                    public void onAnimationEnd(View view) {
-                                        textView.setVisibility(View.INVISIBLE);
-                                        clicked = false;
-                                    }
-                                    @Override
-                                    public void onAnimationCancel(View view) {}
-                                }).start();
-                    }
+                    closeList();
                 } else {
-                    opened = true;
-                    for (int i = 0; i < miniFabs.size(); i++){
-                        MyFAB fab = miniFabs.get(i);
-                        fab.setClickable(true);
-                        fab.setX(getX() + (getWidth() - fab.getWidth()) / 2);
-                        fab.setY(getY());
-                        fab.setZ(getZ());
-
-                        MyTextView textView = textViews.get(i);
-                        textView.setX(fab.getX() - textView.getWidth() - 20);
-                        textView.setY(fab.getY() + (fab.getHeight() - textView.getHeight()) / 2);
-                        textView.setZ(fab.getZ());
-
-                        for (int j = 0; j < rootView.getChildCount(); j++){
-                            View child = rootView.getChildAt(j);
-                            if (!(child instanceof MyFAB)){
-                                child.animate()
-                                        .alpha(1.0f)
-                                        .alpha(0.5f)
-                                        .setDuration(200)
-                                        .start();
-                            }
-                        }
-
-                        animate()
-                                .scaleX(1f)
-                                .scaleY(1f)
-                                .rotation(45f)
-                                .setInterpolator(new DecelerateInterpolator())
-                                .start();
-
-                        ViewCompat.animate(fab)
-                                .alpha(0.0f)
-                                .alpha(1.0f)
-                                .translationYBy(-(getHeight() * (i + 1) + 100))
-                                .setDuration(300)
-                                .setListener(new ViewPropertyAnimatorListener() {
-                                    @Override
-                                    public void onAnimationStart(View view) {
-                                        fab.setVisibility(View.VISIBLE);
-                                    }
-                                    @Override
-                                    public void onAnimationEnd(View view) {
-                                        clicked = false;
-                                    }
-                                    @Override
-                                    public void onAnimationCancel(View view) {}
-                                }).start();
-
-                        ViewCompat.animate(textView)
-                                .alpha(0.0f)
-                                .alpha(1.0f)
-                                .translationYBy(-(getHeight() * (i + 1) + 100))
-                                .setDuration(300)
-                                .setListener(new ViewPropertyAnimatorListener() {
-                                    @Override
-                                    public void onAnimationStart(View view) {
-                                        textView.setVisibility(View.VISIBLE);
-                                    }
-                                    @Override
-                                    public void onAnimationEnd(View view) {
-                                        clicked = false;
-                                    }
-                                    @Override
-                                    public void onAnimationCancel(View view) {}
-                                }).start();
-                    }
+                    openList();
                 }
             }
         });
+    }
+
+    public void closeList(){
+        opened = false;
+        for (int i = 0; i < miniFabs.size(); i++){
+            MyFAB fab = miniFabs.get(i);
+            fab.setClickable(false);
+
+            MyTextView textView = textViews.get(i);
+
+            for (int j = 0; j < rootView.getChildCount(); j++){
+                View child = rootView.getChildAt(j);
+                if (!(child instanceof MyFAB) && !(child instanceof MyTextView)){
+                    child.animate()
+                            .alpha(0.5f)
+                            .alpha(1.0f)
+                            .setDuration(200)
+                            .start();
+                }
+            }
+
+            animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .rotation(-90f)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+
+            ViewCompat.animate(fab)
+                    .alpha(1.0f)
+                    .alpha(0.0f)
+                    .translationYBy(getHeight() * (i + 1) + 100)
+                    .setDuration(300)
+                    .setListener(new ViewPropertyAnimatorListener() {
+                        @Override
+                        public void onAnimationStart(View view) {}
+                        @Override
+                        public void onAnimationEnd(View view) {
+                            fab.setVisibility(View.INVISIBLE);
+                            clicked = false;
+                        }
+                        @Override
+                        public void onAnimationCancel(View view) {}
+                    }).start();
+
+            ViewCompat.animate(textView)
+                    .alpha(1.0f)
+                    .alpha(0.0f)
+                    .translationYBy(getHeight() * (i + 1) + 100)
+                    .setDuration(300)
+                    .setListener(new ViewPropertyAnimatorListener() {
+                        @Override
+                        public void onAnimationStart(View view) {}
+                        @Override
+                        public void onAnimationEnd(View view) {
+                            textView.setVisibility(View.INVISIBLE);
+                            clicked = false;
+                        }
+                        @Override
+                        public void onAnimationCancel(View view) {}
+                    }).start();
+        }
+    }
+
+    public void openList(){
+        opened = true;
+        for (int i = 0; i < miniFabs.size(); i++){
+            MyFAB fab = miniFabs.get(i);
+            fab.setClickable(true);
+            fab.setX(getX() + (getWidth() - fab.getWidth()) / 2);
+            fab.setY(getY());
+            fab.setZ(getZ());
+
+            MyTextView textView = textViews.get(i);
+            textView.setX(fab.getX() - textView.getWidth() - 20);
+            textView.setY(fab.getY() + (fab.getHeight() - textView.getHeight()) / 2);
+            textView.setZ(fab.getZ());
+
+            for (int j = 0; j < rootView.getChildCount(); j++){
+                View child = rootView.getChildAt(j);
+                if (!(child instanceof MyFAB)){
+                    child.animate()
+                            .alpha(1.0f)
+                            .alpha(0.5f)
+                            .setDuration(200)
+                            .start();
+                }
+            }
+
+            animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .rotation(45f)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+
+            ViewCompat.animate(fab)
+                    .alpha(0.0f)
+                    .alpha(1.0f)
+                    .translationYBy(-(getHeight() * (i + 1) + 100))
+                    .setDuration(300)
+                    .setListener(new ViewPropertyAnimatorListener() {
+                        @Override
+                        public void onAnimationStart(View view) {
+                            fab.setVisibility(View.VISIBLE);
+                        }
+                        @Override
+                        public void onAnimationEnd(View view) {
+                            clicked = false;
+                        }
+                        @Override
+                        public void onAnimationCancel(View view) {}
+                    }).start();
+
+            ViewCompat.animate(textView)
+                    .alpha(0.0f)
+                    .alpha(1.0f)
+                    .translationYBy(-(getHeight() * (i + 1) + 100))
+                    .setDuration(300)
+                    .setListener(new ViewPropertyAnimatorListener() {
+                        @Override
+                        public void onAnimationStart(View view) {
+                            textView.setVisibility(View.VISIBLE);
+                        }
+                        @Override
+                        public void onAnimationEnd(View view) {
+                            clicked = false;
+                        }
+                        @Override
+                        public void onAnimationCancel(View view) {}
+                    }).start();
+        }
     }
 
     private void start() {

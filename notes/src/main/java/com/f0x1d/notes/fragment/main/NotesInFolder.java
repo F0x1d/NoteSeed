@@ -209,12 +209,14 @@ public class NotesInFolder extends Fragment {
             @Override
             public void onClick(View v) {
                 createNotify();
+                fab.closeList();
             }
         }));
         elements.add(new Element(getString(R.string.new_folder), getActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createFolder();
+                fab.closeList();
             }
         }));
         elements.add(new Element(getString(R.string.new_note), getActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
@@ -223,11 +225,11 @@ public class NotesInFolder extends Fragment {
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
+                fab.closeList();
             }
         }));
 
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_black_24dp));
-
         fab.setElements(elements, (ViewGroup) view);
 
         fab.setOnLongClickListener(new View.OnLongClickListener() {

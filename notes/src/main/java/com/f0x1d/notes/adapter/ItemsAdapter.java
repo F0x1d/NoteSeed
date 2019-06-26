@@ -163,7 +163,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.lightColorIconColor));
+                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.WHITE);
                     holder.text.setTextColor(Color.WHITE);
@@ -189,7 +189,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (UselessUtils.ifCustomTheme()) {
                     holder.title.setTextColor(ThemesEngine.darkColorTextColor);
                     holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.lightColorIconColor));
+                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.darkColorIconColor));
                 } else {
                     holder.title.setTextColor(Color.WHITE);
                     holder.text.setTextColor(Color.WHITE);

@@ -222,7 +222,7 @@ public class NoteAdd extends Fragment {
                     recyclerView.getAdapter().notifyItemChanged(viewHolder.getPosition());
                     Toast.makeText(getActivity(), "Nope.", Toast.LENGTH_SHORT).show();
                 } else
-                    adapter.delete(viewHolder.getPosition());
+                    adapter.delete(viewHolder.getPosition(), view);
             }
 
             @Override

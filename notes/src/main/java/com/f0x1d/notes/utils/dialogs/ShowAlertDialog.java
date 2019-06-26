@@ -43,14 +43,10 @@ public class ShowAlertDialog {
                     try {
                         ((TextView) dialog1337.findViewById(App.getContext().getResources().getIdentifier("alertTitle", "id", BuildConfig.APPLICATION_ID)))
                                 .setTextColor(ThemesEngine.textColor);
-                    } catch (Exception e){
-                        Logger.log(e);
-                    }
+                    } catch (Exception e){}
                     try {
                         ((TextView) dialog1337.findViewById(android.R.id.message)).setTextColor(ThemesEngine.textColor);
-                    } catch (Exception e){
-                        Logger.log(e);
-                    }
+                    } catch (Exception e){}
 
                     try {
                         ViewGroup listView = dialog1337.findViewById(androidx.appcompat.R.id.select_dialog_listview);
@@ -60,9 +56,7 @@ public class ShowAlertDialog {
                                 ((TextView) view).setTextColor(ThemesEngine.textColor);
                             }
                         }
-                    } catch (Exception e){
-                        Logger.log(e);
-                    }
+                    } catch (Exception e){}
                 }
             }
         });
