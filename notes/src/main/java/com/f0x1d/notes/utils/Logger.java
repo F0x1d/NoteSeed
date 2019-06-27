@@ -16,7 +16,7 @@ import java.util.Locale;
 
 public class Logger {
 
-    public static void log(Exception e){
+    public static void log(Throwable e){
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);

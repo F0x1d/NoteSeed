@@ -54,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
         instance = this;
         PermissionUtils.requestPermissions(this);
 
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                Logger.log(e);
+            }
+        });
+
         if (UselessUtils.ifCustomTheme()) {
             new ThemesEngine().setupAll();
         }
@@ -97,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         if (GoogleSignIn.getLastSignedInAccount(this) == null) {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
-                    //.requestScopes(new Scope(DriveScopes.DRIVE_FILE))
                     .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
                     .build();
 

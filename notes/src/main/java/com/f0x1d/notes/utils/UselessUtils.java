@@ -132,6 +132,10 @@ public class UselessUtils {
                 R.id.container, fragment, tag).commit();
     }
 
+    public static Object getNull(){
+        return null;
+    }
+
     public static Drawable setTint(Drawable d, int color) {
         Drawable wrappedDrawable = DrawableCompat.wrap(d);
         DrawableCompat.setTint(wrappedDrawable, color);
