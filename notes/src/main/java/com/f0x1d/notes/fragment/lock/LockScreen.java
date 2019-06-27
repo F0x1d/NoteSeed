@@ -270,12 +270,6 @@ public class LockScreen extends Fragment {
         }
     }
 
-    private class FingerprintException extends Exception {
-        public FingerprintException(Exception e) {
-            super(e);
-        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     public boolean initCipher() {
         try {
@@ -300,6 +294,12 @@ public class LockScreen extends Fragment {
                 | UnrecoverableKeyException | IOException
                 | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException("Failed to init Cipher", e);
+        }
+    }
+
+    private class FingerprintException extends Exception {
+        public FingerprintException(Exception e) {
+            super(e);
         }
     }
 

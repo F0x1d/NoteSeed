@@ -7,10 +7,9 @@ import java.util.List;
 
 public class BottomSheetCreator {
 
+    public CustomBottomSheet customBottomSheet;
     private FragmentActivity context;
     private List<Element> elements;
-
-    public CustomBottomSheet customBottomSheet;
 
     public BottomSheetCreator(FragmentActivity someContext) {
         this.context = someContext;

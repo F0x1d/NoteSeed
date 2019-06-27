@@ -3,7 +3,6 @@ package com.f0x1d.notes.utils.dialogs;
 import android.app.Activity;
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 

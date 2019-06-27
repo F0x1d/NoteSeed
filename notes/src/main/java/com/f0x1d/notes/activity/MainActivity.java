@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -31,7 +30,6 @@ import com.f0x1d.notes.utils.dialogs.BackupDialog;
 import com.f0x1d.notes.utils.dialogs.SignInDialog;
 import com.f0x1d.notes.utils.sync.SyncService;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.view.CenteredToolbar;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -46,8 +44,8 @@ import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 
 public class MainActivity extends AppCompatActivity {
 
-    private GoogleSignInClient mGoogleSignInClient;
     public static MainActivity instance;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             signIn();
         }
 
-        if (getIntent().getExtras() != null){
+        if (getIntent().getExtras() != null) {
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                     R.id.container, new Notes(), "notes").commit();
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
@@ -189,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment add = getSupportFragmentManager().findFragmentByTag("add");
         Fragment lockTicked = getSupportFragmentManager().findFragmentByTag("lockTicked");
 
-        if (lockTicked != null && lockTicked.isVisible()){
+        if (lockTicked != null && lockTicked.isVisible()) {
             UselessUtils.edit().putLong("lockTicker", 0).apply();
             super.onBackPressed();
             return;
@@ -257,14 +255,19 @@ public class MainActivity extends AppCompatActivity {
         if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getLong("lockTicker", 0) == 0)
             return;
 
-        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getLong("lockTicker", 0) > 60000){
+        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getLong("lockTicker", 0) > 60000) {
             UselessUtils.clear_back_stack();
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                     R.id.container, LockTickerScreen.newInstance(new LockTickerScreen.Callback() {
                         @Override
-                        public int describeContents() { return 0; }
+                        public int describeContents() {
+                            return 0;
+                        }
+
                         @Override
-                        public void writeToParcel(Parcel dest, int flags) {}
+                        public void writeToParcel(Parcel dest, int flags) {
+                        }
+
                         @Override
                         public void onSuccess(LockTickerScreen screen) {
                             UselessUtils.edit().putLong("lockTicker", 0).apply();

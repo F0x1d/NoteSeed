@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -70,6 +69,43 @@ public class SetNotify extends BottomSheetDialogFragment {
     NotifyDao dao;
 
     Notify notify;
+    TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+            myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            myCalendar.set(Calendar.MINUTE, minute);
+
+            myHour = hourOfDay;
+            myMinute = minute;
+
+            String minutes = String.valueOf(myMinute);
+            String hour = String.valueOf(myHour);
+
+            if (String.valueOf(myMinute).length() <= 1)
+                minutes = "0" + minutes;
+
+            if (String.valueOf(myHour).length() <= 1)
+                hour = "0" + hour;
+
+            time.setText(hour + ":" + minutes);
+        }
+    };
+    DatePickerDialog.OnDateSetListener myCallBack2 = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.YEAR, year);
+
+            myYear = year;
+            myMonth = monthOfYear;
+            myMonth = myMonth + 1;
+            myDay = dayOfMonth;
+            date.setText(myDay + "." + myMonth + "." + myYear);
+        }
+    };
 
     public SetNotify(Notify notify) {
         this.notify = notify;
@@ -236,45 +272,6 @@ public class SetNotify extends BottomSheetDialogFragment {
 
         dialog.setContentView(v);
     }
-
-    TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-            myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            myCalendar.set(Calendar.MINUTE, minute);
-
-            myHour = hourOfDay;
-            myMinute = minute;
-
-            String minutes = String.valueOf(myMinute);
-            String hour = String.valueOf(myHour);
-
-            if (String.valueOf(myMinute).length() <= 1)
-                minutes = "0" + minutes;
-
-            if (String.valueOf(myHour).length() <= 1)
-                hour = "0" + hour;
-
-            time.setText(hour + ":" + minutes);
-        }
-    };
-
-    DatePickerDialog.OnDateSetListener myCallBack2 = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            myCalendar.set(Calendar.MONTH, monthOfYear);
-            myCalendar.set(Calendar.YEAR, year);
-
-            myYear = year;
-            myMonth = monthOfYear;
-            myMonth = myMonth + 1;
-            myDay = dayOfMonth;
-            date.setText(myDay + "." + myMonth + "." + myYear);
-        }
-    };
 
     public void delete(long id) {
         dao.delete(id);

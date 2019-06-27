@@ -16,7 +16,7 @@ import java.util.Locale;
 
 public class Logger {
 
-    public static void log(Throwable e){
+    public static void log(Throwable e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
@@ -41,7 +41,7 @@ public class Logger {
         e.printStackTrace();
     }
 
-    public static void log(String s){
+    public static void log(String s) {
         File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/");
         File logFile = new File(dir, "log.txt");
         try {

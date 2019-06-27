@@ -29,20 +29,18 @@ import java.util.List;
 
 public class ChooseFolder extends Fragment {
 
+    private RecyclerView recyclerView;
+    private CenteredToolbar toolbar;
+    private FloatingActionButton fab;
+    private String in_id;
+    private long id;
+    private NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
+
     public static ChooseFolder newInstance(Bundle args) {
         ChooseFolder fragment = new ChooseFolder();
         fragment.setArguments(args);
         return fragment;
     }
-
-    private RecyclerView recyclerView;
-    private CenteredToolbar toolbar;
-    private FloatingActionButton fab;
-
-    private String in_id;
-    private long id;
-
-    private NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

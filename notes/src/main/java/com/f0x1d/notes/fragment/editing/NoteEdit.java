@@ -1,6 +1,5 @@
 package com.f0x1d.notes.fragment.editing;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -14,14 +13,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
-import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +31,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -62,17 +57,13 @@ import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationHandler;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,29 +71,37 @@ import java.util.List;
 
 public class NoteEdit extends Fragment {
 
+    public static int last_pos;
     EditText title;
     RecyclerView recyclerView;
-
     String id_str;
     long id;
     int locked;
-
     NoteOrFolderDao dao;
     String titleStr;
     NoteItemsDao noteItemsDao;
     CenteredToolbar toolbar;
     List<NoteItem> noteItems;
-
-    public static int last_pos;
     Bundle args;
 
     private boolean editMode = false;
     private boolean pinned = false;
+    private String currentPhotoPath;
 
     public static NoteEdit newInstance(Bundle args) {
         NoteEdit myFragment = new NoteEdit();
         myFragment.setArguments(args);
         return myFragment;
+    }
+
+    public static void copy(InputStream in, File dst) throws IOException {
+        try (OutputStream out = new FileOutputStream(dst)) {
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+        }
     }
 
     @Override
@@ -118,7 +117,7 @@ public class NoteEdit extends Fragment {
             id_str = String.valueOf(getArguments().getLong("id"));
             try {
                 locked = getArguments().getInt("locked");
-            } catch (Exception e){
+            } catch (Exception e) {
                 locked = getLocked(id);
             }
         }
@@ -257,7 +256,7 @@ public class NoteEdit extends Fragment {
         return view;
     }
 
-    public void enterEditMode(){
+    public void enterEditMode() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.warning);
         builder.setMessage(R.string.enter_edit_mode);
@@ -270,7 +269,7 @@ public class NoteEdit extends Fragment {
         ShowAlertDialog.show(builder.create());
     }
 
-    private void editModeSetup(){
+    private void editModeSetup() {
         editMode = true;
         ((NoteItemsAdapter) recyclerView.getAdapter()).setEditing(true);
 
@@ -284,7 +283,7 @@ public class NoteEdit extends Fragment {
         title.setOnClickListener(null);
     }
 
-    private void attachHelper(){
+    private void attachHelper() {
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -337,7 +336,7 @@ public class NoteEdit extends Fragment {
         }
     }
 
-    private int getLocked(long id){
+    private int getLocked(long id) {
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
             if (noteOrFolder.id == id)
                 return noteOrFolder.locked;
@@ -444,7 +443,7 @@ public class NoteEdit extends Fragment {
 
                 break;
             case R.id.attach:
-                if (!editMode){
+                if (!editMode) {
                     enterEditMode();
                     break;
                 }
@@ -462,7 +461,8 @@ public class NoteEdit extends Fragment {
 
                         try {
                             creator.customBottomSheet.dismiss();
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                        }
                     }
                 }));
                 creator.addElement(new Element(getString(R.string.picture), getActivity().getDrawable(R.drawable.ic_image_white_24dp), new View.OnClickListener() {
@@ -472,7 +472,8 @@ public class NoteEdit extends Fragment {
 
                         try {
                             creator.customBottomSheet.dismiss();
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                        }
                     }
                 }));
                 creator.addElement(new Element(getString(R.string.item_checkbox), getActivity().getDrawable(R.drawable.ic_work_white_24dp), new View.OnClickListener() {
@@ -482,13 +483,14 @@ public class NoteEdit extends Fragment {
 
                         try {
                             creator.customBottomSheet.dismiss();
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                        }
                     }
                 }));
                 creator.show("", true);
                 break;
             case R.id.lock:
-                if (!editMode){
+                if (!editMode) {
                     enterEditMode();
                     break;
                 }
@@ -513,7 +515,7 @@ public class NoteEdit extends Fragment {
 
                 break;
             case R.id.settings:
-                if (!editMode){
+                if (!editMode) {
                     enterEditMode();
                     break;
                 }
@@ -523,7 +525,7 @@ public class NoteEdit extends Fragment {
             case R.id.pin_status:
                 NotificationManager manager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
-                if (pinned){
+                if (pinned) {
                     manager.cancel((int) id + 1);
                     toolbar.getMenu().findItem(R.id.pin_status).setTitle(R.string.pin_in_status_bar);
                     pinned = false;
@@ -571,14 +573,15 @@ public class NoteEdit extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void openChoosePicture(){
+    private void openChoosePicture() {
         BottomSheetCreator creator = new BottomSheetCreator(getActivity());
         creator.addElement(new Element(getString(R.string.camera), getResources().getDrawable(R.drawable.ic_camera_alt_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
 
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -608,15 +611,14 @@ public class NoteEdit extends Fragment {
             public void onClick(View v) {
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
 
                 openFile("image/*", 228, getActivity());
             }
         }));
         creator.show("TAG", true);
     }
-
-    private String currentPhotoPath;
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -670,7 +672,7 @@ public class NoteEdit extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.log("got onActivityResult");
 
-        if (resultCode == Activity.RESULT_OK && requestCode == 1337){
+        if (resultCode == Activity.RESULT_OK && requestCode == 1337) {
             if (new File(currentPhotoPath).length() < 10)
                 return;
 
@@ -742,16 +744,6 @@ public class NoteEdit extends Fragment {
                     dao.updateNoteTime(System.currentTimeMillis(), id);
                 }
             }).start();
-        }
-    }
-
-    public static void copy(InputStream in, File dst) throws IOException {
-        try (OutputStream out = new FileOutputStream(dst)) {
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
         }
     }
 

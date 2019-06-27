@@ -11,7 +11,6 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.PreferenceViewHolder;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.ColorUtils;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 

@@ -34,13 +34,25 @@ import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.fragment.bottomSheet.TextSizeDialog;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
-import com.f0x1d.notes.utils.ColorUtils;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 
 public class MainSettings extends PreferenceFragmentCompat {
+
+    boolean delete = false;
+
+    private static void setZeroPaddingToLayoutChildren(View view) {
+        if (!(view instanceof ViewGroup))
+            return;
+        ViewGroup viewGroup = (ViewGroup) view;
+        int childCount = viewGroup.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            setZeroPaddingToLayoutChildren(viewGroup.getChildAt(i));
+            viewGroup.setPaddingRelative(0, viewGroup.getPaddingTop(), viewGroup.getPaddingEnd(), viewGroup.getPaddingBottom());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -180,8 +192,6 @@ public class MainSettings extends PreferenceFragmentCompat {
         }
     }
 
-    boolean delete = false;
-
     public void removeAll() {
 
         if (delete) {
@@ -235,17 +245,6 @@ public class MainSettings extends PreferenceFragmentCompat {
                     iconFrame.setVisibility(currentPreference.getIcon() == null ? View.GONE : View.VISIBLE);
                 }
             }
-        }
-    }
-
-    private static void setZeroPaddingToLayoutChildren(View view) {
-        if (!(view instanceof ViewGroup))
-            return;
-        ViewGroup viewGroup = (ViewGroup) view;
-        int childCount = viewGroup.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            setZeroPaddingToLayoutChildren(viewGroup.getChildAt(i));
-            viewGroup.setPaddingRelative(0, viewGroup.getPaddingTop(), viewGroup.getPaddingEnd(), viewGroup.getPaddingBottom());
         }
     }
 }

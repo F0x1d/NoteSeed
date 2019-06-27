@@ -1,25 +1,19 @@
 package com.f0x1d.notes.view.theming;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
@@ -58,13 +52,13 @@ public class MyFAB extends FloatingActionButton {
             setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
     }
 
-    public void setElements(List<Element> elements, ViewGroup rootView){
+    public void setElements(List<Element> elements, ViewGroup rootView) {
         if (elements.isEmpty())
             return;
 
         this.rootView = rootView;
 
-        for (int i = 0; i < elements.size(); i++){
+        for (int i = 0; i < elements.size(); i++) {
             Element element = elements.get(i);
 
             MyFAB fab = new MyFAB(getContext());
@@ -92,7 +86,7 @@ public class MyFAB extends FloatingActionButton {
 
                 clicked = true;
 
-                if (opened){
+                if (opened) {
                     closeList();
                 } else {
                     openList();
@@ -101,17 +95,17 @@ public class MyFAB extends FloatingActionButton {
         });
     }
 
-    public void closeList(){
+    public void closeList() {
         opened = false;
-        for (int i = 0; i < miniFabs.size(); i++){
+        for (int i = 0; i < miniFabs.size(); i++) {
             MyFAB fab = miniFabs.get(i);
             fab.setClickable(false);
 
             MyTextView textView = textViews.get(i);
 
-            for (int j = 0; j < rootView.getChildCount(); j++){
+            for (int j = 0; j < rootView.getChildCount(); j++) {
                 View child = rootView.getChildAt(j);
-                if (!(child instanceof MyFAB) && !(child instanceof MyTextView)){
+                if (!(child instanceof MyFAB) && !(child instanceof MyTextView)) {
                     child.animate()
                             .alpha(0.5f)
                             .alpha(1.0f)
@@ -134,14 +128,18 @@ public class MyFAB extends FloatingActionButton {
                     .setDuration(300)
                     .setListener(new ViewPropertyAnimatorListener() {
                         @Override
-                        public void onAnimationStart(View view) {}
+                        public void onAnimationStart(View view) {
+                        }
+
                         @Override
                         public void onAnimationEnd(View view) {
                             fab.setVisibility(View.INVISIBLE);
                             clicked = false;
                         }
+
                         @Override
-                        public void onAnimationCancel(View view) {}
+                        public void onAnimationCancel(View view) {
+                        }
                     }).start();
 
             ViewCompat.animate(textView)
@@ -151,21 +149,25 @@ public class MyFAB extends FloatingActionButton {
                     .setDuration(300)
                     .setListener(new ViewPropertyAnimatorListener() {
                         @Override
-                        public void onAnimationStart(View view) {}
+                        public void onAnimationStart(View view) {
+                        }
+
                         @Override
                         public void onAnimationEnd(View view) {
                             textView.setVisibility(View.INVISIBLE);
                             clicked = false;
                         }
+
                         @Override
-                        public void onAnimationCancel(View view) {}
+                        public void onAnimationCancel(View view) {
+                        }
                     }).start();
         }
     }
 
-    public void openList(){
+    public void openList() {
         opened = true;
-        for (int i = 0; i < miniFabs.size(); i++){
+        for (int i = 0; i < miniFabs.size(); i++) {
             MyFAB fab = miniFabs.get(i);
             fab.setClickable(true);
             fab.setX(getX() + (getWidth() - fab.getWidth()) / 2);
@@ -177,9 +179,9 @@ public class MyFAB extends FloatingActionButton {
             textView.setY(fab.getY() + (fab.getHeight() - textView.getHeight()) / 2);
             textView.setZ(fab.getZ());
 
-            for (int j = 0; j < rootView.getChildCount(); j++){
+            for (int j = 0; j < rootView.getChildCount(); j++) {
                 View child = rootView.getChildAt(j);
-                if (!(child instanceof MyFAB)){
+                if (!(child instanceof MyFAB)) {
                     child.animate()
                             .alpha(1.0f)
                             .alpha(0.5f)
@@ -205,12 +207,15 @@ public class MyFAB extends FloatingActionButton {
                         public void onAnimationStart(View view) {
                             fab.setVisibility(View.VISIBLE);
                         }
+
                         @Override
                         public void onAnimationEnd(View view) {
                             clicked = false;
                         }
+
                         @Override
-                        public void onAnimationCancel(View view) {}
+                        public void onAnimationCancel(View view) {
+                        }
                     }).start();
 
             ViewCompat.animate(textView)
@@ -223,12 +228,15 @@ public class MyFAB extends FloatingActionButton {
                         public void onAnimationStart(View view) {
                             textView.setVisibility(View.VISIBLE);
                         }
+
                         @Override
                         public void onAnimationEnd(View view) {
                             clicked = false;
                         }
+
                         @Override
-                        public void onAnimationCancel(View view) {}
+                        public void onAnimationCancel(View view) {
+                        }
                     }).start();
         }
     }

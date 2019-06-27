@@ -2,13 +2,11 @@ package com.f0x1d.notes.utils.sync;
 
 import android.accounts.Account;
 import android.os.Environment;
-import android.util.Log;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.utils.Logger;
-import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -78,7 +76,7 @@ public class SyncUtils {
             File db = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
             if (!db.exists())
                 db.mkdirs();
-            
+
             File database = new File(db, "database.noteseed");
             if (!database.exists())
                 database.createNewFile();

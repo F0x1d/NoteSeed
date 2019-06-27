@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -21,14 +20,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-
-import java.lang.reflect.InvocationHandler;
 
 public class CenteredToolbar extends Toolbar {
 
@@ -58,6 +54,11 @@ public class CenteredToolbar extends Toolbar {
     }
 
     @Override
+    public CharSequence getTitle() {
+        return tvTitle.getText().toString();
+    }
+
+    @Override
     public void setTitle(@StringRes int resId) {
         String s = getResources().getString(resId);
         setTitle(s);
@@ -66,6 +67,11 @@ public class CenteredToolbar extends Toolbar {
     @Override
     public void setTitle(CharSequence title) {
         tvTitle.setText(title);
+    }
+
+    @Override
+    public CharSequence getSubtitle() {
+        return tvSubtitle.getText().toString();
     }
 
     @Override
@@ -78,16 +84,6 @@ public class CenteredToolbar extends Toolbar {
     public void setSubtitle(CharSequence subtitle) {
         tvSubtitle.setVisibility(VISIBLE);
         tvSubtitle.setText(subtitle);
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return tvTitle.getText().toString();
-    }
-
-    @Override
-    public CharSequence getSubtitle() {
-        return tvSubtitle.getText().toString();
     }
 
     private void setupTextViews() {
@@ -188,7 +184,8 @@ public class CenteredToolbar extends Toolbar {
                                     });
                         }
                     }, 500);
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
 
             }
         }, 1500);

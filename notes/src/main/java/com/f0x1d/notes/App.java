@@ -19,10 +19,9 @@ import io.fabric.sdk.android.Fabric;
 
 public final class App extends Application {
 
-    private FirebaseAnalytics mFirebaseAnalytics;
-
-    private Database database;
     private static App instance;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private Database database;
 
     public static App getInstance() {
         return instance;
@@ -52,7 +51,7 @@ public final class App extends Application {
         return database;
     }
 
-    private void initPositions(){
+    private void initPositions() {
         if (UselessUtils.getBool("inited_pos", false))
             return;
 

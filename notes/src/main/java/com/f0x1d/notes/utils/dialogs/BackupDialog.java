@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;

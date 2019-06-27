@@ -132,7 +132,8 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
                                 } else {
                                     themes.get(position).theme_file.delete();
                                 }
-                            } catch (Exception e) {}
+                            } catch (Exception e) {
+                            }
 
                             themes.remove(position);
                             notifyDataSetChanged();

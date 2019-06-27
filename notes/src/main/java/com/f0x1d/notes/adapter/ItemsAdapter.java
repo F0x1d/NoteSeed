@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,13 +64,11 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<NoteOrFolder> items;
-    Activity activity;
-
     private final int NOTE = 1;
     private final int FOLDER = 2;
     private final int NOTIFY = 3;
-
+    List<NoteOrFolder> items;
+    Activity activity;
     private boolean anim;
 
     private NoteOrFolderDao dao;
@@ -82,6 +79,32 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.anim = anim;
 
         setHasStableIds(true);
+    }
+
+    public static String getFolderNameFromDataBaseStatic(long id, int pos) {
+        String name = "";
+
+        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
+            if (noteOrFolder.id == id) {
+                name = noteOrFolder.folder_name;
+                break;
+            }
+        }
+
+        return name;
+    }
+
+    public static String getFolderNameFromDataBase(long id) {
+        String name = "";
+
+        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
+            if (noteOrFolder.id == id) {
+                name = noteOrFolder.folder_name;
+                break;
+            }
+        }
+
+        return name;
     }
 
     @Override
@@ -211,7 +234,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 if (pinned)
                     itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
-                        activity.getString(R.string.unpin_from_status_bar), activity.getString(R.string.change)};
+                            activity.getString(R.string.unpin_from_status_bar), activity.getString(R.string.change)};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setItems(itemsAlert, new DialogInterface.OnClickListener() {
@@ -252,7 +275,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             case 2:
                                 NotificationManager manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                                if (pinned){
+                                if (pinned) {
                                     manager.cancel((int) items.get(position).id + 1);
                                     activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(position).id, false).apply();
                                     break;
@@ -304,7 +327,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return pos;
     }
 
-    public void onItemsChanged(int lastPos, int newPos){
+    public void onItemsChanged(int lastPos, int newPos) {
         dao.updatePosition(newPos, items.get(lastPos).id);
 
         Collections.swap(items, lastPos, newPos);
@@ -400,10 +423,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    private void deleteFolderFull(String folderName){
+    private void deleteFolderFull(String folderName) {
         dao.deleteFolder(folderName);
-        for (NoteOrFolder noteOrFolder : dao.getByInFolderId(folderName)){
-            if (noteOrFolder.is_folder == 1){
+        for (NoteOrFolder noteOrFolder : dao.getByInFolderId(folderName)) {
+            if (noteOrFolder.is_folder == 1) {
                 deleteFolderFull(noteOrFolder.folder_name);
                 dao.deleteFolder(noteOrFolder.folder_name);
             } else {
@@ -424,19 +447,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         return color;
-    }
-
-    public static String getFolderNameFromDataBaseStatic(long id, int pos) {
-        String name = "";
-
-        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.id == id) {
-                name = noteOrFolder.folder_name;
-                break;
-            }
-        }
-
-        return name;
     }
 
     public String getFolderNameFromDataBase(long id, int pos) {
@@ -868,19 +878,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         return color;
-    }
-
-    public static String getFolderNameFromDataBase(long id) {
-        String name = "";
-
-        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.id == id) {
-                name = noteOrFolder.folder_name;
-                break;
-            }
-        }
-
-        return name;
     }
 
     @Override

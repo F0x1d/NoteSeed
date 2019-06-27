@@ -3,43 +3,27 @@ package com.f0x1d.notes.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.f0x1d.notes.App;
-import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
-import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import static com.f0x1d.notes.App.getContext;
 
@@ -78,7 +62,7 @@ public class UselessUtils {
         return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("custom_theme", false);
     }
 
-    public static int getNavColor(){
+    public static int getNavColor() {
         if (UselessUtils.ifCustomTheme())
             return ThemesEngine.navBarColor;
         else if (UselessUtils.getBool("night", true))
@@ -132,7 +116,7 @@ public class UselessUtils {
                 R.id.container, fragment, tag).commit();
     }
 
-    public static Object getNull(){
+    public static Object getNull() {
         return null;
     }
 

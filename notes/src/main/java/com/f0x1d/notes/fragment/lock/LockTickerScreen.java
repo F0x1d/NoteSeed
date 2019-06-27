@@ -277,12 +277,6 @@ public class LockTickerScreen extends Fragment {
         }
     }
 
-    private class FingerprintException extends Exception {
-        public FingerprintException(Exception e) {
-            super(e);
-        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     public boolean initCipher() {
         try {
@@ -307,6 +301,16 @@ public class LockTickerScreen extends Fragment {
                 | UnrecoverableKeyException | IOException
                 | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException("Failed to init Cipher", e);
+        }
+    }
+
+    public interface Callback extends Parcelable {
+        void onSuccess(LockTickerScreen screen);
+    }
+
+    private class FingerprintException extends Exception {
+        public FingerprintException(Exception e) {
+            super(e);
         }
     }
 
@@ -348,9 +352,5 @@ public class LockTickerScreen extends Fragment {
             } catch (Exception e) {
             }
         }
-    }
-
-    public interface Callback extends Parcelable {
-        void onSuccess(LockTickerScreen screen);
     }
 }

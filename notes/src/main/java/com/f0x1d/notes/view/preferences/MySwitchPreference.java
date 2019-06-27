@@ -15,7 +15,6 @@ import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SwitchPreference;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.utils.ColorUtils;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 
@@ -42,6 +41,18 @@ public class MySwitchPreference extends SwitchPreference {
         super(context);
     }
 
+    private static void colorSwitch(Switch s, int thumbOn) {
+
+        int[][] states = new int[][]{
+                new int[]{-android.R.attr.state_checked},
+                new int[]{android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[]{Color.GRAY, thumbOn};
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(s.getThumbDrawable()), new ColorStateList(states, thumbColors));
+    }
+
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
@@ -61,18 +72,6 @@ public class MySwitchPreference extends SwitchPreference {
 
         text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
         text2.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
-    }
-
-    private static void colorSwitch(Switch s, int thumbOn) {
-
-        int[][] states = new int[][]{
-                new int[]{-android.R.attr.state_checked},
-                new int[]{android.R.attr.state_checked},
-        };
-
-        int[] thumbColors = new int[]{Color.GRAY, thumbOn};
-
-        DrawableCompat.setTintList(DrawableCompat.wrap(s.getThumbDrawable()), new ColorStateList(states, thumbColors));
     }
 
     private void changeColor(boolean checked) {

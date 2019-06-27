@@ -60,14 +60,13 @@ import static android.view.View.GONE;
 public class LockNote extends Fragment {
 
     private static final String KEY_NAME = "notes";
+    Bundle args;
     private Cipher cipher;
     private KeyStore keyStore;
     private KeyGenerator keyGenerator;
     private FingerprintManager.CryptoObject cryptoObject;
     private FingerprintManager fingerprintManager;
     private KeyguardManager keyguardManager;
-    Bundle args;
-
     private SwirlView swirlView;
 
     public static LockNote newInstance(Bundle args) {
@@ -215,8 +214,9 @@ public class LockNote extends Fragment {
         });
 
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("finger", false)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { keyguardManager =
-                    (KeyguardManager) getActivity().getSystemService(KEYGUARD_SERVICE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                keyguardManager =
+                        (KeyguardManager) getActivity().getSystemService(KEYGUARD_SERVICE);
                 fingerprintManager =
                         (FingerprintManager) getActivity().getSystemService(FINGERPRINT_SERVICE);
 
@@ -275,12 +275,6 @@ public class LockNote extends Fragment {
         }
     }
 
-    private class FingerprintException extends Exception {
-        public FingerprintException(Exception e) {
-            super(e);
-        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     public boolean initCipher() {
         try {
@@ -305,6 +299,12 @@ public class LockNote extends Fragment {
                 | UnrecoverableKeyException | IOException
                 | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException("Failed to init Cipher", e);
+        }
+    }
+
+    private class FingerprintException extends Exception {
+        public FingerprintException(Exception e) {
+            super(e);
         }
     }
 

@@ -1,13 +1,11 @@
 package com.f0x1d.notes.fragment.main;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,10 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -42,8 +38,6 @@ import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
-import com.f0x1d.notes.fragment.search.Search;
-import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
@@ -52,9 +46,6 @@ import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyFAB;
-import com.f0x1d.notes.view.theming.MyImageButton;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,15 +59,13 @@ import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 public class NotesInFolder extends Fragment {
 
     public static RecyclerView recyclerView;
-    private List<NoteOrFolder> allList;
-
+    public String in_folder_id;
     TextView nothing;
 
     CenteredToolbar toolbar;
     NoteOrFolderDao dao;
     ItemsAdapter adapter;
-
-    public String in_folder_id;
+    private List<NoteOrFolder> allList;
 
     public static NotesInFolder newInstance(String in_folder_id) {
         Bundle args = new Bundle();
@@ -85,6 +74,18 @@ public class NotesInFolder extends Fragment {
         NotesInFolder fragment = new NotesInFolder();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public static long genId() {
+        long id = 0;
+
+        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
+            if (noteOrFolder.id > id) {
+                id = noteOrFolder.id;
+            }
+        }
+
+        return id + 1;
     }
 
     @Override
@@ -354,7 +355,7 @@ public class NotesInFolder extends Fragment {
         return name;
     }
 
-    public long getIdByInFolderId(String in_folder_id){
+    public long getIdByInFolderId(String in_folder_id) {
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
             if (noteOrFolder.folder_name != null && noteOrFolder.folder_name.equals(in_folder_id))
                 return noteOrFolder.id;
@@ -443,18 +444,6 @@ public class NotesInFolder extends Fragment {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public static long genId() {
-        long id = 0;
-
-        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.id > id) {
-                id = noteOrFolder.id;
-            }
-        }
-
-        return id + 1;
     }
 
     private int getPosition(long id) {

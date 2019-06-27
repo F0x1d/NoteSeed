@@ -12,7 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -29,22 +28,18 @@ import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.view.CenteredToolbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Search extends Fragment {
 
-    RecyclerView recyclerView;
-
     static List<NoteOrFolder> allList;
     static List<NoteOrFolder> searchedList;
-
-    private String id;
-
+    RecyclerView recyclerView;
     NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
     NoteItemsDao noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
+    private String id;
 
     public static Search newInstance(String in_folder_id) {
 
@@ -130,9 +125,13 @@ public class Search extends Fragment {
         text.startAnimation(animation);
         text.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().isEmpty()) {
@@ -150,10 +149,10 @@ public class Search extends Fragment {
                     } else {
                         boolean add = false;
 
-                        for (NoteItem noteItem : noteItemsDao.getAll()){
-                            if (menuItem.id == noteItem.to_id){
-                                if (noteItem.text != null && !noteItem.text.equals("null")){
-                                    if (noteItem.text.toLowerCase().contains(s.toString().toLowerCase())){
+                        for (NoteItem noteItem : noteItemsDao.getAll()) {
+                            if (menuItem.id == noteItem.to_id) {
+                                if (noteItem.text != null && !noteItem.text.equals("null")) {
+                                    if (noteItem.text.toLowerCase().contains(s.toString().toLowerCase())) {
                                         add = true;
                                         break;
                                     }

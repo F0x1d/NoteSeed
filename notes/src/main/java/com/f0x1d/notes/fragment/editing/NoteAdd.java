@@ -1,7 +1,5 @@
 package com.f0x1d.notes.fragment.editing;
 
-import android.animation.FloatEvaluator;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,7 +8,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -21,7 +18,6 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,11 +61,9 @@ import com.f0x1d.notes.view.CenteredToolbar;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,6 +76,14 @@ public class NoteAdd extends Fragment {
 
     String id;
     boolean pinned = false;
+    EditText title;
+    RecyclerView recyclerView;
+    long rowID;
+    NoteOrFolderDao dao;
+    NoteItemsDao noteItemsDao;
+    CenteredToolbar toolbar;
+    List<NoteItem> noteItems;
+    private String currentPhotoPath;
 
     public static NoteAdd newInstance(String in_folder_id) {
 
@@ -92,18 +94,6 @@ public class NoteAdd extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-    EditText title;
-    RecyclerView recyclerView;
-
-    long rowID;
-
-    NoteOrFolderDao dao;
-    NoteItemsDao noteItemsDao;
-
-    CenteredToolbar toolbar;
-
-    List<NoteItem> noteItems;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -432,7 +422,7 @@ public class NoteAdd extends Fragment {
             case R.id.pin_status:
                 NotificationManager manager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
-                if (pinned){
+                if (pinned) {
                     manager.cancel((int) rowID + 1);
                     toolbar.getMenu().findItem(R.id.pin_status).setTitle(R.string.pin_in_status_bar);
                     pinned = false;
@@ -464,7 +454,7 @@ public class NoteAdd extends Fragment {
                 builder.setOngoing(true);
                 builder.setStyle(new Notification.BigTextStyle().bigText(Html.fromHtml(flexNoteItem.text.replace("\n", "<br />"))));
                 builder.setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class)
-                    .putExtra("id", rowID).putExtra("title", title.getText().toString()), 0));
+                        .putExtra("id", rowID).putExtra("title", title.getText().toString()), 0));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                     builder.setChannelId("com.f0x1d.notes.notifications");
 
@@ -480,14 +470,15 @@ public class NoteAdd extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void openChoosePicture(){
+    private void openChoosePicture() {
         BottomSheetCreator creator = new BottomSheetCreator(getActivity());
         creator.addElement(new Element(getString(R.string.camera), getResources().getDrawable(R.drawable.ic_camera_alt_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
 
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -516,15 +507,14 @@ public class NoteAdd extends Fragment {
             public void onClick(View v) {
                 try {
                     creator.customBottomSheet.dismiss();
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
 
                 openFile("image/*", 228, getActivity());
             }
         }));
         creator.show("TAG", true);
     }
-
-    private String currentPhotoPath;
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -576,7 +566,7 @@ public class NoteAdd extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == 1337){
+        if (resultCode == Activity.RESULT_OK && requestCode == 1337) {
             if (new File(currentPhotoPath).length() < 1)
                 return;
 
