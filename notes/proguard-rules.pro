@@ -16,8 +16,6 @@
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
--dontobfuscate
-
 -renamesourcefileattribute SourceFile
 -repackageclasses 'noteseed'
 -allowaccessmodification
@@ -36,24 +34,5 @@
   public *;
 }
 
--keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
-    public static final *** NULL;
-}
-
--keepnames @com.google.android.gms.common.annotation.KeepName class *
--keepclassmembernames class * {
-    @com.google.android.gms.common.annotation.KeepName *;
-}
-
--keep class * extends com.google.api.client.json.GenericJson {
-    *;
-}
--keep class com.google.api.services.drive.** {
-    *;
-}
-
--keep class com.f0x1d.notes.adapter.ItemsAdapter { *; }
-
--keepnames class * implements android.os.Parcelable {
-    public static final ** CREATOR;
-}
+-keep class com.google.** { *;}
+-keep class com.fasterxml.** { *;}

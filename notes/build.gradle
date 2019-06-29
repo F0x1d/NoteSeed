@@ -91,17 +91,33 @@ android {
         }
     }
 
+    def versionPropsFile = file('version.properties')
+
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def code = versionProps['VERSION_CODE'].toInteger() + 1
+
+        versionProps['VERSION_CODE'] = code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        defaultConfig {
+            applicationId "com.f0x1d.notes"
+            minSdkVersion 21
+            targetSdkVersion 28
+            versionCode code
+            versionName "6.4.2"
+
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
+
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
-    defaultConfig {
-        applicationId "com.f0x1d.notes"
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 156
-        versionName "6.4.2"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
 
     buildTypes {
         debug {
@@ -112,8 +128,8 @@ android {
         }
 
         release {
-            minifyEnabled false//true
-            shrinkResources false//true
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
