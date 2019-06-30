@@ -2,6 +2,7 @@ package com.f0x1d.notes.view.theming;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -37,15 +38,32 @@ public class MyTextView extends TextView {
     private void setColor() {
         if (UselessUtils.ifCustomTheme()) {
             this.setTextColor(ThemesEngine.textColor);
-
             try {
                 setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
             } catch (Exception e) {
             }
-
         }
 
         setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
+    }
+
+    public void setupCompoundDrawables(){
+        if (UselessUtils.ifCustomTheme()) {
+            try {
+                setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
+            } catch (Exception e) {
+            }
+        } else if (UselessUtils.getBool("night", true)){
+            try {
+                setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], Color.WHITE), null, null, null);
+            } catch (Exception e) {
+            }
+        } else {
+            try {
+                setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], Color.BLACK), null, null, null);
+            } catch (Exception e) {
+            }
+        }
     }
 
     @Override

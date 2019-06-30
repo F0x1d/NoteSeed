@@ -155,4 +155,5 @@
     <string name="default_name">По умолчанию</string>
     <string name="ok">OK</string>
     <string name="gdrive">GDrive</string>
+    <string name="edit_translation">Править локализацию</string>
 </resources>

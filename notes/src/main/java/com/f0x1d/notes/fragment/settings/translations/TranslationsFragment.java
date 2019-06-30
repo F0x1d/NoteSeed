@@ -61,6 +61,7 @@ public class TranslationsFragment extends Fragment {
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
+        translations.clear();
         translations.add(null);
         translations.add(new Translation(Translations.getString("default_name"), null));
         try {
