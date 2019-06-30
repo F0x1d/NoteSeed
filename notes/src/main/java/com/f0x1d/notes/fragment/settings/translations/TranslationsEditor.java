@@ -272,8 +272,10 @@ public class TranslationsEditor extends Fragment {
             });
 
             if (values != null){
-                if (values.get(keysNames.get(position)) != null)
+                if (values.get(keysNames.get(position)) != null) {
+                    translations.put(position, new EditTranslation(keysNames.get(position), values.get(keysNames.get(position))));
                     holder.editText.setText(values.get(keysNames.get(position)));
+                }
             }
 
             if (translations.get(position) != null){
