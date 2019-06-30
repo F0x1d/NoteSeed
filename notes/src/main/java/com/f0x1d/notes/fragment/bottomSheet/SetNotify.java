@@ -34,6 +34,7 @@ import com.f0x1d.notes.db.entities.Notify;
 import com.f0x1d.notes.receiver.NotifyServiceReceiver;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.theming.MyButton;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -134,6 +135,7 @@ public class SetNotify extends BottomSheetDialogFragment {
         choose_time = v.findViewById(R.id.choose_time_layout);
 
         time = v.findViewById(R.id.choose_time);
+        time.setText(Translations.getString("choose_time"));
         choose_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,6 +154,7 @@ public class SetNotify extends BottomSheetDialogFragment {
         });
 
         date = v.findViewById(R.id.choose_date);
+        date.setText(Translations.getString("choose_date"));
         choose_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,7 +174,9 @@ public class SetNotify extends BottomSheetDialogFragment {
         });
 
         ok = v.findViewById(R.id.ok);
+        ok.setText(Translations.getString("ok"));
         delete = v.findViewById(R.id.delete);
+        delete.setText(Translations.getString("delete_notify"));
         if (UselessUtils.getBool("night", true)) {
             ok.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
             delete.setBackgroundTintList(ColorStateList.valueOf(App.getContext().getResources().getColor(R.color.statusbar)));
@@ -217,7 +222,7 @@ public class SetNotify extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if (!exists) {
-                    if (!date.getText().toString().equals(getActivity().getString(R.string.choose_date)) && !time.getText().toString().equals(getActivity().getString(R.string.choose_time))) {
+                    if (!date.getText().toString().equals(Translations.getString("choose_date")) && !time.getText().toString().equals(Translations.getString("choose_time"))) {
 
                         notify.time = myCalendar.getTimeInMillis();
 
@@ -239,7 +244,7 @@ public class SetNotify extends BottomSheetDialogFragment {
                         Toast.makeText(getActivity(), "Hmmmmm...", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    if (!date.getText().toString().equals(getActivity().getString(R.string.choose_date)) && !time.getText().toString().equals(getActivity().getString(R.string.choose_time))) {
+                    if (!date.getText().toString().equals(Translations.getString("choose_date")) && !time.getText().toString().equals(Translations.getString("choose_time"))) {
 
                         delete(id);
 

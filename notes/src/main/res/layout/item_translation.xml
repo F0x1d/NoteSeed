@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.f0x1d.notes.view.theming.ItemCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    android:layout_height="150dp"
+    app:cardCornerRadius="9dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:id="@+id/cardView">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.f0x1d.notes.view.theming.MyTextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+</com.f0x1d.notes.view.theming.ItemCardView>

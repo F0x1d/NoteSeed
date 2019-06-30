@@ -28,6 +28,7 @@ import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.translations.Translations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +88,7 @@ public class Search extends Fragment {
         recyclerView.setAdapter(adapter);
 
         EditText text = view.findViewById(R.id.text);
+        text.setHint(Translations.getString("search"));
 
         ImageButton button = view.findViewById(R.id.close);
 

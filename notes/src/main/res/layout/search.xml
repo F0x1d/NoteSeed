@@ -26,7 +26,6 @@
             android:id="@+id/text"
             android:background="@null"
             android:singleLine="true"
-            android:hint="@string/search"
             android:layout_weight="1"
             android:layout_height="wrap_content" />
 

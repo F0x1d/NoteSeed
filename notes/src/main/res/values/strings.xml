@@ -150,4 +150,9 @@
     <string name="pin_in_status_bar">Pin in status bar</string>
     <string name="unpin_from_status_bar">Unpin from status bar</string>
     <string name="autolock">Automatically lock app after 1 minute</string>
+    <string name="translations">Translations</string>
+    <string name="add_translation">Add translation</string>
+    <string name="default_name">Default</string>
+    <string name="ok">OK</string>
+    <string name="gdrive">GDrive</string>
 </resources>

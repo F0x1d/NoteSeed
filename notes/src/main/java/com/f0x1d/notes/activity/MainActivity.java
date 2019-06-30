@@ -23,6 +23,7 @@ import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.SyncSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
+import com.f0x1d.notes.fragment.settings.translations.TranslationsFragment;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.PermissionUtils;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -130,6 +131,17 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                         R.id.container, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change", false).apply();
+
+            } else if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change_l", false)) {
+                clear_back_stack();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, new Notes(), "notes").commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, new MainSettings(), "settings").addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                        R.id.container, TranslationsFragment.newInstance(), "translations").addToBackStack(null).commit();
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change_l", false).apply();
+
             } else {
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false)) {
                     getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(

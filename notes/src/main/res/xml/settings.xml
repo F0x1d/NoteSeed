@@ -7,58 +7,53 @@
     </com.f0x1d.notes.view.preferences.MyPreference>
 
     <com.f0x1d.notes.view.preferences.MyPreference
-        android:title="@string/about" android:key="about"/>
+        android:key="about"/>
 
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/sync">
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:key="syncC">
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:title="@string/sync" android:key="sync"/>
+            android:key="sync"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/onscreen">
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:key="onscreenC">
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:title="@string/theme" android:key="dayAccent"/>
-            <com.f0x1d.notes.view.preferences.MyPreference
-                android:title="@string/text_size" android:summary="@string/in_editor" android:key="textSize" />
-            <com.f0x1d.notes.view.preferences.MySwitchPreference
-                android:title="@string/use_mono" android:summary="@string/in_editor" android:key="mono"/>
+            android:key="dayAccent"/>
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:key="translations"/>
+        <com.f0x1d.notes.view.preferences.MyPreference
+            android:key="textSize" />
+        <com.f0x1d.notes.view.preferences.MySwitchPreference
+            android:key="mono"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/notes">
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:key="notesC">
 
         <com.f0x1d.notes.view.preferences.MySwitchPreference
-            android:title="@string/two_rows"
             android:key="two_rows"/>
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:title="@string/date_appearance"
-            android:summary="@string/choose_date_appearance"
             android:key="date"/>
         <com.f0x1d.notes.view.preferences.MySwitchPreference
-            android:title="@string/show_skolko_thing_on_folder"
             android:key="show_things"/>
         <com.f0x1d.notes.view.preferences.MySwitchPreference
             android:key="shakal"
-            android:defaultValue="true"
-            android:title="@string/shakal"
-            android:summary="@string/shakal_summary"/>
+            android:defaultValue="true" />
         <com.f0x1d.notes.view.preferences.MySwitchPreference
-            android:title="@string/auto_editmode"
             android:key="auto_editmode"/>
 
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/security">
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:key="securityC">
         <com.f0x1d.notes.view.preferences.MySwitchPreference
-            android:title="@string/use_pin" android:key="lock"/>
+            android:key="lock"/>
         <com.f0x1d.notes.view.preferences.MySwitchPreference
-            android:title="@string/use_finger" android:key="finger"/>
+            android:key="finger"/>
         <com.f0x1d.notes.view.preferences.MySwitchPreference
-            android:title="@string/autolock" android:key="autolock" android:defaultValue="true"/>
+            android:key="autolock" android:defaultValue="true"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/debug">
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:key="debugC">
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:summary="@string/debug_title" android:selectable="false"/>
+            android:key="warning_d" android:selectable="false"/>
             <com.f0x1d.notes.view.preferences.MyPreference
-                android:title="@string/clear_all" android:key="delete_all"/>
+                android:key="delete_all"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 </PreferenceScreen>

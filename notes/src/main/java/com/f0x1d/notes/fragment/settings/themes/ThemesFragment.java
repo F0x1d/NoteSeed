@@ -28,6 +28,7 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.Theme;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.translations.Translations;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ThemesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.themes_fragment, container, false);
         Toolbar toolbar = v.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.themes));
+        toolbar.setTitle(Translations.getString("themes"));
 
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
@@ -71,9 +72,9 @@ public class ThemesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         themes = new ArrayList<>();
-        themes.add(new Theme(null, getString(R.string.blue), "by F0x1d", 0xff64B5F6, 0xffffffff));
-        themes.add(new Theme(null, getString(R.string.orange), "by F0x1d", 0xffffaa00, 0xff000000));
-        themes.add(new Theme(null, getString(R.string.dark), "by F0x1d", 0xff303030, 0xffffffff));
+        themes.add(new Theme(null, Translations.getString("blue"), "by F0x1d", 0xff64B5F6, 0xffffffff));
+        themes.add(new Theme(null, Translations.getString("orange"), "by F0x1d", 0xffffaa00, 0xff000000));
+        themes.add(new Theme(null, Translations.getString("dark"), "by F0x1d", 0xff303030, 0xffffffff));
         themes.addAll(new ThemesEngine().getThemes());
 
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -112,8 +113,8 @@ public class ThemesFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("FAQ");
         builder.setCancelable(false);
-        builder.setMessage(Html.fromHtml("<b>" + getString(R.string.where_themes) + "</b> <br>" + getString(R.string.there_themes)));
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setMessage(Html.fromHtml("<b>" + Translations.getString("where_themes") + "</b> <br>" + Translations.getString("there_themes")));
+        builder.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("faq_themes", true).apply();

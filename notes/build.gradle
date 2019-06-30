@@ -8,13 +8,10 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-
 apply plugin: 'com.google.gms.google-services'
 
 repositories {
     mavenCentral()
-    maven { url 'https://maven.fabric.io/public' }
 }
 
 import java.nio.file.Files
@@ -87,7 +84,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "noteseed_${variant.versionName}.apk"
+            outputFileName = "noteseed_${variant.versionName}_${variant.versionCode}.apk"
         }
     }
 
@@ -108,7 +105,7 @@ android {
             minSdkVersion 21
             targetSdkVersion 28
             versionCode code
-            versionName "6.4.2"
+            versionName "6.4.3"
 
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         }
@@ -147,14 +144,14 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation "androidx.core:core:1.1.0-alpha04"
+    implementation "androidx.core:core:1.2.0-alpha02"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "androidx.appcompat:appcompat:1.1.0-alpha02"
-    implementation "androidx.annotation:annotation:1.0.1"
+    implementation "androidx.appcompat:appcompat:1.1.0-beta01"
+    implementation "androidx.annotation:annotation:1.1.0"
     implementation 'com.android.support:preference-v7:28.0.0'
     implementation 'com.mattprecious.swirl:swirl:1.2.0'
 
-    implementation "com.google.android.material:material:1.1.0-alpha03"
+    implementation "com.google.android.material:material:1.1.0-alpha07"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
@@ -176,9 +173,7 @@ dependencies {
     implementation 'com.google.apis:google-api-services-drive:v3-rev165-1.25.0'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    //implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
-    compile "androidx.core:core-ktx:+"
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    compile "androidx.core:core-ktx:1.0.2"
 }

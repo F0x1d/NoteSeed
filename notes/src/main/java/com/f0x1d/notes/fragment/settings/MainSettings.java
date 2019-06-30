@@ -34,9 +34,12 @@ import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.fragment.bottomSheet.TextSizeDialog;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
+import com.f0x1d.notes.fragment.settings.translations.TranslationsFragment;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.translations.Translation;
+import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.CenteredToolbar;
 
 public class MainSettings extends PreferenceFragmentCompat {
@@ -66,7 +69,7 @@ public class MainSettings extends PreferenceFragmentCompat {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
-            toolbar.setTitle(R.string.settings);
+            toolbar.setTitle(Translations.getString("settings"));
             getActivity().setActionBar(toolbar);
 
             if (UselessUtils.ifCustomTheme())
@@ -90,7 +93,54 @@ public class MainSettings extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.settings);
 
+        PreferenceCategory debugCategory = (PreferenceCategory) findPreference("debugC");
+        debugCategory.setTitle(Translations.getString("debug"));
+
+        PreferenceCategory securityCategory = (PreferenceCategory) findPreference("securityC");
+        securityCategory.setTitle(Translations.getString("security"));
+
+        PreferenceCategory notesCategory = (PreferenceCategory) findPreference("notesC");
+        notesCategory.setTitle(Translations.getString("notes"));
+
+        PreferenceCategory onScreen = (PreferenceCategory) findPreference("onscreenC");
+        onScreen.setTitle(Translations.getString("onscreen"));
+
+        PreferenceCategory syncCategory = (PreferenceCategory) findPreference("syncC");
+        syncCategory.setTitle(Translations.getString("sync"));
+
+        SwitchPreference mono = (SwitchPreference) findPreference("mono");
+        mono.setTitle(Translations.getString("use_mono"));
+        mono.setSummary(Translations.getString("in_editor"));
+
+        SwitchPreference twoRows = (SwitchPreference) findPreference("two_rows");
+        twoRows.setTitle(Translations.getString("two_rows"));
+
+        SwitchPreference showThings = (SwitchPreference) findPreference("show_things");
+        showThings.setTitle(Translations.getString("show_skolko_thing_on_folder"));
+
+        SwitchPreference shakal = (SwitchPreference) findPreference("shakal");
+        shakal.setTitle(Translations.getString("shakal"));
+        shakal.setSummary(Translations.getString("shakal_summary"));
+
+        SwitchPreference autoEditMode = (SwitchPreference) findPreference("auto_editmode");
+        autoEditMode.setTitle(Translations.getString("auto_editmode"));
+
+        SwitchPreference autoLock = (SwitchPreference) findPreference("autolock");
+        autoLock.setTitle(Translations.getString("autolock"));
+
+        Preference translations = findPreference("translations");
+        translations.setTitle(Translations.getString("translations"));
+        translations.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                UselessUtils.replace(TranslationsFragment.newInstance(), "translations");
+                return false;
+            }
+        });
+
         Preference date = findPreference("date");
+        date.setTitle(Translations.getString("date_appearance"));
+        date.setSummary(Translations.getString("choose_date_appearance"));
         date.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -102,9 +152,9 @@ public class MainSettings extends PreferenceFragmentCompat {
                 text.setText(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("date", "HH:mm | dd.MM.yyyy"));
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(R.string.choose_date_appearance);
+                builder.setTitle(Translations.getString("choose_date_appearance"));
                 builder.setView(v);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
@@ -118,6 +168,7 @@ public class MainSettings extends PreferenceFragmentCompat {
         });
 
         Preference sync = findPreference("sync");
+        sync.setTitle(Translations.getString("sync"));
         sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -127,6 +178,7 @@ public class MainSettings extends PreferenceFragmentCompat {
         });
 
         Preference about = findPreference("about");
+        about.setTitle(Translations.getString("about"));
         about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -136,6 +188,7 @@ public class MainSettings extends PreferenceFragmentCompat {
         });
 
         Preference accent = findPreference("dayAccent");
+        accent.setTitle(Translations.getString("theme"));
         accent.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -145,6 +198,8 @@ public class MainSettings extends PreferenceFragmentCompat {
         });
 
         Preference textSize = findPreference("textSize");
+        textSize.setTitle(Translations.getString("text_size"));
+        textSize.setSummary(Translations.getString("in_editor"));
         textSize.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -155,7 +210,11 @@ public class MainSettings extends PreferenceFragmentCompat {
             }
         });
 
+        Preference debugWarning = findPreference("warning_d");
+        debugWarning.setTitle(Translations.getString("debug_title"));
+
         Preference delete_all = findPreference("delete_all");
+        delete_all.setTitle(Translations.getString("clear_all"));
         delete_all.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -165,8 +224,10 @@ public class MainSettings extends PreferenceFragmentCompat {
         });
 
         final SwitchPreference finger = (SwitchPreference) findPreference("finger");
+        finger.setTitle(Translations.getString("use_finger"));
 
         SwitchPreference lock = (SwitchPreference) findPreference("lock");
+        lock.setTitle(Translations.getString("use_pin"));
         lock.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -182,13 +243,13 @@ public class MainSettings extends PreferenceFragmentCompat {
             FingerprintManager fingerprintManager = (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
             if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
                 finger.setEnabled(false);
-                finger.setSummary(getString(R.string.fingerprint_error2));
+                finger.setSummary(Translations.getString("fingerprint_error2"));
             } else if (!fingerprintManager.hasEnrolledFingerprints()) {
                 finger.setEnabled(false);
             }
         } else {
             finger.setEnabled(false);
-            finger.setSummary(getString(R.string.fingerprint_error3));
+            finger.setSummary(Translations.getString("fingerprint_error3"));
         }
     }
 
@@ -205,7 +266,7 @@ public class MainSettings extends PreferenceFragmentCompat {
         }
 
         delete = true;
-        Toast.makeText(getActivity(), R.string.one_more_time_to_delete, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), Translations.getString("one_more_time_to_delete"), Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
             @Override

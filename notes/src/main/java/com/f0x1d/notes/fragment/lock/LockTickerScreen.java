@@ -24,6 +24,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -34,6 +35,7 @@ import androidx.fragment.app.Fragment;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.theming.MyButton;
 import com.mattprecious.swirl.SwirlView;
 
@@ -87,6 +89,8 @@ public class LockTickerScreen extends Fragment {
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
+
+        ((TextView) view.findViewById(R.id.textView5)).setText(Translations.getString("pass"));
 
         callback = (Callback) getArguments().get("callback");
 
@@ -337,7 +341,7 @@ public class LockTickerScreen extends Fragment {
         public void onAuthenticationFailed() {
             try {
                 swirlView.setState(SwirlView.State.ERROR, true);
-                Toast.makeText(context, getString(R.string.fingerprint_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, Translations.getString("fingerprint_error"), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
             }
         }

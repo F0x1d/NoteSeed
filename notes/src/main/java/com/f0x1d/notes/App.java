@@ -5,17 +5,17 @@ import android.content.Context;
 
 import androidx.room.Room;
 
-import com.crashlytics.android.Crashlytics;
 import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
+import com.f0x1d.notes.utils.translations.IncorrectTranslationError;
+import com.f0x1d.notes.utils.translations.Translations;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;
 import java.util.List;
-
-import io.fabric.sdk.android.Fabric;
 
 public final class App extends Application {
 
@@ -36,13 +36,18 @@ public final class App extends Application {
         instance = this;
         super.onCreate();
 
-        Fabric.with(this, new Crashlytics());
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         database = Room.databaseBuilder(this, Database.class, "noteseed_db")
                 .allowMainThreadQueries()
                 .addMigrations(Database.MIGRATION_8_9, Database.MIGRATION_9_10)
                 .build();
+
+        try {
+            Translations.init(getApplicationContext());
+        } catch (IncorrectTranslationError incorrectTranslationError) {
+            Logger.log(incorrectTranslationError);
+        }
 
         initPositions();
     }

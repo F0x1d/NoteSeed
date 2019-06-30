@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
@@ -26,6 +27,7 @@ import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 
 import static com.f0x1d.notes.App.getContext;
+import static com.f0x1d.notes.App.getInstance;
 
 public class UselessUtils {
 
@@ -49,6 +51,18 @@ public class UselessUtils {
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
+    }
+
+    public static Drawable getDrawableForToolbar(@DrawableRes int drawableRes){
+        Drawable drawable;
+        if (UselessUtils.ifCustomTheme())
+            drawable = UselessUtils.setTint(getInstance().getDrawable(drawableRes), ThemesEngine.iconsColor);
+        else if (UselessUtils.getBool("night", true))
+            drawable = UselessUtils.setTint(getInstance().getDrawable(drawableRes), Color.WHITE);
+        else
+            drawable = UselessUtils.setTint(getInstance().getDrawable(drawableRes), Color.BLACK);
+
+        return drawable;
     }
 
     public static void clear_back_stack() {

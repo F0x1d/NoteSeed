@@ -35,6 +35,7 @@ import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
+import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.theming.MyEditText;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -134,6 +135,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         };
 
+        holder.editText.setHint(Translations.getString("note"));
+
         holder.editText.clearTextChangedListeners();
 
         holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
@@ -222,6 +225,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }
         };
+
+        holder.editText.setHint(Translations.getString("note"));
 
         holder.editText.clearTextChangedListeners();
 
@@ -371,7 +376,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void delete(int position, View rootView) {
         BottomSheetCreator creator = new BottomSheetCreator((FragmentActivity) activity);
-        creator.addElement(new Element(activity.getString(R.string.delete), activity.getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
+        creator.addElement(new Element(Translations.getString("delete"), activity.getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -394,7 +399,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     Toast.makeText(activity, "error: " + e, Toast.LENGTH_SHORT).show();
                 }
 
-                Snackbar.make(rootView, activity.getString(R.string.deleted), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, Translations.getString("deleted"), Snackbar.LENGTH_SHORT).show();
 
                 try {
                     creator.customBottomSheet.dismiss();
@@ -402,7 +407,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }
         }));
-        creator.addElement(new Element(activity.getString(R.string.cancel), activity.getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
+        creator.addElement(new Element(Translations.getString("cancel"), activity.getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 notifyItemChanged(position);

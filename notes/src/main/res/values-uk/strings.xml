@@ -150,4 +150,9 @@
     <string name="pin_in_status_bar">Закріпити в рядку сповіщень</string>
     <string name="unpin_from_status_bar">Відкріпити з рядка сповіщень</string>
     <string name="autolock">Автоматически блокировать приложение после минуты в фоне</string>
+    <string name="translations">Локалізації</string>
+    <string name="add_translation">Додати локалізацію</string>
+    <string name="default_name">За замовчуванням</string>
+    <string name="ok">OK</string>
+    <string name="gdrive">GDrive</string>
 </resources>

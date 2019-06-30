@@ -19,6 +19,7 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
+import com.f0x1d.notes.utils.translations.Translations;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -54,7 +55,7 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String name = activity.getString(R.string.notification);
+            String name = Translations.getString("notification");
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
             channel.enableVibration(true);

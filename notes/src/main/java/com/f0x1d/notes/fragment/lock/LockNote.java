@@ -23,6 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -35,6 +36,7 @@ import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.theming.MyButton;
 import com.mattprecious.swirl.SwirlView;
 
@@ -60,7 +62,7 @@ import static android.view.View.GONE;
 public class LockNote extends Fragment {
 
     private static final String KEY_NAME = "notes";
-    Bundle args;
+    private Bundle args;
     private Cipher cipher;
     private KeyStore keyStore;
     private KeyGenerator keyGenerator;
@@ -83,6 +85,8 @@ public class LockNote extends Fragment {
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
+
+        ((TextView) view.findViewById(R.id.textView5)).setText(Translations.getString("pass"));
 
         args = getArguments();
 
@@ -331,7 +335,7 @@ public class LockNote extends Fragment {
         public void onAuthenticationFailed() {
             try {
                 swirlView.setState(SwirlView.State.ERROR, true);
-                Toast.makeText(context, getString(R.string.fingerprint_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, Translations.getString("fingerprint_error"), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
             }
         }

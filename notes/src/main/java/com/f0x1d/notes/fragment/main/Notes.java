@@ -45,6 +45,8 @@ import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.translations.Translation;
+import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyFAB;
 import com.google.android.material.snackbar.Snackbar;
@@ -92,7 +94,7 @@ public class Notes extends Fragment {
         View view = inflater.inflate(R.layout.notes_layout, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.notes));
+        toolbar.setTitle(Translations.getString("notes"));
         toolbar.goAnim("def");
 
         Drawable settings;
@@ -120,21 +122,21 @@ public class Notes extends Fragment {
         MyFAB fab = view.findViewById(R.id.new_note);
 
         List<Element> elements = new ArrayList<>();
-        elements.add(new Element(getString(R.string.new_notify), getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp), new View.OnClickListener() {
+        elements.add(new Element(Translations.getString("new_notify"), getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createNotify();
                 fab.closeList();
             }
         }));
-        elements.add(new Element(getString(R.string.new_folder), getActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
+        elements.add(new Element(Translations.getString("new_folder"), getActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createFolder();
                 fab.closeList();
             }
         }));
-        elements.add(new Element(getString(R.string.new_note), getActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
+        elements.add(new Element(Translations.getString("new_note"), getActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
@@ -159,6 +161,7 @@ public class Notes extends Fragment {
         }
 
         nothing = view.findViewById(R.id.nothing);
+        nothing.setText(Translations.getString("empty"));
 
         if (allList.isEmpty()) {
             nothing.setVisibility(View.VISIBLE);
@@ -223,7 +226,7 @@ public class Notes extends Fragment {
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(getActivity(), getString(R.string.import_db), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), Translations.getString("import_db"), Toast.LENGTH_SHORT).show();
                 openFile("*/*", 228, getActivity());
                 return false;
             }
@@ -248,16 +251,16 @@ public class Notes extends Fragment {
 
         EditText title = v.findViewById(R.id.edit_text_one);
         title.setBackground(null);
-        title.setHint(getString(R.string.title));
+        title.setHint(Translations.getString("title"));
 
         EditText text = v.findViewById(R.id.edit_text_two);
         text.setBackground(null);
-        text.setHint(getString(R.string.text));
+        text.setHint(Translations.getString("text"));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 long id = genId();
@@ -272,7 +275,7 @@ public class Notes extends Fragment {
                 nothing.setVisibility(View.INVISIBLE);
             }
         });
-        builder.setNeutralButton(R.string.set_time, new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(Translations.getString("set_time"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 long id = genId();
@@ -300,13 +303,13 @@ public class Notes extends Fragment {
 
         EditText text = v.findViewById(R.id.edit_text);
         text.setBackground(null);
-        text.setHint(getString(R.string.name));
+        text.setHint(Translations.getString("name"));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-        builder.setTitle(getString(R.string.folder_name));
+        builder.setTitle(Translations.getString("folder_name"));
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog228, int which) {
                 if (text.getText().toString().isEmpty()) {
@@ -318,7 +321,7 @@ public class Notes extends Fragment {
                 for (NoteOrFolder noteOrFolder : dao.getAll()) {
                     if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(text.getText().toString())) {
                         create = false;
-                        Toast.makeText(getActivity(), getString(R.string.folder_error), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), Translations.getString("folder_error"), Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
@@ -342,11 +345,11 @@ public class Notes extends Fragment {
     public String generateName() {
         int first_number = 1;
 
-        String name = getString(R.string.new_folder);
+        String name = Translations.getString("new_folder");
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
             if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(name)) {
-                name = getString(R.string.new_folder) + first_number;
+                name = Translations.getString("new_folder") + first_number;
                 first_number++;
             }
         }
@@ -448,7 +451,7 @@ public class Notes extends Fragment {
 
     public void delete(int position) {
         BottomSheetCreator creator = new BottomSheetCreator(getActivity());
-        creator.addElement(new Element(getString(R.string.delete), getActivity().getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
+        creator.addElement(new Element(Translations.getString("delete"), getActivity().getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (allList.get(position).is_folder == 1) {
@@ -470,7 +473,7 @@ public class Notes extends Fragment {
 
                 recyclerView.getAdapter().notifyDataSetChanged();
 
-                Snackbar.make(getView(), getString(R.string.deleted), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getView(), Translations.getString("deleted"), Snackbar.LENGTH_SHORT).show();
 
                 try {
                     creator.customBottomSheet.dismiss();
@@ -478,7 +481,7 @@ public class Notes extends Fragment {
                 }
             }
         }));
-        creator.addElement(new Element(getString(R.string.cancel), getActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
+        creator.addElement(new Element(Translations.getString("cancel"), getActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recyclerView.getAdapter().notifyItemChanged(position);
