@@ -91,6 +91,7 @@ public class Translations {
             if (it) {
                 currentTranslationName = "";
                 currentTranslation.clear();
+                preferences.edit().putString("path", null).apply();
             }
             translation.delete();
 

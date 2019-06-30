@@ -248,6 +248,15 @@ public class TranslationsEditor extends Fragment {
             this.keys = keys;
             this.values = values;
             this.keysNames = keysNames;
+
+            if (values == null)
+                return;
+
+            for (int i = 0; i < keysNames.size(); i++){
+                if (values.get(keysNames.get(i)) != null){
+                    translations.put(i, new EditTranslation(keysNames.get(i), values.get(keysNames.get(i))));
+                }
+            }
         }
 
         @NonNull
@@ -273,7 +282,6 @@ public class TranslationsEditor extends Fragment {
 
             if (values != null){
                 if (values.get(keysNames.get(position)) != null) {
-                    translations.put(position, new EditTranslation(keysNames.get(position), values.get(keysNames.get(position))));
                     holder.editText.setText(values.get(keysNames.get(position)));
                 }
             }
