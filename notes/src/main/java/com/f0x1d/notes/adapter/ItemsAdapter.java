@@ -49,7 +49,6 @@ import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.theming.MyColorPickerDialog;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
@@ -228,14 +227,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] itemsAlert = new String[]{Translations.getString("now"), Translations.getString("set_time"),
-                        Translations.getString("pin_in_status_bar"), Translations.getString("change")};
+                String[] itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
+                        activity.getString(R.string.pin_in_status_bar), activity.getString(R.string.change)};
 
                 final boolean pinned = activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).getBoolean("notify " + items.get(position).id, false);
 
                 if (pinned)
-                    itemsAlert = new String[]{Translations.getString("now"), Translations.getString("set_time"),
-                            Translations.getString("unpin_from_status_bar"), Translations.getString("change")};
+                    itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
+                            activity.getString(R.string.unpin_from_status_bar), activity.getString(R.string.change)};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setItems(itemsAlert, new DialogInterface.OnClickListener() {
@@ -244,7 +243,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         switch (which) {
                             case 0:
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    String name1 = Translations.getString("notification");
+                                    String name1 = activity.getString(R.string.notification);
                                     int importance = NotificationManager.IMPORTANCE_DEFAULT;
                                     NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name1, importance);
                                     channel.enableVibration(true);
@@ -283,7 +282,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 }
 
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    String name = Translations.getString("notification");
+                                    String name = activity.getString(R.string.notification);
                                     int importance = NotificationManager.IMPORTANCE_DEFAULT;
                                     NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
                                     channel.enableVibration(true);
@@ -556,11 +555,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         if (holder.text.getText().toString().equals("")) {
-            holder.text.setText(Html.fromHtml("<i>" + Translations.getString("empty_note") + "</i>"));
+            holder.text.setText(Html.fromHtml("<i>" + activity.getString(R.string.empty_note) + "</i>"));
         }
 
         if (items.get(position).locked == 1) {
-            holder.text.setText(Html.fromHtml("<i>" + Translations.getString("blocked") + "</i>"));
+            holder.text.setText(Html.fromHtml("<i>" + activity.getString(R.string.blocked) + "</i>"));
         }
 
         Date currentDate = new Date(items.get(position).edit_time);
@@ -585,7 +584,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
                                 R.id.container, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
                     } else {
-                        Toast.makeText(activity, Translations.getString("enable_pin"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     MainActivity.instance.getSupportFragmentManager().beginTransaction()
@@ -629,9 +628,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             Color.parseColor(getColorFromDataBase(id));
 
-            hm = new String[]{Translations.getString("change"), Translations.getString("color"), Translations.getString("restore_color")};
+            hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
         } catch (Exception e) {
-            hm = new String[]{Translations.getString("change"), Translations.getString("color")};
+            hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color)};
         }
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
@@ -646,17 +645,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         EditText title = v.findViewById(R.id.edit_text_one);
                         title.setBackground(null);
                         title.setText(getNotifyTitle(id));
-                        title.setHint(Translations.getString("title"));
+                        title.setHint(activity.getString(R.string.title));
 
                         EditText text = v.findViewById(R.id.edit_text_two);
                         text.setBackground(null);
                         text.setText(getNotifyText(id));
-                        text.setHint(Translations.getString("text"));
+                        text.setHint(activity.getString(R.string.text));
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setView(v);
 
-                        builder.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton(activity.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog228, int which) {
                                 App.getInstance().getDatabase().noteOrFolderDao().updateNoteTitle(title.getText().toString(), id);
@@ -714,9 +713,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             Color.parseColor(getColorFromDataBase(id));
 
-            hm = new String[]{Translations.getString("rename"), Translations.getString("color"), Translations.getString("restore_color")};
+            hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
         } catch (Exception e) {
-            hm = new String[]{Translations.getString("rename"), Translations.getString("color")};
+            hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color)};
         }
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
@@ -731,14 +730,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         EditText text = v.findViewById(R.id.edit_text);
                         text.setBackground(null);
                         text.setText(getFolderNameFromDataBase(id));
-                        text.setHint(Translations.getString("name"));
+                        text.setHint(activity.getString(R.string.name));
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
                         builder.setView(v);
-                        builder.setTitle(Translations.getString("folder_name"));
+                        builder.setTitle(activity.getString(R.string.folder_name));
 
-                        builder.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton(activity.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog228, int which) {
                                 boolean create = true;
@@ -746,7 +745,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
                                     if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(text.getText().toString())) {
                                         create = false;
-                                        Toast.makeText(App.getContext(), Translations.getString("folder_error"), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(App.getContext(), activity.getString(R.string.folder_error), Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                 }
@@ -808,9 +807,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             Color.parseColor(getColorFromDataBase(id));
 
-            hm = new String[]{Translations.getString("color"), Translations.getString("move_ro_folder"), Translations.getString("restore_color")};
+            hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
         } catch (Exception e) {
-            hm = new String[]{Translations.getString("color"), Translations.getString("move_ro_folder")};
+            hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
         }
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);

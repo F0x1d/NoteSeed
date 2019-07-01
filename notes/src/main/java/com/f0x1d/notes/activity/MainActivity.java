@@ -3,6 +3,7 @@ package com.f0x1d.notes.activity;
 import android.accounts.Account;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.os.Parcel;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -31,6 +33,7 @@ import com.f0x1d.notes.utils.dialogs.BackupDialog;
 import com.f0x1d.notes.utils.dialogs.SignInDialog;
 import com.f0x1d.notes.utils.sync.SyncService;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.translations.CustomResources;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static MainActivity instance;
     private GoogleSignInClient mGoogleSignInClient;
+    private CustomResources resources;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,7 +291,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }), "lockTicked").commit();
         }
+    }
 
-
+    @Override
+    public Resources getResources() {
+        if (resources == null)
+            resources = new CustomResources(super.getResources().getAssets(), super.getResources().getDisplayMetrics(), super.getResources().getConfiguration());
+        return resources;
     }
 }

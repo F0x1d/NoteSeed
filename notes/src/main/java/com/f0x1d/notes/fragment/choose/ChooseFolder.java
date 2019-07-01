@@ -22,7 +22,6 @@ import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.utils.UselessUtils;
-import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -58,7 +57,7 @@ public class ChooseFolder extends Fragment {
         toolbar = v.findViewById(R.id.toolbar);
         toolbar.setTitle(in_id);
         if (in_id.equals("def"))
-            toolbar.setTitle(Translations.getString("notes"));
+            toolbar.setTitle(getString(R.string.notes));
 
         getActivity().setActionBar(toolbar);
 
@@ -73,7 +72,7 @@ public class ChooseFolder extends Fragment {
             }
         }
 
-        ((TextView) v.findViewById(R.id.no_folders)).setText(Translations.getString("no_folders"));
+        ((TextView) v.findViewById(R.id.no_folders)).setText(getString(R.string.no_folders));
 
         if (allList.isEmpty())
             v.findViewById(R.id.no_folders).setVisibility(View.VISIBLE);

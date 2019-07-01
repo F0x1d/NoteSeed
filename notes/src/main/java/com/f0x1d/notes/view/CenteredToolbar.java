@@ -25,7 +25,6 @@ import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.translations.Translations;
 
 public class CenteredToolbar extends Toolbar {
 
@@ -165,7 +164,7 @@ public class CenteredToolbar extends Toolbar {
                         @Override
                         public void run() {
                             tvTitle.setVisibility(VISIBLE);
-                            tvTitle.setText(Translations.getString("tap_to_search"));
+                            tvTitle.setText(getContext().getString(R.string.tap_to_search));
                             tvTitle.setTextSize(17);
 
                             LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

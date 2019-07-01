@@ -5,18 +5,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -44,6 +40,15 @@ import java.util.List;
 
 public class TranslationsEditor extends Fragment {
 
+    public HashMap<Integer, EditTranslation> translations = new HashMap<>();
+    private CenteredToolbar toolbar;
+    private RecyclerView recyclerView;
+    private TranslationsEditAdapter adapter;
+    private File translationToEdit;
+    private List<String> keysValue;
+    private List<String> keys;
+    private HashMap<String, String> valuesAndKeys = null;
+
     public static TranslationsEditor newInstance(String pathToFile) {
         Bundle args = new Bundle();
         if (pathToFile != null)
@@ -54,19 +59,6 @@ public class TranslationsEditor extends Fragment {
         return fragment;
     }
 
-    public HashMap<Integer, EditTranslation> translations = new HashMap<>();
-
-    private CenteredToolbar toolbar;
-    private RecyclerView recyclerView;
-
-    private TranslationsEditAdapter adapter;
-
-    private File translationToEdit;
-
-    private List<String> keysValue;
-    private List<String> keys;
-    private HashMap<String, String> valuesAndKeys = null;
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (getArguments().getString("path") != null)
@@ -75,12 +67,12 @@ public class TranslationsEditor extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.edit_translation);
-        toolbar.setTitle(Translations.getString("edit_translation"));
+        toolbar.setTitle(getString(R.string.edit_translation));
         toolbar.getMenu().findItem(R.id.apply).setIcon(UselessUtils.getDrawableForToolbar(R.drawable.ic_done_black_24dp)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         toolbar.getMenu().findItem(R.id.apply).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (translationToEdit == null){
+                if (translationToEdit == null) {
                     File file = new File(new File("data/data/" + getContext().getPackageName() + "/files/translations"), System.currentTimeMillis() + " translation.txt");
                     try {
                         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -132,11 +124,11 @@ public class TranslationsEditor extends Fragment {
                 keysValue.add(getString(getResources().getIdentifier(field.getName(), "string", getContext().getPackageName())));
                 keys.add(field.getName());
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             Logger.log(e);
         }
 
-        if (translationToEdit != null){
+        if (translationToEdit != null) {
             try {
                 valuesAndKeys = Translations.parseFileWithTranslation(translationToEdit);
             } catch (IncorrectTranslationError incorrectTranslationError) {
@@ -150,7 +142,7 @@ public class TranslationsEditor extends Fragment {
         return view;
     }
 
-    public void setupAll(){
+    public void setupAll() {
         keys.clear();
         keysValue.clear();
         if (translationToEdit != null)
@@ -162,11 +154,11 @@ public class TranslationsEditor extends Fragment {
                 keysValue.add(getString(getResources().getIdentifier(field.getName(), "string", getContext().getPackageName())));
                 keys.add(field.getName());
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             Logger.log(e);
         }
 
-        if (translationToEdit != null){
+        if (translationToEdit != null) {
             try {
                 valuesAndKeys = Translations.parseFileWithTranslation(translationToEdit);
             } catch (IncorrectTranslationError incorrectTranslationError) {
@@ -180,9 +172,9 @@ public class TranslationsEditor extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.apply:
-                if (translationToEdit == null){
+                if (translationToEdit == null) {
                     File file = new File(new File("data/data/" + getContext().getPackageName() + "/files/translations"), System.currentTimeMillis() + " translation.txt");
                     try {
                         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -220,7 +212,7 @@ public class TranslationsEditor extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void restart(){
+    public void restart() {
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("change_l", true).apply();
 
         Intent i1 = getActivity().getBaseContext().getPackageManager().
@@ -244,7 +236,7 @@ public class TranslationsEditor extends Fragment {
         public List<String> keysNames;
         public HashMap<String, String> values;
 
-        public TranslationsEditAdapter(List<String> keys, HashMap<String, String> values, List<String> keysNames){
+        public TranslationsEditAdapter(List<String> keys, HashMap<String, String> values, List<String> keysNames) {
             this.keys = keys;
             this.values = values;
             this.keysNames = keysNames;
@@ -252,8 +244,8 @@ public class TranslationsEditor extends Fragment {
             if (values == null)
                 return;
 
-            for (int i = 0; i < keysNames.size(); i++){
-                if (values.get(keysNames.get(i)) != null){
+            for (int i = 0; i < keysNames.size(); i++) {
+                if (values.get(keysNames.get(i)) != null) {
                     translations.put(i, new EditTranslation(keysNames.get(i), values.get(keysNames.get(i))));
                 }
             }
@@ -267,26 +259,30 @@ public class TranslationsEditor extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull TranslationsEditAdapter.EditTextViewHolder holder, int position) {
-            holder.editText.setHint(keys.get(position));
+            holder.editText.setHint(keys.get(position) + " (" + keysNames.get(position) + ")");
 
             holder.editText.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
                 @Override
                 public void afterTextChanged(Editable s) {
                     translations.put(position, new EditTranslation(keysNames.get(position), s.toString()));
                 }
             });
 
-            if (values != null){
+            if (values != null) {
                 if (values.get(keysNames.get(position)) != null) {
                     holder.editText.setText(values.get(keysNames.get(position)));
                 }
             }
 
-            if (translations.get(position) != null){
+            if (translations.get(position) != null) {
                 holder.editText.setText(translations.get(position).value);
             }
         }
@@ -303,14 +299,14 @@ public class TranslationsEditor extends Fragment {
             return keys.size();
         }
 
-        public HashMap<String, String> getTranslations(){
+        public HashMap<String, String> getTranslations() {
             HashMap<String, String> map = new HashMap<>();
 
-            for (int i = 0; i < getItemCount(); i++){
+            for (int i = 0; i < getItemCount(); i++) {
                 EditTranslation translation = translations.get(i);
                 try {
                     map.put(translation.key, translation.value);
-                } catch (Exception e){
+                } catch (Exception e) {
                     continue;
                 }
             }

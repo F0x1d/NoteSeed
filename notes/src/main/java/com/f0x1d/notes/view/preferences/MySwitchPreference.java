@@ -1,10 +1,8 @@
 package com.f0x1d.notes.view.preferences;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -18,23 +16,28 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class MySwitchPreference extends SwitchPreference {
 
-    Switch aSwitch;
-    SharedPreferences sharedPreferences;
+    private Switch aSwitch;
+
+    private AttributeSet attrs;
+
+    private int title;
+    private int summary;
 
     public MySwitchPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init(attrs);
     }
 
     public MySwitchPreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(attrs);
     }
 
     public MySwitchPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(attrs);
     }
 
     public MySwitchPreference(Context context) {
@@ -72,18 +75,32 @@ public class MySwitchPreference extends SwitchPreference {
 
         text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
         text2.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
+
+        try {
+            if (title != -1)
+                text.setText(getContext().getString(title));
+            if (summary != -1)
+                text2.setText(getContext().getString(summary));
+        } catch (Exception e) {
+        }
     }
 
-    private void changeColor(boolean checked) {
-        try {
-            sharedPreferences = getContext().getSharedPreferences("settings_data", MODE_PRIVATE);
-            //apply the colors here
-            int thumbCheckedColor = sharedPreferences.getInt("theme_color_key", ThemesEngine.accentColor);
-            int thumbUncheckedColor = Color.GRAY;
-
-            aSwitch.getThumbDrawable().setColorFilter(checked ? thumbCheckedColor : thumbUncheckedColor, PorterDuff.Mode.MULTIPLY);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+    private void init(AttributeSet attrs) {
+        this.attrs = attrs;
+        for (int i = 0; i < attrs.getAttributeCount(); i++) {
+            if (attrs.getAttributeName(i).equals("title")) {
+                try {
+                    title = Integer.parseInt(attrs.getAttributeValue(i).replace("@", ""));
+                } catch (Exception e) {
+                    title = -1;
+                }
+            } else if (attrs.getAttributeName(i).equals("summary")) {
+                try {
+                    summary = Integer.parseInt(attrs.getAttributeValue(i).replace("@", ""));
+                } catch (Exception e) {
+                    summary = -1;
+                }
+            }
         }
     }
 }

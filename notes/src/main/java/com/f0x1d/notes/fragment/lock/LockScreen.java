@@ -35,7 +35,6 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.theming.MyButton;
 import com.mattprecious.swirl.SwirlView;
 
@@ -79,7 +78,7 @@ public class LockScreen extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.screen_lock, container, false);
 
-        ((TextView) view.findViewById(R.id.textView5)).setText(Translations.getString("pass"));
+        ((TextView) view.findViewById(R.id.textView5)).setText(getString(R.string.pass));
 
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
@@ -330,7 +329,7 @@ public class LockScreen extends Fragment {
         public void onAuthenticationFailed() {
             try {
                 swirlView.setState(SwirlView.State.ERROR, true);
-                Toast.makeText(context, Translations.getString("fingerprint_error"), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, getString(R.string.fingerprint_error), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
             }
         }

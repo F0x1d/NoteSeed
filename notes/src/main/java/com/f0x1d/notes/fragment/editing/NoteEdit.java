@@ -55,7 +55,6 @@ import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.CenteredToolbar;
 
 import java.io.File;
@@ -128,10 +127,10 @@ public class NoteEdit extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.edit_menu);
 
-        toolbar.getMenu().findItem(R.id.lock).setTitle(Translations.getString("lock"));
-        toolbar.getMenu().findItem(R.id.export).setTitle(Translations.getString("export"));
-        toolbar.getMenu().findItem(R.id.pin_status).setTitle(Translations.getString("pin_in_status_bar"));
-        toolbar.getMenu().findItem(R.id.settings).setTitle(Translations.getString("settings"));
+        toolbar.getMenu().findItem(R.id.lock).setTitle(getString(R.string.lock));
+        toolbar.getMenu().findItem(R.id.export).setTitle(getString(R.string.export));
+        toolbar.getMenu().findItem(R.id.pin_status).setTitle(getString(R.string.pin_in_status_bar));
+        toolbar.getMenu().findItem(R.id.settings).setTitle(getString(R.string.settings));
 
         if (UselessUtils.ifCustomTheme()) {
             toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
@@ -150,7 +149,7 @@ public class NoteEdit extends Fragment {
         }
 
         if (pinned)
-            toolbar.getMenu().findItem(R.id.pin_status).setTitle(Translations.getString("unpin_from_status_bar"));
+            toolbar.getMenu().findItem(R.id.pin_status).setTitle(getString(R.string.unpin_from_status_bar));
 
         MenuItem pic = toolbar.getMenu().findItem(R.id.attach);
         pic.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -163,7 +162,7 @@ public class NoteEdit extends Fragment {
             pic.setIcon(R.drawable.ic_add_black_24dp);
         }
 
-        toolbar.setTitle(Translations.getString("checking"));
+        toolbar.setTitle(getString(R.string.checking));
 
         getActivity().setActionBar(toolbar);
 
@@ -228,7 +227,7 @@ public class NoteEdit extends Fragment {
             title.setText(Html.fromHtml(getArguments().getString("title").replace("\n", "<br />")));
             args = getArguments();
         }
-        title.setHint(Translations.getString("title"));
+        title.setHint(getString(R.string.title));
 
         title.setFocusableInTouchMode(false);
         title.setFocusable(false);
@@ -265,9 +264,9 @@ public class NoteEdit extends Fragment {
 
     public void enterEditMode() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(Translations.getString("warning"));
-        builder.setMessage(Translations.getString("enter_edit_mode"));
-        builder.setPositiveButton(Translations.getString("enter"), new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.warning));
+        builder.setMessage(getString(R.string.enter_edit_mode));
+        builder.setPositiveButton(getString(R.string.enter), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 editModeSetup();
@@ -280,7 +279,7 @@ public class NoteEdit extends Fragment {
         editMode = true;
         ((NoteItemsAdapter) recyclerView.getAdapter()).setEditing(true);
 
-        toolbar.setTitle(Translations.getString("editing"));
+        toolbar.setTitle(getString(R.string.editing));
 
         attachHelper();
 
@@ -387,7 +386,7 @@ public class NoteEdit extends Fragment {
         });
         seekBar.setProgress(3);
 
-        builder.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 for (int i = 0; i < seekBar.getProgress(); i++) {
@@ -409,11 +408,11 @@ public class NoteEdit extends Fragment {
             case R.id.export:
                 View v = LayoutInflater.from(getActivity()).inflate(R.layout.export_file_type_dialog, null);
                 EditText text = v.findViewById(R.id.extension);
-                ((TextView) v.findViewById(R.id.text)).setText(Translations.getString("export_file_type"));
+                ((TextView) v.findViewById(R.id.text)).setText(getString(R.string.export_file_type));
 
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
                 builder2.setView(v);
-                builder2.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
+                builder2.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         File noteDir = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes/" + "/Exported notes");
@@ -441,7 +440,7 @@ public class NoteEdit extends Fragment {
                             writer.append(text);
                             writer.flush();
                             writer.close();
-                            Toast.makeText(getActivity(), Translations.getString("saved") + " " + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getString(R.string.saved) + " " + note.getAbsolutePath(), Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             Logger.log(e);
                         }
@@ -457,7 +456,7 @@ public class NoteEdit extends Fragment {
                 }
 
                 BottomSheetCreator creator = new BottomSheetCreator(getActivity());
-                creator.addElement(new Element(Translations.getString("text"), getActivity().getDrawable(R.drawable.ic_text_fields_white_24dp), new View.OnClickListener() {
+                creator.addElement(new Element(getString(R.string.text), getActivity().getDrawable(R.drawable.ic_text_fields_white_24dp), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         last_pos = last_pos + 1;
@@ -473,7 +472,7 @@ public class NoteEdit extends Fragment {
                         }
                     }
                 }));
-                creator.addElement(new Element(Translations.getString("picture"), getActivity().getDrawable(R.drawable.ic_image_white_24dp), new View.OnClickListener() {
+                creator.addElement(new Element(getString(R.string.picture), getActivity().getDrawable(R.drawable.ic_image_white_24dp), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         openChoosePicture();
@@ -484,7 +483,7 @@ public class NoteEdit extends Fragment {
                         }
                     }
                 }));
-                creator.addElement(new Element(Translations.getString("item_checkbox"), getActivity().getDrawable(R.drawable.ic_work_white_24dp), new View.OnClickListener() {
+                creator.addElement(new Element(getString(R.string.item_checkbox), getActivity().getDrawable(R.drawable.ic_work_white_24dp), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         addThisTODOs();
@@ -518,7 +517,7 @@ public class NoteEdit extends Fragment {
                         dao.updateNoteLocked(0, id);
                     }
                 } else {
-                    Toast.makeText(getActivity(), Translations.getString("enable_pin"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -535,7 +534,7 @@ public class NoteEdit extends Fragment {
 
                 if (pinned) {
                     manager.cancel((int) id + 1);
-                    toolbar.getMenu().findItem(R.id.pin_status).setTitle(Translations.getString("pin_in_status_bar"));
+                    toolbar.getMenu().findItem(R.id.pin_status).setTitle(getString(R.string.pin_in_status_bar));
                     pinned = false;
                     getActivity().getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("note " + id, false).apply();
                     break;
@@ -549,7 +548,7 @@ public class NoteEdit extends Fragment {
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    String name = Translations.getString("notification");
+                    String name = getString(R.string.notification);
                     int importance = NotificationManager.IMPORTANCE_DEFAULT;
                     NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
                     channel.enableVibration(true);
@@ -571,7 +570,7 @@ public class NoteEdit extends Fragment {
 
                 manager.notify((int) id + 1, builder.build());
 
-                toolbar.getMenu().findItem(R.id.pin_status).setTitle(Translations.getString("unpin_from_status_bar"));
+                toolbar.getMenu().findItem(R.id.pin_status).setTitle(getString(R.string.unpin_from_status_bar));
                 pinned = true;
 
                 getActivity().getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("note " + id, true).apply();
@@ -583,7 +582,7 @@ public class NoteEdit extends Fragment {
 
     private void openChoosePicture() {
         BottomSheetCreator creator = new BottomSheetCreator(getActivity());
-        creator.addElement(new Element(Translations.getString("camera"), getResources().getDrawable(R.drawable.ic_camera_alt_white_24dp), new View.OnClickListener() {
+        creator.addElement(new Element(getString(R.string.camera), getResources().getDrawable(R.drawable.ic_camera_alt_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -614,7 +613,7 @@ public class NoteEdit extends Fragment {
                 }
             }
         }));
-        creator.addElement(new Element(Translations.getString("gallery"), getResources().getDrawable(R.drawable.ic_image_white_24dp), new View.OnClickListener() {
+        creator.addElement(new Element(getString(R.string.gallery), getResources().getDrawable(R.drawable.ic_image_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -762,10 +761,10 @@ public class NoteEdit extends Fragment {
         MenuItem pic = menu.findItem(R.id.attach);
         pic.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.findItem(R.id.lock).setTitle(Translations.getString("lock"));
-        menu.findItem(R.id.export).setTitle(Translations.getString("export"));
-        menu.findItem(R.id.pin_status).setTitle(Translations.getString("pin_in_status_bar"));
-        menu.findItem(R.id.settings).setTitle(Translations.getString("settings"));
+        menu.findItem(R.id.lock).setTitle(getString(R.string.lock));
+        menu.findItem(R.id.export).setTitle(getString(R.string.export));
+        menu.findItem(R.id.pin_status).setTitle(getString(R.string.pin_in_status_bar));
+        menu.findItem(R.id.settings).setTitle(getString(R.string.settings));
 
         if (UselessUtils.ifCustomTheme()) {
             pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_add_black_24dp), ThemesEngine.iconsColor));

@@ -16,7 +16,6 @@ import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.sync.SyncUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.translations.Translations;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -46,12 +45,12 @@ public class BackupDialog {
             File database = new File(db, "database.noteseed");
 
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle(Translations.getString("backup_found"));
-            builder.setMessage(Translations.getString("restore") + "?");
+            builder.setTitle(activity.getString(R.string.backup_found));
+            builder.setMessage(activity.getString(R.string.restore) + "?");
             builder.setCancelable(false);
 
             if (database.exists()) {
-                builder.setPositiveButton(Translations.getString("restore"), new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(activity.getString(R.string.restore), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SyncUtils.importFile();
@@ -63,7 +62,7 @@ public class BackupDialog {
                 haveAnyBackup = true;
             }
 
-            builder.setNeutralButton(Translations.getString("no"), new DialogInterface.OnClickListener() {
+            builder.setNeutralButton(activity.getString(R.string.no), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("restored", true).apply();

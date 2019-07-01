@@ -44,8 +44,6 @@ import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.translations.Translation;
-import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyFAB;
 
@@ -107,7 +105,7 @@ public class NotesInFolder extends Fragment {
         toolbar.goAnim(in_folder_id);
         toolbar.inflateMenu(R.menu.in_folder_menu);
         toolbar.getMenu().findItem(R.id.root).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        toolbar.getMenu().findItem(R.id.settings).setTitle(Translations.getString("settings"));
+        toolbar.getMenu().findItem(R.id.settings).setTitle(getString(R.string.settings));
 
         if (UselessUtils.getBool("night", true)) {
             if (UselessUtils.ifCustomTheme()) {
@@ -145,7 +143,7 @@ public class NotesInFolder extends Fragment {
             }
         }
 
-        nothing.setText(Translations.getString("empty"));
+        nothing.setText(getString(R.string.empty));
 
         if (allList.isEmpty()) {
             nothing.setVisibility(View.VISIBLE);
@@ -211,21 +209,21 @@ public class NotesInFolder extends Fragment {
         fab.startAnimation(animation);
 
         List<Element> elements = new ArrayList<>();
-        elements.add(new Element(Translations.getString("new_notify"), getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp), new View.OnClickListener() {
+        elements.add(new Element(getString(R.string.new_notify), getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createNotify();
                 fab.closeList();
             }
         }));
-        elements.add(new Element(Translations.getString("new_folder"), getActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
+        elements.add(new Element(getString(R.string.new_folder), getActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createFolder();
                 fab.closeList();
             }
         }));
-        elements.add(new Element(Translations.getString("new_note"), getActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
+        elements.add(new Element(getString(R.string.new_note), getActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
@@ -241,7 +239,7 @@ public class NotesInFolder extends Fragment {
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(getActivity(), Translations.getString("import_db"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.import_db), Toast.LENGTH_SHORT).show();
                 openFile("*/*", 228, getActivity());
                 return false;
             }
@@ -254,16 +252,16 @@ public class NotesInFolder extends Fragment {
 
         EditText title = v.findViewById(R.id.edit_text_one);
         title.setBackground(null);
-        title.setHint(Translations.getString("title"));
+        title.setHint(getString(R.string.title));
 
         EditText text = v.findViewById(R.id.edit_text_two);
         text.setBackground(null);
-        text.setHint(Translations.getString("text"));
+        text.setHint(getString(R.string.text));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
 
-        builder.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 long id = genId();
@@ -278,7 +276,7 @@ public class NotesInFolder extends Fragment {
                 nothing.setVisibility(View.INVISIBLE);
             }
         });
-        builder.setNeutralButton(Translations.getString("set_time"), new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(getString(R.string.set_time), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 long id = genId();
@@ -306,13 +304,13 @@ public class NotesInFolder extends Fragment {
 
         EditText text = v.findViewById(R.id.edit_text);
         text.setBackground(null);
-        text.setHint(Translations.getString("name"));
+        text.setHint(getString(R.string.name));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v);
-        builder.setTitle(Translations.getString("folder_name"));
+        builder.setTitle(getString(R.string.folder_name));
 
-        builder.setPositiveButton(Translations.getString("ok"), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog228, int which) {
                 if (text.getText().toString().isEmpty()) {
@@ -324,7 +322,7 @@ public class NotesInFolder extends Fragment {
                 for (NoteOrFolder noteOrFolder : dao.getAll()) {
                     if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(text.getText().toString())) {
                         create = false;
-                        Toast.makeText(getActivity(), Translations.getString("folder_error"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.folder_error), Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
@@ -348,11 +346,11 @@ public class NotesInFolder extends Fragment {
     public String generateName() {
         int first_number = 1;
 
-        String name = Translations.getString("new_folder");
+        String name = getString(R.string.new_folder);
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
             if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(name)) {
-                name = Translations.getString("new_folder") + first_number;
+                name = getString(R.string.new_folder) + first_number;
                 first_number++;
             }
         }
@@ -466,7 +464,7 @@ public class NotesInFolder extends Fragment {
 
     public void delete(int position) {
         BottomSheetCreator creator = new BottomSheetCreator(getActivity());
-        creator.addElement(new Element(Translations.getString("delete"), getActivity().getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
+        creator.addElement(new Element(getString(R.string.delete), getActivity().getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (allList.get(position).is_folder == 1) {
@@ -488,7 +486,7 @@ public class NotesInFolder extends Fragment {
 
                 recyclerView.getAdapter().notifyDataSetChanged();
 
-                Toast.makeText(getActivity(), Translations.getString("deleted"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.deleted), Toast.LENGTH_SHORT).show();
 
                 try {
                     creator.customBottomSheet.dismiss();
@@ -496,7 +494,7 @@ public class NotesInFolder extends Fragment {
                 }
             }
         }));
-        creator.addElement(new Element(Translations.getString("cancel"), getActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
+        creator.addElement(new Element(getString(R.string.cancel), getActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recyclerView.getAdapter().notifyItemChanged(position);
@@ -517,7 +515,7 @@ public class NotesInFolder extends Fragment {
             MenuItem item = menu.findItem(R.id.root);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-            menu.findItem(R.id.settings).setTitle(Translations.getString("settings"));
+            menu.findItem(R.id.settings).setTitle(getString(R.string.settings));
 
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
                 item.setIcon(R.drawable.ic_arrow_upward_white_24dp);

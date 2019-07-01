@@ -53,7 +53,7 @@ public class UselessUtils {
         }
     }
 
-    public static Drawable getDrawableForToolbar(@DrawableRes int drawableRes){
+    public static Drawable getDrawableForToolbar(@DrawableRes int drawableRes) {
         Drawable drawable;
         if (UselessUtils.ifCustomTheme())
             drawable = UselessUtils.setTint(getInstance().getDrawable(drawableRes), ThemesEngine.iconsColor);

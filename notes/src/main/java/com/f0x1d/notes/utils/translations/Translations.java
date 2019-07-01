@@ -2,7 +2,8 @@ package com.f0x1d.notes.utils.translations;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+
+import com.f0x1d.notes.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,11 +15,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,10 +25,10 @@ import java.util.Map;
 
 public class Translations {
 
+    public static HashMap<String, Integer> defaultStrings = new HashMap<>();
     protected static Context context;
     private static File translationDir;
     private static SharedPreferences preferences;
-
     private static String currentTranslationName;
     private static HashMap<String, String> currentTranslation;
 
@@ -42,21 +40,40 @@ public class Translations {
 
         if (preferences.getString("path", null) != null)
             setCurrentTranslation(new File(preferences.getString("path", null)));
+
+        try {
+            Field[] fields = R.string.class.getFields();
+            for (Field field : fields) {
+                defaultStrings.put(field.getName(), (Integer) field.get(null));
+            }
+        } catch (Exception e) {
+            throw new IncorrectTranslationError(e);
+        }
     }
 
-    public static boolean translationIsOk(){
+    public static boolean translationIsOk() {
         return !currentTranslation.isEmpty();
     }
 
-    public static File getCurrentTranslation(){
+    public static File getCurrentTranslation() {
         if (currentTranslation.isEmpty())
             throw new RuntimeException("now there is no active translation!");
 
         return new File(preferences.getString("path", null));
     }
 
-    public static List<File> getAvailableTranslations(){
-        if (translationDir == null){
+    public static void setCurrentTranslation(File translation) throws IncorrectTranslationError {
+        if (isImported(translation)) {
+            currentTranslation.clear();
+            currentTranslationName = translation.getName();
+            parseTranslation(translation);
+            preferences.edit().putString("path", translation.getAbsolutePath()).apply();
+        } else
+            throw new RuntimeException("it is not imported!");
+    }
+
+    public static List<File> getAvailableTranslations() {
+        if (translationDir == null) {
             throw new RuntimeException("init() pls");
         }
 
@@ -65,24 +82,14 @@ public class Translations {
         return translations;
     }
 
-    private static boolean isImported(File translation){
-        for (File importedFile : getAvailableTranslations()){
-            if (importedFile.getName().equals(translation.getName())){
+    private static boolean isImported(File translation) {
+        for (File importedFile : getAvailableTranslations()) {
+            if (importedFile.getName().equals(translation.getName())) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    public static void setCurrentTranslation(File translation) throws IncorrectTranslationError {
-        if (isImported(translation)){
-            currentTranslation.clear();
-            currentTranslationName = translation.getName();
-            parseTranslation(translation);
-            preferences.edit().putString("path", translation.getAbsolutePath()).apply();
-        } else
-            throw new RuntimeException("it is not imported!");
     }
 
     public static boolean deleteTranslation(File translation) {
@@ -100,38 +107,41 @@ public class Translations {
             throw new RuntimeException("it is not imported!");
     }
 
-    public static void setDefaultTranslation(){
+    public static void setDefaultTranslation() {
         currentTranslationName = "";
         currentTranslation.clear();
         preferences.edit().putString("path", null).apply();
     }
 
-    public static String getString(String key){
-        if (!hasString(key)){
+    public static String getString(String key) {
+        if (!hasString(key)) {
             try {
-                return context.getResources().getString(context.getResources().getIdentifier(key, "string", context.getPackageName()));
-            } catch (Exception e){
+                if (defaultStrings.get(key) != null)
+                    return context.getResources().getString(defaultStrings.get(key));
+                else
+                    throw new RuntimeException("no such string");
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         } else
             return currentTranslation.get(key);
     }
 
-    public static String getString(String key, String defaultValue){
+    public static String getString(String key, String defaultValue) {
         if (hasString(key))
             return currentTranslation.get(key);
         else
             return defaultValue;
     }
 
-    public static boolean hasString(String key){
+    public static boolean hasString(String key) {
         if (currentTranslation.isEmpty())
             return false;
         return currentTranslation.get(key) != null;
     }
 
     public static void addTranslation(File translationFile) throws IncorrectTranslationError {
-        if (translationDir == null){
+        if (translationDir == null) {
             throw new RuntimeException("init() pls");
         }
 
@@ -148,7 +158,7 @@ public class Translations {
     }
 
     public static void addTranslation(FileInputStream translationFileIs, String translationName) throws IncorrectTranslationError {
-        if (translationDir == null){
+        if (translationDir == null) {
             throw new RuntimeException("init() pls");
         }
 
@@ -169,7 +179,7 @@ public class Translations {
             StringBuilder result = new StringBuilder();
             BufferedReader reader = new BufferedReader(new FileReader(translationFile));
             String line;
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 if (result.toString().isEmpty())
                     result.append(line);
                 else {
@@ -180,17 +190,17 @@ public class Translations {
             reader.close();
 
             JSONArray array = new JSONArray(result.toString());
-            for (int i = 0; i < array.length(); i++){
+            for (int i = 0; i < array.length(); i++) {
                 JSONObject translation = array.getJSONObject(i);
                 try {
                     translation.getString("key");
                     translation.getString("value");
-                } catch (Exception e){
+                } catch (Exception e) {
                     continue;
                 }
                 currentTranslation.put(translation.getString("key"), translation.getString("value"));
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             preferences.edit().putString("path", null).apply();
             currentTranslation.clear();
             currentTranslationName = "";
@@ -198,12 +208,12 @@ public class Translations {
         }
     }
 
-    public static HashMap<String, String> parseFileWithTranslation(File file) throws IncorrectTranslationError{
+    public static HashMap<String, String> parseFileWithTranslation(File file) throws IncorrectTranslationError {
         try {
             StringBuilder result = new StringBuilder();
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 if (result.toString().isEmpty())
                     result.append(line);
                 else {
@@ -216,29 +226,29 @@ public class Translations {
             HashMap<String, String> map = new HashMap<>();
 
             JSONArray array = new JSONArray(result.toString());
-            for (int i = 0; i < array.length(); i++){
+            for (int i = 0; i < array.length(); i++) {
                 JSONObject translation = array.getJSONObject(i);
                 try {
                     translation.getString("key");
                     translation.getString("value");
-                } catch (Exception e){
+                } catch (Exception e) {
                     continue;
                 }
                 map.put(translation.getString("key"), translation.getString("value"));
             }
 
             return map;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new IncorrectTranslationError(e);
         }
     }
 
-    public static String createTranslation(HashMap<String, String> keysAndValues){
+    public static String createTranslation(HashMap<String, String> keysAndValues) {
         if (keysAndValues.isEmpty())
             throw new RuntimeException("your translation is empty!");
 
         JSONArray array = new JSONArray();
-        for (Map.Entry<String, String> entry : keysAndValues.entrySet()){
+        for (Map.Entry<String, String> entry : keysAndValues.entrySet()) {
             JSONObject translation = new JSONObject();
             try {
                 translation.put("key", entry.getKey());

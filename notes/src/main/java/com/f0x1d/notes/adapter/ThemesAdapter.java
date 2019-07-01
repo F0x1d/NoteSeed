@@ -24,7 +24,6 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.Theme;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.translations.Translations;
 
 import java.util.List;
 
@@ -107,7 +106,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
         } else if (position == 2) {
             Toast.makeText(activity, "Nope", Toast.LENGTH_SHORT).show();
         } else {
-            String[] variants = {Translations.getString("delete")};
+            String[] variants = {activity.getString(R.string.delete)};
 
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setItems(variants, new DialogInterface.OnClickListener() {

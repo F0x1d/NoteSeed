@@ -14,10 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.R;
@@ -26,8 +24,6 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.SignInDialog;
 import com.f0x1d.notes.utils.sync.SyncUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.translations.Translation;
-import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -58,7 +54,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
-            toolbar.setTitle(Translations.getString("sync"));
+            toolbar.setTitle(getString(R.string.sync));
             getActivity().setActionBar(toolbar);
 
             if (UselessUtils.ifCustomTheme())
@@ -81,22 +77,8 @@ public class SyncSettings extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.sync);
 
-        PreferenceCategory accountCategory = (PreferenceCategory) findPreference("accountC");
-        accountCategory.setTitle(Translations.getString("account"));
-
-        PreferenceCategory gdriveCategory = (PreferenceCategory) findPreference("gdriveC");
-        gdriveCategory.setTitle(Translations.getString("gdrive"));
-
-        PreferenceCategory fileCategory = (PreferenceCategory) findPreference("fileC");
-        fileCategory.setTitle(Translations.getString("file"));
-
-        SwitchPreference autoS = (SwitchPreference) findPreference("auto_s");
-        autoS.setTitle(Translations.getString("automatic_sync"));
-
         login = findPreference("sign_in");
-        login.setTitle(Translations.getString("sign_in"));
         logout = findPreference("sign_out");
-        logout.setTitle(Translations.getString("sign_out"));
 
         updateSignedState();
 
@@ -153,7 +135,6 @@ public class SyncSettings extends PreferenceFragmentCompat {
         });
 
         Preference import_gdrive = findPreference("import_g");
-        import_gdrive.setTitle(Translations.getString("import_gdrive"));
         import_gdrive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -167,7 +148,6 @@ public class SyncSettings extends PreferenceFragmentCompat {
         });
 
         Preference export_gdrive = findPreference("export_g");
-        export_gdrive.setTitle(Translations.getString("export_gdrive"));
         export_gdrive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -198,7 +178,6 @@ public class SyncSettings extends PreferenceFragmentCompat {
         });
 
         Preference import_db = findPreference("import");
-        import_db.setTitle(Translations.getString("import_db"));
         import_db.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -209,7 +188,6 @@ public class SyncSettings extends PreferenceFragmentCompat {
         });
 
         Preference export = findPreference("export");
-        export.setTitle(Translations.getString("export"));
         export.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

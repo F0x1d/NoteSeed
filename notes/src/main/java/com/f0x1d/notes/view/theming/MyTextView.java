@@ -47,13 +47,13 @@ public class MyTextView extends TextView {
         setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
     }
 
-    public void setupCompoundDrawables(){
+    public void setupCompoundDrawables() {
         if (UselessUtils.ifCustomTheme()) {
             try {
                 setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
             } catch (Exception e) {
             }
-        } else if (UselessUtils.getBool("night", true)){
+        } else if (UselessUtils.getBool("night", true)) {
             try {
                 setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], Color.WHITE), null, null, null);
             } catch (Exception e) {

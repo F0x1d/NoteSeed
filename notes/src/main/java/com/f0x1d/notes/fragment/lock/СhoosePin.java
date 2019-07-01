@@ -23,8 +23,6 @@ import com.f0x1d.notes.fragment.main.Notes;
 import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.translations.Translation;
-import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.theming.MyButton;
 
 public class СhoosePin extends Fragment {
@@ -41,7 +39,7 @@ public class СhoosePin extends Fragment {
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
 
-        ((TextView) view.findViewById(R.id.textView5)).setText(Translations.getString("pass"));
+        ((TextView) view.findViewById(R.id.textView5)).setText(getString(R.string.pass));
 
         MyButton odin = view.findViewById(R.id.odin);
         MyButton dva = view.findViewById(R.id.dva);
@@ -109,13 +107,13 @@ public class СhoosePin extends Fragment {
                         break;
                     case R.id.done:
                         if (pass.getText().toString().isEmpty()) {
-                            Toast.makeText(getActivity(), Translations.getString("empty_pass"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.empty_pass), Toast.LENGTH_SHORT).show();
                         } else {
                             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("pass", pass.getText().toString()).apply();
                             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("lock", true).apply();
 
                             UselessUtils.clear_back_stack();
-                            Toast.makeText(getActivity(), Translations.getString("success"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
                             UselessUtils.replaceNoBackStack(new Notes(), "notes");
                             UselessUtils.replace(new MainSettings(), "settings");
                         }

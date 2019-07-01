@@ -37,7 +37,6 @@ public class ItemCardView extends CardView {
             super.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
         } else if (UselessUtils.getBool("night", true))
             super.setCardBackgroundColor(Color.parseColor("#424242"));
-        //super.setCardBackgroundColor(color);
     }
 
     private void setup() {

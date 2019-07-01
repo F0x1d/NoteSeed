@@ -14,7 +14,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.Logger;
-import com.f0x1d.notes.utils.translations.Translations;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,7 +33,7 @@ public class SyncService extends Service {
 
         if (GoogleSignIn.getLastSignedInAccount(this) != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                String name = Translations.getString("sync");
+                String name = getString(R.string.sync);
                 int importance = NotificationManager.IMPORTANCE_LOW;
                 NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.sync", name, importance);
                 channel.enableVibration(false);
@@ -44,8 +43,8 @@ public class SyncService extends Service {
             }
 
             Notification.Builder builder = new Notification.Builder(getApplicationContext());
-            builder.setContentTitle(Translations.getString("sync"));
-            builder.setContentText(Translations.getString("syncing"));
+            builder.setContentTitle(getString(R.string.sync));
+            builder.setContentText(getString(R.string.syncing));
             builder.setSmallIcon(R.drawable.ic_sync_black_24dp);
             builder.setCategory(NotificationCompat.CATEGORY_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)

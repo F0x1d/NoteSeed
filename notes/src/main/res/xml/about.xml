@@ -5,35 +5,38 @@
         <intent android:action="android.intent.action.VIEW" android:data="https://t.me/noteseed_app"/>
     </com.f0x1d.notes.view.preferences.MyPreference>
 
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:key="linksC">
-        <com.f0x1d.notes.view.preferences.MyPreference android:key="tgdev">
-            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/f0x3d"/>
-        </com.f0x1d.notes.view.preferences.MyPreference>
-
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/help_me">
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:key="donate">
+            android:title="@string/donate" android:key="donate">
             <intent android:action="android.intent.action.VIEW" android:data="https://t.me/noteseed_app" />
         </com.f0x1d.notes.view.preferences.MyPreference>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
-    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:key="thanksC">
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/links">
+        <com.f0x1d.notes.view.preferences.MyPreference android:title="@string/telegram">
+            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/f0x3d"/>
+        </com.f0x1d.notes.view.preferences.MyPreference>
+
+        <com.f0x1d.notes.view.preferences.MyPreference android:title="EasyAPK">
+            <intent android:action="android.intent.action.VIEW" android:data="https://t.me/EasyAPK"/>
+        </com.f0x1d.notes.view.preferences.MyPreference>
+    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
+
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/thanks">
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:key="emulond" android:title="Emulond">
+            android:title="Emulond" android:summary="@string/icon_by_emulond">
             <intent android:action="android.intent.action.VIEW" android:data="https://t.me/Emulond" />
         </com.f0x1d.notes.view.preferences.MyPreference>
-
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:key="gg" android:title="GGGGG">
+            android:title="GGGGG" android:summary="@string/icon_by_emulond">
             <intent android:action="android.intent.action.VIEW" android:data="https://t.me/r1fwe23hg" />
         </com.f0x1d.notes.view.preferences.MyPreference>
-
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:key="murleek" android:title="murleek">
+            android:title="murleek" android:summary="@string/murleek">
             <intent android:action="android.intent.action.VIEW" android:data="https://t.me/murleek" />
         </com.f0x1d.notes.view.preferences.MyPreference>
-
         <com.f0x1d.notes.view.preferences.MyPreference
-            android:key="ikso" android:title="Mr_Ikso">
+            android:title="Mr_Ikso" android:summary="@string/murleek">
             <intent android:action="android.intent.action.VIEW" android:data="https://t.me/Mr_Ikso" />
         </com.f0x1d.notes.view.preferences.MyPreference>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>

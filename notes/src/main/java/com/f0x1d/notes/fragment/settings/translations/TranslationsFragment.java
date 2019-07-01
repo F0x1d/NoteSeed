@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +32,11 @@ import java.util.List;
 
 public class TranslationsFragment extends Fragment {
 
+    private RecyclerView recyclerView;
+    private CenteredToolbar toolbar;
+    private TranslationsAdapter adapter;
+    private List<Translation> translations = new ArrayList<>();
+
     public static TranslationsFragment newInstance() {
         Bundle args = new Bundle();
 
@@ -41,18 +45,12 @@ public class TranslationsFragment extends Fragment {
         return fragment;
     }
 
-    private RecyclerView recyclerView;
-    private CenteredToolbar toolbar;
-
-    private TranslationsAdapter adapter;
-    private List<Translation> translations = new ArrayList<>();
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.translations_layout, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(Translations.getString("translations"));
+        toolbar.setTitle(getString(R.string.translations));
         getActivity().setActionBar(toolbar);
 
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -63,12 +61,13 @@ public class TranslationsFragment extends Fragment {
 
         translations.clear();
         translations.add(null);
-        translations.add(new Translation(Translations.getString("default_name"), null));
+        translations.add(new Translation(getString(R.string.default_name), null));
         try {
-            for (File file : Translations.getAvailableTranslations()){
+            for (File file : Translations.getAvailableTranslations()) {
                 translations.add(new Translation(file.getName(), file));
             }
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
 
         adapter = new TranslationsAdapter(translations, this);
         recyclerView.setAdapter(adapter);
@@ -76,7 +75,7 @@ public class TranslationsFragment extends Fragment {
         return view;
     }
 
-    public void restart(){
+    public void restart() {
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("change_l", true).apply();
 
         Intent i1 = getActivity().getBaseContext().getPackageManager().
@@ -118,7 +117,7 @@ public class TranslationsFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null && requestCode == 228){
+        if (data != null && requestCode == 228) {
             try {
                 Translations.addTranslation((FileInputStream) getActivity().getContentResolver().openInputStream(data.getData()), UselessUtils.getFileName(data.getData()));
                 restart();
