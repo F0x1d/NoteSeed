@@ -14,8 +14,13 @@ repositories {
     mavenCentral()
 }
 
+
+import org.json.JSONArray
+
 import java.nio.file.Files
 import java.security.SecureRandom
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
@@ -64,6 +69,21 @@ task generateDictionary {
 }
 
 extractProguardFiles.dependsOn generateDictionary
+
+task("parseAndPutNewStringsInAssets"){
+    doLast {
+        File strings = new File("src/main/res/values/strings.xml")
+        String result = strings.getText("UTF8")
+
+        Pattern pattern = Pattern.compile("<string name=\"(.+?)\">.+?</string>", Pattern.CASE_INSENSITIVE)
+        Matcher matcher = pattern.matcher(result)
+        JSONArray array = new JSONArray()
+        while (matcher.find()) array.put(matcher.group(1))
+
+        strings = new File(new File("src/main/assets"), "stringKeys.json")
+        strings.write(array.toString())
+    }
+} group 'noteseed'
 
 android {
 

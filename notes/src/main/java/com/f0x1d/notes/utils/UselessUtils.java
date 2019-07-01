@@ -26,6 +26,12 @@ import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import static com.f0x1d.notes.App.getContext;
 import static com.f0x1d.notes.App.getInstance;
 
@@ -63,6 +69,27 @@ public class UselessUtils {
             drawable = UselessUtils.setTint(getInstance().getDrawable(drawableRes), Color.BLACK);
 
         return drawable;
+    }
+
+    public static String readFile(File file){
+        try {
+            StringBuilder builder = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = reader.readLine()) != null){
+                if (builder.toString().isEmpty())
+                    builder.append(line);
+                else {
+                    builder.append("\n");
+                    builder.append(line);
+                }
+            }
+            reader.close();
+            return builder.toString();
+        } catch (IOException e) {
+            Logger.log(e);
+            return null;
+        }
     }
 
     public static void clear_back_stack() {

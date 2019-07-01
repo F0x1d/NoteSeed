@@ -2,9 +2,11 @@ package com.f0x1d.notes.fragment.settings.translations;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.utils.Logger;
@@ -29,12 +32,15 @@ import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyEditText;
 
+import org.json.JSONArray;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,8 +51,7 @@ public class TranslationsEditor extends Fragment {
     private RecyclerView recyclerView;
     private TranslationsEditAdapter adapter;
     private File translationToEdit;
-    private List<String> keysValue;
-    private List<String> keys;
+    private List<Pair<String, String>> keys;
     private HashMap<String, String> valuesAndKeys = null;
 
     public static TranslationsEditor newInstance(String pathToFile) {
@@ -115,18 +120,23 @@ public class TranslationsEditor extends Fragment {
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        keysValue = new ArrayList<>();
         keys = new ArrayList<>();
-
         try {
-            Field[] fields = R.string.class.getFields();
-            for (Field field : fields) {
-                keysValue.add(getString(getResources().getIdentifier(field.getName(), "string", getContext().getPackageName())));
-                keys.add(field.getName());
+            JSONArray array = new JSONArray(UselessUtils.readFile(new File(new File(Environment.getExternalStorageDirectory() + "/Notes/utils"),
+                    "strings " + BuildConfig.VERSION_NAME + ".json")));
+            for (int i = 0; i < array.length(); i++){
+                keys.add(new Pair<>(array.getString(i), Translations.getString(array.getString(i))));
             }
         } catch (Exception e) {
             Logger.log(e);
         }
+
+        Collections.sort(keys, new Comparator<Pair<String, String>>() {
+            @Override
+            public int compare(Pair<String, String> o1, Pair<String, String> o2) {
+                return o1.first.compareTo(o2.first);
+            }
+        });
 
         if (translationToEdit != null) {
             try {
@@ -136,38 +146,10 @@ public class TranslationsEditor extends Fragment {
             }
         }
 
-        adapter = new TranslationsEditAdapter(keysValue, valuesAndKeys, keys);
+        adapter = new TranslationsEditAdapter();
         recyclerView.setAdapter(adapter);
 
         return view;
-    }
-
-    public void setupAll() {
-        keys.clear();
-        keysValue.clear();
-        if (translationToEdit != null)
-            valuesAndKeys.clear();
-
-        try {
-            Field[] fields = R.string.class.getFields();
-            for (Field field : fields) {
-                keysValue.add(getString(getResources().getIdentifier(field.getName(), "string", getContext().getPackageName())));
-                keys.add(field.getName());
-            }
-        } catch (Exception e) {
-            Logger.log(e);
-        }
-
-        if (translationToEdit != null) {
-            try {
-                valuesAndKeys = Translations.parseFileWithTranslation(translationToEdit);
-            } catch (IncorrectTranslationError incorrectTranslationError) {
-                Logger.log(incorrectTranslationError);
-            }
-        }
-
-        adapter = new TranslationsEditAdapter(keysValue, valuesAndKeys, keys);
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -232,21 +214,13 @@ public class TranslationsEditor extends Fragment {
 
     public class TranslationsEditAdapter extends RecyclerView.Adapter<TranslationsEditAdapter.EditTextViewHolder> {
 
-        public List<String> keys;
-        public List<String> keysNames;
-        public HashMap<String, String> values;
-
-        public TranslationsEditAdapter(List<String> keys, HashMap<String, String> values, List<String> keysNames) {
-            this.keys = keys;
-            this.values = values;
-            this.keysNames = keysNames;
-
-            if (values == null)
+        public TranslationsEditAdapter() {
+            if (valuesAndKeys == null)
                 return;
 
-            for (int i = 0; i < keysNames.size(); i++) {
-                if (values.get(keysNames.get(i)) != null) {
-                    translations.put(i, new EditTranslation(keysNames.get(i), values.get(keysNames.get(i))));
+            for (int i = 0; i < keys.size(); i++) {
+                if (valuesAndKeys.get(keys.get(i).first) != null) {
+                    translations.put(i, new EditTranslation(keys.get(i).first, valuesAndKeys.get(keys.get(i).first)));
                 }
             }
         }
@@ -259,7 +233,7 @@ public class TranslationsEditor extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull TranslationsEditAdapter.EditTextViewHolder holder, int position) {
-            holder.editText.setHint(keys.get(position) + " (" + keysNames.get(position) + ")");
+            holder.editText.setHint(keys.get(position).second + " (" + keys.get(position).first + ")");
 
             holder.editText.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -272,13 +246,13 @@ public class TranslationsEditor extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    translations.put(position, new EditTranslation(keysNames.get(position), s.toString()));
+                    translations.put(position, new EditTranslation(keys.get(position).first, s.toString()));
                 }
             });
 
-            if (values != null) {
-                if (values.get(keysNames.get(position)) != null) {
-                    holder.editText.setText(values.get(keysNames.get(position)));
+            if (valuesAndKeys != null) {
+                if (valuesAndKeys.get(keys.get(position).first) != null) {
+                    holder.editText.setText(valuesAndKeys.get(keys.get(position).first));
                 }
             }
 

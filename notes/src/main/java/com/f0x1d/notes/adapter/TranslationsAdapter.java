@@ -96,7 +96,14 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
             if (translation == null)
                 return;
 
-            holder.text.setText(translation.name);
+            String name = "";
+            String[] splits = translation.name.split("\\.");
+            for (int i = 0; i < splits.length; i++){
+                if (i != splits.length - 1)
+                    name += splits[i];
+            }
+
+            holder.text.setText(name);
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

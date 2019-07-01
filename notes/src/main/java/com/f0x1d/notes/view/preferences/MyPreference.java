@@ -73,8 +73,6 @@ public class MyPreference extends Preference {
             text.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
             text2.setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
 
-            Logger.log(String.valueOf(attrs.getAttributeCount()));
-
             if (title != -1)
                 text.setText(getContext().getString(title));
             if (summary != -1)
