@@ -210,7 +210,7 @@ public class MainSettings extends PreferenceFragmentCompat {
             dao.nukeTable2();
             dao.nukeTable3();
 
-            Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
             return;
         }
 

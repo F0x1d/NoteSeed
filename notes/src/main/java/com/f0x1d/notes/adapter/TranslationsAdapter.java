@@ -148,7 +148,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
                                         dst.mkdirs();
                                     try {
                                         NoteEdit.copy(new FileInputStream(translation.file), new File(dst, translation.name));
-                                        Toast.makeText(fragment.getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(fragment.getContext(), fragment.getString(R.string.success), Toast.LENGTH_SHORT).show();
                                     } catch (IOException e) {
                                         Logger.log(e);
                                     }

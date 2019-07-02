@@ -182,7 +182,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 SyncUtils.importFile();
-                Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -192,7 +192,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 SyncUtils.export();
-                Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });

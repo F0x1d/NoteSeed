@@ -34,7 +34,6 @@
     <string name="dark">Dark</string>
     <string name="fingerprint_error">The fingerprint is not recognized, try again!</string>
     <string name="editing">Editing</string>
-    <string name="wallpapers_ask">Will the text in the editor be white?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="fingerprint_error2">You do not have a scanner!</string>

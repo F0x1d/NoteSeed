@@ -37,6 +37,8 @@ public class Translations {
         context = appContext;
         preferences = context.getSharedPreferences("customTranslations", Context.MODE_PRIVATE);
         translationDir = new File("data/data/" + context.getPackageName() + "/files/translations");
+        if (!translationDir.exists())
+            translationDir.mkdirs();
 
         if (preferences.getString("path", null) != null)
             setCurrentTranslation(new File(preferences.getString("path", null)));

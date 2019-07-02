@@ -34,7 +34,6 @@
     <string name="dark">Тёмная</string>
     <string name="fingerprint_error">Отпечаток не распознан, попробуйте ещё раз</string>
     <string name="editing">Редактирование</string>
-    <string name="wallpapers_ask">Текст в редакторе будет белый?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="fingerprint_error2">У вас нет сканера!</string>

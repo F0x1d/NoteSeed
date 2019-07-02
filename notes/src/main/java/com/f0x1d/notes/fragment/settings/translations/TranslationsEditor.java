@@ -78,39 +78,7 @@ public class TranslationsEditor extends Fragment {
         toolbar.getMenu().findItem(R.id.apply).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (translationToEdit == null) {
-                    File file = new File(new File("data/data/" + getContext().getPackageName() + "/files/translations"), System.currentTimeMillis() + " translation.txt");
-                    try {
-                        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                        writer.write(Translations.createTranslation(adapter.getTranslations()));
-                        writer.flush();
-                        writer.close();
-
-                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
-
-                        Translations.setCurrentTranslation(file);
-                        restart();
-                    } catch (IOException | IncorrectTranslationError e) {
-                        Logger.log(e);
-                    }
-                } else {
-                    File file = translationToEdit;
-                    try {
-                        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                        writer.write(Translations.createTranslation(adapter.getTranslations()));
-                        writer.flush();
-                        writer.close();
-
-                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
-
-                        Translations.setCurrentTranslation(file);
-                        restart();
-
-                        MainActivity.instance.getSupportFragmentManager().popBackStack();
-                    } catch (IOException | IncorrectTranslationError e) {
-                        Logger.log(e);
-                    }
-                }
+                save();
                 return false;
             }
         });
@@ -161,42 +129,46 @@ public class TranslationsEditor extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.apply:
-                if (translationToEdit == null) {
-                    File file = new File(new File("data/data/" + getContext().getPackageName() + "/files/translations"), System.currentTimeMillis() + " translation.txt");
-                    try {
-                        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                        writer.write(Translations.createTranslation(adapter.getTranslations()));
-                        writer.flush();
-                        writer.close();
-
-                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
-
-                        Translations.setCurrentTranslation(file);
-                        restart();
-                    } catch (IOException | IncorrectTranslationError e) {
-                        Logger.log(e);
-                    }
-                } else {
-                    File file = translationToEdit;
-                    try {
-                        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                        writer.write(Translations.createTranslation(adapter.getTranslations()));
-                        writer.flush();
-                        writer.close();
-
-                        Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
-
-                        Translations.setCurrentTranslation(file);
-                        restart();
-
-                        MainActivity.instance.getSupportFragmentManager().popBackStack();
-                    } catch (IOException | IncorrectTranslationError e) {
-                        Logger.log(e);
-                    }
-                }
+                save();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void save(){
+        if (translationToEdit == null) {
+            File file = new File(new File("data/data/" + getContext().getPackageName() + "/files/translations"), System.currentTimeMillis() + " translation.txt");
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write(Translations.createTranslation(adapter.getTranslations()));
+                writer.flush();
+                writer.close();
+
+                Toast.makeText(getContext(), getString(R.string.success), Toast.LENGTH_SHORT).show();
+
+                Translations.setCurrentTranslation(file);
+                restart();
+            } catch (IOException | IncorrectTranslationError e) {
+                Logger.log(e);
+            }
+        } else {
+            File file = translationToEdit;
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write(Translations.createTranslation(adapter.getTranslations()));
+                writer.flush();
+                writer.close();
+
+                Toast.makeText(getContext(), getString(R.string.success), Toast.LENGTH_SHORT).show();
+
+                Translations.setCurrentTranslation(file);
+                restart();
+
+                MainActivity.instance.getSupportFragmentManager().popBackStack();
+            } catch (IOException | IncorrectTranslationError e) {
+                Logger.log(e);
+            }
+        }
     }
 
     public void restart() {
