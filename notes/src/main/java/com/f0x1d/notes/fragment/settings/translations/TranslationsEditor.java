@@ -128,8 +128,7 @@ public class TranslationsEditor extends Fragment {
 
         keys = new ArrayList<>();
         try {
-            JSONArray array = new JSONArray(UselessUtils.readFile(new File(new File(Environment.getExternalStorageDirectory() + "/Notes/utils"),
-                    "strings " + BuildConfig.VERSION_NAME + ".json")));
+            JSONArray array = new JSONArray(UselessUtils.readFile(new File(dir, "strings " + BuildConfig.VERSION_NAME + ".json")));
             for (int i = 0; i < array.length(); i++){
                 keys.add(new Pair<>(array.getString(i), Translations.getString(array.getString(i))));
             }
