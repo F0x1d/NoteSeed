@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
@@ -119,6 +120,11 @@ public class TranslationsEditor extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
+
+        File dir = new File(Environment.getExternalStorageDirectory() + "/Notes/utils");
+        if (!dir.exists())
+            dir.mkdirs();
+        App.getInstance().exportStrings();
 
         keys = new ArrayList<>();
         try {

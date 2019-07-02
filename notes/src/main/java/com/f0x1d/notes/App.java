@@ -101,30 +101,34 @@ public final class App extends Application {
         UselessUtils.edit().putBoolean("inited_pos", true).apply();
     }
 
-    private void exportStrings(){
-        File mainFolder = new File(Environment.getExternalStorageDirectory() + "/Notes/utils");
-        if (!mainFolder.exists())
-            mainFolder.mkdirs();
+    public void exportStrings(){
+        try {
+            File mainFolder = new File(Environment.getExternalStorageDirectory() + "/Notes/utils");
+            if (!mainFolder.exists())
+                mainFolder.mkdirs();
 
-        for (File file : mainFolder.listFiles()){
-            if (file.getName().contains("strings ") && file.getName().contains(".json")){
-                String versionName = file.getName().split(" ")[1].replace(".json", "");
-                if (versionName.equals(BuildConfig.VERSION_NAME))
-                    return;
-                else {
-                    file.delete();
-                    break;
+            for (File file : mainFolder.listFiles()){
+                if (file.getName().contains("strings ") && file.getName().contains(".json")){
+                    String versionName = file.getName().split(" ")[1].replace(".json", "");
+                    if (versionName.equals(BuildConfig.VERSION_NAME))
+                        return;
+                    else {
+                        file.delete();
+                        break;
+                    }
                 }
             }
-        }
 
-        File strings = new File(mainFolder, "strings " + BuildConfig.VERSION_NAME + ".json");
-        if (!strings.exists()){
-            try {
-                NoteEdit.copy(getAssets().open("stringKeys.json"), strings);
-            } catch (IOException e) {
-                e.printStackTrace();
+            File strings = new File(mainFolder, "strings " + BuildConfig.VERSION_NAME + ".json");
+            if (!strings.exists()){
+                try {
+                    NoteEdit.copy(getAssets().open("stringKeys.json"), strings);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+        } catch (Exception e){
+            Logger.log(e);
         }
     }
 }
