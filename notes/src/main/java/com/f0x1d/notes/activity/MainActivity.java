@@ -299,4 +299,8 @@ public class MainActivity extends AppCompatActivity {
             resources = new CustomResources(super.getResources().getAssets(), super.getResources().getDisplayMetrics(), super.getResources().getConfiguration());
         return resources;
     }
+
+    public Resources getDefaultResources(){
+        return super.getResources();
+    }
 }

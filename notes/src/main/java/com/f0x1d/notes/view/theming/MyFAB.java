@@ -63,6 +63,7 @@ public class MyFAB extends FloatingActionButton {
 
             MyFAB fab = new MyFAB(getContext());
             fab.setVisibility(View.INVISIBLE);
+            fab.setAlpha(0.0f);
             fab.setOnClickListener(element.listener);
             fab.setImageDrawable(element.pic);
             fab.setSize(SIZE_MINI);
@@ -71,6 +72,7 @@ public class MyFAB extends FloatingActionButton {
 
             MyTextView textView = new MyTextView(getContext());
             textView.setVisibility(View.INVISIBLE);
+            textView.setAlpha(0.0f);
             textView.setText(element.name);
             rootView.addView(textView);
 

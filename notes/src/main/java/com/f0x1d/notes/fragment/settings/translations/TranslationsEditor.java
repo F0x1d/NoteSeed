@@ -98,18 +98,20 @@ public class TranslationsEditor extends Fragment {
         try {
             JSONArray array = new JSONArray(UselessUtils.readFile(new File(dir, "strings " + BuildConfig.VERSION_NAME + ".json")));
             for (int i = 0; i < array.length(); i++){
-                keys.add(new Pair<>(array.getString(i), Translations.getString(array.getString(i))));
+                keys.add(new Pair<>(array.getString(i), ((MainActivity) getActivity()).getDefaultResources().getString(
+                        ((MainActivity) getActivity()).getDefaultResources().getIdentifier(array.getString(i), "string", getContext().getPackageName()))));
             }
         } catch (Exception e) {
             Logger.log(e);
+            Toast.makeText(getContext(), "error! not all strings were added to screen, check log.txt for details!", Toast.LENGTH_SHORT).show();
         }
 
-        Collections.sort(keys, new Comparator<Pair<String, String>>() {
+        /*Collections.sort(keys, new Comparator<Pair<String, String>>() {
             @Override
             public int compare(Pair<String, String> o1, Pair<String, String> o2) {
                 return o1.first.compareTo(o2.first);
             }
-        });
+        });*/
 
         if (translationToEdit != null) {
             try {
