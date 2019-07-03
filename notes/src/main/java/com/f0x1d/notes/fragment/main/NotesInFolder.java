@@ -228,7 +228,7 @@ public class NotesInFolder extends Fragment {
             public void onClick(View v) {
                 MainActivity.instance.getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
+                        R.id.container, NoteAdd.newInstance(in_folder_id), "add").addToBackStack("editor").commit();
                 fab.closeList();
             }
         }));
