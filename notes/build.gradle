@@ -26,6 +26,9 @@ import java.util.stream.Stream
 
 import static java.util.stream.IntStream.rangeClosed
 
+Properties localProperties = new Properties()
+localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 task generateDictionary {
     doLast {
         int total = 20000
@@ -70,7 +73,7 @@ task generateDictionary {
 
 extractProguardFiles.dependsOn generateDictionary
 
-task("parseAndPutNewStringsInAssets"){
+task parseAndPutNewStringsInAssets {
     doLast {
         File strings = new File("src/main/res/values/strings.xml")
         String result = strings.getText("UTF8")
@@ -82,8 +85,21 @@ task("parseAndPutNewStringsInAssets"){
 
         strings = new File(new File("src/main/assets"), "stringKeys.json")
         strings.write(array.toString())
+
+        println()
+        println('strings are ok!')
+        println()
     }
 } group 'noteseed'
+
+task buildNoteSeed {
+    doLast {
+        println('starting!')
+    }
+} group 'noteseed'
+
+buildNoteSeed.finalizedBy(parseAndPutNewStringsInAssets)
+buildNoteSeed.finalizedBy(build)
 
 android {
 
@@ -125,7 +141,7 @@ android {
             minSdkVersion 21
             targetSdkVersion 28
             versionCode code
-            versionName "6.4.4.1"
+            versionName "6.4.5"
 
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         }
@@ -135,6 +151,16 @@ android {
 
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
+
+    signingConfigs {
+
+        release {
+            storeFile new File(localProperties.getProperty("RELEASE_STORE_FILE"))
+            storePassword localProperties.getProperty("RELEASE_STORE_PASSWORD")
+            keyAlias localProperties.getProperty("RELEASE_KEY_ALIAS")
+            keyPassword localProperties.getProperty("RELEASE_KEY_PASSWORD")
+        }
+    }
 
     buildTypes {
         debug {
@@ -148,6 +174,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

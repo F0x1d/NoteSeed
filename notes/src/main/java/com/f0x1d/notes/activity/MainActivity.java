@@ -2,6 +2,10 @@ package com.f0x1d.notes.activity;
 
 import android.accounts.Account;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -9,11 +13,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.App;
@@ -26,6 +32,7 @@ import com.f0x1d.notes.fragment.settings.MainSettings;
 import com.f0x1d.notes.fragment.settings.SyncSettings;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.fragment.settings.translations.TranslationsFragment;
+import com.f0x1d.notes.receiver.CopyTextReceiver;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.PermissionUtils;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -57,10 +64,39 @@ public class MainActivity extends AppCompatActivity {
         instance = this;
         PermissionUtils.requestPermissions(this);
 
+        Thread.UncaughtExceptionHandler defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
+                String stackTrace = Logger.getStackTrace(e);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    String name = App.getContext().getString(R.string.notification);
+                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                    NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
+                    channel.enableVibration(true);
+                    channel.enableLights(true);
+                    NotificationManager notificationManager = MainActivity.this.getSystemService(NotificationManager.class);
+                    notificationManager.createNotificationChannel(channel);
+                }
+
+                Notification.Builder builder = new Notification.Builder(getApplicationContext());
+                builder.setSmallIcon(R.drawable.ic_bug_report_black_24dp);
+                builder.setContentTitle("NoteSeed crashed!");
+                builder.setContentText(Logger.getStackTrace(e));
+                builder.addAction(new Notification.Action(0, getString(R.string.copy), PendingIntent.getBroadcast(
+                        getApplicationContext(), 228, new Intent(MainActivity.this, CopyTextReceiver.class).putExtra("text", stackTrace), 0)));
+                builder.setStyle(new Notification.BigTextStyle().bigText(stackTrace));
+                builder.setAutoCancel(true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    builder.setChannelId("com.f0x1d.notes.notifications");
+
+                NotificationManager notificationManager = (NotificationManager) MainActivity.this.getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(Integer.MIN_VALUE, builder.build());
+
                 Logger.log(e);
+
+                defaultHandler.uncaughtException(t, e);
             }
         });
 

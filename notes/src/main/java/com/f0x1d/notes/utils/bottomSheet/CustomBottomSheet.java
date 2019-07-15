@@ -59,6 +59,8 @@ public class CustomBottomSheet extends BottomSheetDialogFragment {
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
+        if (getArguments() == null)
+            return;
         recyclerView.setAdapter(new BottomSheetItemsAdapter((List<Element>) getArguments().getSerializable("elems")));
 
         dialog.setContentView(v);

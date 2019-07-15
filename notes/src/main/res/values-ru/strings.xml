@@ -134,4 +134,6 @@
     <string name="ok">OK</string>
     <string name="gdrive">GDrive</string>
     <string name="edit_translation">Править локализацию</string>
+    <string name="copy">Скопировать</string>
+    <string name="copied">Скопировано</string>
 </resources>

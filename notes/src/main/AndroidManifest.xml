@@ -41,11 +41,8 @@
         <receiver
             android:enabled="true"
             android:name=".receiver.NotifyServiceReceiver"/>
+        <receiver android:name=".receiver.CopyTextReceiver"/>
         <service android:name=".utils.sync.SyncService"/>
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="739e07b685d16d7a41340eaca4fe3c5d9c8907ac" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
