@@ -11,7 +11,8 @@ import androidx.core.app.ActivityCompat;
 public class PermissionUtils {
 
     public static void requestPermissions(Activity activity) {
-        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        if (!hasPermissions(activity, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
     }
 
     public static boolean hasPermissions(Context context, String... permissions) {

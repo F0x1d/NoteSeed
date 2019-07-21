@@ -34,9 +34,9 @@ public class ShowAlertDialog {
             @Override
             public void onShow(DialogInterface dialog1) {
                 if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", true)) {
-                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.BLACK);
-                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                    dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+                    dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.WHITE);
+                    dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
                 }
                 if (UselessUtils.ifCustomTheme()) {
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);

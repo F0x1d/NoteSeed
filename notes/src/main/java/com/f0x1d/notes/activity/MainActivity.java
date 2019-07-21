@@ -136,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     getWindow().setStatusBarColor(Color.GRAY);
                 }
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1)
+                    getWindow().setNavigationBarColor(Color.BLACK);
             }
         }
 
