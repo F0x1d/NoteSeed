@@ -56,6 +56,7 @@ import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -263,7 +264,7 @@ public class NoteEdit extends Fragment {
     }
 
     public void enterEditMode() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle(getString(R.string.warning));
         builder.setMessage(getString(R.string.enter_edit_mode));
         builder.setPositiveButton(getString(R.string.enter), new DialogInterface.OnClickListener() {
@@ -272,7 +273,7 @@ public class NoteEdit extends Fragment {
                 editModeSetup();
             }
         });
-        ShowAlertDialog.show(builder.create());
+        ShowAlertDialog.show(builder);
     }
 
     private void editModeSetup() {
@@ -367,7 +368,7 @@ public class NoteEdit extends Fragment {
         TextView textView = v.findViewById(R.id.text);
         textView.setTextSize(30);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setView(v);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -399,7 +400,7 @@ public class NoteEdit extends Fragment {
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
-        ShowAlertDialog.show(builder.create());
+        ShowAlertDialog.show(builder);
     }
 
     @Override
@@ -410,7 +411,7 @@ public class NoteEdit extends Fragment {
                 EditText text = v.findViewById(R.id.extension);
                 ((TextView) v.findViewById(R.id.text)).setText(getString(R.string.export_file_type));
 
-                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                MaterialAlertDialogBuilder builder2 = new MaterialAlertDialogBuilder(getActivity());
                 builder2.setView(v);
                 builder2.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
@@ -446,7 +447,7 @@ public class NoteEdit extends Fragment {
                         }
                     }
                 });
-                ShowAlertDialog.show(builder2.create());
+                ShowAlertDialog.show(builder2);
 
                 break;
             case R.id.attach:

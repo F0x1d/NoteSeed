@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,19 @@ import com.f0x1d.notes.BuildConfig;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class ShowAlertDialog {
 
-    public static void show(AlertDialog dialog1337) {
+    public static void show(MaterialAlertDialogBuilder builder) {
+        if (UselessUtils.ifCustomTheme())
+            builder.setBackground(new ColorDrawable(ThemesEngine.background));
+        else if (UselessUtils.getBool("night", true))
+            builder.setBackground(new ColorDrawable(App.getContext().getResources().getColor(R.color.statusbar_for_dialogs)));
+        else
+            builder.setBackground(new ColorDrawable(App.getContext().getResources().getColor(android.R.color.white)));
+
+        AlertDialog dialog1337 = builder.create();
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
@@ -62,12 +72,5 @@ public class ShowAlertDialog {
         });
 
         dialog1337.show();
-
-        if (UselessUtils.ifCustomTheme())
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
-        else if (UselessUtils.getBool("night", true))
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(App.getContext().getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
-        else
-            dialog1337.getWindow().getDecorView().getBackground().setColorFilter(App.getContext().getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
     }
 }

@@ -24,6 +24,7 @@ import com.f0x1d.notes.utils.translations.Translation;
 import com.f0x1d.notes.utils.translations.Translations;
 import com.f0x1d.notes.view.theming.ItemCardView;
 import com.f0x1d.notes.view.theming.MyTextView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,7 +65,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
                 public void onClick(View v) {
                     String[] items = {fragment.getString(R.string.import_db), fragment.getString(R.string.create)};
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(fragment.getContext());
                     builder.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -78,7 +79,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
                             }
                         }
                     });
-                    ShowAlertDialog.show(builder.create());
+                    ShowAlertDialog.show(builder);
                 }
             });
         } else if (position == 1) {
@@ -123,7 +124,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
             holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(fragment.getContext());
                     String[] items = {fragment.getString(R.string.delete), fragment.getString(R.string.change), fragment.getString(R.string.export)};
                     builder.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
@@ -156,7 +157,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
                             }
                         }
                     });
-                    ShowAlertDialog.show(builder.create());
+                    ShowAlertDialog.show(builder);
                     return false;
                 }
             });

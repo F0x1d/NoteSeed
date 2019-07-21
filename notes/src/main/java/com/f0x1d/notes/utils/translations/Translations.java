@@ -96,7 +96,7 @@ public class Translations {
 
     public static boolean deleteTranslation(File translation) {
         if (isImported(translation)) {
-            boolean it = currentTranslationName.equals(translation.getName());
+            boolean it = currentTranslationName != null && currentTranslationName.equals(translation.getName());
             if (it) {
                 currentTranslationName = "";
                 currentTranslation.clear();

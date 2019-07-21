@@ -39,6 +39,7 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class MainSettings extends PreferenceFragmentCompat {
 
@@ -111,7 +112,7 @@ public class MainSettings extends PreferenceFragmentCompat {
                 text.setHint("HH:mm | dd.MM.yyyy");
                 text.setText(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("date", "HH:mm | dd.MM.yyyy"));
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                 builder.setTitle(getString(R.string.choose_date_appearance));
                 builder.setView(v);
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -122,7 +123,7 @@ public class MainSettings extends PreferenceFragmentCompat {
                                 .apply();
                     }
                 });
-                ShowAlertDialog.show(builder.create());
+                ShowAlertDialog.show(builder);
                 return false;
             }
         });

@@ -50,6 +50,7 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.theming.MyColorPickerDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 import java.text.DateFormat;
@@ -236,7 +237,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
                             activity.getString(R.string.unpin_from_status_bar), activity.getString(R.string.change)};
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
                 builder.setItems(itemsAlert, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -309,7 +310,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         }
                     }
                 });
-                ShowAlertDialog.show(builder.create());
+                ShowAlertDialog.show(builder);
             }
         });
     }
@@ -633,7 +634,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color)};
         }
 
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+        MaterialAlertDialogBuilder builder1 = new MaterialAlertDialogBuilder(activity);
 
         builder1.setItems(hm, new DialogInterface.OnClickListener() {
             @Override
@@ -652,7 +653,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         text.setText(getNotifyText(id));
                         text.setHint(activity.getString(R.string.text));
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
                         builder.setView(v);
 
                         builder.setPositiveButton(activity.getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -665,7 +666,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             }
                         }).create();
 
-                        ShowAlertDialog.show(builder.create());
+                        ShowAlertDialog.show(builder);
                         break;
                     case 1:
 
@@ -704,7 +705,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        ShowAlertDialog.show(builder1.create());
+        ShowAlertDialog.show(builder1);
     }
 
     public void getFoldersDialog(long id, NotesInFolder notesInFolder) {
@@ -718,7 +719,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color)};
         }
 
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+        MaterialAlertDialogBuilder builder1 = new MaterialAlertDialogBuilder(activity);
 
         builder1.setItems(hm, new DialogInterface.OnClickListener() {
             @Override
@@ -732,7 +733,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         text.setText(getFolderNameFromDataBase(id));
                         text.setHint(activity.getString(R.string.name));
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
 
                         builder.setView(v);
                         builder.setTitle(activity.getString(R.string.folder_name));
@@ -764,7 +765,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             }
                         }).create();
 
-                        ShowAlertDialog.show(builder.create());
+                        ShowAlertDialog.show(builder);
                         break;
                     case 1:
                         int currentColor;
@@ -799,7 +800,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        ShowAlertDialog.show(builder1.create());
+        ShowAlertDialog.show(builder1);
     }
 
     public void getNotesDialog(long id) {
@@ -812,7 +813,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
         }
 
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+        MaterialAlertDialogBuilder builder1 = new MaterialAlertDialogBuilder(activity);
 
         builder1.setItems(hm, new DialogInterface.OnClickListener() {
             @Override
@@ -864,7 +865,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        ShowAlertDialog.show(builder1.create());
+        ShowAlertDialog.show(builder1);
 
     }
 

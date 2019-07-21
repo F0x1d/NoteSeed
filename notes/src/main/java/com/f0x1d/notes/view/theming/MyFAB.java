@@ -50,6 +50,10 @@ public class MyFAB extends FloatingActionButton {
         super.setImageDrawable(drawable);
         if (UselessUtils.ifCustomTheme())
             setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
+        else if (UselessUtils.getBool("night", true))
+            setImageTintList(ColorStateList.valueOf(getContext().getResources().getColor(android.R.color.black)));
+        else
+            setImageTintList(ColorStateList.valueOf(getContext().getResources().getColor(android.R.color.white)));
     }
 
     public void setElements(List<Element> elements, ViewGroup rootView) {

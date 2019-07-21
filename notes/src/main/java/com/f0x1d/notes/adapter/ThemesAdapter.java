@@ -24,6 +24,7 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.Theme;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
@@ -108,7 +109,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
         } else {
             String[] variants = {activity.getString(R.string.delete)};
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
             builder.setItems(variants, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -142,7 +143,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
                 }
             });
 
-            ShowAlertDialog.show(builder.create());
+            ShowAlertDialog.show(builder);
         }
     }
 

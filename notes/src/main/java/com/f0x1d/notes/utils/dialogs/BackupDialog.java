@@ -19,6 +19,7 @@ import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 
@@ -44,7 +45,7 @@ public class BackupDialog {
             File db = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Notes//db");
             File database = new File(db, "database.noteseed");
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
             builder.setTitle(activity.getString(R.string.backup_found));
             builder.setMessage(activity.getString(R.string.restore) + "?");
             builder.setCancelable(false);
@@ -77,7 +78,7 @@ public class BackupDialog {
                         Logger.log("gdrive error");
                         dialog.cancel();
                         if (haveAnyBackup)
-                            ShowAlertDialog.show(builder.create());
+                            ShowAlertDialog.show(builder);
                         return;
                     }
 
@@ -125,7 +126,7 @@ public class BackupDialog {
 
                     dialog.cancel();
                     if (haveAnyBackup)
-                        ShowAlertDialog.show(builder.create());
+                        ShowAlertDialog.show(builder);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -133,7 +134,7 @@ public class BackupDialog {
                     Logger.log(e);
                     dialog.cancel();
                     if (haveAnyBackup)
-                        ShowAlertDialog.show(builder.create());
+                        ShowAlertDialog.show(builder);
                 }
             });
         }

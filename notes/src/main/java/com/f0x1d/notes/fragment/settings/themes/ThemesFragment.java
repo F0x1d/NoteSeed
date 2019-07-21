@@ -28,6 +28,7 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.Theme;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public class ThemesFragment extends Fragment {
     }
 
     private void showFAQ() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle("FAQ");
         builder.setCancelable(false);
         builder.setMessage(Html.fromHtml("<b>" + getString(R.string.where_themes) + "</b> <br>" + getString(R.string.there_themes)));
@@ -130,7 +131,7 @@ public class ThemesFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        ShowAlertDialog.show(builder.create());
+        ShowAlertDialog.show(builder);
     }
 
     @Override

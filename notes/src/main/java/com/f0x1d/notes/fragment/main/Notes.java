@@ -47,6 +47,7 @@ import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyFAB;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
@@ -255,7 +256,7 @@ public class Notes extends Fragment {
         text.setBackground(null);
         text.setHint(getString(R.string.text));
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setView(v);
 
         builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -293,7 +294,7 @@ public class Notes extends Fragment {
             }
         });
 
-        ShowAlertDialog.show(builder.create());
+        ShowAlertDialog.show(builder);
     }
 
     private void createFolder() {
@@ -303,7 +304,7 @@ public class Notes extends Fragment {
         text.setBackground(null);
         text.setHint(getString(R.string.name));
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setView(v);
         builder.setTitle(getString(R.string.folder_name));
 
@@ -337,7 +338,7 @@ public class Notes extends Fragment {
             }
         }).create();
 
-        ShowAlertDialog.show(builder.create());
+        ShowAlertDialog.show(builder);
     }
 
     public String generateName() {
