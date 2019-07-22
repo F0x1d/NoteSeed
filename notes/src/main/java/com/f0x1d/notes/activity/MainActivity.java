@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
+import com.crashlytics.android.Crashlytics;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 recreate();
             }
         } else {
-            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", true)) {
+            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", false)) {
                 setTheme(R.style.NightTheme);
                 getWindow().setNavigationBarColor(getResources().getColor(R.color.statusbar));
             } else {

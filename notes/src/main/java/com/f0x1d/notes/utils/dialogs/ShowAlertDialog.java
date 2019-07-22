@@ -24,7 +24,7 @@ public class ShowAlertDialog {
     public static void show(MaterialAlertDialogBuilder builder) {
         if (UselessUtils.ifCustomTheme())
             builder.setBackground(new ColorDrawable(ThemesEngine.background));
-        else if (UselessUtils.getBool("night", true))
+        else if (UselessUtils.getBool("night", false))
             builder.setBackground(new ColorDrawable(App.getContext().getResources().getColor(R.color.statusbar_for_dialogs)));
         else
             builder.setBackground(new ColorDrawable(App.getContext().getResources().getColor(android.R.color.white)));
@@ -33,7 +33,7 @@ public class ShowAlertDialog {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", true)) {
+                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", false)) {
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.WHITE);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.WHITE);
                     dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.WHITE);

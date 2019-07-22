@@ -50,7 +50,7 @@ public class MyFAB extends FloatingActionButton {
         super.setImageDrawable(drawable);
         if (UselessUtils.ifCustomTheme())
             setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
-        else if (UselessUtils.getBool("night", true))
+        else if (UselessUtils.getBool("night", false))
             setImageTintList(ColorStateList.valueOf(getContext().getResources().getColor(android.R.color.black)));
         else
             setImageTintList(ColorStateList.valueOf(getContext().getResources().getColor(android.R.color.white)));
@@ -252,7 +252,7 @@ public class MyFAB extends FloatingActionButton {
             setBackgroundTintList(ColorStateList.valueOf(ThemesEngine.fabColor));
             setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
             setCompatElevation(ThemesEngine.shadows);
-        } else if (UselessUtils.getBool("night", true)) {
+        } else if (UselessUtils.getBool("night", false)) {
             setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
         } else if (UselessUtils.getBool("orange", false)) {
             setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.noname)));

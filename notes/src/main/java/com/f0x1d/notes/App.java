@@ -6,6 +6,7 @@ import android.os.Environment;
 
 import androidx.room.Room;
 
+import com.crashlytics.android.Crashlytics;
 import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
@@ -16,6 +17,7 @@ import com.f0x1d.notes.utils.translations.IncorrectTranslationError;
 import com.f0x1d.notes.utils.translations.Translations;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import io.fabric.sdk.android.Fabric;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -56,6 +58,7 @@ public final class App extends Application {
     public void onCreate() {
         instance = this;
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 

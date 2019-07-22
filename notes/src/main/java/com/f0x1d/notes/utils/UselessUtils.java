@@ -63,7 +63,7 @@ public class UselessUtils {
         Drawable drawable;
         if (UselessUtils.ifCustomTheme())
             drawable = UselessUtils.setTint(getInstance().getDrawable(drawableRes), ThemesEngine.iconsColor);
-        else if (UselessUtils.getBool("night", true))
+        else if (UselessUtils.getBool("night", false))
             drawable = UselessUtils.setTint(getInstance().getDrawable(drawableRes), Color.WHITE);
         else
             drawable = UselessUtils.setTint(getInstance().getDrawable(drawableRes), Color.BLACK);
@@ -106,7 +106,7 @@ public class UselessUtils {
     public static int getNavColor() {
         if (UselessUtils.ifCustomTheme())
             return ThemesEngine.navBarColor;
-        else if (UselessUtils.getBool("night", true))
+        else if (UselessUtils.getBool("night", false))
             return App.getContext().getResources().getColor(R.color.statusbar);
         else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)

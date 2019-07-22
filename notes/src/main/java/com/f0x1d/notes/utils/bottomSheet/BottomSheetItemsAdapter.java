@@ -38,7 +38,7 @@ public class BottomSheetItemsAdapter extends RecyclerView.Adapter<BottomSheetIte
 
         if (UselessUtils.getBool("custom", false))
             holder.text.setCompoundDrawablesWithIntrinsicBounds(UselessUtils.setTint(elements.get(position).pic, ThemesEngine.iconsColor), null, null, null);
-        else if (UselessUtils.getBool("night", true))
+        else if (UselessUtils.getBool("night", false))
             holder.text.setCompoundDrawablesWithIntrinsicBounds(UselessUtils.setTint(elements.get(position).pic, Color.WHITE), null, null, null);
         else
             holder.text.setCompoundDrawablesWithIntrinsicBounds(UselessUtils.setTint(elements.get(position).pic, Color.BLACK), null, null, null);

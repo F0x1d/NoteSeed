@@ -53,7 +53,7 @@ public class MyTextView extends TextView {
                 setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
             } catch (Exception e) {
             }
-        } else if (UselessUtils.getBool("night", true)) {
+        } else if (UselessUtils.getBool("night", false)) {
             try {
                 setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], Color.WHITE), null, null, null);
             } catch (Exception e) {

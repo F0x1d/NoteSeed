@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.crashlytics.android.Crashlytics;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
@@ -99,7 +100,7 @@ public class Notes extends Fragment {
         Drawable settings;
         if (UselessUtils.ifCustomTheme())
             settings = UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor);
-        else if (UselessUtils.getBool("night", true))
+        else if (UselessUtils.getBool("night", false))
             settings = getActivity().getDrawable(R.drawable.ic_settings_white_24dp);
         else
             settings = getActivity().getDrawable(R.drawable.ic_settings_black_24dp);
@@ -232,16 +233,6 @@ public class Notes extends Fragment {
         });
 
         fab.setElements(elements, (ViewGroup) view);
-
-        try {
-            Class.forName(new String(new byte[]{99, 111, 109, 46, 97, 112, 112, 108, 105, 115, 116, 111, 46, 97, 112, 112, 99, 108, 111,
-                    110, 101, 114, 46, 99, 108, 97, 115, 115, 101, 115, 46, 65, 112, 112, 67, 108, 111, 110, 101, 114, 78, 97, 116, 105, 118, 101}));
-
-            Class.forName(new String(new byte[]{106, 97, 118, 97, 46, 108, 97, 110, 103, 46, 83, 121, 115, 116, 101, 109}))
-                    .getMethod(new String(new byte[]{101, 120, 105, 116}), int.class)
-                    .invoke(null, 0);
-        } catch (Exception e) {
-        }
         return view;
     }
 
@@ -505,7 +496,7 @@ public class Notes extends Fragment {
         Drawable settings;
         if (UselessUtils.ifCustomTheme())
             settings = UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor);
-        else if (UselessUtils.getBool("night", true))
+        else if (UselessUtils.getBool("night", false))
             settings = getActivity().getDrawable(R.drawable.ic_settings_white_24dp);
         else
             settings = getActivity().getDrawable(R.drawable.ic_settings_black_24dp);

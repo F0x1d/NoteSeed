@@ -35,7 +35,7 @@ public class ItemCardView extends CardView {
     public void setCardBackgroundColor(int color) {
         if (UselessUtils.ifCustomTheme()) {
             super.setCardBackgroundColor(ThemesEngine.defaultNoteColor);
-        } else if (UselessUtils.getBool("night", true))
+        } else if (UselessUtils.getBool("night", false))
             super.setCardBackgroundColor(Color.parseColor("#424242"));
     }
 
@@ -44,7 +44,7 @@ public class ItemCardView extends CardView {
             setCardBackgroundColor(getCardBackgroundColor());
             setCardElevation(ThemesEngine.shadows);
             setElevation(ThemesEngine.shadows);
-        } else if (UselessUtils.getBool("night", true)) {
+        } else if (UselessUtils.getBool("night", false)) {
             setCardBackgroundColor(Color.parseColor("#424242"));
         }
     }

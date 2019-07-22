@@ -33,6 +33,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.theming.MyButton;
@@ -184,7 +185,7 @@ public class LockTickerScreen extends Fragment {
 
         swirlView.setState(SwirlView.State.ON, true);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)) {
             odin.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             dva.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             tri.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
@@ -227,11 +228,7 @@ public class LockTickerScreen extends Fragment {
 
                 if (!keyguardManager.isKeyguardSecure()) {
                 } else {
-                    try {
-                        generateKey();
-                    } catch (FingerprintException e) {
-                        e.printStackTrace();
-                    }
+                    generateKey();
 
                     if (initCipher()) {
                         cryptoObject = new FingerprintManager.CryptoObject(cipher);
@@ -248,7 +245,7 @@ public class LockTickerScreen extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void generateKey() throws FingerprintException {
+    private void generateKey() {
         try {
             keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
@@ -265,18 +262,9 @@ public class LockTickerScreen extends Fragment {
 
             keyGenerator.generateKey();
 
-        } catch (KeyStoreException
-                | NoSuchAlgorithmException
-                | NoSuchProviderException
-                | InvalidAlgorithmParameterException
-                | CertificateException
-                | IOException exc) {
-            exc.printStackTrace();
-            try {
-                throw new FingerprintException(exc);
-            } catch (FingerprintException e) {
-                e.printStackTrace();
-            }
+        } catch (Exception exc) {
+            Logger.log(exc);
+            Toast.makeText(getActivity(), "Fingerprint initialisation error!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -287,9 +275,9 @@ public class LockTickerScreen extends Fragment {
                     KeyProperties.KEY_ALGORITHM_AES + "/"
                             + KeyProperties.BLOCK_MODE_CBC + "/"
                             + KeyProperties.ENCRYPTION_PADDING_PKCS7);
-        } catch (NoSuchAlgorithmException |
-                NoSuchPaddingException e) {
-            throw new RuntimeException("Failed to get Cipher", e);
+        } catch (Exception e) {
+            Logger.log(e);
+            return false;
         }
 
         try {
@@ -300,21 +288,14 @@ public class LockTickerScreen extends Fragment {
             return true;
         } catch (KeyPermanentlyInvalidatedException e) {
             return false;
-        } catch (KeyStoreException | CertificateException
-                | UnrecoverableKeyException | IOException
-                | NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException("Failed to init Cipher", e);
+        } catch (Exception e) {
+            Logger.log(e);
+            return false;
         }
     }
 
     public interface Callback extends Parcelable {
         void onSuccess(LockTickerScreen screen);
-    }
-
-    private class FingerprintException extends Exception {
-        public FingerprintException(Exception e) {
-            super(e);
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

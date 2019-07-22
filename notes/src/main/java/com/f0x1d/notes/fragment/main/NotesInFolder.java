@@ -47,6 +47,7 @@ import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyFAB;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -108,7 +109,7 @@ public class NotesInFolder extends Fragment {
         toolbar.getMenu().findItem(R.id.root).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         toolbar.getMenu().findItem(R.id.settings).setTitle(getString(R.string.settings));
 
-        if (UselessUtils.getBool("night", true)) {
+        if (UselessUtils.getBool("night", false)) {
             if (UselessUtils.ifCustomTheme()) {
                 toolbar.getMenu().findItem(R.id.root).setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_arrow_upward_white_24dp), ThemesEngine.iconsColor));
             } else {
@@ -487,7 +488,7 @@ public class NotesInFolder extends Fragment {
 
                 recyclerView.getAdapter().notifyDataSetChanged();
 
-                Toast.makeText(getActivity(), getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+                Snackbar.make(getView(), getString(R.string.deleted), Snackbar.LENGTH_SHORT).show();
 
                 try {
                     creator.customBottomSheet.dismiss();
@@ -518,7 +519,7 @@ public class NotesInFolder extends Fragment {
 
             menu.findItem(R.id.settings).setTitle(getString(R.string.settings));
 
-            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", true)) {
+            if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)) {
                 item.setIcon(R.drawable.ic_arrow_upward_white_24dp);
             }
         } catch (Exception e) {
