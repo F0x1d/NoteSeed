@@ -2,10 +2,15 @@ package com.f0x1d.notes.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -15,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,11 +46,15 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
+import static com.f0x1d.notes.App.getContext;
+
 public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int TEXT = 0;
     public static final int IMAGE = 1;
     public static final int CHECKBOX = 2;
+    public static final int FILE = 3;
+
     public boolean editMode = false;
     List<NoteItem> noteItems;
     Activity activity;
@@ -85,6 +95,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return new imageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false));
         } else if (viewType == CHECKBOX) {
             return new checkBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_checkbox, parent, false));
+        } else if (viewType == FILE) {
+            return new fileViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_file, parent, false));
         } else {
             return null;
         }
@@ -94,7 +106,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (fragment instanceof NoteAdd)
             editMode = true;
-        else if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("auto_editmode", false))
+        else if (PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("auto_editmode", false))
             editMode = true;
 
         dao = App.getInstance().getDatabase().noteItemsDao();
@@ -109,6 +121,72 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             case CHECKBOX:
                 setCheckbox((checkBoxViewHolder) holder, position);
                 break;
+            case FILE:
+                setFile((fileViewHolder) holder, position);
+                break;
+        }
+    }
+
+    private void setFile(fileViewHolder holder, int position) {
+        holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
+
+        Typeface face;
+        if (UselessUtils.getBool("mono", false)) {
+            face = Typeface.MONOSPACE;
+
+            holder.editText.setTypeface(face);
+        }
+
+        for (NoteItem noteItem : dao.getAll()) {
+            if (noteItem.id == noteItems.get(position).id) {
+                String fileName = getFileNameFromUri(Uri.parse(noteItem.pic_res));
+                holder.editText.setText(fileName);
+                holder.editText.setFocusableInTouchMode(false);
+                holder.editText.setFocusable(false);
+
+                holder.icon.setImageDrawable(UselessUtils.getDrawableForToolbar(R.drawable.ic_insert_drive_file_black_24dp));
+
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            intent.setDataAndType(Uri.parse(noteItem.pic_res), "*/*");
+                            activity.startActivity(intent);
+                        } catch (Exception e){
+                            Logger.log(e);
+                        }
+                    }
+                };
+
+                holder.background.setOnClickListener(clickListener);
+                holder.icon.setOnClickListener(clickListener);
+                holder.itemView.setOnClickListener(clickListener);
+                holder.editText.setOnClickListener(clickListener);
+                break;
+            }
+        }
+    }
+
+    private String getFileNameFromUri(Uri uri) {
+        if (uri.getPath() == null)
+            return "???";
+
+        String[] pathParts = uri.getPath().split("/");
+        String fallbackName = pathParts[pathParts.length - 1];
+
+        try (Cursor cursor = getContext().getContentResolver().query(uri, new String[]{MediaStore.MediaColumns.DISPLAY_NAME}, null, null, null)) {
+            if (cursor == null)
+                return fallbackName;
+
+            cursor.moveToFirst();
+            String name = cursor.getString(0);
+
+            if (name == null)
+                return fallbackName;
+
+            return name;
         }
     }
 
@@ -193,14 +271,14 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void setupImage(imageViewHolder holder, int position) {
         RequestOptions options = new RequestOptions()
                 .placeholder(new ColorDrawable(Color.WHITE));
-        if (!PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("shakal", true)) {
+        if (!PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("shakal", true)) {
             options
                     .dontTransform()
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
         } else
             options.fitCenter();
 
-        Glide.with(App.getContext()).load(noteItems.get(position).pic_res).apply(options).into(holder.image);
+        Glide.with(getContext()).load(noteItems.get(position).pic_res).apply(options).into(holder.image);
     }
 
     private void setupText(textViewHolder holder, int position) {
@@ -368,6 +446,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         } else if (item.type == 1) {
             return CHECKBOX;
+        } else if (item.type == 2) {
+            return FILE;
         } else {
             throw new RuntimeException();
         }
@@ -438,7 +518,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     class imageViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView image;
+        public ImageView image;
 
         public imageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -449,7 +529,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     class textViewHolder extends RecyclerView.ViewHolder {
 
-        MyEditText editText;
+        public MyEditText editText;
 
         public textViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -458,10 +538,25 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    class fileViewHolder extends RecyclerView.ViewHolder {
+
+        public MyEditText editText;
+        public ImageView icon;
+        public RelativeLayout background;
+
+        public fileViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            editText = itemView.findViewById(R.id.edit_text);
+            icon = itemView.findViewById(R.id.icon);
+            background = itemView.findViewById(R.id.background);
+        }
+    }
+
     class checkBoxViewHolder extends RecyclerView.ViewHolder {
 
-        CheckBox checkBox;
-        MyEditText editText;
+        public CheckBox checkBox;
+        public MyEditText editText;
 
         public checkBoxViewHolder(@NonNull View itemView) {
             super(itemView);

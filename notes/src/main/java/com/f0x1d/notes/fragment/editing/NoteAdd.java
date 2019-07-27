@@ -405,6 +405,17 @@ public class NoteAdd extends Fragment {
                         }
                     }
                 }));
+                creator.addElement(new Element(getString(R.string.file), getActivity().getDrawable(R.drawable.ic_insert_drive_file_white_24dp), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openFile("*/*", 229, getActivity());
+
+                        try {
+                            creator.customBottomSheet.dismiss();
+                        } catch (Exception e) {
+                        }
+                    }
+                }));
                 creator.show("", true);
                 break;
             case R.id.lock:
@@ -518,7 +529,7 @@ public class NoteAdd extends Fragment {
                 } catch (Exception e) {
                 }
 
-                openFile("image/*", 228, getActivity());
+                openImage("image/*", 228, getActivity());
             }
         }));
         creator.show("TAG", true);
@@ -543,9 +554,37 @@ public class NoteAdd extends Fragment {
         return image;
     }
 
-    public void openFile(String minmeType, int requestCode, Context c) {
+    public void openImage(String minmeType, int requestCode, Context c) {
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(minmeType);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // special intent for Samsung file manager
+        Intent sIntent = new Intent("com.f0x1d.notes.main.PICK_DATA");
+        // if you want any file type, you can skip next line
+        sIntent.putExtra("CONTENT_TYPE", minmeType);
+        sIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        Intent chooserIntent;
+        if (c.getPackageManager().resolveActivity(sIntent, 0) != null) {
+            // it is device with samsung file manager
+            chooserIntent = Intent.createChooser(sIntent, "Open file");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{intent});
+        } else {
+            chooserIntent = Intent.createChooser(intent, "Open file");
+        }
+
+        try {
+            startActivityForResult(chooserIntent, requestCode);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void openFile(String minmeType, int requestCode, Context c) {
+
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType(minmeType);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
@@ -574,6 +613,29 @@ public class NoteAdd extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK && requestCode == 229) {
+            try {
+                String path = data.getData().toString();
+                getActivity().getContentResolver().takePersistableUriPermission(data.getData(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                try {
+                    last_pos = last_pos + 1;
+                    NoteItem noteItem = new NoteItem(NoteItemsAdapter.getId(), rowID, null, path, last_pos, 0, 2);
+                    noteItemsDao.insert(noteItem);
+                    noteItems.add(last_pos, noteItem);
+                } catch (IndexOutOfBoundsException e) {
+                    Logger.log(e);
+                }
+
+                recyclerView.getAdapter().notifyDataSetChanged();
+
+                dao.updateNoteTime(System.currentTimeMillis(), rowID);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         if (resultCode == Activity.RESULT_OK && requestCode == 1337) {
             if (new File(currentPhotoPath).length() < 1)
                 return;
