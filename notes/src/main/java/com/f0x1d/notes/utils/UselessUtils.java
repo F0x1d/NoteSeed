@@ -28,7 +28,6 @@ import com.f0x1d.notes.utils.theme.ThemesEngine;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -71,12 +70,12 @@ public class UselessUtils {
         return drawable;
     }
 
-    public static String readFile(File file){
+    public static String readFile(File file) {
         try {
             StringBuilder builder = new StringBuilder();
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 if (builder.toString().isEmpty())
                     builder.append(line);
                 else {

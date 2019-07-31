@@ -13,16 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.preference.PreferenceManager;
-import android.text.Html;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
-import com.crashlytics.android.Crashlytics;
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
@@ -49,8 +45,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.api.services.drive.DriveScopes;
 
 import static android.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -342,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
         return resources;
     }
 
-    public Resources getDefaultResources(){
+    public Resources getDefaultResources() {
         return super.getResources();
     }
 }

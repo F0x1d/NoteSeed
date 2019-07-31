@@ -60,7 +60,7 @@ public class Logger {
         Log.e("noteseed", s);
     }
 
-    public static String getStackTrace(Throwable e){
+    public static String getStackTrace(Throwable e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);

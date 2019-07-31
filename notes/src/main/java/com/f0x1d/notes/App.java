@@ -17,28 +17,12 @@ import com.f0x1d.notes.utils.translations.IncorrectTranslationError;
 import com.f0x1d.notes.utils.translations.Translations;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import io.fabric.sdk.android.Fabric;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import dalvik.system.PathClassLoader;
-import kotlin.text.Regex;
+import io.fabric.sdk.android.Fabric;
 
 public final class App extends Application {
 
@@ -109,14 +93,14 @@ public final class App extends Application {
         UselessUtils.edit().putBoolean("inited_pos", true).apply();
     }
 
-    public void exportStrings(){
+    public void exportStrings() {
         try {
             File mainFolder = new File(Environment.getExternalStorageDirectory() + "/Notes/utils");
             if (!mainFolder.exists())
                 mainFolder.mkdirs();
 
-            for (File file : mainFolder.listFiles()){
-                if (file.getName().contains("strings ") && file.getName().contains(".json")){
+            for (File file : mainFolder.listFiles()) {
+                if (file.getName().contains("strings ") && file.getName().contains(".json")) {
                     String versionName = file.getName().split(" ")[1].replace(".json", "");
                     if (versionName.equals(BuildConfig.VERSION_NAME))
                         return;
@@ -128,14 +112,14 @@ public final class App extends Application {
             }
 
             File strings = new File(mainFolder, "strings " + BuildConfig.VERSION_NAME + ".json");
-            if (!strings.exists()){
+            if (!strings.exists()) {
                 try {
                     NoteEdit.copy(getAssets().open("stringKeys.json"), strings);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             Logger.log(e);
         }
     }

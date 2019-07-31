@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.Logger;

@@ -3,7 +3,6 @@ package com.f0x1d.notes.utils.dialogs;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
 import android.view.View;

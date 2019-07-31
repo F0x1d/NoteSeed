@@ -97,7 +97,7 @@ public class TranslationsEditor extends Fragment {
         keys = new ArrayList<>();
         try {
             JSONArray array = new JSONArray(UselessUtils.readFile(new File(dir, "strings " + BuildConfig.VERSION_NAME + ".json")));
-            for (int i = 0; i < array.length(); i++){
+            for (int i = 0; i < array.length(); i++) {
                 keys.add(new Pair<>(array.getString(i), ((MainActivity) getActivity()).getDefaultResources().getString(
                         ((MainActivity) getActivity()).getDefaultResources().getIdentifier(array.getString(i), "string", getContext().getPackageName()))));
             }
@@ -137,7 +137,7 @@ public class TranslationsEditor extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void save(){
+    public void save() {
         if (translationToEdit == null) {
             File file = new File(new File("data/data/" + getContext().getPackageName() + "/files/translations"), System.currentTimeMillis() + " translation.txt");
             try {

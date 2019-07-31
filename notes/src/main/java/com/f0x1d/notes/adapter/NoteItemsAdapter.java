@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -154,7 +153,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             intent.setDataAndType(Uri.parse(noteItem.pic_res), "*/*");
                             activity.startActivity(intent);
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             Logger.log(e);
                         }
                     }

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.R;
@@ -99,7 +98,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
 
             String name = "";
             String[] splits = translation.name.split("\\.");
-            for (int i = 0; i < splits.length; i++){
+            for (int i = 0; i < splits.length; i++) {
                 if (i != splits.length - 1)
                     name += splits[i];
             }
