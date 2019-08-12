@@ -136,4 +136,8 @@
     <string name="edit_translation">Edit translation</string>
     <string name="copy">Copy</string>
     <string name="copied">Copied</string>
+    <string name="capture_note_notification_title">Capture note to NoteSeed</string>
+    <string name="capture_note_notification_text">It will be saved in root directory</string>
+    <string name="capture_note_notification_action">Capture</string>
+    <string name="capture_note_setting_title">Display notification to capture notes everywhere</string>
 </resources>

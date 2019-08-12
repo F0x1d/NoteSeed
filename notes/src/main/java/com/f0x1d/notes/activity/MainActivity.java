@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockScreen;
 import com.f0x1d.notes.fragment.lock.LockTickerScreen;
@@ -149,6 +150,14 @@ public class MainActivity extends AppCompatActivity {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
             signIn();
+        }
+
+        if (getIntent().getExtras() != null && getIntent().getStringExtra("open") != null && getIntent().getStringExtra("open").equals("add")) {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                    R.id.container, new Notes(), "notes").commit();
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                    R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
+            return;
         }
 
         if (getIntent().getExtras() != null) {

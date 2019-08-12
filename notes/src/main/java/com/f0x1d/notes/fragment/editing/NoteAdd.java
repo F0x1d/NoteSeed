@@ -1,5 +1,6 @@
 package com.f0x1d.notes.fragment.editing;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -95,6 +96,7 @@ public class NoteAdd extends Fragment {
         return fragment;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notes_editing_layout, container, false);

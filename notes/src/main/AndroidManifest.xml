@@ -56,5 +56,7 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="739e07b685d16d7a41340eaca4fe3c5d9c8907ac" />
+        <service android:name=".service.CaptureNoteNotificationService" />
+        <receiver android:name=".receiver.CaptureNoteReceiver" />
     </application>
 </manifest>

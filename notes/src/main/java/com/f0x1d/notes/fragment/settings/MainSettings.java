@@ -1,13 +1,17 @@
 package com.f0x1d.notes.fragment.settings;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +38,7 @@ import com.f0x1d.notes.fragment.bottomSheet.TextSizeDialog;
 import com.f0x1d.notes.fragment.lock.СhoosePin;
 import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
 import com.f0x1d.notes.fragment.settings.translations.TranslationsFragment;
+import com.f0x1d.notes.service.CaptureNoteNotificationService;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
@@ -90,6 +95,37 @@ public class MainSettings extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.settings);
+
+        SwitchPreference showCaptureNotesNotification = (SwitchPreference) findPreference("showCaptureNotification");
+        showCaptureNotesNotification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean value = (boolean) newValue;
+
+                if (value) {
+                    Intent intent = new Intent(getActivity(), CaptureNoteNotificationService.class);
+
+                    getActivity().startService(intent);
+                    getActivity().bindService(intent, new ServiceConnection() {
+                        @Override
+                        public void onServiceConnected(ComponentName name, IBinder service) {
+
+                        }
+
+                        @Override
+                        public void onServiceDisconnected(ComponentName name) {
+
+                        }
+                    }, 0);
+                } else {
+                    if (CaptureNoteNotificationService.instance != null) {
+                        CaptureNoteNotificationService.instance.stopForeground(true);
+                    }
+                }
+
+                return true;
+            }
+        });
 
         Preference translations = findPreference("translations");
         translations.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

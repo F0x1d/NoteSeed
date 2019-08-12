@@ -136,4 +136,8 @@
     <string name="edit_translation">Редагувати локалізацію</string>
     <string name="copy">Скопіювати</string>
     <string name="copied">Скопійовано</string>
+    <string name="capture_note_notification_title">Записати нотатку в NoteSeed</string>
+    <string name="capture_note_notification_text">Вона буде збережена в головній теці</string>
+    <string name="capture_note_notification_action">Записати</string>
+    <string name="capture_note_setting_title">Показувати повідомлення для запису нотаток скрізь</string>
 </resources>

@@ -1,9 +1,15 @@
 package com.f0x1d.notes;
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Environment;
+import android.os.IBinder;
 
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 
 import com.crashlytics.android.Crashlytics;
@@ -11,6 +17,7 @@ import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
+import com.f0x1d.notes.service.CaptureNoteNotificationService;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.translations.IncorrectTranslationError;
@@ -63,6 +70,23 @@ public final class App extends Application {
         if (!mainFolder.exists())
             mainFolder.mkdirs();
         exportStrings();
+
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showCaptureNotification", false)) {
+            Intent intent = new Intent(this, CaptureNoteNotificationService.class);
+
+            startService(intent);
+            bindService(intent, new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+
+                }
+            }, 0);
+        }
     }
 
     public Database getDatabase() {

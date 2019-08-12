@@ -37,7 +37,6 @@ public class MyPreferenceCategory extends PreferenceCategory {
         init(attrs);
     }
 
-
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);

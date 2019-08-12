@@ -14,6 +14,11 @@
             android:title="@string/sync" android:key="sync"/>
     </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
 
+    <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/notification">
+        <com.f0x1d.notes.view.preferences.MySwitchPreference
+            android:title="@string/capture_note_setting_title" android:key="showCaptureNotification"/>
+    </com.f0x1d.notes.view.preferences.MyPreferenceCategory>
+
     <com.f0x1d.notes.view.preferences.MyPreferenceCategory android:title="@string/onscreen">
         <com.f0x1d.notes.view.preferences.MyPreference
             android:title="@string/theme" android:key="dayAccent"/>
