@@ -17,10 +17,13 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.databinding.ActivityMainBinding;
 import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockScreen;
@@ -38,6 +41,7 @@ import com.f0x1d.notes.utils.dialogs.BackupDialog;
 import com.f0x1d.notes.utils.dialogs.SignInDialog;
 import com.f0x1d.notes.utils.sync.SyncService;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemingViewModel;
 import com.f0x1d.notes.utils.translations.CustomResources;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -57,10 +61,14 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private CustomResources resources;
 
+    public ThemingViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         instance = this;
         PermissionUtils.requestPermissions(this);
+
+        viewModel = ViewModelProviders.of(this).get(ThemingViewModel.class);
 
         Thread.UncaughtExceptionHandler defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -99,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (UselessUtils.ifCustomTheme()) {
-            new ThemesEngine().setupAll();
+            new ThemesEngine().setupAll(this);
         }
 
         if (UselessUtils.ifCustomTheme()) {
@@ -110,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             try {
-                getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-                getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+                getWindow().setStatusBarColor(viewModel.statusBarColor.getValue());
+                getWindow().setNavigationBarColor(viewModel.navBarColor.getValue());
             } catch (Exception e) {
                 PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
                 recreate();
@@ -139,7 +147,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setViewmodel(ViewModelProviders.of(this).get(ThemingViewModel.class));
+        binding.setLifecycleOwner(this);
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null) {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

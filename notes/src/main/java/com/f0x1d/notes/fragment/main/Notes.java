@@ -109,8 +109,8 @@ public class Notes extends Fragment {
 
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+            getActivity().getWindow().setStatusBarColor(MainActivity.instance.viewModel.statusBarColor.getValue());
+            getActivity().getWindow().setNavigationBarColor(MainActivity.instance.viewModel.navBarColor.getValue());
 
             toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }

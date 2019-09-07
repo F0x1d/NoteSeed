@@ -14,6 +14,9 @@ public interface NoteItemsDao {
     @Query("SELECT * FROM NoteItem order by position asc")
     List<NoteItem> getAll();
 
+    @Query("SELECT * FROM NoteItem WHERE id = :id")
+    NoteItem getById(long id);
+
     @Insert
     long insert(NoteItem noteItem);
 

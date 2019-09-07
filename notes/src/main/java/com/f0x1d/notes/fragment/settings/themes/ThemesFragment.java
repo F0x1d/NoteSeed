@@ -1,9 +1,12 @@
 package com.f0x1d.notes.fragment.settings.themes;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,17 +19,24 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ThemesAdapter;
+import com.f0x1d.notes.databinding.ThemesFragmentBinding;
 import com.f0x1d.notes.utils.AnimUtils;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
 import com.f0x1d.notes.utils.theme.Theme;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.utils.theme.ThemingViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -51,9 +61,15 @@ public class ThemesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = LayoutInflater.from(getActivity()).inflate(R.layout.themes_fragment, container, false);
-        Toolbar toolbar = v.findViewById(R.id.toolbar);
+        ThemesFragmentBinding binding = DataBindingUtil.inflate(inflater, R.layout.themes_fragment, container, false);
+        binding.setViewmodel(ViewModelProviders.of(requireActivity()).get(ThemingViewModel.class));
+        binding.setLifecycleOwner(requireActivity());
+
+        Toolbar toolbar = binding.toolbarSpace.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.themes));
+
+        recyclerView = binding.recyclerView;
+        import_fab = binding.importTheme;
 
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
@@ -62,7 +78,7 @@ public class ThemesFragment extends Fragment {
 
             toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
-        return v;
+        return binding.getRoot();
     }
 
     @SuppressLint("WrongConstant")
@@ -75,8 +91,6 @@ public class ThemesFragment extends Fragment {
         themes.add(new Theme(null, getString(R.string.orange), "by F0x1d", 0xffffaa00, 0xff000000));
         themes.add(new Theme(null, getString(R.string.dark), "by F0x1d", 0xff303030, 0xffffffff));
         themes.addAll(new ThemesEngine().getThemes());
-
-        recyclerView = view.findViewById(R.id.recyclerView);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -93,7 +107,6 @@ public class ThemesFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        import_fab = view.findViewById(R.id.import_theme);
         import_fab.setImageDrawable(getActivity().getDrawable(R.drawable.ic_add_black_24dp));
         AnimUtils.animRotate(import_fab);
 
@@ -104,6 +117,39 @@ public class ThemesFragment extends Fragment {
                     openFile("*/*", 228, getActivity());
                 else
                     showFAQ();
+            }
+        });
+
+        MainActivity.instance.viewModel.statusBarColor.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                int colorFrom = requireActivity().getWindow().getStatusBarColor();
+
+                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
+                colorAnimation.setDuration(250);
+                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        requireActivity().getWindow().setStatusBarColor((int) animator.getAnimatedValue());
+                    }
+                });
+                colorAnimation.start();
+            }
+        });
+        MainActivity.instance.viewModel.navBarColor.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                int colorFrom = requireActivity().getWindow().getNavigationBarColor();
+
+                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
+                colorAnimation.setDuration(250);
+                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        requireActivity().getWindow().setNavigationBarColor((int) animator.getAnimatedValue());
+                    }
+                });
+                colorAnimation.start();
             }
         });
     }
@@ -138,7 +184,7 @@ public class ThemesFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (data != null) {
-            new ThemesEngine().importTheme(data.getData(), getActivity());
+            new ThemesEngine().importTheme(data.getData(), (AppCompatActivity) getActivity());
 
             UselessUtils.recreate(ThemesFragment.this, "themes");
         }

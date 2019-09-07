@@ -1,5 +1,7 @@
 package com.f0x1d.notes.view.theming;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -12,8 +14,10 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
+import androidx.lifecycle.Observer;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
@@ -259,5 +263,38 @@ public class MyFAB extends FloatingActionButton {
         } else {
             setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
         }
+
+        MainActivity.instance.viewModel.fabColor.observe(MainActivity.instance, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                int colorFrom = getBackgroundTintList().getDefaultColor();
+
+                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
+                colorAnimation.setDuration(250);
+                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        setBackgroundTintList(ColorStateList.valueOf((int) animator.getAnimatedValue()));
+                    }
+                });
+                colorAnimation.start();
+            }
+        });
+        MainActivity.instance.viewModel.fabIconColor.observe(MainActivity.instance, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                int colorFrom = getImageTintList().getDefaultColor();
+
+                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
+                colorAnimation.setDuration(250);
+                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        setImageTintList(ColorStateList.valueOf((int) animator.getAnimatedValue()));
+                    }
+                });
+                colorAnimation.start();
+            }
+        });
     }
 }

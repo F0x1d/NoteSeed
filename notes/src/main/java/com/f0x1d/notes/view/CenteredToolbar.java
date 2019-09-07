@@ -2,8 +2,12 @@ package com.f0x1d.notes.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -19,8 +23,11 @@ import android.widget.Toolbar;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.f0x1d.notes.R;
+import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.fragment.search.Search;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -135,6 +142,45 @@ public class CenteredToolbar extends Toolbar {
                 Logger.log(e);
             }
         }
+
+        MainActivity.instance.viewModel.toolbarColor.observe(MainActivity.instance, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                int colorFrom;
+
+                Drawable backgroundDrawable = getBackground();
+                if (backgroundDrawable instanceof ColorDrawable)
+                    colorFrom = ((ColorDrawable) backgroundDrawable).getColor();
+                else
+                    colorFrom = Color.WHITE;
+
+                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
+                colorAnimation.setDuration(250);
+                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        setBackgroundColor((int) animator.getAnimatedValue());
+                    }
+                });
+                colorAnimation.start();
+            }
+        });
+        MainActivity.instance.viewModel.toolbarTextColor.observe(MainActivity.instance, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                int colorFrom = tvTitle.getCurrentTextColor();
+
+                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
+                colorAnimation.setDuration(250);
+                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        tvTitle.setTextColor((int) animator.getAnimatedValue());
+                    }
+                });
+                colorAnimation.start();
+            }
+        });
     }
 
     public void goAnim(String inFolderId) {

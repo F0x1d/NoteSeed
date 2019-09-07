@@ -241,6 +241,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     });
                 }
 
+                holder.checkBox.setOnCheckedChangeListener(null);
+
                 if (getChecked(noteItems.get(position).id) == 0)
                     holder.checkBox.setChecked(false);
                 else if (getChecked(noteItems.get(position).id) == 1)

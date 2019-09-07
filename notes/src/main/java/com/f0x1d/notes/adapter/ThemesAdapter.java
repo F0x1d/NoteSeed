@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -183,7 +184,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
             activity.startActivity(i);
             activity.finish();
         } else {
-            new ThemesEngine().setTheme(themes.get(position).theme_file, activity);
+            new ThemesEngine().setTheme(themes.get(position).theme_file, (AppCompatActivity) activity);
         }
     }
 
