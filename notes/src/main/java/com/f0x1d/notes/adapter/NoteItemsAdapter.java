@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,6 +136,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             holder.editText.setTypeface(face);
         }
+        holder.editText.setMovementMethod(LinkMovementMethod.getInstance());
 
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.id == noteItems.get(position).id) {
@@ -223,6 +225,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             holder.editText.setTypeface(face);
         }
+        holder.editText.setMovementMethod(LinkMovementMethod.getInstance());
 
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.id == noteItems.get(position).id) {
@@ -316,6 +319,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             holder.editText.setTypeface(face);
         }
+        holder.editText.setMovementMethod(LinkMovementMethod.getInstance());
 
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.id == noteItems.get(position).id) {

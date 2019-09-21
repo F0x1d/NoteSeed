@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
 
+import com.f0x1d.notes.utils.UselessUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -23,6 +24,8 @@ public class ColorBindingAdapter {
         Drawable backgroundDrawable = view.getBackground();
         if (backgroundDrawable instanceof ColorDrawable)
             colorFrom = ((ColorDrawable) backgroundDrawable).getColor();
+        else if (UselessUtils.ifCustomTheme())
+            colorFrom = ThemesEngine.background;
         else
             colorFrom = Color.WHITE;
 

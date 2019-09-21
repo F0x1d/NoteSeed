@@ -49,6 +49,7 @@ public class ThemesFragment extends Fragment {
     FloatingActionButton import_fab;
 
     List<Theme> themes;
+    ThemesAdapter adapter;
 
     public static ThemesFragment newInstance(boolean anim) {
         ThemesFragment myFragment = new ThemesFragment();
@@ -96,8 +97,6 @@ public class ThemesFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(llm);
-
-        ThemesAdapter adapter;
 
         if (getArguments().getBoolean("anim", false)) {
             adapter = new ThemesAdapter(themes, getActivity(), true);
@@ -186,7 +185,15 @@ public class ThemesFragment extends Fragment {
         if (data != null) {
             new ThemesEngine().importTheme(data.getData(), (AppCompatActivity) getActivity());
 
-            UselessUtils.recreate(ThemesFragment.this, "themes");
+            themes.clear();
+            themes.add(new Theme(null, getString(R.string.blue), "by F0x1d", 0xff64B5F6, 0xffffffff));
+            themes.add(new Theme(null, getString(R.string.orange), "by F0x1d", 0xffffaa00, 0xff000000));
+            themes.add(new Theme(null, getString(R.string.dark), "by F0x1d", 0xff303030, 0xffffffff));
+            themes.addAll(new ThemesEngine().getThemes());
+
+            adapter.notifyDataSetChanged();
+
+            //UselessUtils.recreate(ThemesFragment.this, "themes");
         }
     }
 
