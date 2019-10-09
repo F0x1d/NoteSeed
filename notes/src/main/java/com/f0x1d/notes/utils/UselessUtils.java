@@ -99,7 +99,7 @@ public class UselessUtils {
     }
 
     public static boolean ifCustomTheme() {
-        return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("custom_theme", false);
+        return true;//PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("custom_theme", false);
     }
 
     public static int getNavColor() {

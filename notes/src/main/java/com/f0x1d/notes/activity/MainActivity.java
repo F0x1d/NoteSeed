@@ -110,41 +110,13 @@ public class MainActivity extends AppCompatActivity {
             new ThemesEngine().setupAll(this);
         }
 
-        if (UselessUtils.ifCustomTheme()) {
-            if (ThemesEngine.dark) {
-                setTheme(R.style.NightTheme);
-            } else {
-                setTheme(R.style.AppTheme);
-            }
+        setTheme(R.style.AppTheme);
 
-            try {
-                getWindow().setStatusBarColor(viewModel.statusBarColor.getValue());
-                getWindow().setNavigationBarColor(viewModel.navBarColor.getValue());
-            } catch (Exception e) {
-                PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
-                recreate();
-            }
-        } else {
-            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("night", false)) {
-                setTheme(R.style.NightTheme);
-                getWindow().setNavigationBarColor(getResources().getColor(R.color.statusbar));
-            } else {
-                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("orange", false)) {
-                    setTheme(R.style.AppTheme_Orange);
-                } else {
-                    setTheme(R.style.AppTheme);
-                }
+        getWindow().setStatusBarColor(viewModel.statusBarColor.getValue());
+        getWindow().setNavigationBarColor(viewModel.navBarColor.getValue());
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    getWindow().setStatusBarColor(Color.WHITE);
-                } else {
-                    getWindow().setStatusBarColor(Color.GRAY);
-                }
-
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1)
-                    getWindow().setNavigationBarColor(Color.BLACK);
-            }
-        }
+        if (ThemesEngine.dark)
+            getWindow().getDecorView().setSystemUiVisibility(0);
 
         super.onCreate(savedInstanceState);
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);

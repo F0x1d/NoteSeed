@@ -140,4 +140,10 @@
     <string name="capture_note_notification_text">It will be saved in root directory</string>
     <string name="capture_note_notification_action">Capture</string>
     <string name="capture_note_setting_title">Display notification to capture notes everywhere</string>
+    <string name="formatting">Formatting</string>
+    <string name="bold">Bold</string>
+    <string name="italic">Italic</string>
+    <string name="link">Link</string>
+    <string name="enter_link">Enter your link</string>
+    <string name="pls_select_text">Select text to format first</string>
 </resources>

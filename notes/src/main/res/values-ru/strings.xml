@@ -140,4 +140,10 @@
     <string name="capture_note_notification_text">Она будет сохранена в главной директории</string>
     <string name="capture_note_notification_action">Записать</string>
     <string name="capture_note_setting_title">Показывать уведомление для записи заметок везде</string>
+    <string name="formatting">Форматирование</string>
+    <string name="bold">Жирный</string>
+    <string name="italic">Курсив</string>
+    <string name="link">Ссылка</string>
+    <string name="enter_link">Введите вашу ссылку</string>
+    <string name="pls_select_text">Сначала выберите текст для форматирования</string>
 </resources>

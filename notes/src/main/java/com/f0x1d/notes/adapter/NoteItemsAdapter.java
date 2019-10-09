@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.view.theming.MyEditText;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.f0x1d.notes.App.getContext;
@@ -62,10 +64,16 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     TextWatcher textWatcher = null;
     Fragment fragment;
 
-    public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity, Fragment fragment) {
+    List<EditText> editTexts = new ArrayList<>();
+
+    public boolean openedKeyboard = false;
+    private boolean openKeyboard;
+
+    public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity, Fragment fragment, boolean openKeyboard) {
         this.noteItems = noteItems;
         this.activity = activity;
         this.fragment = fragment;
+        this.openKeyboard = openKeyboard;
 
         setHasStableIds(true);
     }
@@ -269,6 +277,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         });
 
         holder.editText.addTextChangedListener(textWatcher);
+
+        editTexts.add(holder.editText);
     }
 
     @SuppressLint("CheckResult")
@@ -283,6 +293,50 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             options.fitCenter();
 
         Glide.with(getContext()).load(noteItems.get(position).pic_res).apply(options).into(holder.image);
+    }
+
+    public boolean hasSelection() {
+        for (EditText editText : editTexts) {
+            if (editText != null && editText.hasSelection())
+                return true;
+        }
+        return false;
+    }
+
+    public boolean applyFormat(String formatType, String link) {
+        for (EditText editText : editTexts) {
+            if (editText != null && editText.hasSelection()) {
+                String text = editText.getText().toString();
+
+                String formattedText = null;
+                switch (formatType) {
+                    case "bold":
+                        formattedText = "<b>" + text.substring(editText.getSelectionStart(), editText.getSelectionEnd()) + "</b>";
+                        break;
+                    case "italic":
+                        formattedText = "<i>" + text.substring(editText.getSelectionStart(), editText.getSelectionEnd()) + "</i>";
+                        break;
+                    case "link":
+                        if (!link.startsWith("http"))
+                            link = "https://" + link;
+                        formattedText = "<a href=\"" + link + "\">" + text.substring(editText.getSelectionStart(), editText.getSelectionEnd()) + "</a>";
+                        break;
+
+                        default:
+                            formattedText = text.substring(editText.getSelectionStart(), editText.getSelectionEnd());
+                }
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(text);
+                stringBuilder.replace(editText.getSelectionStart(),
+                        editText.getSelectionEnd(),
+                        formattedText);
+
+                editText.setText(stringBuilder);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void setupText(textViewHolder holder, int position) {
@@ -341,7 +395,17 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
 
+        if (openKeyboard) {
+            if (!openedKeyboard) {
+                holder.editText.requestFocus();
+                UselessUtils.showKeyboard(holder.editText, activity);
+                openedKeyboard = true;
+            }
+        }
+
         holder.editText.addTextChangedListener(textWatcher);
+
+        editTexts.add(holder.editText);
     }
 
     public void setEditing(boolean editing) {

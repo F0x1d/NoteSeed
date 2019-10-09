@@ -1,7 +1,5 @@
 package com.f0x1d.notes.utils.theme;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -32,6 +30,10 @@ import java.util.List;
 
 public class ThemesEngine {
 
+    public static final String LIGHT_BLUE = "blue";
+    public static final String LIGHT_ORANGE = "orange";
+    public static final String DARK = "dark";
+
     public static int background;
     public static int statusBarColor;
     public static int navBarColor;
@@ -52,6 +54,186 @@ public class ThemesEngine {
     public static int seekBarColor;
     public static int seekBarThumbColor;
     public static float shadows;
+
+    public void setupStockTheme(String theme, AppCompatActivity activity) {
+        ThemingViewModel viewModel = ViewModelProviders.of(activity).get(ThemingViewModel.class);
+
+        if (theme.equals(DARK)) {
+            background = 0xff303030;
+            viewModel.background.setValue(0xff303030);
+
+            statusBarColor = 0xff303030;
+            viewModel.statusBarColor.setValue(0xff303030);
+
+            navBarColor = 0xff303030;
+            viewModel.navBarColor.setValue(0xff303030);
+
+            textColor = 0xffffffff;
+            viewModel.textColor.setValue(0xffffffff);
+
+            accentColor = 0xffffffff;
+            viewModel.accentColor.setValue(0xffffffff);
+
+            iconsColor = 0xffffffff;
+            viewModel.iconsColor.setValue(0xffffffff);
+
+            textHintColor = 0xff808080;
+            viewModel.textHintColor.setValue(0xff808080);
+
+            toolbarColor = 0xff424242;
+            viewModel.toolbarColor.setValue(0xff424242);
+
+            toolbarTextColor = 0xffffffff;
+            viewModel.toolbarTextColor.setValue(0xffffffff);
+
+            fabColor = 0xffffffff;
+            viewModel.fabColor.setValue(0xffffffff);
+
+            fabIconColor = 0xff000000;
+            viewModel.fabIconColor.setValue(0xff000000);
+
+            defaultNoteColor = 0xff424242;
+            viewModel.defaultNoteColor.setValue(0xff424242);
+
+            lightColorTextColor = 0xff000000;
+            viewModel.lightColorTextColor.setValue(0xff000000);
+
+            lightColorIconColor = 0xff000000;
+            viewModel.lightColorIconColor.setValue(0xff000000);
+
+            darkColorTextColor = 0xffffffff;
+            viewModel.darkColorTextColor.setValue(0xffffffff);
+
+            darkColorIconColor = 0xffffffff;
+            viewModel.darkColorIconColor.setValue(0xffffffff);
+
+            dark = true;
+
+            seekBarColor = 0xffffffff;
+            viewModel.seekBarColor.setValue(0xffffffff);
+
+            seekBarThumbColor = 0xffffffff;
+            viewModel.seekBarThumbColor.setValue(0xffffffff);
+
+            shadows = 0.0f;
+        } else if (theme.equals(LIGHT_BLUE)) {
+            background = 0xffffffff;
+            viewModel.background.setValue(0xffffffff);
+
+            statusBarColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 0xffffffff : Color.GRAY;
+            viewModel.statusBarColor.setValue(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 0xffffffff : Color.GRAY);
+
+            navBarColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? 0xffffffff : 0xff000000;
+            viewModel.navBarColor.setValue(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? 0xffffffff : 0xff000000);
+
+            textColor = 0xff000000;
+            viewModel.textColor.setValue(0xff000000);
+
+            accentColor = 0xff64B5F6;
+            viewModel.accentColor.setValue(0xff64B5F6);
+
+            iconsColor = 0xff000000;
+            viewModel.iconsColor.setValue(0xff000000);
+
+            textHintColor = 0xff808080;
+            viewModel.textHintColor.setValue(0xff808080);
+
+            toolbarColor = 0xffffffff;
+            viewModel.toolbarColor.setValue(0xffffffff);
+
+            toolbarTextColor = 0xff000000;
+            viewModel.toolbarTextColor.setValue(0xff000000);
+
+            fabColor = 0xff64B5F6;
+            viewModel.fabColor.setValue(0xff64B5F6);
+
+            fabIconColor = 0xffffffff;
+            viewModel.fabIconColor.setValue(0xffffffff);
+
+            defaultNoteColor = 0xffffffff;
+            viewModel.defaultNoteColor.setValue(0xffffffff);
+
+            lightColorTextColor = 0xff000000;
+            viewModel.lightColorTextColor.setValue(0xff000000);
+
+            lightColorIconColor = 0xff000000;
+            viewModel.lightColorIconColor.setValue(0xff000000);
+
+            darkColorTextColor = 0xffffffff;
+            viewModel.darkColorTextColor.setValue(0xffffffff);
+
+            darkColorIconColor = 0xffffffff;
+            viewModel.darkColorIconColor.setValue(0xffffffff);
+
+            dark = false;
+
+            seekBarColor = 0xff64B5F6;
+            viewModel.seekBarColor.setValue(0xff64B5F6);
+
+            seekBarThumbColor = 0xff64B5F6;
+            viewModel.seekBarThumbColor.setValue(0xff64B5F6);
+
+            shadows = 10.0f;
+        } else if (theme.equals(ThemesEngine.LIGHT_ORANGE)) {
+            background = 0xffffffff;
+            viewModel.background.setValue(0xffffffff);
+
+            statusBarColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 0xffffffff : Color.GRAY;
+            viewModel.statusBarColor.setValue(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 0xffffffff : Color.GRAY);
+
+            navBarColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? 0xffffffff : 0xff000000;
+            viewModel.navBarColor.setValue(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? 0xffffffff : 0xff000000);
+
+            textColor = 0xff000000;
+            viewModel.textColor.setValue(0xff000000);
+
+            accentColor = 0xffffaa00;
+            viewModel.accentColor.setValue(0xffffaa00);
+
+            iconsColor = 0xff000000;
+            viewModel.iconsColor.setValue(0xff000000);
+
+            textHintColor = 0xff808080;
+            viewModel.textHintColor.setValue(0xff808080);
+
+            toolbarColor = 0xffffffff;
+            viewModel.toolbarColor.setValue(0xffffffff);
+
+            toolbarTextColor = 0xff000000;
+            viewModel.toolbarTextColor.setValue(0xff000000);
+
+            fabColor = 0xffffaa00;
+            viewModel.fabColor.setValue(0xffffaa00);
+
+            fabIconColor = 0xffffffff;
+            viewModel.fabIconColor.setValue(0xffffffff);
+
+            defaultNoteColor = 0xffffffff;
+            viewModel.defaultNoteColor.setValue(0xffffffff);
+
+            lightColorTextColor = 0xff000000;
+            viewModel.lightColorTextColor.setValue(0xff000000);
+
+            lightColorIconColor = 0xff000000;
+            viewModel.lightColorIconColor.setValue(0xff000000);
+
+            darkColorTextColor = 0xffffffff;
+            viewModel.darkColorTextColor.setValue(0xffffffff);
+
+            darkColorIconColor = 0xffffffff;
+            viewModel.darkColorIconColor.setValue(0xffffffff);
+
+            dark = false;
+
+            seekBarColor = 0xffffaa00;
+            viewModel.seekBarColor.setValue(0xffffaa00);
+
+            seekBarThumbColor = 0xffffaa00;
+            viewModel.seekBarThumbColor.setValue(0xffffaa00);
+
+            shadows = 10.0f;
+        }
+    }
 
     public void importTheme(Uri uri, AppCompatActivity activity) {
         ThemingViewModel viewModel = ViewModelProviders.of(activity).get(ThemingViewModel.class);
@@ -90,6 +272,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.background.setValue(Color.parseColor(jsonObject.getString("background")));
+                background = Color.parseColor(jsonObject.getString("background"));
                 viewModel.background.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -102,6 +285,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.statusBarColor.setValue(Color.parseColor(jsonObject.getString("status_bar_color")));
+                statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
                 viewModel.statusBarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -114,6 +298,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.textColor.setValue(Color.parseColor(jsonObject.getString("text_color")));
+                textColor = Color.parseColor(jsonObject.getString("text_color"));
                 viewModel.textColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -126,6 +311,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.accentColor.setValue(Color.parseColor(jsonObject.getString("accent")));
+                accentColor = Color.parseColor(jsonObject.getString("accent"));
                 viewModel.accentColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -138,6 +324,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.navBarColor.setValue(Color.parseColor(jsonObject.getString("nav_color")));
+                navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
                 viewModel.navBarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -150,6 +337,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.iconsColor.setValue(Color.parseColor(jsonObject.getString("icons_color")));
+                iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
                 viewModel.iconsColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -162,6 +350,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.textHintColor.setValue(Color.parseColor(jsonObject.getString("hint_color")));
+                textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
                 viewModel.textHintColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -180,6 +369,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.toolbarColor.setValue(Color.parseColor(jsonObject.getString("toolbar_color")));
+                toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
                 viewModel.toolbarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -192,6 +382,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.toolbarTextColor.setValue(Color.parseColor(jsonObject.getString("toolbar_text_color")));
+                toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
                 viewModel.toolbarTextColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -204,6 +395,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.fabColor.setValue(Color.parseColor(jsonObject.getString("fab_color")));
+                fabColor = Color.parseColor(jsonObject.getString("fab_color"));
                 viewModel.fabColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -216,6 +408,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.fabIconColor.setValue(Color.parseColor(jsonObject.getString("fab_icon_color")));
+                fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
                 viewModel.fabIconColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -228,6 +421,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.defaultNoteColor.setValue(Color.parseColor(jsonObject.getString("default_note_color")));
+                defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
                 viewModel.defaultNoteColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -240,6 +434,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.lightColorTextColor.setValue(Color.parseColor(jsonObject.getString("lightColorTextColor")));
+                lightColorTextColor = Color.parseColor(jsonObject.getString("lightColorTextColor"));
                 viewModel.lightColorTextColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -252,6 +447,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.darkColorTextColor.setValue(Color.parseColor(jsonObject.getString("darkColorTextColor")));
+                darkColorTextColor = Color.parseColor(jsonObject.getString("darkColorTextColor"));
                 viewModel.darkColorTextColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -264,6 +460,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.lightColorIconColor.setValue(Color.parseColor(jsonObject.getString("lightColorIconColor")));
+                lightColorIconColor = Color.parseColor(jsonObject.getString("lightColorIconColor"));
                 viewModel.lightColorIconColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -276,6 +473,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.darkColorIconColor.setValue(Color.parseColor(jsonObject.getString("darkColorIconColor")));
+                darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
                 viewModel.darkColorIconColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -288,6 +486,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.seekBarColor.setValue(Color.parseColor(jsonObject.getString("seekbar_color")));
+                seekBarColor = Color.parseColor(jsonObject.getString("seekbar_color"));
                 viewModel.seekBarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -300,6 +499,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.seekBarThumbColor.setValue(Color.parseColor(jsonObject.getString("seekbar_thumb_color")));
+                seekBarThumbColor = Color.parseColor(jsonObject.getString("seekbar_thumb_color"));
                 viewModel.seekBarThumbColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -432,8 +632,9 @@ public class ThemesEngine {
                 }
             } catch (IOException e) {
                 Logger.log(e);
-
-                PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
+                setupStockTheme(PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("path_theme", ThemesEngine.LIGHT_BLUE), activity);
+                return;
+                //PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
             }
 
             JSONObject jsonObject = null;
@@ -448,6 +649,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.background.setValue(Color.parseColor(jsonObject.getString("background")));
+                background = Color.parseColor(jsonObject.getString("background"));
                 viewModel.background.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -460,6 +662,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.statusBarColor.setValue(Color.parseColor(jsonObject.getString("status_bar_color")));
+                statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
                 viewModel.statusBarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -472,6 +675,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.textColor.setValue(Color.parseColor(jsonObject.getString("text_color")));
+                textColor = Color.parseColor(jsonObject.getString("text_color"));
                 viewModel.textColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -484,6 +688,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.accentColor.setValue(Color.parseColor(jsonObject.getString("accent")));
+                accentColor = Color.parseColor(jsonObject.getString("accent"));
                 viewModel.accentColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -496,6 +701,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.navBarColor.setValue(Color.parseColor(jsonObject.getString("nav_color")));
+                navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
                 viewModel.navBarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -508,6 +714,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.iconsColor.setValue(Color.parseColor(jsonObject.getString("icons_color")));
+                iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
                 viewModel.iconsColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -520,6 +727,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.textHintColor.setValue(Color.parseColor(jsonObject.getString("hint_color")));
+                textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
                 viewModel.textHintColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -538,6 +746,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.toolbarColor.setValue(Color.parseColor(jsonObject.getString("toolbar_color")));
+                toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
                 viewModel.toolbarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -550,6 +759,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.toolbarTextColor.setValue(Color.parseColor(jsonObject.getString("toolbar_text_color")));
+                toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
                 viewModel.toolbarTextColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -562,6 +772,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.fabColor.setValue(Color.parseColor(jsonObject.getString("fab_color")));
+                fabColor = Color.parseColor(jsonObject.getString("fab_color"));
                 viewModel.fabColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -574,6 +785,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.fabIconColor.setValue(Color.parseColor(jsonObject.getString("fab_icon_color")));
+                fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
                 viewModel.fabIconColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -586,6 +798,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.defaultNoteColor.setValue(Color.parseColor(jsonObject.getString("default_note_color")));
+                defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
                 viewModel.defaultNoteColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -598,6 +811,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.lightColorTextColor.setValue(Color.parseColor(jsonObject.getString("lightColorTextColor")));
+                lightColorTextColor = Color.parseColor(jsonObject.getString("lightColorTextColor"));
                 viewModel.lightColorTextColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -610,6 +824,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.darkColorTextColor.setValue(Color.parseColor(jsonObject.getString("darkColorTextColor")));
+                darkColorTextColor = Color.parseColor(jsonObject.getString("darkColorTextColor"));
                 viewModel.darkColorTextColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -622,6 +837,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.lightColorIconColor.setValue(Color.parseColor(jsonObject.getString("lightColorIconColor")));
+                lightColorIconColor = Color.parseColor(jsonObject.getString("lightColorIconColor"));
                 viewModel.lightColorIconColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -634,6 +850,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.darkColorIconColor.setValue(Color.parseColor(jsonObject.getString("darkColorIconColor")));
+                darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
                 viewModel.darkColorIconColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -646,6 +863,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.seekBarColor.setValue(Color.parseColor(jsonObject.getString("seekbar_color")));
+                seekBarColor = Color.parseColor(jsonObject.getString("seekbar_color"));
                 viewModel.seekBarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -658,6 +876,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.seekBarThumbColor.setValue(Color.parseColor(jsonObject.getString("seekbar_thumb_color")));
+                seekBarThumbColor = Color.parseColor(jsonObject.getString("seekbar_thumb_color"));
                 viewModel.seekBarThumbColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -666,12 +885,6 @@ public class ThemesEngine {
                 });
             } catch (Exception e) {
                 seekBarThumbColor = 0xff888888;
-            }
-
-            try {
-                shadows = Float.parseFloat(jsonObject.getString("shadows"));
-            } catch (Exception e) {
-                shadows = 1.0f;
             }
 
         } catch (Exception e) {
@@ -709,6 +922,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.background.setValue(Color.parseColor(jsonObject.getString("background")));
+                background = Color.parseColor(jsonObject.getString("background"));
                 viewModel.background.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -721,6 +935,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.statusBarColor.setValue(Color.parseColor(jsonObject.getString("status_bar_color")));
+                statusBarColor = Color.parseColor(jsonObject.getString("status_bar_color"));
                 viewModel.statusBarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -733,6 +948,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.textColor.setValue(Color.parseColor(jsonObject.getString("text_color")));
+                textColor = Color.parseColor(jsonObject.getString("text_color"));
                 viewModel.textColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -745,6 +961,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.accentColor.setValue(Color.parseColor(jsonObject.getString("accent")));
+                accentColor = Color.parseColor(jsonObject.getString("accent"));
                 viewModel.accentColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -757,6 +974,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.navBarColor.setValue(Color.parseColor(jsonObject.getString("nav_color")));
+                navBarColor = Color.parseColor(jsonObject.getString("nav_color"));
                 viewModel.navBarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -769,6 +987,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.iconsColor.setValue(Color.parseColor(jsonObject.getString("icons_color")));
+                iconsColor = Color.parseColor(jsonObject.getString("icons_color"));
                 viewModel.iconsColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -781,6 +1000,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.textHintColor.setValue(Color.parseColor(jsonObject.getString("hint_color")));
+                textHintColor = Color.parseColor(jsonObject.getString("hint_color"));
                 viewModel.textHintColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -799,6 +1019,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.toolbarColor.setValue(Color.parseColor(jsonObject.getString("toolbar_color")));
+                toolbarColor = Color.parseColor(jsonObject.getString("toolbar_color"));
                 viewModel.toolbarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -811,6 +1032,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.toolbarTextColor.setValue(Color.parseColor(jsonObject.getString("toolbar_text_color")));
+                toolbarTextColor = Color.parseColor(jsonObject.getString("toolbar_text_color"));
                 viewModel.toolbarTextColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -823,6 +1045,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.fabColor.setValue(Color.parseColor(jsonObject.getString("fab_color")));
+                fabColor = Color.parseColor(jsonObject.getString("fab_color"));
                 viewModel.fabColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -835,6 +1058,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.fabIconColor.setValue(Color.parseColor(jsonObject.getString("fab_icon_color")));
+                fabIconColor = Color.parseColor(jsonObject.getString("fab_icon_color"));
                 viewModel.fabIconColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -847,6 +1071,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.defaultNoteColor.setValue(Color.parseColor(jsonObject.getString("default_note_color")));
+                defaultNoteColor = Color.parseColor(jsonObject.getString("default_note_color"));
                 viewModel.defaultNoteColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -859,6 +1084,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.lightColorTextColor.setValue(Color.parseColor(jsonObject.getString("lightColorTextColor")));
+                lightColorTextColor = Color.parseColor(jsonObject.getString("lightColorTextColor"));
                 viewModel.lightColorTextColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -871,6 +1097,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.darkColorTextColor.setValue(Color.parseColor(jsonObject.getString("darkColorTextColor")));
+                darkColorTextColor = Color.parseColor(jsonObject.getString("darkColorTextColor"));
                 viewModel.darkColorTextColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -883,6 +1110,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.lightColorIconColor.setValue(Color.parseColor(jsonObject.getString("lightColorIconColor")));
+                lightColorIconColor = Color.parseColor(jsonObject.getString("lightColorIconColor"));
                 viewModel.lightColorIconColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -895,6 +1123,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.darkColorIconColor.setValue(Color.parseColor(jsonObject.getString("darkColorIconColor")));
+                darkColorIconColor = Color.parseColor(jsonObject.getString("darkColorIconColor"));
                 viewModel.darkColorIconColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -907,6 +1136,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.seekBarColor.setValue(Color.parseColor(jsonObject.getString("seekbar_color")));
+                seekBarColor = Color.parseColor(jsonObject.getString("seekbar_color"));
                 viewModel.seekBarColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -919,6 +1149,7 @@ public class ThemesEngine {
 
             try {
                 viewModel.seekBarThumbColor.setValue(Color.parseColor(jsonObject.getString("seekbar_thumb_color")));
+                seekBarThumbColor = Color.parseColor(jsonObject.getString("seekbar_thumb_color"));
                 viewModel.seekBarThumbColor.observe(activity, new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -927,12 +1158,6 @@ public class ThemesEngine {
                 });
             } catch (Exception e) {
                 seekBarThumbColor = 0xff888888;
-            }
-
-            try {
-                shadows = Float.parseFloat(jsonObject.getString("shadows"));
-            } catch (Exception e) {
-                shadows = 1.0f;
             }
 
             if (dark) {

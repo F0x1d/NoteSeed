@@ -16,6 +16,22 @@
         android:title="@string/pin_in_status_bar"
         android:id="@+id/pin_status"/>
     <item
+        android:title="@string/formatting">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/bold"
+                    android:title="@string/bold"/>
+                <item
+                    android:id="@+id/italic"
+                    android:title="@string/italic"/>
+                <item
+                    android:id="@+id/link"
+                    android:title="@string/link"/>
+            </group>
+        </menu>
+    </item>
+    <item
         android:title="@string/settings"
         android:id="@+id/settings"/>
 </menu>

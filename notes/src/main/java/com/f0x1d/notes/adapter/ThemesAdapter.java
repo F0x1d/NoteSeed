@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,42 +150,39 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
 
     private void cardClick(int position) {
         if (position == 0) {
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", false).apply();
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("change", true).apply();
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("orange", false).apply();
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
-
-            Intent i = activity.getBaseContext().getPackageManager().
-                    getLaunchIntentForPackage(activity.getBaseContext().getPackageName());
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(i);
-            activity.finish();
+            new ThemesEngine().setupStockTheme(ThemesEngine.LIGHT_BLUE, (AppCompatActivity) activity);
+            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putString("path_theme", ThemesEngine.LIGHT_BLUE).apply();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    activity.getWindow().getDecorView().setSystemUiVisibility(activity.getWindow().getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                }
+            }
         } else if (position == 1) {
-            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("night", false).apply();
-            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("change", true).apply();
-            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("orange", true).apply();
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
-
-            Intent i = activity.getBaseContext().getPackageManager().
-                    getLaunchIntentForPackage(activity.getBaseContext().getPackageName());
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(i);
-            activity.finish();
+            new ThemesEngine().setupStockTheme(ThemesEngine.LIGHT_ORANGE, (AppCompatActivity) activity);
+            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putString("path_theme", ThemesEngine.LIGHT_ORANGE).apply();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    activity.getWindow().getDecorView().setSystemUiVisibility(activity.getWindow().getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                }
+            }
         } else if (position == 2) {
-            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("night", true).apply();
-            PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("change", true).apply();
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
-
-            Intent i = activity.getBaseContext().getPackageManager().
-                    getLaunchIntentForPackage(activity.getBaseContext().getPackageName());
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(i);
-            activity.finish();
+            new ThemesEngine().setupStockTheme(ThemesEngine.DARK, (AppCompatActivity) activity);
+            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putString("path_theme", ThemesEngine.DARK).apply();
+            activity.getWindow().getDecorView().setSystemUiVisibility(0);
         } else {
             new ThemesEngine().setTheme(themes.get(position).theme_file, (AppCompatActivity) activity);
+            if (ThemesEngine.dark)
+                activity.getWindow().getDecorView().setSystemUiVisibility(0);
+            else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        activity.getWindow().getDecorView().setSystemUiVisibility(activity.getWindow().getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                    }
+                }
+            }
         }
     }
 

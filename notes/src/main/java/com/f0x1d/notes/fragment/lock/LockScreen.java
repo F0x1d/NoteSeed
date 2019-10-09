@@ -5,6 +5,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -69,14 +70,13 @@ public class LockScreen extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.screen_lock, container, false);
-
-        ((TextView) view.findViewById(R.id.textView5)).setText(getString(R.string.pass));
-
         if (UselessUtils.ifCustomTheme()) {
             getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
             getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
             getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
+
+        ((TextView) view.findViewById(R.id.textView5)).setText(getString(R.string.pass));
 
         MyButton odin = view.findViewById(R.id.odin);
         MyButton dva = view.findViewById(R.id.dva);
@@ -169,7 +169,7 @@ public class LockScreen extends Fragment {
 
         swirlView.setState(SwirlView.State.ON, true);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)) {
+        /*if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)) {
             odin.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             dva.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             tri.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
@@ -181,7 +181,7 @@ public class LockScreen extends Fragment {
             devat.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             nol.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
             back.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-        }
+        }*/
 
         pass.addTextChangedListener(new TextWatcher() {
             @Override

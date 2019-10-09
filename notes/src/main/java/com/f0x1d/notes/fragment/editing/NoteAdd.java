@@ -86,6 +86,8 @@ public class NoteAdd extends Fragment {
     List<NoteItem> noteItems;
     private String currentPhotoPath;
 
+    public NoteItemsAdapter adapter;
+
     public static NoteAdd newInstance(String in_folder_id) {
 
         Bundle args = new Bundle();
@@ -173,8 +175,6 @@ public class NoteAdd extends Fragment {
         title.setHint(getString(R.string.title));
         title.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));
 
-        UselessUtils.showKeyboard(title, getActivity());
-
         recyclerView = view.findViewById(R.id.recyclerView);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -190,8 +190,7 @@ public class NoteAdd extends Fragment {
             }
         }
 
-        NoteItemsAdapter adapter = new NoteItemsAdapter(noteItems, getActivity(), this);
-
+        adapter = new NoteItemsAdapter(noteItems, getActivity(), this, true);
         recyclerView.setAdapter(adapter);
 
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
@@ -484,6 +483,34 @@ public class NoteAdd extends Fragment {
                 pinned = true;
 
                 getActivity().getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("note " + rowID, true).apply();
+                break;
+            case R.id.bold:
+                if (!adapter.applyFormat("bold", null))
+                    Toast.makeText(requireContext(), R.string.pls_select_text, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.italic:
+                if (!adapter.applyFormat("italic", null))
+                    Toast.makeText(requireContext(), R.string.pls_select_text, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.link:
+                if (!adapter.hasSelection()) {
+                    Toast.makeText(requireContext(), R.string.pls_select_text, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                View editTextView = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_edit_text, null);
+                ((EditText) editTextView.findViewById(R.id.edit_text)).setHint(R.string.link);
+
+                MaterialAlertDialogBuilder alertBuilder = new MaterialAlertDialogBuilder(requireActivity());
+                alertBuilder.setTitle(R.string.enter_link);
+                alertBuilder.setView(editTextView);
+                alertBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.applyFormat("link", ((EditText) editTextView.findViewById(R.id.edit_text)).getText().toString());
+                    }
+                });
+                ShowAlertDialog.show(alertBuilder);
                 break;
         }
 
