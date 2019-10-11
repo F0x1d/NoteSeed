@@ -75,6 +75,7 @@ import static com.f0x1d.notes.fragment.editing.NoteEdit.last_pos;
 
 public class NoteAdd extends Fragment {
 
+    public NoteItemsAdapter adapter;
     String id;
     boolean pinned = false;
     EditText title;
@@ -85,8 +86,6 @@ public class NoteAdd extends Fragment {
     CenteredToolbar toolbar;
     List<NoteItem> noteItems;
     private String currentPhotoPath;
-
-    public NoteItemsAdapter adapter;
 
     public static NoteAdd newInstance(String in_folder_id) {
 

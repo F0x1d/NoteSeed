@@ -14,7 +14,6 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,6 @@ import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.view.theming.MyEditText;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,15 +58,14 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int FILE = 3;
 
     public boolean editMode = false;
+    public boolean openedKeyboard = false;
+    public MyEditText firstEditText;
     List<NoteItem> noteItems;
     Activity activity;
     NoteItemsDao dao;
     TextWatcher textWatcher = null;
     Fragment fragment;
-
     List<EditText> editTexts = new ArrayList<>();
-
-    public boolean openedKeyboard = false;
     private boolean openKeyboard;
 
     public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity, Fragment fragment, boolean openKeyboard) {
@@ -361,8 +358,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         formattedText = "<a href=\"" + link + "\">" + text.substring(editText.getSelectionStart(), editText.getSelectionEnd()) + "</a>";
                         break;
 
-                        default:
-                            formattedText = text.substring(editText.getSelectionStart(), editText.getSelectionEnd());
+                    default:
+                        formattedText = text.substring(editText.getSelectionStart(), editText.getSelectionEnd());
                 }
 
                 StringBuilder stringBuilder = new StringBuilder();
@@ -377,8 +374,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
         return false;
     }
-
-    public MyEditText firstEditText;
 
     private void setupText(textViewHolder holder, int position) {
         textWatcher = new TextWatcher() {

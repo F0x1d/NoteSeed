@@ -24,7 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;

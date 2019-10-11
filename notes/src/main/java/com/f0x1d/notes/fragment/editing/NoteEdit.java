@@ -72,6 +72,7 @@ import java.util.List;
 public class NoteEdit extends Fragment {
 
     public static int last_pos;
+    public NoteItemsAdapter adapter;
     EditText title;
     RecyclerView recyclerView;
     String id_str;
@@ -83,12 +84,9 @@ public class NoteEdit extends Fragment {
     CenteredToolbar toolbar;
     List<NoteItem> noteItems;
     Bundle args;
-
     private boolean editMode = false;
     private boolean pinned = false;
     private String currentPhotoPath;
-
-    public NoteItemsAdapter adapter;
 
     public static NoteEdit newInstance(Bundle args) {
         NoteEdit myFragment = new NoteEdit();

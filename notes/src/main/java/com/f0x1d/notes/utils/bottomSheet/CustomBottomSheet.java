@@ -61,7 +61,11 @@ public class CustomBottomSheet extends BottomSheetDialogFragment {
 
         if (getArguments() == null)
             return;
-        recyclerView.setAdapter(new BottomSheetItemsAdapter((List<Element>) getArguments().getSerializable("elems")));
+        try {
+            recyclerView.setAdapter(new BottomSheetItemsAdapter((List<Element>) getArguments().getSerializable("elems")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         dialog.setContentView(v);
     }

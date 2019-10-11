@@ -1,7 +1,6 @@
 package com.f0x1d.notes.utils.theme;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 public class ThemingViewModel extends ViewModel {

@@ -8,7 +8,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -58,10 +57,9 @@ import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
 public class MainActivity extends AppCompatActivity {
 
     public static MainActivity instance;
+    public ThemingViewModel viewModel;
     private GoogleSignInClient mGoogleSignInClient;
     private CustomResources resources;
-
-    public ThemingViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

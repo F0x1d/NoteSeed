@@ -8,7 +8,6 @@ import android.content.ServiceConnection;
 import android.os.Environment;
 import android.os.IBinder;
 
-import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 

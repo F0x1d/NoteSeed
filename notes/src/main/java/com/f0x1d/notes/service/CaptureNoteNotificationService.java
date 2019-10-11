@@ -50,8 +50,8 @@ public class CaptureNoteNotificationService extends Service {
                     .build();
 
             action = new NotificationCompat.Action.Builder(0, getString(R.string.capture_note_notification_action),
-                            PendingIntent.getBroadcast(this, 1, new Intent(this, CaptureNoteReceiver.class), 0))
-                            .addRemoteInput(remoteInput).build();
+                    PendingIntent.getBroadcast(this, 1, new Intent(this, CaptureNoteReceiver.class), 0))
+                    .addRemoteInput(remoteInput).build();
         } else {
             action = new NotificationCompat.Action.Builder(0, getString(R.string.capture_note_notification_action),
                     PendingIntent.getActivity(this, 1000, new Intent(this, MainActivity.class)
