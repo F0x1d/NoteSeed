@@ -152,6 +152,8 @@ public class SyncSettings extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null) {
+                    SyncUtils.export();
+
                     ProgressDialog dialog = new ProgressDialog(getActivity());
                     dialog.setMessage("Loading...");
                     dialog.setCancelable(false);
@@ -230,7 +232,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "error: " + e, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                             dialog1.cancel();
                         }
                     });

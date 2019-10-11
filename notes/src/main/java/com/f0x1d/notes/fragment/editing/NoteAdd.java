@@ -493,7 +493,7 @@ public class NoteAdd extends Fragment {
                     Toast.makeText(requireContext(), R.string.pls_select_text, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.link:
-                if (!adapter.hasSelection()) {
+                if (!adapter.hasAnySelection()) {
                     Toast.makeText(requireContext(), R.string.pls_select_text, Toast.LENGTH_SHORT).show();
                     break;
                 }

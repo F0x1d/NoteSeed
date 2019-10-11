@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.view.theming.MyEditText;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,6 +178,21 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 break;
             }
         }
+
+        try {
+            editTexts.remove(position);
+        } catch (Exception e) {
+
+        }
+        editTexts.add(holder.editText);
+
+        if (getItemCount() != 1) {
+            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
+            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                firstEditText.setLayoutParams(layoutParams);
+            }
+        }
     }
 
     private String getFileNameFromUri(Uri uri) {
@@ -278,7 +295,20 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         holder.editText.addTextChangedListener(textWatcher);
 
+        try {
+            editTexts.remove(position);
+        } catch (Exception e) {
+
+        }
         editTexts.add(holder.editText);
+
+        if (getItemCount() != 1) {
+            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
+            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                firstEditText.setLayoutParams(layoutParams);
+            }
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -293,12 +323,21 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             options.fitCenter();
 
         Glide.with(getContext()).load(noteItems.get(position).pic_res).apply(options).into(holder.image);
+
+        if (getItemCount() != 1) {
+            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
+            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                firstEditText.setLayoutParams(layoutParams);
+            }
+        }
     }
 
-    public boolean hasSelection() {
+    public boolean hasAnySelection() {
         for (EditText editText : editTexts) {
-            if (editText != null && editText.hasSelection())
+            if (editText != null && editText.hasSelection()) {
                 return true;
+            }
         }
         return false;
     }
@@ -338,6 +377,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
         return false;
     }
+
+    public MyEditText firstEditText;
 
     private void setupText(textViewHolder holder, int position) {
         textWatcher = new TextWatcher() {
@@ -379,6 +420,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (noteItem.id == noteItems.get(position).id) {
                 if (editMode) {
                     holder.editText.setText(getText(noteItems.get(position).id));
+                    holder.editText.setFocusableInTouchMode(true);
+                    holder.editText.setFocusable(true);
                     holder.editText.setOnClickListener(null);
                 } else {
                     holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
@@ -405,7 +448,27 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         holder.editText.addTextChangedListener(textWatcher);
 
+        try {
+            editTexts.remove(position);
+        } catch (Exception e) {
+
+        }
         editTexts.add(holder.editText);
+
+        if (position == 0)
+            firstEditText = holder.editText;
+
+        if (getItemCount() == 1 && position == 0) {
+            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            firstEditText.setLayoutParams(layoutParams);
+        } else {
+            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
+            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                firstEditText.setLayoutParams(layoutParams);
+            }
+        }
     }
 
     public void setEditing(boolean editing) {

@@ -30,7 +30,7 @@ public class Logger {
             String time = df.format(currentDate);
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, true));
-            writer.write("[TIME:" + time + "] " + stackTrace + "\n");
+            writer.write("[TIME:" + time + "] [CRASH] " + stackTrace + "\n");
             writer.flush();
             writer.close();
         } catch (IOException ex) {
