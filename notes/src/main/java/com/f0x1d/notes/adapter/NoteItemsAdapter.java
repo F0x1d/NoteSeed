@@ -467,7 +467,11 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
             if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
                 layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                firstEditText.setLayoutParams(layoutParams);
+                try {
+                    firstEditText.setLayoutParams(layoutParams);
+                } catch (Exception e) {
+                }
+                holder.editText.setLayoutParams(layoutParams);
             }
         }
     }

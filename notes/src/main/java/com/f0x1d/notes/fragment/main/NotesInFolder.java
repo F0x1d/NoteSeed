@@ -190,7 +190,7 @@ public class NotesInFolder extends Fragment {
 
             @Override
             public boolean isLongPressDragEnabled() {
-                return true;
+                return false;
             }
 
             @Override

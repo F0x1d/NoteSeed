@@ -580,8 +580,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.time.setText("Error");
         }
 
-        BetterLinkMovementMethod.linkify(Linkify.ALL, holder.text);
-
         if (!ableToMove) {
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -591,7 +589,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
             });
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.note_card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle args = new Bundle();

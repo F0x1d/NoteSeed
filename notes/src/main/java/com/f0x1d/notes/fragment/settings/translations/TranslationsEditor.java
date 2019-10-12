@@ -138,6 +138,10 @@ public class TranslationsEditor extends Fragment {
     }
 
     public void save() {
+        if (adapter.getTranslations().isEmpty()) {
+            requireActivity().getSupportFragmentManager().popBackStack();
+            return;
+        }
         if (translationToEdit == null) {
             File file = new File(new File("data/data/" + getContext().getPackageName() + "/files/translations"), System.currentTimeMillis() + " translation.txt");
             try {
@@ -166,7 +170,7 @@ public class TranslationsEditor extends Fragment {
                 Translations.setCurrentTranslation(file);
                 restart();
 
-                MainActivity.instance.getSupportFragmentManager().popBackStack();
+                //MainActivity.instance.getSupportFragmentManager().popBackStack();
             } catch (IOException | IncorrectTranslationError e) {
                 Logger.log(e);
             }
