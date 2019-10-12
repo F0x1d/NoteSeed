@@ -102,26 +102,7 @@ public class MyEditText extends EditText {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean b = super.onTouchEvent(event);
-
-        int x = (int) event.getX();
-        int y = (int) event.getY();
-
-        x -= getTotalPaddingLeft();
-        y -= getTotalPaddingTop();
-
-        x += getScrollX();
-        y += getScrollY();
-
-        Layout layout = getLayout();
-        int line = layout.getLineForVertical(y);
-        int off = layout.getOffsetForHorizontal(line, x);
-
-        setSelection(off);
-
-        ImageSpan[] link = getText().getSpans(off, off, ImageSpan.class);
-        if (link.length != 0)
-            return true;
-        return b;
+        super.onTouchEvent(event);
+        return true;
     }
 }

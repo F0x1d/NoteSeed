@@ -74,13 +74,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private final int NOTE = 1;
     private final int FOLDER = 2;
     private final int NOTIFY = 3;
+    public boolean ableToMove;
+    public ItemTouchHelper touchHelper;
     List<NoteOrFolder> items;
     Activity activity;
     private boolean anim;
-
-    public boolean ableToMove;
-    public ItemTouchHelper touchHelper;
-
     private NoteOrFolderDao dao;
 
     public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim, boolean ableToMove, ItemTouchHelper touchHelper) {
@@ -185,50 +183,41 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.title.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
-                } else {
-                    holder.title.setTextColor(Color.BLACK);
-                    holder.text.setTextColor(Color.BLACK);
-                    holder.notify_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp));
+                holder.title.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.text.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
+                } catch (Exception e) {
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.title.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.darkColorIconColor));
-                } else {
-                    holder.title.setTextColor(Color.WHITE);
-                    holder.text.setTextColor(Color.WHITE);
-                    holder.notify_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp));
+                holder.title.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.text.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.darkColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
+                } catch (Exception e) {
                 }
             }
         } catch (Exception e) {
-            if (UselessUtils.ifCustomTheme()) {
-                holder.cardView.setCardBackgroundColor(Color.BLACK);
-            }
+
+            holder.cardView.setCardBackgroundColor(Color.BLACK);
 
             if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.title.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
-                } else {
-                    holder.title.setTextColor(Color.BLACK);
-                    holder.text.setTextColor(Color.BLACK);
-                    holder.notify_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp));
+                holder.title.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.text.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
+                } catch (Exception ex) {
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.title.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.darkColorIconColor));
-                } else {
-                    holder.title.setTextColor(Color.WHITE);
-                    holder.text.setTextColor(Color.WHITE);
-                    holder.notify_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp));
+                holder.title.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.text.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.darkColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
+                } catch (Exception ex) {
                 }
             }
         }
@@ -379,42 +368,36 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.name.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                } else {
-                    holder.name.setTextColor(Color.BLACK);
-                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
+                holder.name.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
+                } catch (Exception e) {
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.name.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                } else {
-                    holder.name.setTextColor(Color.WHITE);
-                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
+                holder.name.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
+                } catch (Exception e) {
                 }
             }
         } catch (Exception e) {
-            if (UselessUtils.ifCustomTheme()) {
-                holder.cardView.setCardBackgroundColor(Color.BLACK);
-            }
+            holder.cardView.setCardBackgroundColor(Color.BLACK);
 
             if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.name.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                } else {
-                    holder.name.setTextColor(Color.BLACK);
-                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
+                holder.name.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
+                } catch (Exception ex) {
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.name.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                } else {
-                    holder.name.setTextColor(Color.WHITE);
-                    holder.folder_image.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
+                holder.name.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
+                } catch (Exception ex) {
                 }
             }
         }
@@ -511,58 +494,44 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.note_card.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.title.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.time.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_black_24dp), ThemesEngine.lightColorIconColor));
-                } else {
-                    holder.title.setTextColor(Color.BLACK);
-                    holder.text.setTextColor(Color.BLACK);
-                    holder.time.setTextColor(Color.BLACK);
-                    holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
+                holder.title.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.text.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.time.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_black_24dp), ThemesEngine.lightColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
+                } catch (Exception e) {
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.title.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.time.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_white_24dp), ThemesEngine.darkColorIconColor));
-                } else {
-                    holder.title.setTextColor(Color.WHITE);
-                    holder.text.setTextColor(Color.WHITE);
-                    holder.time.setTextColor(Color.WHITE);
-                    holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
+                holder.title.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.text.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.time.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_white_24dp), ThemesEngine.darkColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
+                } catch (Exception e) {
                 }
             }
         } catch (Exception e) {
-            if (UselessUtils.ifCustomTheme()) {
-                holder.note_card.setCardBackgroundColor(Color.BLACK);
-            }
+            holder.note_card.setCardBackgroundColor(Color.BLACK);
 
             if (UselessUtils.ifBrightColor(holder.note_card.getCardBackgroundColor().getDefaultColor())) {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.title.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.time.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_black_24dp), ThemesEngine.lightColorIconColor));
-                } else {
-                    holder.title.setTextColor(Color.BLACK);
-                    holder.text.setTextColor(Color.BLACK);
-                    holder.time.setTextColor(Color.BLACK);
-                    holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
+                holder.title.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.text.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.time.setTextColor(ThemesEngine.lightColorTextColor);
+                holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_black_24dp), ThemesEngine.lightColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
+                } catch (Exception ex) {
                 }
             } else {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.title.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.time.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_white_24dp), ThemesEngine.darkColorIconColor));
-                } else {
-                    holder.title.setTextColor(Color.WHITE);
-                    holder.time.setTextColor(Color.WHITE);
-                    holder.text.setTextColor(Color.WHITE);
-                    holder.time_pic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
+                holder.title.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.text.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.time.setTextColor(ThemesEngine.darkColorTextColor);
+                holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_white_24dp), ThemesEngine.darkColorIconColor));
+                try {
+                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
+                } catch (Exception ex) {
                 }
             }
         }
