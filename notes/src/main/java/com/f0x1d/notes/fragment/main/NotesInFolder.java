@@ -106,7 +106,6 @@ public class NotesInFolder extends Fragment {
         toolbar.goAnim(in_folder_id);
         toolbar.inflateMenu(R.menu.in_folder_menu);
         toolbar.getMenu().findItem(R.id.root).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        toolbar.getMenu().findItem(R.id.settings).setTitle(getString(R.string.settings));
 
         if (UselessUtils.getBool("night", false)) {
             if (UselessUtils.ifCustomTheme()) {
@@ -163,7 +162,7 @@ public class NotesInFolder extends Fragment {
             recyclerView.setLayoutManager(llm);
         }
 
-        adapter = new ItemsAdapter(allList, getActivity(), true);
+        adapter = new ItemsAdapter(allList, getActivity(), true, false);
 
         recyclerView.setAdapter(adapter);
 
@@ -375,9 +374,6 @@ public class NotesInFolder extends Fragment {
                 UselessUtils.clear_back_stack();
                 UselessUtils.replaceNoBackStack(new Notes(), "notes");
                 break;
-            case R.id.settings:
-                new ItemsAdapter(null, getActivity(), true).getFoldersDialog(getIdByInFolderId(in_folder_id), this);
-                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -515,8 +511,6 @@ public class NotesInFolder extends Fragment {
             inflater.inflate(R.menu.in_folder_menu, menu);
             MenuItem item = menu.findItem(R.id.root);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            menu.findItem(R.id.settings).setTitle(getString(R.string.settings));
 
             if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)) {
                 item.setIcon(R.drawable.ic_arrow_upward_white_24dp);

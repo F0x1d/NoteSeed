@@ -130,7 +130,6 @@ public class NoteEdit extends Fragment {
         toolbar.getMenu().findItem(R.id.lock).setTitle(getString(R.string.lock));
         toolbar.getMenu().findItem(R.id.export).setTitle(getString(R.string.export));
         toolbar.getMenu().findItem(R.id.pin_status).setTitle(getString(R.string.pin_in_status_bar));
-        toolbar.getMenu().findItem(R.id.settings).setTitle(getString(R.string.settings));
 
         if (UselessUtils.ifCustomTheme()) {
             toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
@@ -532,14 +531,6 @@ public class NoteEdit extends Fragment {
                 }
 
                 break;
-            case R.id.settings:
-                if (!editMode) {
-                    enterEditMode();
-                    break;
-                }
-
-                new ItemsAdapter(null, getActivity(), true).getNotesDialog(id);
-                break;
             case R.id.pin_status:
                 NotificationManager manager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -853,7 +844,6 @@ public class NoteEdit extends Fragment {
         menu.findItem(R.id.lock).setTitle(getString(R.string.lock));
         menu.findItem(R.id.export).setTitle(getString(R.string.export));
         menu.findItem(R.id.pin_status).setTitle(getString(R.string.pin_in_status_bar));
-        menu.findItem(R.id.settings).setTitle(getString(R.string.settings));
 
         if (UselessUtils.ifCustomTheme()) {
             pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_add_black_24dp), ThemesEngine.iconsColor));

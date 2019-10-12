@@ -7,8 +7,4 @@
         android:icon="@drawable/ic_arrow_upward_black_24dp"
         app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/settings"
-        android:title="@string/settings"/>
-
 </menu>

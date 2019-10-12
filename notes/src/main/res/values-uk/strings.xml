@@ -140,4 +140,11 @@
     <string name="capture_note_notification_text">Вона буде збережена в головній теці</string>
     <string name="capture_note_notification_action">Записати</string>
     <string name="capture_note_setting_title">Показувати повідомлення для запису нотаток скрізь</string>
+    <string name="formatting">Форматування</string>
+    <string name="bold">Жирний</string>
+    <string name="italic">Курсив</string>
+    <string name="link">Посилання</string>
+    <string name="enter_link">Введіть ваше посилання</string>
+    <string name="pls_select_text">Спочатку виділіть текст для форматування</string>
+    <string name="move">Перемістити</string>
 </resources>

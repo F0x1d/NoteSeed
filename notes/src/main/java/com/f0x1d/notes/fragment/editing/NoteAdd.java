@@ -114,7 +114,6 @@ public class NoteAdd extends Fragment {
         toolbar.getMenu().findItem(R.id.lock).setTitle(getString(R.string.lock));
         toolbar.getMenu().findItem(R.id.export).setTitle(getString(R.string.export));
         toolbar.getMenu().findItem(R.id.pin_status).setTitle(getString(R.string.pin_in_status_bar));
-        toolbar.getMenu().findItem(R.id.settings).setTitle(getString(R.string.settings));
 
         if (UselessUtils.ifCustomTheme()) {
             toolbar.setNavigationIcon(UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_timer_black_24dp), ThemesEngine.iconsColor));
@@ -434,9 +433,6 @@ public class NoteAdd extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.settings:
-                new ItemsAdapter(null, getActivity(), true).getNotesDialog(rowID);
-                break;
             case R.id.pin_status:
                 NotificationManager manager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -747,7 +743,6 @@ public class NoteAdd extends Fragment {
         menu.findItem(R.id.lock).setTitle(getString(R.string.lock));
         menu.findItem(R.id.export).setTitle(getString(R.string.export));
         menu.findItem(R.id.pin_status).setTitle(getString(R.string.pin_in_status_bar));
-        menu.findItem(R.id.settings).setTitle(getString(R.string.settings));
 
         if (UselessUtils.ifCustomTheme()) {
             pic.setIcon(UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_add_black_24dp), ThemesEngine.iconsColor));

@@ -44,6 +44,7 @@ import com.f0x1d.notes.fragment.choose.ChooseFolder;
 import com.f0x1d.notes.fragment.editing.NoteEdit;
 import com.f0x1d.notes.fragment.lock.LockNote;
 import com.f0x1d.notes.fragment.main.NotesInFolder;
+import com.f0x1d.notes.fragment.main.NotesMoving;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
@@ -71,12 +72,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     Activity activity;
     private boolean anim;
 
+    public boolean ableToMove;
+
     private NoteOrFolderDao dao;
 
-    public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim) {
+    public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim, boolean ableToMove) {
         this.items = items;
         this.activity = activity;
         this.anim = anim;
+        this.ableToMove = ableToMove;
 
         setHasStableIds(true);
     }
@@ -145,7 +149,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             return new notifyViewHolder(view);
         } else {
-            throw new RuntimeException("The type has to be NOTE or FOLDER or NOTIFY");
+            return null;
         }
     }
 
@@ -224,94 +228,96 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.title.setText(getNotifyTitle(items.get(position).id));
         holder.text.setText(getNotifyText(items.get(position).id));
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String[] itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
-                        activity.getString(R.string.pin_in_status_bar), activity.getString(R.string.change)};
+        if (!ableToMove) {
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String[] itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
+                            activity.getString(R.string.pin_in_status_bar), activity.getString(R.string.change)};
 
-                final boolean pinned = activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).getBoolean("notify " + items.get(position).id, false);
+                    final boolean pinned = activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).getBoolean("notify " + items.get(position).id, false);
 
-                if (pinned)
-                    itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
-                            activity.getString(R.string.unpin_from_status_bar), activity.getString(R.string.change)};
+                    if (pinned)
+                        itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
+                                activity.getString(R.string.unpin_from_status_bar), activity.getString(R.string.change)};
 
-                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
-                builder.setItems(itemsAlert, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    String name1 = activity.getString(R.string.notification);
-                                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                                    NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name1, importance);
-                                    channel.enableVibration(true);
-                                    channel.enableLights(true);
-                                    NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
-                                    notificationManager.createNotificationChannel(channel);
-                                }
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
+                    builder.setItems(itemsAlert, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        String name1 = activity.getString(R.string.notification);
+                                        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                                        NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name1, importance);
+                                        channel.enableVibration(true);
+                                        channel.enableLights(true);
+                                        NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
+                                        notificationManager.createNotificationChannel(channel);
+                                    }
 
-                                NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
-                                        .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
-                                        .setContentTitle(getNotifyTitle(items.get(position).id))
-                                        .setContentText(getNotifyText(items.get(position).id))
-                                        .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class),
-                                                PendingIntent.FLAG_CANCEL_CURRENT))
-                                        .setAutoCancel(true)
-                                        .setVibrate(new long[]{1000L, 1000L, 1000L})
-                                        .setChannelId("com.f0x1d.notes.notifications");
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
+                                            .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
+                                            .setContentTitle(getNotifyTitle(items.get(position).id))
+                                            .setContentText(getNotifyText(items.get(position).id))
+                                            .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class),
+                                                    PendingIntent.FLAG_CANCEL_CURRENT))
+                                            .setAutoCancel(true)
+                                            .setVibrate(new long[]{1000L, 1000L, 1000L})
+                                            .setChannelId("com.f0x1d.notes.notifications");
 
-                                NotificationManager notificationManager =
-                                        (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
+                                    NotificationManager notificationManager =
+                                            (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
 
-                                notificationManager.notify((int) items.get(position).id, builder.build());
-                                break;
-                            case 1:
-                                FragmentActivity activity1 = (FragmentActivity) activity;
-                                SetNotify notify = new SetNotify(new Notify(getNotifyTitle(items.get(position).id), getNotifyText(items.get(position).id), 0, items.get(position).id));
-                                notify.show(activity1.getSupportFragmentManager(), "TAG");
-                                break;
-                            case 2:
-                                NotificationManager manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
-
-                                if (pinned) {
-                                    manager.cancel((int) items.get(position).id + 1);
-                                    activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(position).id, false).apply();
+                                    notificationManager.notify((int) items.get(position).id, builder.build());
                                     break;
-                                }
+                                case 1:
+                                    FragmentActivity activity1 = (FragmentActivity) activity;
+                                    SetNotify notify = new SetNotify(new Notify(getNotifyTitle(items.get(position).id), getNotifyText(items.get(position).id), 0, items.get(position).id));
+                                    notify.show(activity1.getSupportFragmentManager(), "TAG");
+                                    break;
+                                case 2:
+                                    NotificationManager manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    String name = activity.getString(R.string.notification);
-                                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                                    NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
-                                    channel.enableVibration(true);
-                                    channel.enableLights(true);
-                                    manager.createNotificationChannel(channel);
-                                }
+                                    if (pinned) {
+                                        manager.cancel((int) items.get(position).id + 1);
+                                        activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(position).id, false).apply();
+                                        break;
+                                    }
 
-                                Notification.Builder builder2 = new Notification.Builder(activity);
-                                builder2.setSmallIcon(R.drawable.ic_notifications_active_black_24dp);
-                                builder2.setContentTitle(getNotifyTitle(items.get(position).id));
-                                builder2.setContentText(getNotifyText(items.get(position).id));
-                                builder2.setOngoing(true);
-                                builder2.setStyle(new Notification.BigTextStyle().bigText(getNotifyText(items.get(position).id)));
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                                    builder2.setChannelId("com.f0x1d.notes.notifications");
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        String name = activity.getString(R.string.notification);
+                                        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                                        NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
+                                        channel.enableVibration(true);
+                                        channel.enableLights(true);
+                                        manager.createNotificationChannel(channel);
+                                    }
 
-                                manager.notify((int) items.get(position).id + 1, builder2.build());
+                                    Notification.Builder builder2 = new Notification.Builder(activity);
+                                    builder2.setSmallIcon(R.drawable.ic_notifications_active_black_24dp);
+                                    builder2.setContentTitle(getNotifyTitle(items.get(position).id));
+                                    builder2.setContentText(getNotifyText(items.get(position).id));
+                                    builder2.setOngoing(true);
+                                    builder2.setStyle(new Notification.BigTextStyle().bigText(getNotifyText(items.get(position).id)));
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                                        builder2.setChannelId("com.f0x1d.notes.notifications");
 
-                                activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(position).id, true).apply();
-                                break;
-                            case 3:
-                                getNotifyDialog(items.get(position).id, position);
-                                break;
+                                    manager.notify((int) items.get(position).id + 1, builder2.build());
+
+                                    activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(position).id, true).apply();
+                                    break;
+                                case 3:
+                                    getNotifyDialog(items.get(position).id, position);
+                                    break;
+                            }
                         }
-                    }
-                });
-                ShowAlertDialog.show(builder);
-            }
-        });
+                    });
+                    ShowAlertDialog.show(builder);
+                }
+            });
+        }
     }
 
     private int getPosition(long id) {
@@ -402,13 +408,23 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("show_things", false))
             holder.name.setText(getFolderNameFromDataBase(items.get(position).id, position) + " | " + Database.thingsInFolder(getFolderNameFromDataBase(items.get(position).id, position)));
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
-                        .replace(R.id.container, NotesInFolder.newInstance(getFolderNameFromDataBase(items.get(position).id, position)), "in_folder").addToBackStack(null).commit();
-            }
-        });
+        if (!ableToMove) {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    getFoldersDialog(items.get(position).id, position);
+                    return false;
+                }
+            });
+
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
+                            .replace(R.id.container, NotesInFolder.newInstance(getFolderNameFromDataBase(items.get(position).id, position)), "in_folder").addToBackStack(null).commit();
+                }
+            });
+        }
     }
 
     public void deleteNote(long id) {
@@ -570,30 +586,40 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.time.setText("Error");
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle args = new Bundle();
-                args.putLong("id", items.get(position).id);
-                args.putInt("locked", items.get(position).locked);
-                args.putString("title", items.get(position).title);
+        if (!ableToMove) {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    getNotesDialog(items.get(position).id, position);
+                    return false;
+                }
+            });
 
-                if (items.get(position).locked == 1) {
-                    if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("lock", false)) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle args = new Bundle();
+                    args.putLong("id", items.get(position).id);
+                    args.putInt("locked", items.get(position).locked);
+                    args.putString("title", items.get(position).title);
+
+                    if (items.get(position).locked == 1) {
+                        if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("lock", false)) {
+                            MainActivity.instance.getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
+                                    R.id.container, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
+                        } else {
+                            Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
                         MainActivity.instance.getSupportFragmentManager().beginTransaction()
                                 .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                R.id.container, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
-                    } else {
-                        Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
+                                R.id.container, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
                     }
-                } else {
-                    MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            R.id.container, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
-                }
 
-            }
-        });
+                }
+            });
+        }
     }
 
     private String getNotifyTitle(long id) {
@@ -628,9 +654,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             Color.parseColor(getColorFromDataBase(id));
 
-            hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+            hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.move), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
         } catch (Exception e) {
-            hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.color)};
+            hm = new String[]{activity.getString(R.string.change), activity.getString(R.string.move), activity.getString(R.string.color)};
         }
 
         MaterialAlertDialogBuilder builder1 = new MaterialAlertDialogBuilder(activity);
@@ -668,7 +694,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         ShowAlertDialog.show(builder);
                         break;
                     case 1:
-
+                        UselessUtils.replace(NotesMoving.newInstance(items.get(0).in_folder_id), "moving");
+                        break;
+                    case 2:
                         int currentColor;
 
                         try {
@@ -696,7 +724,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
-                    case 2:
+                    case 3:
                         App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("", id);
                         notifyItemChanged(position);
                         break;
@@ -707,15 +735,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ShowAlertDialog.show(builder1);
     }
 
-    public void getFoldersDialog(long id, NotesInFolder notesInFolder) {
+    public void getFoldersDialog(long id, int position) {
         String[] hm;
 
         try {
             Color.parseColor(getColorFromDataBase(id));
 
-            hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
+            hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.move), activity.getString(R.string.color), activity.getString(R.string.restore_color)};
         } catch (Exception e) {
-            hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.color)};
+            hm = new String[]{activity.getString(R.string.rename), activity.getString(R.string.move), activity.getString(R.string.color)};
         }
 
         MaterialAlertDialogBuilder builder1 = new MaterialAlertDialogBuilder(activity);
@@ -759,7 +787,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                     App.getInstance().getDatabase().noteOrFolderDao().updateFolderTitle(text.getText().toString(), getFolderNameFromDataBase(id));
                                     App.getInstance().getDatabase().noteOrFolderDao().updateInFolderId(text.getText().toString(), getFolderNameFromDataBase(id));
 
-                                    notesInFolder.in_folder_id = text.getText().toString();
+                                    notifyItemChanged(position);
                                 }
                             }
                         }).create();
@@ -767,6 +795,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         ShowAlertDialog.show(builder);
                         break;
                     case 1:
+                        UselessUtils.replace(NotesMoving.newInstance(items.get(0).in_folder_id), "moving");
+                        break;
+                    case 2:
                         int currentColor;
 
                         try {
@@ -781,6 +812,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             public void onColorSelected(int dialogId, int color) {
                                 Logger.log("onColorSelected: " + "#" + Integer.toHexString(color));
                                 App.getInstance().getDatabase().noteOrFolderDao().updateFolderColor("#" + Integer.toHexString(color), getFolderNameFromDataBase(id));
+
+                                notifyItemChanged(position);
                             }
 
                             @Override
@@ -792,8 +825,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         FragmentActivity fragmentActivity = (FragmentActivity) activity;
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
-                    case 2:
+                    case 3:
                         App.getInstance().getDatabase().noteOrFolderDao().updateFolderColor("", getFolderNameFromDataBase(id));
+                        notifyItemChanged(position);
                         break;
                 }
             }
@@ -802,14 +836,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ShowAlertDialog.show(builder1);
     }
 
-    public void getNotesDialog(long id) {
+    public void getNotesDialog(long id, int position) {
         String[] hm;
         try {
             Color.parseColor(getColorFromDataBase(id));
 
-            hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
+            hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move), activity.getString(R.string.move_ro_folder), activity.getString(R.string.restore_color)};
         } catch (Exception e) {
-            hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move_ro_folder)};
+            hm = new String[]{activity.getString(R.string.color), activity.getString(R.string.move), activity.getString(R.string.move_ro_folder)};
         }
 
         MaterialAlertDialogBuilder builder1 = new MaterialAlertDialogBuilder(activity);
@@ -835,6 +869,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 Logger.log("onColorSelected: " + "#" + Integer.toHexString(color) + " id: " + id);
 
                                 App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("#" + Integer.toHexString(color), id);
+                                notifyItemChanged(position);
                             }
 
                             @Override
@@ -848,6 +883,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
                     case 1:
+                        UselessUtils.replace(NotesMoving.newInstance(items.get(0).in_folder_id), "moving");
+                        break;
+                    case 2:
                         Bundle args = new Bundle();
                         args.putString("in_id", "def");
                         args.putLong("id", id);
@@ -857,8 +895,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 R.id.container, ChooseFolder.newInstance(args), "choose_folder")
                                 .addToBackStack(null).commit();
                         break;
-                    case 2:
+                    case 3:
                         App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("", id);
+                        notifyItemChanged(position);
                         break;
                 }
             }

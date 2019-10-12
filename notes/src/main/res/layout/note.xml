@@ -47,7 +47,7 @@
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content" />
 
-        <com.f0x1d.notes.view.theming.MyImageView
+        <ImageView
             android:id="@+id/time_ic"
             android:layout_width="20dp"
             android:layout_height="20dp"

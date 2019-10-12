@@ -176,7 +176,7 @@ public class Notes extends Fragment {
             recyclerView.setLayoutManager(llm);
         }
 
-        adapter = new ItemsAdapter(allList, getActivity(), true);
+        adapter = new ItemsAdapter(allList, getActivity(), true, false);
 
         recyclerView.setAdapter(adapter);
 
@@ -190,7 +190,7 @@ public class Notes extends Fragment {
             }
 
             @Override
-            public boolean onMove(RecyclerView recyclerView2, RecyclerView.ViewHolder h1, RecyclerView.ViewHolder h2) {
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder h1, RecyclerView.ViewHolder h2) {
                 int fromPosition = h1.getAdapterPosition();
                 int toPosition = h2.getAdapterPosition();
 
@@ -205,7 +205,7 @@ public class Notes extends Fragment {
 
             @Override
             public boolean isLongPressDragEnabled() {
-                return true;
+                return false;
             }
 
             @Override

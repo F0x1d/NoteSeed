@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -254,10 +255,14 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if (editMode) {
                     holder.editText.setText(getText(noteItems.get(position).id));
                     holder.editText.setOnClickListener(null);
+                    holder.editText.setFocusableInTouchMode(true);
+                    holder.editText.setFocusable(true);
+                    holder.editText.setInputType(getTextInputType());
                 } else {
                     holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
                     holder.editText.setFocusableInTouchMode(false);
                     holder.editText.setFocusable(false);
+                    holder.editText.setInputType(InputType.TYPE_NULL);
                     holder.editText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -415,13 +420,15 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (noteItem.id == noteItems.get(position).id) {
                 if (editMode) {
                     holder.editText.setText(getText(noteItems.get(position).id));
+                    holder.editText.setOnClickListener(null);
                     holder.editText.setFocusableInTouchMode(true);
                     holder.editText.setFocusable(true);
-                    holder.editText.setOnClickListener(null);
+                    holder.editText.setInputType(getTextInputType());
                 } else {
                     holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
                     holder.editText.setFocusableInTouchMode(false);
                     holder.editText.setFocusable(false);
+                    holder.editText.setInputType(InputType.TYPE_NULL);
                     holder.editText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -464,6 +471,10 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 firstEditText.setLayoutParams(layoutParams);
             }
         }
+    }
+
+    public static int getTextInputType() {
+        return InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT | InputType.TYPE_TEXT_FLAG_MULTI_LINE;
     }
 
     public void setEditing(boolean editing) {

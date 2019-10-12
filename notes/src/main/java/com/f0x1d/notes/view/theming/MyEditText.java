@@ -2,8 +2,11 @@ package com.f0x1d.notes.view.theming;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.Layout;
 import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.EditText;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -49,7 +52,7 @@ public class MyEditText extends EditText {
             this.setHintTextColor(ThemesEngine.textHintColor);
             this.setBackground(null);
 
-            UselessUtils.setCursorColor(this, ThemesEngine.accentColor);
+            //UselessUtils.setCursorColor(this, ThemesEngine.accentColor);
         }
 
         setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
@@ -95,5 +98,30 @@ public class MyEditText extends EditText {
             mListeners.clear();
             mListeners = null;
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        boolean b = super.onTouchEvent(event);
+
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+
+        x -= getTotalPaddingLeft();
+        y -= getTotalPaddingTop();
+
+        x += getScrollX();
+        y += getScrollY();
+
+        Layout layout = getLayout();
+        int line = layout.getLineForVertical(y);
+        int off = layout.getOffsetForHorizontal(line, x);
+
+        setSelection(off);
+
+        ImageSpan[] link = getText().getSpans(off, off, ImageSpan.class);
+        if (link.length != 0)
+            return true;
+        return b;
     }
 }

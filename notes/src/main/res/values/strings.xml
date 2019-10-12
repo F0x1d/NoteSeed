@@ -146,4 +146,5 @@
     <string name="link">Link</string>
     <string name="enter_link">Enter your link</string>
     <string name="pls_select_text">Select text to format first</string>
+    <string name="move">Move</string>
 </resources>

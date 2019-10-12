@@ -19,7 +19,7 @@
         android:gravity="center_horizontal"
         android:layout_height="wrap_content">
 
-        <com.f0x1d.notes.view.theming.MyImageView
+        <ImageView
             android:layout_width="wrap_content"
             android:id="@+id/notify_pic"
             android:src="@drawable/ic_notifications_active_black_24dp"
