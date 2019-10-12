@@ -15,6 +15,7 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 import static com.f0x1d.notes.App.getContext;
 
@@ -248,7 +251,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             holder.editText.setTypeface(face);
         }
-        holder.editText.setMovementMethod(LinkMovementMethod.getInstance());
 
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.id == noteItems.get(position).id) {
@@ -257,12 +259,10 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     holder.editText.setOnClickListener(null);
                     holder.editText.setFocusableInTouchMode(true);
                     holder.editText.setFocusable(true);
-                    holder.editText.setInputType(getTextInputType());
                 } else {
                     holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
                     holder.editText.setFocusableInTouchMode(false);
                     holder.editText.setFocusable(false);
-                    holder.editText.setInputType(InputType.TYPE_NULL);
                     holder.editText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -281,6 +281,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 break;
             }
         }
+        BetterLinkMovementMethod.linkify(Linkify.ALL, holder.editText);
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -360,7 +361,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     case "link":
                         if (!link.startsWith("http"))
                             link = "https://" + link;
-                        formattedText = "<a href=\"" + link + "\">" + text.substring(editText.getSelectionStart(), editText.getSelectionEnd()) + "</a>";
+                        formattedText = "<a href=\"" + link + "\">" + text.substring(editText.getSelectionStart(), editText.getSelectionEnd()) + "</a> ";
                         break;
 
                     default:
@@ -414,7 +415,6 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             holder.editText.setTypeface(face);
         }
-        holder.editText.setMovementMethod(LinkMovementMethod.getInstance());
 
         for (NoteItem noteItem : dao.getAll()) {
             if (noteItem.id == noteItems.get(position).id) {
@@ -423,12 +423,10 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     holder.editText.setOnClickListener(null);
                     holder.editText.setFocusableInTouchMode(true);
                     holder.editText.setFocusable(true);
-                    holder.editText.setInputType(getTextInputType());
                 } else {
                     holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
                     holder.editText.setFocusableInTouchMode(false);
                     holder.editText.setFocusable(false);
-                    holder.editText.setInputType(InputType.TYPE_NULL);
                     holder.editText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -439,6 +437,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 break;
             }
         }
+        BetterLinkMovementMethod.linkify(Linkify.ALL, holder.editText);
 
         if (openKeyboard) {
             if (!openedKeyboard) {

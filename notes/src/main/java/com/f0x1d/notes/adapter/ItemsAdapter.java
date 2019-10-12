@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,6 +64,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -607,6 +610,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } catch (Exception e) {
             holder.time.setText("Error");
         }
+
+        BetterLinkMovementMethod.linkify(Linkify.ALL, holder.text);
 
         if (!ableToMove) {
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {

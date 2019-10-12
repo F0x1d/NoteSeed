@@ -487,26 +487,6 @@ public class NoteAdd extends Fragment {
                 if (!adapter.applyFormat("italic", null))
                     Toast.makeText(requireContext(), R.string.pls_select_text, Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.link:
-                if (!adapter.hasAnySelection()) {
-                    Toast.makeText(requireContext(), R.string.pls_select_text, Toast.LENGTH_SHORT).show();
-                    break;
-                }
-
-                View editTextView = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_edit_text, null);
-                ((EditText) editTextView.findViewById(R.id.edit_text)).setHint(R.string.link);
-
-                MaterialAlertDialogBuilder alertBuilder = new MaterialAlertDialogBuilder(requireActivity());
-                alertBuilder.setTitle(R.string.enter_link);
-                alertBuilder.setView(editTextView);
-                alertBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        adapter.applyFormat("link", ((EditText) editTextView.findViewById(R.id.edit_text)).getText().toString());
-                    }
-                });
-                ShowAlertDialog.show(alertBuilder);
-                break;
         }
 
         return super.onOptionsItemSelected(item);
