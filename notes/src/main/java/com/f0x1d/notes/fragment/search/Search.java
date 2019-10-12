@@ -82,7 +82,7 @@ public class Search extends Fragment {
             }
         }
 
-        ItemsAdapter adapter = new ItemsAdapter(allList, getActivity(), false, false);
+        ItemsAdapter adapter = new ItemsAdapter(allList, getActivity(), false, false, null);
 
         recyclerView.setAdapter(adapter);
 
@@ -176,7 +176,7 @@ public class Search extends Fragment {
                     }
                 }
 
-                ItemsAdapter adapter = new ItemsAdapter(searchedList, getActivity(), false, false);
+                ItemsAdapter adapter = new ItemsAdapter(searchedList, getActivity(), false, false, null);
                 recyclerView.setAdapter(adapter);
             }
         });

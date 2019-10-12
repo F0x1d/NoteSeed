@@ -97,9 +97,6 @@ public class NotesMoving extends Fragment {
 
         recyclerView.setLayoutManager(llm);
 
-        adapter = new ItemsAdapter(allList, getActivity(), true, true);
-        recyclerView.setAdapter(adapter);
-
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -135,6 +132,10 @@ public class NotesMoving extends Fragment {
         };
 
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+
+        adapter = new ItemsAdapter(allList, getActivity(), true, true, touchHelper);
+        recyclerView.setAdapter(adapter);
+
         touchHelper.attachToRecyclerView(recyclerView);
 
         return view;

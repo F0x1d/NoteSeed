@@ -1,5 +1,6 @@
 package com.f0x1d.notes.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -28,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
@@ -73,14 +76,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private boolean anim;
 
     public boolean ableToMove;
+    public ItemTouchHelper touchHelper;
 
     private NoteOrFolderDao dao;
 
-    public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim, boolean ableToMove) {
+    public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim, boolean ableToMove, ItemTouchHelper touchHelper) {
         this.items = items;
         this.activity = activity;
         this.anim = anim;
         this.ableToMove = ableToMove;
+        this.touchHelper = touchHelper;
 
         setHasStableIds(true);
     }
@@ -119,7 +124,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == NOTE) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.note, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(ableToMove ? R.layout.note_drag : R.layout.note, parent, false);
 
             if (anim) {
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
@@ -129,7 +134,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             return new noteViewHolder(view);
         } else if (viewType == FOLDER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.folder, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(ableToMove ? R.layout.folder_drag : R.layout.folder, parent, false);
 
             if (anim) {
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
@@ -139,7 +144,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             return new folderViewHolder(view);
         } else if (viewType == NOTIFY) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notify, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(ableToMove ? R.layout.notify_drag : R.layout.notify, parent, false);
 
             if (anim) {
                 Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
@@ -317,6 +322,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     ShowAlertDialog.show(builder);
                 }
             });
+        } else {
+            holder.drag.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    touchHelper.startDrag(holder);
+                    return false;
+                }
+            });
         }
     }
 
@@ -424,6 +437,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             .replace(R.id.container, NotesInFolder.newInstance(getFolderNameFromDataBase(items.get(position).id, position)), "in_folder").addToBackStack(null).commit();
                 }
             });
+        } else {
+            holder.drag.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    touchHelper.startDrag(holder);
+                    return false;
+                }
+            });
         }
     }
 
@@ -481,6 +502,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return name;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initLayoutNote(noteViewHolder holder, int position) {
         try {
             holder.note_card.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
@@ -617,6 +639,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 R.id.container, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
                     }
 
+                }
+            });
+        } else {
+            holder.drag.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    touchHelper.startDrag(holder);
+                    return false;
                 }
             });
         }
@@ -920,6 +950,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+
+        if (holder instanceof folderViewHolder) {
+
+        }
+    }
+
+    @Override
     public int getItemViewType(int position) {
         dao = App.getInstance().getDatabase().noteOrFolderDao();
 
@@ -945,6 +984,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView name;
         CardView cardView;
         ImageView folder_image;
+        ImageView drag;
 
         folderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -952,6 +992,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             folder_image = itemView.findViewById(R.id.folder_image);
             cardView = itemView.findViewById(R.id.note_card);
             name = itemView.findViewById(R.id.name);
+            drag = itemView.findViewById(R.id.drag);
         }
     }
 
@@ -962,6 +1003,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         CardView note_card;
         TextView time;
         ImageView time_pic;
+        ImageView drag;
 
         noteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -971,6 +1013,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             text = itemView.findViewById(R.id.textView_text);
             time = itemView.findViewById(R.id.time);
             time_pic = itemView.findViewById(R.id.time_ic);
+            drag = itemView.findViewById(R.id.drag);
         }
     }
 
@@ -980,6 +1023,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView text;
         ImageView notify_pic;
         CardView cardView;
+        ImageView drag;
 
         notifyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -988,6 +1032,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             text = itemView.findViewById(R.id.textView_text);
             cardView = itemView.findViewById(R.id.note_card);
             notify_pic = itemView.findViewById(R.id.notify_pic);
+            drag = itemView.findViewById(R.id.drag);
         }
     }
 }

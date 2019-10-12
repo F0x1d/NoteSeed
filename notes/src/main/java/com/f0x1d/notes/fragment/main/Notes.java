@@ -176,7 +176,7 @@ public class Notes extends Fragment {
             recyclerView.setLayoutManager(llm);
         }
 
-        adapter = new ItemsAdapter(allList, getActivity(), true, false);
+        adapter = new ItemsAdapter(allList, getActivity(), true, false, null);
 
         recyclerView.setAdapter(adapter);
 
