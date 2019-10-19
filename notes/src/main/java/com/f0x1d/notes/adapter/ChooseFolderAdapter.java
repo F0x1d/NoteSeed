@@ -47,26 +47,20 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
     }
 
     private void initLayoutFolder(FolderViewHolder holder, int position) {
+        boolean dark;
         try {
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
-
-            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                holder.name.setTextColor(Color.BLACK);
-                holder.folderImage.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_folder_black_24dp));
-            } else {
-                holder.name.setTextColor(Color.WHITE);
-                holder.folderImage.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_folder_white_24dp));
-            }
+            dark = !UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)));
         } catch (Exception e) {
             holder.cardView.setThemedCardBackgroundColor();
-
-            if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
-                holder.name.setTextColor(Color.BLACK);
-                holder.folderImage.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_folder_black_24dp));
-            } else {
-                holder.name.setTextColor(Color.WHITE);
-                holder.folderImage.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_folder_white_24dp));
-            }
+            dark = !UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor());
+        }
+        if (dark) {
+            holder.name.setTextColor(Color.WHITE);
+            holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
+        } else {
+            holder.name.setTextColor(Color.BLACK);
+            holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
         }
 
         holder.name.setText(getFolderNameFromDataBase(position));
@@ -103,7 +97,7 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UselessUtils.replace(activity, ChooseFolderFragment.newInstance(noteId, getColorFromDataBase(getAdapterPosition())), "choose_folder", true, null);
+                    UselessUtils.replace(activity, ChooseFolderFragment.newInstance(noteId, items.get(getAdapterPosition()).folderName), "choose_folder", true, null);
                 }
             });
         }

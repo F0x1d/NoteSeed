@@ -19,6 +19,7 @@ import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
+import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
@@ -96,6 +97,7 @@ public class NotesMovingFragment extends Fragment {
 
             @Override
             public boolean onMove(RecyclerView recyclerView2, RecyclerView.ViewHolder h1, RecyclerView.ViewHolder h2) {
+                Logger.log("from " + h1.getAdapterPosition() + " to " + h2.getAdapterPosition());
                 int fromPosition = h1.getAdapterPosition();
                 int toPosition = h2.getAdapterPosition();
 
@@ -123,7 +125,6 @@ public class NotesMovingFragment extends Fragment {
 
         adapter = new ItemsAdapter(allList, requireActivity(), true, touchHelper);
         recyclerView.setAdapter(adapter);
-
         touchHelper.attachToRecyclerView(recyclerView);
 
         return view;

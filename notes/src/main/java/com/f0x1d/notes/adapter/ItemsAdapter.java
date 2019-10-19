@@ -124,65 +124,36 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @SuppressLint("ClickableViewAccessibility")
     private void initLayoutNotify(NotifyViewHolder holder, int position) {
+        boolean dark;
         try {
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
-
-            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                holder.title.setTextColor(Color.BLACK);
-                holder.text.setTextColor(Color.BLACK);
-                holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
-            } else {
-                holder.title.setTextColor(Color.WHITE);
-                holder.text.setTextColor(Color.WHITE);
-                holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
-            }
+            dark = !UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)));
         } catch (Exception e) {
             holder.cardView.setThemedCardBackgroundColor();
-
-            if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
-                holder.title.setTextColor(Color.BLACK);
-                holder.text.setTextColor(Color.BLACK);
-                holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
-            } else {
-                holder.title.setTextColor(Color.WHITE);
-                holder.text.setTextColor(Color.WHITE);
-                holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
-            }
+            dark = !UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor());
+        }
+        if (dark) {
+            holder.title.setTextColor(Color.WHITE);
+            holder.text.setTextColor(Color.WHITE);
+            holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp));
+            if (holder.drag != null)
+                holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
+        } else {
+            holder.title.setTextColor(Color.BLACK);
+            holder.text.setTextColor(Color.BLACK);
+            holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp));
+            if (holder.drag != null)
+                holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
         }
 
         holder.title.setText(getNotifyTitle(items.get(position).id));
         holder.text.setText(getNotifyText(items.get(position).id));
     }
 
-    private int getPosition(long id) {
-        return dao.getById(id).position;
-    }
-
     public void onItemsChanged(int lastPos, int newPos) {
-        dao.updatePosition(newPos, items.get(lastPos).id);
-
         Collections.swap(items, lastPos, newPos);
-
-        if (lastPos < newPos) {
-            for (int i = 0; i < items.size(); i++) {
-                if (getPosition(items.get(i).id) != i) {
-                    dao.updatePosition(i, items.get(i).id);
-                }
-            }
-        } else {
-            for (int i = items.size() - 1; i > 0; i--) {
-                if (getPosition(items.get(i).id) != i) {
-                    dao.updatePosition(i, items.get(i).id);
-                }
-            }
+        for (int i = 0; i < items.size(); i++) {
+            dao.updatePosition(i, items.get(i).id);
         }
 
         notifyItemMoved(lastPos, newPos);
@@ -193,34 +164,24 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @SuppressLint("ClickableViewAccessibility")
     private void initLayoutFolder(FolderViewHolder holder, int position) {
+        boolean dark;
         try {
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
-
-            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                holder.name.setTextColor(Color.BLACK);
-                holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
-            } else {
-                holder.name.setTextColor(Color.WHITE);
-                holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
-            }
+            dark = !UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)));
         } catch (Exception e) {
             holder.cardView.setThemedCardBackgroundColor();
-
-            if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
-                holder.name.setTextColor(Color.BLACK);
-                holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
-            } else {
-                holder.name.setTextColor(Color.WHITE);
-                holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
-            }
+            dark = !UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor());
+        }
+        if (dark) {
+            holder.name.setTextColor(Color.WHITE);
+            holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
+            if (holder.drag != null)
+                holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
+        } else {
+            holder.name.setTextColor(Color.BLACK);
+            holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
+            if (holder.drag != null)
+                holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
         }
 
         String folderName = getFolderNameFromDataBase(items.get(position).id, position);
@@ -271,42 +232,28 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @SuppressLint("ClickableViewAccessibility")
     private void initLayoutNote(NoteViewHolder holder, int position) {
+        boolean dark;
         try {
             holder.noteCard.setCardBackgroundColor(Color.parseColor(getColorFromDataBase(position)));
-
-            if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                holder.title.setTextColor(Color.BLACK);
-                holder.text.setTextColor(Color.BLACK);
-                holder.time.setTextColor(Color.BLACK);
-                holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
-            } else {
-                holder.title.setTextColor(Color.WHITE);
-                holder.text.setTextColor(Color.WHITE);
-                holder.time.setTextColor(Color.WHITE);
-                holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
-            }
+            dark = !UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)));
         } catch (Exception e) {
             holder.noteCard.setThemedCardBackgroundColor();
-
-            if (UselessUtils.ifBrightColor(holder.noteCard.getCardBackgroundColor().getDefaultColor())) {
-                holder.title.setTextColor(Color.BLACK);
-                holder.text.setTextColor(Color.BLACK);
-                holder.time.setTextColor(Color.BLACK);
-                holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
-            } else {
-                holder.title.setTextColor(Color.WHITE);
-                holder.time.setTextColor(Color.WHITE);
-                holder.text.setTextColor(Color.WHITE);
-                holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
-                if (holder.drag != null)
-                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
-            }
+            dark = !UselessUtils.ifBrightColor(holder.noteCard.getCardBackgroundColor().getDefaultColor());
+        }
+        if (dark) {
+            holder.title.setTextColor(Color.WHITE);
+            holder.time.setTextColor(Color.WHITE);
+            holder.text.setTextColor(Color.WHITE);
+            holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
+            if (holder.drag != null)
+                holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
+        } else {
+            holder.title.setTextColor(Color.BLACK);
+            holder.text.setTextColor(Color.BLACK);
+            holder.time.setTextColor(Color.BLACK);
+            holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
+            if (holder.drag != null)
+                holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
         }
 
         holder.title.setText(Html.fromHtml(items.get(position).title.replace("\n", "<br />")));

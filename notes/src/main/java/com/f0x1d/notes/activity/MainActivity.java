@@ -149,12 +149,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //outState.putString("what_frag", "other");
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -185,13 +179,6 @@ public class MainActivity extends AppCompatActivity {
         Fragment notes = getSupportFragmentManager().findFragmentByTag("notes");
         Fragment edit = getSupportFragmentManager().findFragmentByTag("edit");
         Fragment add = getSupportFragmentManager().findFragmentByTag("add");
-        Fragment lockTicked = getSupportFragmentManager().findFragmentByTag("lockTicked");
-
-        if (lockTicked != null && lockTicked.isVisible()) {
-            UselessUtils.edit().putLong("lockTicker", 0).apply();
-            super.onBackPressed();
-            return;
-        }
 
         if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())) {
             getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
@@ -222,20 +209,6 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         } else {
             getSupportFragmentManager().popBackStack();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (App.getDefaultSharedPreferences().getBoolean("change", false)) {
-            if (UselessUtils.getBool("autolock", true))
-                UselessUtils.edit().putLong("lockTicker", 0).apply();
         }
     }
 
