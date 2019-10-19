@@ -32,7 +32,7 @@ import com.f0x1d.notes.utils.theme.ThemesEngine;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Search extends Fragment {
+public class SearchFragment extends Fragment {
 
     static List<NoteOrFolder> allList;
     static List<NoteOrFolder> searchedList;
@@ -41,12 +41,12 @@ public class Search extends Fragment {
     NoteItemsDao noteItemsDao = App.getInstance().getDatabase().noteItemsDao();
     private String id;
 
-    public static Search newInstance(String in_folder_id) {
+    public static SearchFragment newInstance(String in_folder_id) {
 
         Bundle args = new Bundle();
         args.putString("id", in_folder_id);
 
-        Search fragment = new Search();
+        SearchFragment fragment = new SearchFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,10 +56,10 @@ public class Search extends Fragment {
         View view = inflater.inflate(R.layout.search, container, false);
         id = getArguments().getString("id");
 
-        if (UselessUtils.ifCustomTheme()) {
-            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+        if (UselessUtils.isCustomTheme()) {
+            requireActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            requireActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            requireActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
 
         searchedList = new ArrayList<>();
@@ -67,22 +67,22 @@ public class Search extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerView);
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(requireActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
         if (UselessUtils.getBool("two_rows", false)) {
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
         } else {
             recyclerView.setLayoutManager(llm);
         }
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.in_folder_id.equals(id)) {
+            if (noteOrFolder.inFolderId.equals(id)) {
                 allList.add(noteOrFolder);
             }
         }
 
-        ItemsAdapter adapter = new ItemsAdapter(allList, getActivity(), false, false, null);
+        ItemsAdapter adapter = new ItemsAdapter(allList, requireActivity(), false, null);
 
         recyclerView.setAdapter(adapter);
 
@@ -97,11 +97,11 @@ public class Search extends Fragment {
         buttonRes.setVisibility(View.INVISIBLE);
 
         if (UselessUtils.getBool("night", false)) {
-            button.setImageDrawable(getActivity().getDrawable(R.drawable.ic_arrow_back_white_24dp));
-            buttonRes.setImageDrawable(getActivity().getDrawable(R.drawable.ic_clear_white_24dp));
+            button.setImageDrawable(requireActivity().getDrawable(R.drawable.ic_arrow_back_white_24dp));
+            buttonRes.setImageDrawable(requireActivity().getDrawable(R.drawable.ic_clear_white_24dp));
         } else {
-            button.setImageDrawable(getActivity().getDrawable(R.drawable.ic_arrow_back_black_24dp));
-            buttonRes.setImageDrawable(getActivity().getDrawable(R.drawable.ic_clear_black_24dp));
+            button.setImageDrawable(requireActivity().getDrawable(R.drawable.ic_arrow_back_black_24dp));
+            buttonRes.setImageDrawable(requireActivity().getDrawable(R.drawable.ic_clear_black_24dp));
         }
 
         buttonRes.setOnClickListener(new View.OnClickListener() {
@@ -114,14 +114,14 @@ public class Search extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.hideSoftKeyboard(text, getActivity());
-                MainActivity.instance.getSupportFragmentManager().popBackStack();
+                UselessUtils.hideSoftKeyboard(text, requireActivity());
+                requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
-        UselessUtils.showKeyboard(text, getActivity());
+        UselessUtils.showKeyboard(text, requireActivity());
 
-        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in);
+        Animation animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.push_left_in);
         animation.setDuration(400);
         text.startAnimation(animation);
         text.addTextChangedListener(new TextWatcher() {
@@ -143,15 +143,15 @@ public class Search extends Fragment {
 
                 searchedList.clear();
                 for (NoteOrFolder menuItem : allList) {
-                    if (menuItem.is_folder == 1) {
-                        if (menuItem.folder_name.toLowerCase().contains(s.toString().toLowerCase())) {
+                    if (menuItem.isFolder == 1) {
+                        if (menuItem.folderName.toLowerCase().contains(s.toString().toLowerCase())) {
                             searchedList.add(menuItem);
                         }
                     } else {
                         boolean add = false;
 
                         for (NoteItem noteItem : noteItemsDao.getAll()) {
-                            if (menuItem.id == noteItem.to_id) {
+                            if (menuItem.id == noteItem.toId) {
                                 if (noteItem.text != null && !noteItem.text.equals("null")) {
                                     if (noteItem.text.toLowerCase().contains(s.toString().toLowerCase())) {
                                         add = true;
@@ -176,7 +176,7 @@ public class Search extends Fragment {
                     }
                 }
 
-                ItemsAdapter adapter = new ItemsAdapter(searchedList, getActivity(), false, false, null);
+                ItemsAdapter adapter = new ItemsAdapter(searchedList, requireActivity(), false, null);
                 recyclerView.setAdapter(adapter);
             }
         });

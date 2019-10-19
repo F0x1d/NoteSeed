@@ -8,11 +8,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -27,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,8 +35,7 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.entities.NoteItem;
-import com.f0x1d.notes.fragment.editing.NoteAdd;
-import com.f0x1d.notes.fragment.editing.NoteEdit;
+import com.f0x1d.notes.fragment.editing.NoteEditFragment;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
@@ -64,33 +60,38 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public boolean editMode = false;
     public boolean openedKeyboard = false;
     public MyEditText firstEditText;
-    List<NoteItem> noteItems;
-    Activity activity;
-    NoteItemsDao dao;
-    TextWatcher textWatcher = null;
-    Fragment fragment;
-    List<EditText> editTexts = new ArrayList<>();
     private boolean openKeyboard;
+    private List<EditText> editTexts = new ArrayList<>();
 
-    public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity, Fragment fragment, boolean openKeyboard) {
+    private List<NoteItem> noteItems;
+    private NoteItemsDao dao;
+
+    private Activity activity;
+    private NoteEditFragment fragment;
+
+    public NoteItemsAdapter(List<NoteItem> noteItems, Activity activity, NoteEditFragment fragment, boolean openKeyboard) {
         this.noteItems = noteItems;
         this.activity = activity;
         this.fragment = fragment;
         this.openKeyboard = openKeyboard;
 
         setHasStableIds(true);
+
+        if (App.getDefaultSharedPreferences().getBoolean("auto_editmode", false))
+            editMode = true;
+        else if (fragment.editMode)
+            editMode = true;
     }
 
     public static long getId() {
-        long max_id = 0;
-
+        long maxId = 0;
         for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
-            if (noteItem.id > max_id) {
-                max_id = noteItem.id;
+            if (noteItem.id > maxId) {
+                maxId = noteItem.id;
             }
         }
 
-        return max_id + 1;
+        return maxId + 1;
     }
 
     @Override
@@ -101,13 +102,13 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TEXT) {
-            return new textViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text, parent, false));
+            return new TextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text, parent, false));
         } else if (viewType == IMAGE) {
-            return new imageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false));
+            return new ImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false));
         } else if (viewType == CHECKBOX) {
-            return new checkBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_checkbox, parent, false));
+            return new CheckBoxViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_checkbox, parent, false));
         } else if (viewType == FILE) {
-            return new fileViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_file, parent, false));
+            return new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_file, parent, false));
         } else {
             return null;
         }
@@ -115,234 +116,67 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (fragment instanceof NoteAdd)
-            editMode = true;
-        else if (PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("auto_editmode", false))
-            editMode = true;
-
         dao = App.getInstance().getDatabase().noteItemsDao();
 
         switch (holder.getItemViewType()) {
             case TEXT:
-                setupText((textViewHolder) holder, position);
+                setupText((TextViewHolder) holder, position);
                 break;
             case IMAGE:
-                setupImage((imageViewHolder) holder, position);
+                setupImage((ImageViewHolder) holder, position);
                 break;
             case CHECKBOX:
-                setCheckbox((checkBoxViewHolder) holder, position);
+                setCheckbox((CheckBoxViewHolder) holder, position);
                 break;
             case FILE:
-                setFile((fileViewHolder) holder, position);
+                setFile((FileViewHolder) holder, position);
                 break;
         }
     }
 
-    private void setFile(fileViewHolder holder, int position) {
-        holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
-
-        Typeface face;
-        if (UselessUtils.getBool("mono", false)) {
-            face = Typeface.MONOSPACE;
-
-            holder.editText.setTypeface(face);
-        }
-        holder.editText.setMovementMethod(LinkMovementMethod.getInstance());
-
-        for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == noteItems.get(position).id) {
-                String fileName = getFileNameFromUri(Uri.parse(noteItem.pic_res));
-                holder.editText.setText(fileName);
-                holder.editText.setFocusableInTouchMode(false);
-                holder.editText.setFocusable(false);
-
-                holder.icon.setImageDrawable(UselessUtils.getDrawableForToolbar(R.drawable.ic_insert_drive_file_black_24dp));
-
-                View.OnClickListener clickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            intent.setDataAndType(Uri.parse(noteItem.pic_res), "*/*");
-                            activity.startActivity(intent);
-                        } catch (Exception e) {
-                            Logger.log(e);
-                        }
-                    }
-                };
-
-                holder.background.setOnClickListener(clickListener);
-                holder.icon.setOnClickListener(clickListener);
-                holder.itemView.setOnClickListener(clickListener);
-                holder.editText.setOnClickListener(clickListener);
-                break;
-            }
-        }
-
-        try {
-            editTexts.remove(position);
-        } catch (Exception e) {
-
-        }
-        editTexts.add(holder.editText);
-
-        if (getItemCount() != 1) {
-            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
-            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
-                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                firstEditText.setLayoutParams(layoutParams);
-            }
-        }
+    private void setFile(FileViewHolder holder, int position) {
+        holder.editText.setText(getFileNameFromUri(Uri.parse(noteItems.get(position).picRes)));
     }
 
-    private String getFileNameFromUri(Uri uri) {
-        if (uri.getPath() == null)
-            return "???";
+    private void setCheckbox(CheckBoxViewHolder holder, int position) {
+        if (editMode)
+            holder.editText.setText(getText(noteItems.get(position).id));
+        else
+            holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
 
-        String[] pathParts = uri.getPath().split("/");
-        String fallbackName = pathParts[pathParts.length - 1];
-
-        try (Cursor cursor = getContext().getContentResolver().query(uri, new String[]{MediaStore.MediaColumns.DISPLAY_NAME}, null, null, null)) {
-            if (cursor == null)
-                return fallbackName;
-
-            cursor.moveToFirst();
-            String name = cursor.getString(0);
-
-            if (name == null)
-                return fallbackName;
-
-            return name;
-        }
-    }
-
-    private void setCheckbox(checkBoxViewHolder holder, int position) {
-        textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                try {
-                    dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
-                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
-                } catch (Exception e) {
-                }
-            }
-        };
-
-        holder.editText.setHint(activity.getString(R.string.note));
-
-        holder.editText.clearTextChangedListeners();
-
-        holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
-
-        Typeface face;
-        if (UselessUtils.getBool("mono", false)) {
-            face = Typeface.MONOSPACE;
-
-            holder.editText.setTypeface(face);
-        }
-
-        for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == noteItems.get(position).id) {
-                if (editMode) {
-                    holder.editText.setText(getText(noteItems.get(position).id));
-                    holder.editText.setOnClickListener(null);
-                    holder.editText.setFocusableInTouchMode(true);
-                    holder.editText.setFocusable(true);
-                } else {
-                    holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
-                    holder.editText.setFocusableInTouchMode(false);
-                    holder.editText.setFocusable(false);
-                    holder.editText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ((NoteEdit) fragment).enterEditMode();
-                        }
-                    });
-                }
-
-                holder.checkBox.setOnCheckedChangeListener(null);
-
-                if (getChecked(noteItems.get(position).id) == 0)
-                    holder.checkBox.setChecked(false);
-                else if (getChecked(noteItems.get(position).id) == 1)
-                    holder.checkBox.setChecked(true);
-
-                break;
-            }
-        }
-        BetterLinkMovementMethod.linkify(Linkify.ALL, holder.editText);
-
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    dao.updateIsChecked(1, noteItems.get(position).id);
-                } else {
-                    dao.updateIsChecked(0, noteItems.get(position).id);
-                }
-
-                dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
-            }
-        });
-
-        holder.editText.addTextChangedListener(textWatcher);
-
-        try {
-            editTexts.remove(position);
-        } catch (Exception e) {
-
-        }
-        editTexts.add(holder.editText);
-
-        if (getItemCount() != 1) {
-            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
-            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
-                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                firstEditText.setLayoutParams(layoutParams);
-            }
-        }
+        if (getChecked(noteItems.get(position).id) == 0)
+            holder.checkBox.setChecked(false);
+        else if (getChecked(noteItems.get(position).id) == 1)
+            holder.checkBox.setChecked(true);
     }
 
     @SuppressLint("CheckResult")
-    private void setupImage(imageViewHolder holder, int position) {
+    private void setupImage(ImageViewHolder holder, int position) {
         RequestOptions options = new RequestOptions()
                 .placeholder(new ColorDrawable(Color.WHITE));
-        if (!PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("shakal", true)) {
+        if (!App.getDefaultSharedPreferences().getBoolean("shakal", true)) {
             options
                     .dontTransform()
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
         } else
             options.fitCenter();
 
-        Glide.with(getContext()).load(noteItems.get(position).pic_res).apply(options).into(holder.image);
-
-        if (getItemCount() != 1) {
-            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
-            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
-                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                firstEditText.setLayoutParams(layoutParams);
-            }
-        }
+        Glide.with(getContext()).load(noteItems.get(position).picRes).apply(options).into(holder.image);
     }
 
-    public boolean hasAnySelection() {
-        for (EditText editText : editTexts) {
-            if (editText != null && editText.hasSelection()) {
-                return true;
+    private void setupText(TextViewHolder holder, int position) {
+        if (!editMode)
+            holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
+        else
+            holder.editText.setText(getText(noteItems.get(position).id).replace("\n", "<br />"));
+
+        if (openKeyboard) {
+            if (!openedKeyboard) {
+                holder.editText.requestFocus();
+                UselessUtils.showKeyboard(holder.editText, activity);
+                openedKeyboard = true;
             }
         }
-        return false;
     }
 
     public boolean applyFormat(String formatType, String link) {
@@ -381,150 +215,37 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return false;
     }
 
-    private void setupText(textViewHolder holder, int position) {
-        textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    private String getFileNameFromUri(Uri uri) {
+        if (uri.getPath() == null)
+            return "???";
 
-            }
+        String[] pathParts = uri.getPath().split("/");
+        String fallbackName = pathParts[pathParts.length - 1];
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        try (Cursor cursor = getContext().getContentResolver().query(uri, new String[]{MediaStore.MediaColumns.DISPLAY_NAME}, null, null, null)) {
+            if (cursor == null)
+                return fallbackName;
 
-            }
+            cursor.moveToFirst();
+            String name = cursor.getString(0);
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                try {
-                    dao.updateElementTextByPos(s.toString(), noteItems.get(position).to_id, noteItems.get(position).position);
-                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
-                } catch (Exception e) {
-                }
-            }
-        };
+            if (name == null)
+                return fallbackName;
 
-        holder.editText.setHint(activity.getString(R.string.note));
-
-        holder.editText.clearTextChangedListeners();
-
-        holder.editText.setTextSize(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("text_size", "15")));
-
-        Typeface face;
-        if (UselessUtils.getBool("mono", false)) {
-            face = Typeface.MONOSPACE;
-
-            holder.editText.setTypeface(face);
-        }
-
-        for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == noteItems.get(position).id) {
-                if (editMode) {
-                    holder.editText.setText(getText(noteItems.get(position).id));
-                    holder.editText.setOnClickListener(null);
-                    holder.editText.setFocusableInTouchMode(true);
-                    holder.editText.setFocusable(true);
-                } else {
-                    holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
-                    holder.editText.setFocusableInTouchMode(false);
-                    holder.editText.setFocusable(false);
-                    holder.editText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ((NoteEdit) fragment).enterEditMode();
-                        }
-                    });
-                }
-                break;
-            }
-        }
-        BetterLinkMovementMethod.linkify(Linkify.ALL, holder.editText);
-
-        if (openKeyboard) {
-            if (!openedKeyboard) {
-                holder.editText.requestFocus();
-                UselessUtils.showKeyboard(holder.editText, activity);
-                openedKeyboard = true;
-            }
-        }
-
-        holder.editText.addTextChangedListener(textWatcher);
-
-        try {
-            editTexts.remove(position);
-        } catch (Exception e) {
-
-        }
-        editTexts.add(holder.editText);
-
-        if (position == 0)
-            firstEditText = holder.editText;
-
-        if (getItemCount() == 1 && position == 0) {
-            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
-            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            firstEditText.setLayoutParams(layoutParams);
-        } else {
-            ViewGroup.LayoutParams layoutParams = firstEditText.getLayoutParams();
-            if (layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
-                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                try {
-                    firstEditText.setLayoutParams(layoutParams);
-                } catch (Exception e) {
-                }
-                holder.editText.setLayoutParams(layoutParams);
-            }
-        }
-    }
-
-    public static int getTextInputType() {
-        return InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT | InputType.TYPE_TEXT_FLAG_MULTI_LINE;
-    }
-
-    public void setEditing(boolean editing) {
-        editMode = editing;
-
-        for (int i = 0; i < noteItems.size(); i++) {
-            notifyItemChanged(i);
+            return name;
         }
     }
 
     public String getText(long id) {
-        String text = "";
-
-        for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == id) {
-                text = noteItem.text;
-                break;
-            }
-        }
-
-        return text;
+        return dao.getById(id).text;
     }
 
     private int getChecked(long id) {
-        int checked = -1;
-
-        for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == id) {
-                checked = noteItem.checked;
-                break;
-            }
-        }
-
-        return checked;
+        return dao.getById(id).checked;
     }
 
     private int getPosition(long id) {
-        int pos = 0;
-
-        for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.id == id) {
-                pos = noteItem.position;
-                break;
-            }
-        }
-
-        return pos;
+        return dao.getById(id).position;
     }
 
     public void onItemMoved(int fromPosition, int toPosition) {
@@ -558,14 +279,8 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewRecycled(holder);
 
-        if (holder.getItemViewType() == TEXT) {
-            textViewHolder textViewHolder = (NoteItemsAdapter.textViewHolder) holder;
-            textViewHolder.editText.clearTextChangedListeners();
-        } else if (holder.getItemViewType() == CHECKBOX) {
-            checkBoxViewHolder checkBoxViewHolder = (NoteItemsAdapter.checkBoxViewHolder) holder;
-            checkBoxViewHolder.editText.clearTextChangedListeners();
-        } else if (holder.getItemViewType() == IMAGE) {
-            imageViewHolder imageViewHolder = (NoteItemsAdapter.imageViewHolder) holder;
+        if (holder.getItemViewType() == IMAGE) {
+            ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
             Glide.with(activity).clear(imageViewHolder.image);
         }
     }
@@ -580,7 +295,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         NoteItem item = noteItems.get(position);
 
         if (item.type == 0) {
-            if (item.pic_res == null) {
+            if (item.picRes == null) {
                 return TEXT;
             } else {
                 return IMAGE;
@@ -600,18 +315,16 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             @Override
             public void onClick(View v) {
                 try {
-                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).to_id);
+                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(position).toId);
 
                     dao.deleteItem(noteItems.get(position).id);
-                    remove(position);
+                    noteItems.remove(position);
 
                     for (int i = 0; i < noteItems.size(); i++) {
                         if (getPosition(noteItems.get(i).id) != i) {
                             dao.updateElementPos(i, noteItems.get(i).id);
                         }
                     }
-
-                    NoteEdit.last_pos = NoteEdit.last_pos - 1;
 
                     notifyDataSetChanged();
                 } catch (Exception e) {
@@ -620,90 +333,177 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
 
                 Snackbar.make(rootView, activity.getString(R.string.deleted), Snackbar.LENGTH_SHORT).show();
-
-                try {
-                    creator.customBottomSheet.dismiss();
-                } catch (Exception e) {
-                }
+                creator.customBottomSheet.dismiss();
             }
         }));
         creator.addElement(new Element(activity.getString(R.string.cancel), activity.getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 notifyItemChanged(position);
-
-                try {
-                    creator.customBottomSheet.dismiss();
-                } catch (Exception e) {
-                }
+                creator.customBottomSheet.dismiss();
             }
         }));
         creator.show("", false);
     }
 
-    private void add(int pos, NoteItem item) {
-        try {
-            noteItems.add(pos, item);
-        } catch (IndexOutOfBoundsException e) {
-            add(pos - 1, item);
-        }
-    }
-
-    private void remove(int pos) {
-        try {
-            noteItems.remove(pos);
-        } catch (IndexOutOfBoundsException e) {
-            remove(pos - 1);
-        }
-    }
-
-    class imageViewHolder extends RecyclerView.ViewHolder {
+    public class ImageViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView image;
 
-        public imageViewHolder(@NonNull View itemView) {
+        public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
 
             image = itemView.findViewById(R.id.picture);
         }
     }
 
-    class textViewHolder extends RecyclerView.ViewHolder {
+    public class TextViewHolder extends RecyclerView.ViewHolder {
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                dao.updateElementTextByPos(s.toString(), noteItems.get(getAdapterPosition()).toId, noteItems.get(getAdapterPosition()).position);
+                dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(getAdapterPosition()).toId);
+            }
+        };
 
         public MyEditText editText;
 
-        public textViewHolder(@NonNull View itemView) {
+        public TextViewHolder(@NonNull View itemView) {
             super(itemView);
 
             editText = itemView.findViewById(R.id.edit_text);
+            if (editMode)
+                editText.addTextChangedListener(textWatcher);
+            else {
+                editText.setFocusableInTouchMode(false);
+                editText.setFocusable(false);
+                editText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fragment.enterEditMode();
+                    }
+                });
+            }
+
+            editText.setTextSize(Integer.parseInt(App.getDefaultSharedPreferences().getString("text_size", "15")));
+            if (UselessUtils.getBool("mono", false))
+                editText.setTypeface(Typeface.MONOSPACE);
+            BetterLinkMovementMethod.linkify(Linkify.ALL, editText);
+            editText.setHint(activity.getString(R.string.note));
+
+            if (firstEditText == null)
+                firstEditText = editText;
+            editTexts.add(editText);
         }
     }
 
-    class fileViewHolder extends RecyclerView.ViewHolder {
+    public class FileViewHolder extends RecyclerView.ViewHolder {
 
         public MyEditText editText;
         public ImageView icon;
-        public RelativeLayout background;
 
-        public fileViewHolder(@NonNull View itemView) {
+        public FileViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            editText = itemView.findViewById(R.id.edit_text);
+            itemView.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.setDataAndType(Uri.parse(noteItems.get(getAdapterPosition()).picRes), "*/*");
+                    activity.startActivity(intent);
+                } catch (Exception e) {
+                    Logger.log(e);
+                }
+            });
+
             icon = itemView.findViewById(R.id.icon);
-            background = itemView.findViewById(R.id.background);
+            icon.setImageDrawable(UselessUtils.getDrawableForToolbar(R.drawable.ic_insert_drive_file_black_24dp));
+
+            editText = itemView.findViewById(R.id.edit_text);
+            editText.setFocusableInTouchMode(false);
+            editText.setFocusable(false);
+            editText.setTextSize(Integer.parseInt(App.getDefaultSharedPreferences().getString("text_size", "15")));
+            if (UselessUtils.getBool("mono", false))
+                editText.setTypeface(Typeface.MONOSPACE);
+
+            editTexts.add(editText);
         }
     }
 
-    class checkBoxViewHolder extends RecyclerView.ViewHolder {
+    public class CheckBoxViewHolder extends RecyclerView.ViewHolder {
 
         public CheckBox checkBox;
         public MyEditText editText;
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        public checkBoxViewHolder(@NonNull View itemView) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    dao.updateElementTextByPos(s.toString(), noteItems.get(getAdapterPosition()).toId, noteItems.get(getAdapterPosition()).position);
+                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(getAdapterPosition()).toId);
+                } catch (Exception e) {
+                }
+            }
+        };
+
+        public CheckBoxViewHolder(@NonNull View itemView) {
             super(itemView);
 
             checkBox = itemView.findViewById(R.id.checkBox);
             editText = itemView.findViewById(R.id.edit_text);
+            if (editMode)
+                editText.addTextChangedListener(textWatcher);
+            else {
+                editText.setFocusableInTouchMode(false);
+                editText.setFocusable(false);
+                editText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fragment.enterEditMode();
+                    }
+                });
+            }
+
+            editText.setTextSize(Integer.parseInt(App.getDefaultSharedPreferences().getString("text_size", "15")));
+            if (UselessUtils.getBool("mono", false))
+                editText.setTypeface(Typeface.MONOSPACE);
+            BetterLinkMovementMethod.linkify(Linkify.ALL, editText);
+            editText.setHint(activity.getString(R.string.note));
+
+            editTexts.add(editText);
+
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        dao.updateIsChecked(1, noteItems.get(getAdapterPosition()).id);
+                    } else {
+                        dao.updateIsChecked(0, noteItems.get(getAdapterPosition()).id);
+                    }
+
+                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(getAdapterPosition()).toId);
+                }
+            });
         }
     }
 }

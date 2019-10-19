@@ -3,7 +3,6 @@ package com.f0x1d.notes.fragment.settings.translations;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
@@ -45,7 +44,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class TranslationsEditor extends Fragment {
+public class TranslationsEditorFragment extends Fragment {
 
     public HashMap<Integer, EditTranslation> translations = new HashMap<>();
     private CenteredToolbar toolbar;
@@ -55,12 +54,12 @@ public class TranslationsEditor extends Fragment {
     private List<Pair<String, String>> keys;
     private HashMap<String, String> valuesAndKeys = null;
 
-    public static TranslationsEditor newInstance(String pathToFile) {
+    public static TranslationsEditorFragment newInstance(String pathToFile) {
         Bundle args = new Bundle();
         if (pathToFile != null)
             args.putString("path", pathToFile);
 
-        TranslationsEditor fragment = new TranslationsEditor();
+        TranslationsEditorFragment fragment = new TranslationsEditorFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -98,8 +97,8 @@ public class TranslationsEditor extends Fragment {
         try {
             JSONArray array = new JSONArray(UselessUtils.readFile(new File(dir, "strings " + BuildConfig.VERSION_NAME + ".json")));
             for (int i = 0; i < array.length(); i++) {
-                keys.add(new Pair<>(array.getString(i), ((MainActivity) getActivity()).getDefaultResources().getString(
-                        ((MainActivity) getActivity()).getDefaultResources().getIdentifier(array.getString(i), "string", getContext().getPackageName()))));
+                keys.add(new Pair<>(array.getString(i), ((MainActivity) requireActivity()).getDefaultResources().getString(
+                        ((MainActivity) requireActivity()).getDefaultResources().getIdentifier(array.getString(i), "string", getContext().getPackageName()))));
             }
         } catch (Exception e) {
             Logger.log(e);
@@ -178,14 +177,14 @@ public class TranslationsEditor extends Fragment {
     }
 
     public void restart() {
-        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("change_l", true).apply();
+        App.getDefaultSharedPreferences().edit().putBoolean("change_l", true).apply();
 
-        Intent i1 = getActivity().getBaseContext().getPackageManager().
-                getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
+        Intent i1 = requireActivity().getBaseContext().getPackageManager().
+                getLaunchIntentForPackage(requireActivity().getBaseContext().getPackageName());
         i1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getActivity().startActivity(i1);
-        getActivity().finish();
+        requireActivity().startActivity(i1);
+        requireActivity().finish();
     }
 
     @Override

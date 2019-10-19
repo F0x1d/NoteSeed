@@ -2,11 +2,8 @@ package com.f0x1d.notes.view.theming;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.text.Layout;
 import android.text.TextWatcher;
-import android.text.style.ImageSpan;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.widget.EditText;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -24,35 +21,29 @@ public class MyEditText extends EditText {
 
     public MyEditText(Context context) {
         super(context);
-
         setText();
     }
 
     public MyEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         setText();
     }
 
     public MyEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         setText();
     }
 
     public MyEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-
         setText();
     }
 
     private void setText() {
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             this.setTextColor(ThemesEngine.textColor);
             this.setHintTextColor(ThemesEngine.textHintColor);
             this.setBackground(null);
-
-            //UselessUtils.setCursorColor(this, ThemesEngine.accentColor);
         }
 
         setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
@@ -60,7 +51,7 @@ public class MyEditText extends EditText {
 
     @Override
     public void setTextColor(int color) {
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             super.setTextColor(ThemesEngine.textColor);
         } else {
             super.setTextColor(color);
@@ -98,11 +89,5 @@ public class MyEditText extends EditText {
             mListeners.clear();
             mListeners = null;
         }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
-        return true;
     }
 }

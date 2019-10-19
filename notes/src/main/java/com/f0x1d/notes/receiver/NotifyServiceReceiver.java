@@ -38,7 +38,7 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
                 title = noteOrFolder.title;
                 text = noteOrFolder.text;
                 id = noteOrFolder.id;
-                to_id = noteOrFolder.to_id;
+                to_id = noteOrFolder.toId;
             }
         }
 
@@ -46,9 +46,9 @@ public class NotifyServiceReceiver extends WakefulBroadcastReceiver {
 
         for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
             if (to_id == noteOrFolder.id) {
-                if (noteOrFolder.in_folder_id.equals("def"))
+                if (noteOrFolder.inFolderId.equals("def"))
                     break;
-                inFolderId = noteOrFolder.in_folder_id + ": ";
+                inFolderId = noteOrFolder.inFolderId + ": ";
                 break;
             }
         }

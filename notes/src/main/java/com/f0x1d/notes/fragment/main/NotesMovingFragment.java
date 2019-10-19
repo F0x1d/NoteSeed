@@ -1,17 +1,14 @@
 package com.f0x1d.notes.fragment.main;
 
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,23 +19,20 @@ import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
-import com.f0x1d.notes.fragment.editing.NoteAdd;
 import com.f0x1d.notes.utils.UselessUtils;
-import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 import com.f0x1d.notes.view.theming.MyFAB;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class NotesMoving extends Fragment {
+public class NotesMovingFragment extends Fragment {
 
-    public static NotesMoving newInstance(String inFolderId) {
+    public static NotesMovingFragment newInstance(String inFolderId) {
         Bundle args = new Bundle();
         args.putString("in_f_id", inFolderId);
 
-        NotesMoving fragment = new NotesMoving();
+        NotesMovingFragment fragment = new NotesMovingFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,26 +67,20 @@ public class NotesMoving extends Fragment {
             }
         });
 
-        if (UselessUtils.ifCustomTheme()) {
-            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-            getActivity().getWindow().setStatusBarColor(MainActivity.instance.viewModel.statusBarColor.getValue());
-            getActivity().getWindow().setNavigationBarColor(MainActivity.instance.viewModel.navBarColor.getValue());
+        if (UselessUtils.isCustomTheme()) {
+            requireActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            requireActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            requireActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
 
             toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
 
-        getActivity().setActionBar(toolbar);
-
         allList = new ArrayList<>();
 
         dao = App.getInstance().getDatabase().noteOrFolderDao();
-        for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.in_folder_id.equals(inFolderId)) {
-                allList.add(noteOrFolder);
-            }
-        }
+        allList.addAll(dao.getByInFolderId(inFolderId));
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(requireActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(llm);
@@ -133,7 +121,7 @@ public class NotesMoving extends Fragment {
 
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
 
-        adapter = new ItemsAdapter(allList, getActivity(), true, true, touchHelper);
+        adapter = new ItemsAdapter(allList, requireActivity(), true, touchHelper);
         recyclerView.setAdapter(adapter);
 
         touchHelper.attachToRecyclerView(recyclerView);

@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,7 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 public class ShowAlertDialog {
 
     public static void show(MaterialAlertDialogBuilder builder) {
-        if (UselessUtils.ifCustomTheme())
+        if (UselessUtils.isCustomTheme())
             builder.setBackground(new ColorDrawable(ThemesEngine.background));
         else if (UselessUtils.getBool("night", false))
             builder.setBackground(new ColorDrawable(App.getContext().getResources().getColor(R.color.statusbar_for_dialogs)));
@@ -32,12 +31,12 @@ public class ShowAlertDialog {
         dialog1337.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog1) {
-                if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("night", false)) {
+                if (App.getDefaultSharedPreferences().getBoolean("night", false)) {
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.WHITE);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.WHITE);
                     dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
                 }
-                if (UselessUtils.ifCustomTheme()) {
+                if (UselessUtils.isCustomTheme()) {
                     dialog1337.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemesEngine.textColor);
                     dialog1337.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(ThemesEngine.textColor);
                     dialog1337.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemesEngine.textColor);

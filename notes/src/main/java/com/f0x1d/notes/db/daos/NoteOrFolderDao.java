@@ -23,40 +23,40 @@ public interface NoteOrFolderDao {
     @Insert
     long insert(NoteOrFolder NoteOrFolder);
 
-    @Query("UPDATE NoteOrFolder SET title=:title WHERE id = :id")
+    @Query("UPDATE NoteOrFolder SET title = :title WHERE id = :id")
     void updateNoteTitle(String title, long id);
 
-    @Query("UPDATE NoteOrFolder SET position=:position WHERE id = :id")
+    @Query("UPDATE NoteOrFolder SET position = :position WHERE id = :id")
     void updatePosition(int position, long id);
 
-    @Query("UPDATE NoteOrFolder SET text=:text WHERE id = :id")
+    @Query("UPDATE NoteOrFolder SET text = :text WHERE id = :id")
     void updateNoteText(String text, long id);
 
-    @Query("UPDATE NoteOrFolder SET folder_name=:text WHERE folder_name = :id")
+    @Query("UPDATE NoteOrFolder SET folder_name = :text WHERE folder_name = :id")
     void updateFolderTitle(String text, String id);
 
-    @Query("UPDATE NoteOrFolder SET in_folder_id=:text WHERE in_folder_id = :id")
+    @Query("UPDATE NoteOrFolder SET in_folder_id = :text WHERE in_folder_id = :id")
     void updateInFolderId(String text, String id);
 
-    @Query("UPDATE NoteOrFolder SET in_folder_id=:text WHERE id = :id")
+    @Query("UPDATE NoteOrFolder SET in_folder_id = :text WHERE id = :id")
     void updateInFolderIdById(String text, long id);
 
-    @Query("UPDATE NoteOrFolder SET pinned=:pinned WHERE id = :id")
+    @Query("UPDATE NoteOrFolder SET pinned = :pinned WHERE id = :id")
     void updateNotePinned(int pinned, long id);
 
-    @Query("UPDATE NoteOrFolder SET pinned=:pinned WHERE folder_name = :id")
+    @Query("UPDATE NoteOrFolder SET pinned = :pinned WHERE folder_name = :id")
     void updateFolderPinned(int pinned, String id);
 
-    @Query("UPDATE NoteOrFolder SET color=:color WHERE folder_name = :id")
+    @Query("UPDATE NoteOrFolder SET color = :color WHERE folder_name = :id")
     void updateFolderColor(String color, String id);
 
-    @Query("UPDATE NoteOrFolder SET color=:color WHERE id = :id")
+    @Query("UPDATE NoteOrFolder SET color = :color WHERE id = :id")
     void updateNoteColor(String color, long id);
 
-    @Query("UPDATE NoteOrFolder SET locked=:locked WHERE id = :id")
+    @Query("UPDATE NoteOrFolder SET locked = :locked WHERE id = :id")
     void updateNoteLocked(int locked, long id);
 
-    @Query("UPDATE NoteOrFolder SET edit_time=:edit_time WHERE id = :id")
+    @Query("UPDATE NoteOrFolder SET edit_time = :edit_time WHERE id = :id")
     void updateNoteTime(long edit_time, long id);
 
     @Query("DELETE FROM NoteOrFolder WHERE id = :id")

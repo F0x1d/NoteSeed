@@ -1,5 +1,6 @@
 package com.f0x1d.notes.db.entities;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -8,13 +9,16 @@ public class NoteOrFolder {
 
     public String title;
     public String text;
-    public String folder_name;
+    @ColumnInfo(name = "folder_name")
+    public String folderName;
 
     @PrimaryKey(autoGenerate = true)
     public long id;
 
-    public String in_folder_id;
-    public int is_folder;
+    @ColumnInfo(name = "in_folder_id")
+    public String inFolderId;
+    @ColumnInfo(name = "is_folder")
+    public int isFolder;
 
     public int locked;
 
@@ -22,18 +26,19 @@ public class NoteOrFolder {
     public int position;
     public String color;
 
-    public long edit_time;
+    @ColumnInfo(name = "edit_time")
+    public long editTime;
 
-    public NoteOrFolder(String title, String text, long id, int locked, String in_folder_id, int is_folder, String folder_name, int pinned, String color, long edit_time, int position) {
+    public NoteOrFolder(String title, String text, long id, int locked, String inFolderId, int isFolder, String folderName, int pinned, String color, long editTime, int position) {
         this.title = title;
         this.id = id;
         this.locked = locked;
-        this.in_folder_id = in_folder_id;
-        this.is_folder = is_folder;
-        this.folder_name = folder_name;
+        this.inFolderId = inFolderId;
+        this.isFolder = isFolder;
+        this.folderName = folderName;
         this.pinned = pinned;
         this.color = color;
-        this.edit_time = edit_time;
+        this.editTime = editTime;
         this.text = text;
         this.position = position;
     }

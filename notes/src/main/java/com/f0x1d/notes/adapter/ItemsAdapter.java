@@ -13,22 +13,18 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Html;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -38,21 +34,19 @@ import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.Database;
-import com.f0x1d.notes.db.daos.NoteItemsDao;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
-import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
-import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
-import com.f0x1d.notes.fragment.choose.ChooseFolder;
-import com.f0x1d.notes.fragment.editing.NoteEdit;
-import com.f0x1d.notes.fragment.lock.LockNote;
-import com.f0x1d.notes.fragment.main.NotesInFolder;
-import com.f0x1d.notes.fragment.main.NotesMoving;
+import com.f0x1d.notes.fragment.bottomSheet.SetNotifyDialog;
+import com.f0x1d.notes.fragment.choose.ChooseFolderFragment;
+import com.f0x1d.notes.fragment.editing.NoteEditFragment;
+import com.f0x1d.notes.fragment.lock.LockScreenFragment;
+import com.f0x1d.notes.fragment.main.NotesFragment;
+import com.f0x1d.notes.fragment.main.NotesMovingFragment;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.dialogs.ShowAlertDialog;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.view.theming.ItemCardView;
 import com.f0x1d.notes.view.theming.MyColorPickerDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
@@ -65,8 +59,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import me.saket.bettermovementmethod.BetterLinkMovementMethod;
-
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -74,47 +66,25 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private final int NOTE = 1;
     private final int FOLDER = 2;
     private final int NOTIFY = 3;
-    public boolean ableToMove;
-    public ItemTouchHelper touchHelper;
-    List<NoteOrFolder> items;
-    Activity activity;
-    private boolean anim;
-    private NoteOrFolderDao dao;
 
-    public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean anim, boolean ableToMove, ItemTouchHelper touchHelper) {
+    public boolean ableToMove;
+
+    public ItemTouchHelper touchHelper;
+    public List<NoteOrFolder> items;
+    public Activity activity;
+    private NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
+
+    public ItemsAdapter(List<NoteOrFolder> items, Activity activity, boolean ableToMove, ItemTouchHelper touchHelper) {
         this.items = items;
         this.activity = activity;
-        this.anim = anim;
         this.ableToMove = ableToMove;
         this.touchHelper = touchHelper;
 
         setHasStableIds(true);
     }
 
-    public static String getFolderNameFromDataBaseStatic(long id, int pos) {
-        String name = "";
-
-        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.id == id) {
-                name = noteOrFolder.folder_name;
-                break;
-            }
-        }
-
-        return name;
-    }
-
     public static String getFolderNameFromDataBase(long id) {
-        String name = "";
-
-        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.id == id) {
-                name = noteOrFolder.folder_name;
-                break;
-            }
-        }
-
-        return name;
+        return App.getInstance().getDatabase().noteOrFolderDao().getById(id).folderName;
     }
 
     @Override
@@ -125,35 +95,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == NOTE) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(ableToMove ? R.layout.note_drag : R.layout.note, parent, false);
-
-            if (anim) {
-                Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-                animation.setDuration(400);
-                view.startAnimation(animation);
-            }
-
-            return new noteViewHolder(view);
+            return new NoteViewHolder(LayoutInflater.from(parent.getContext()).inflate(ableToMove ? R.layout.note_drag : R.layout.note, parent, false));
         } else if (viewType == FOLDER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(ableToMove ? R.layout.folder_drag : R.layout.folder, parent, false);
-
-            if (anim) {
-                Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-                animation.setDuration(400);
-                view.startAnimation(animation);
-            }
-
-            return new folderViewHolder(view);
+            return new FolderViewHolder(LayoutInflater.from(parent.getContext()).inflate(ableToMove ? R.layout.folder_drag : R.layout.folder, parent, false));
         } else if (viewType == NOTIFY) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(ableToMove ? R.layout.notify_drag : R.layout.notify, parent, false);
-
-            if (anim) {
-                Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-                animation.setDuration(400);
-                view.startAnimation(animation);
-            }
-
-            return new notifyViewHolder(view);
+            return new NotifyViewHolder(LayoutInflater.from(parent.getContext()).inflate(ableToMove ? R.layout.notify_drag : R.layout.notify, parent, false));
         } else {
             return null;
         }
@@ -161,181 +107,63 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int listPosition) {
-        dao = App.getInstance().getDatabase().noteOrFolderDao();
-
         switch (holder.getItemViewType()) {
             case NOTE:
-                initLayoutNote((noteViewHolder) holder, listPosition);
+                initLayoutNote((NoteViewHolder) holder, listPosition);
                 break;
             case FOLDER:
-                initLayoutFolder((folderViewHolder) holder, listPosition);
+                initLayoutFolder((FolderViewHolder) holder, listPosition);
                 break;
             case NOTIFY:
-                initLayoutNotify((notifyViewHolder) holder, listPosition);
+                initLayoutNotify((NotifyViewHolder) holder, listPosition);
                 break;
             default:
                 break;
         }
     }
 
-    private void initLayoutNotify(notifyViewHolder holder, int position) {
+    @SuppressLint("ClickableViewAccessibility")
+    private void initLayoutNotify(NotifyViewHolder holder, int position) {
         try {
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                holder.title.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
-                } catch (Exception e) {
-                }
+                holder.title.setTextColor(Color.BLACK);
+                holder.text.setTextColor(Color.BLACK);
+                holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
             } else {
-                holder.title.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.darkColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
-                } catch (Exception e) {
-                }
+                holder.title.setTextColor(Color.WHITE);
+                holder.text.setTextColor(Color.WHITE);
+                holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
             }
         } catch (Exception e) {
-
-            holder.cardView.setCardBackgroundColor(Color.BLACK);
+            holder.cardView.setThemedCardBackgroundColor();
 
             if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
-                holder.title.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp), ThemesEngine.lightColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
-                } catch (Exception ex) {
-                }
+                holder.title.setTextColor(Color.BLACK);
+                holder.text.setTextColor(Color.BLACK);
+                holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_black_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
             } else {
-                holder.title.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.notify_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp), ThemesEngine.darkColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
-                } catch (Exception ex) {
-                }
+                holder.title.setTextColor(Color.WHITE);
+                holder.text.setTextColor(Color.WHITE);
+                holder.notifyPic.setImageDrawable(activity.getDrawable(R.drawable.ic_notifications_active_white_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
             }
         }
 
         holder.title.setText(getNotifyTitle(items.get(position).id));
         holder.text.setText(getNotifyText(items.get(position).id));
-
-        if (!ableToMove) {
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String[] itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
-                            activity.getString(R.string.pin_in_status_bar), activity.getString(R.string.change)};
-
-                    final boolean pinned = activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).getBoolean("notify " + items.get(position).id, false);
-
-                    if (pinned)
-                        itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
-                                activity.getString(R.string.unpin_from_status_bar), activity.getString(R.string.change)};
-
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
-                    builder.setItems(itemsAlert, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case 0:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        String name1 = activity.getString(R.string.notification);
-                                        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                                        NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name1, importance);
-                                        channel.enableVibration(true);
-                                        channel.enableLights(true);
-                                        NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
-                                        notificationManager.createNotificationChannel(channel);
-                                    }
-
-                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
-                                            .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
-                                            .setContentTitle(getNotifyTitle(items.get(position).id))
-                                            .setContentText(getNotifyText(items.get(position).id))
-                                            .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class),
-                                                    PendingIntent.FLAG_CANCEL_CURRENT))
-                                            .setAutoCancel(true)
-                                            .setVibrate(new long[]{1000L, 1000L, 1000L})
-                                            .setChannelId("com.f0x1d.notes.notifications");
-
-                                    NotificationManager notificationManager =
-                                            (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
-
-                                    notificationManager.notify((int) items.get(position).id, builder.build());
-                                    break;
-                                case 1:
-                                    FragmentActivity activity1 = (FragmentActivity) activity;
-                                    SetNotify notify = new SetNotify(new Notify(getNotifyTitle(items.get(position).id), getNotifyText(items.get(position).id), 0, items.get(position).id));
-                                    notify.show(activity1.getSupportFragmentManager(), "TAG");
-                                    break;
-                                case 2:
-                                    NotificationManager manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
-
-                                    if (pinned) {
-                                        manager.cancel((int) items.get(position).id + 1);
-                                        activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(position).id, false).apply();
-                                        break;
-                                    }
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        String name = activity.getString(R.string.notification);
-                                        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                                        NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
-                                        channel.enableVibration(true);
-                                        channel.enableLights(true);
-                                        manager.createNotificationChannel(channel);
-                                    }
-
-                                    Notification.Builder builder2 = new Notification.Builder(activity);
-                                    builder2.setSmallIcon(R.drawable.ic_notifications_active_black_24dp);
-                                    builder2.setContentTitle(getNotifyTitle(items.get(position).id));
-                                    builder2.setContentText(getNotifyText(items.get(position).id));
-                                    builder2.setOngoing(true);
-                                    builder2.setStyle(new Notification.BigTextStyle().bigText(getNotifyText(items.get(position).id)));
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                                        builder2.setChannelId("com.f0x1d.notes.notifications");
-
-                                    manager.notify((int) items.get(position).id + 1, builder2.build());
-
-                                    activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(position).id, true).apply();
-                                    break;
-                                case 3:
-                                    getNotifyDialog(items.get(position).id, position);
-                                    break;
-                            }
-                        }
-                    });
-                    ShowAlertDialog.show(builder);
-                }
-            });
-        } else {
-            holder.drag.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    touchHelper.startDrag(holder);
-                    return false;
-                }
-            });
-        }
     }
 
     private int getPosition(long id) {
-        int pos = 0;
-
-        for (NoteOrFolder note : dao.getAll()) {
-            if (note.id == id) {
-                pos = note.position;
-                break;
-            }
-        }
-
-        return pos;
+        return dao.getById(id).position;
     }
 
     public void onItemsChanged(int lastPos, int newPos) {
@@ -363,84 +191,52 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    private void initLayoutFolder(folderViewHolder holder, int position) {
+    @SuppressLint("ClickableViewAccessibility")
+    private void initLayoutFolder(FolderViewHolder holder, int position) {
         try {
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                holder.name.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
-                } catch (Exception e) {
-                }
+                holder.name.setTextColor(Color.BLACK);
+                holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
             } else {
-                holder.name.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
-                } catch (Exception e) {
-                }
+                holder.name.setTextColor(Color.WHITE);
+                holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
             }
         } catch (Exception e) {
-            holder.cardView.setCardBackgroundColor(Color.BLACK);
+            holder.cardView.setThemedCardBackgroundColor();
 
             if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
-                holder.name.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
-                } catch (Exception ex) {
-                }
+                holder.name.setTextColor(Color.BLACK);
+                holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_black_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
             } else {
-                holder.name.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.folder_image.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
-                } catch (Exception ex) {
-                }
+                holder.name.setTextColor(Color.WHITE);
+                holder.folderImage.setImageDrawable(activity.getDrawable(R.drawable.ic_folder_white_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
             }
         }
 
-        holder.name.setText(getFolderNameFromDataBase(items.get(position).id, position));
+        String folderName = getFolderNameFromDataBase(items.get(position).id, position);
+        holder.name.setText(folderName);
 
-        if (PreferenceManager.getDefaultSharedPreferences(App.getContext()).getBoolean("show_things", false))
-            holder.name.setText(getFolderNameFromDataBase(items.get(position).id, position) + " | " + Database.thingsInFolder(getFolderNameFromDataBase(items.get(position).id, position)));
-
-        if (!ableToMove) {
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    getFoldersDialog(items.get(position).id, position);
-                    return false;
-                }
-            });
-
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainActivity.instance.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out)
-                            .replace(R.id.container, NotesInFolder.newInstance(getFolderNameFromDataBase(items.get(position).id, position)), "in_folder").addToBackStack(null).commit();
-                }
-            });
-        } else {
-            holder.drag.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    touchHelper.startDrag(holder);
-                    return false;
-                }
-            });
-        }
+        if (App.getDefaultSharedPreferences().getBoolean("show_things", false))
+            holder.name.setText(folderName + " | " + Database.thingsInFolder(folderName));
     }
 
     public void deleteNote(long id) {
         dao.deleteNote(id);
     }
 
-    public void deleteFolder(final String folder_name) {
+    public void deleteFolder(final String folderName) {
         try {
-            deleteFolderFull(folder_name);
+            deleteFolderFull(folderName);
         } catch (IndexOutOfBoundsException e) {
             Logger.log(e);
         }
@@ -449,9 +245,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private void deleteFolderFull(String folderName) {
         dao.deleteFolder(folderName);
         for (NoteOrFolder noteOrFolder : dao.getByInFolderId(folderName)) {
-            if (noteOrFolder.is_folder == 1) {
-                deleteFolderFull(noteOrFolder.folder_name);
-                dao.deleteFolder(noteOrFolder.folder_name);
+            if (noteOrFolder.isFolder == 1) {
+                deleteFolderFull(noteOrFolder.folderName);
+                dao.deleteFolder(noteOrFolder.folderName);
             } else {
                 dao.deleteNote(noteOrFolder.id);
             }
@@ -460,108 +256,68 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private String getColorFromDataBase(int position) {
         long id = items.get(position).id;
-
-        String color = "0xffffffff";
-
-        for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.id == id) {
-                color = noteOrFolder.color;
-            }
-        }
-
-        return color;
+        return dao.getById(id).color;
     }
 
     public String getFolderNameFromDataBase(long id, int pos) {
         String name = "";
-
-        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.id == id) {
-                name = noteOrFolder.folder_name;
-                break;
-            }
-        }
+        name = dao.getById(id).folderName;
 
         if (name.equals(""))
-            return items.get(pos).folder_name;
+            return items.get(pos).folderName;
 
         return name;
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initLayoutNote(noteViewHolder holder, int position) {
+    private void initLayoutNote(NoteViewHolder holder, int position) {
         try {
-            holder.note_card.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
+            holder.noteCard.setCardBackgroundColor(Color.parseColor(getColorFromDataBase(position)));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                holder.title.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.time.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_black_24dp), ThemesEngine.lightColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
-                } catch (Exception e) {
-                }
+                holder.title.setTextColor(Color.BLACK);
+                holder.text.setTextColor(Color.BLACK);
+                holder.time.setTextColor(Color.BLACK);
+                holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
             } else {
-                holder.title.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.time.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_white_24dp), ThemesEngine.darkColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
-                } catch (Exception e) {
-                }
+                holder.title.setTextColor(Color.WHITE);
+                holder.text.setTextColor(Color.WHITE);
+                holder.time.setTextColor(Color.WHITE);
+                holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
             }
         } catch (Exception e) {
-            holder.note_card.setCardBackgroundColor(Color.BLACK);
+            holder.noteCard.setThemedCardBackgroundColor();
 
-            if (UselessUtils.ifBrightColor(holder.note_card.getCardBackgroundColor().getDefaultColor())) {
-                holder.title.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.text.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.time.setTextColor(ThemesEngine.lightColorTextColor);
-                holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_black_24dp), ThemesEngine.lightColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.lightColorIconColor));
-                } catch (Exception ex) {
-                }
+            if (UselessUtils.ifBrightColor(holder.noteCard.getCardBackgroundColor().getDefaultColor())) {
+                holder.title.setTextColor(Color.BLACK);
+                holder.text.setTextColor(Color.BLACK);
+                holder.time.setTextColor(Color.BLACK);
+                holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_black_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_black_24dp);
             } else {
-                holder.title.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.text.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.time.setTextColor(ThemesEngine.darkColorTextColor);
-                holder.time_pic.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_edit_white_24dp), ThemesEngine.darkColorIconColor));
-                try {
-                    holder.drag.setImageDrawable(UselessUtils.setTint(activity.getDrawable(R.drawable.ic_drag_indicator_24dp), ThemesEngine.darkColorIconColor));
-                } catch (Exception ex) {
-                }
+                holder.title.setTextColor(Color.WHITE);
+                holder.time.setTextColor(Color.WHITE);
+                holder.text.setTextColor(Color.WHITE);
+                holder.timePic.setImageDrawable(activity.getDrawable(R.drawable.ic_edit_white_24dp));
+                if (holder.drag != null)
+                    holder.drag.setImageResource(R.drawable.ic_drag_indicator_white_24dp);
             }
         }
 
         holder.title.setText(Html.fromHtml(items.get(position).title.replace("\n", "<br />")));
 
         String text = "null";
+        text = App.getInstance().getDatabase().noteItemsDao().getAllByToId(items.get(position).id).get(0).text;
 
-        NoteItemsDao dao = App.getInstance().getDatabase().noteItemsDao();
-        for (NoteItem noteItem : dao.getAll()) {
-            if (noteItem.to_id == items.get(position).id) {
-                if (noteItem.position == 0) {
-                    text = noteItem.text;
-                    break;
-                }
-            }
-        }
-
-        try {
-            boolean oneLine;
-
-            oneLine = !Pattern.compile("\\r?\\n").matcher(text).find();
-
-            if (oneLine) {
-                holder.text.setText(Html.fromHtml(text.split("\\r?\\n")[0]));
-            } else {
-                holder.text.setText(Html.fromHtml(text.split("\\r?\\n")[0] + "..."));
-            }
-        } catch (Exception e) {
-            Logger.log(e);
+        if (!Pattern.compile("\\r?\\n").matcher(text).find()) {
+            holder.text.setText(Html.fromHtml(text.split("\\r?\\n")[0]));
+        } else {
+            holder.text.setText(Html.fromHtml(text.split("\\r?\\n")[0] + "..."));
         }
 
         if (holder.text.getText().toString().equals("")) {
@@ -572,82 +328,21 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             holder.text.setText(Html.fromHtml("<i>" + activity.getString(R.string.blocked) + "</i>"));
         }
 
-        Date currentDate = new Date(items.get(position).edit_time);
+        Date currentDate = new Date(items.get(position).editTime);
         try {
-            DateFormat df = new SimpleDateFormat(PreferenceManager.getDefaultSharedPreferences(activity).getString("date", "HH:mm | dd.MM.yyyy"), Locale.US);
+            DateFormat df = new SimpleDateFormat(App.getDefaultSharedPreferences().getString("date", "HH:mm | dd.MM.yyyy"), Locale.US);
             holder.time.setText(df.format(currentDate));
         } catch (Exception e) {
             holder.time.setText("Error");
         }
-
-        if (!ableToMove) {
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    getNotesDialog(items.get(position).id, position);
-                    return false;
-                }
-            });
-
-            holder.note_card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle args = new Bundle();
-                    args.putLong("id", items.get(position).id);
-                    args.putInt("locked", items.get(position).locked);
-                    args.putString("title", items.get(position).title);
-
-                    if (items.get(position).locked == 1) {
-                        if (PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("lock", false)) {
-                            MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                                    .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                    R.id.container, LockNote.newInstance(args), "edit").addToBackStack("editor").commit();
-                        } else {
-                            Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                R.id.container, NoteEdit.newInstance(args), "edit").addToBackStack("editor").commit();
-                    }
-
-                }
-            });
-        } else {
-            holder.drag.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    touchHelper.startDrag(holder);
-                    return false;
-                }
-            });
-        }
     }
 
     private String getNotifyTitle(long id) {
-        String flex = "null";
-
-        for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.id == id) {
-                flex = noteOrFolder.title;
-                break;
-            }
-        }
-
-        return flex;
+        return dao.getById(id).title;
     }
 
     private String getNotifyText(long id) {
-        String flex = "null";
-
-        for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.id == id) {
-                flex = noteOrFolder.text;
-                break;
-            }
-        }
-
-        return flex;
+        return dao.getById(id).text;
     }
 
     public void getNotifyDialog(long id, int position) {
@@ -686,8 +381,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         builder.setPositiveButton(activity.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog228, int which) {
-                                App.getInstance().getDatabase().noteOrFolderDao().updateNoteTitle(title.getText().toString(), id);
-                                App.getInstance().getDatabase().noteOrFolderDao().updateNoteText(text.getText().toString(), id);
+                                dao.updateNoteTitle(title.getText().toString(), id);
+                                dao.updateNoteText(text.getText().toString(), id);
 
                                 notifyItemChanged(position);
                             }
@@ -696,7 +391,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         ShowAlertDialog.show(builder);
                         break;
                     case 1:
-                        UselessUtils.replace(NotesMoving.newInstance(items.get(0).in_folder_id), "moving");
+                        UselessUtils.replace((AppCompatActivity) activity, NotesMovingFragment.newInstance(items.get(0).inFolderId), "moving", true, null);
                         break;
                     case 2:
                         int currentColor;
@@ -711,7 +406,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         colorPickerDialog.setColorPickerDialogListener(new ColorPickerDialogListener() {
                             @Override
                             public void onColorSelected(int dialogId, int color) {
-                                App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("#" + Integer.toHexString(color), id);
+                                dao.updateNoteColor("#" + Integer.toHexString(color), id);
 
                                 notifyItemChanged(position);
                             }
@@ -727,7 +422,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
                     case 3:
-                        App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("", id);
+                        dao.updateNoteColor("", id);
                         notifyItemChanged(position);
                         break;
                 }
@@ -772,8 +467,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             public void onClick(DialogInterface dialog228, int which) {
                                 boolean create = true;
 
-                                for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-                                    if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(text.getText().toString())) {
+                                for (NoteOrFolder noteOrFolder : dao.getAll()) {
+                                    if (noteOrFolder.isFolder == 1 && noteOrFolder.folderName.equals(text.getText().toString())) {
                                         create = false;
                                         Toast.makeText(App.getContext(), activity.getString(R.string.folder_error), Toast.LENGTH_SHORT).show();
                                         break;
@@ -781,13 +476,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 }
 
                                 if (create) {
-                                    for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-                                        if (noteOrFolder.in_folder_id.equals(getFolderNameFromDataBase(id))) {
-                                            App.getInstance().getDatabase().noteOrFolderDao().updateInFolderIdById(text.getText().toString(), noteOrFolder.id);
+                                    for (NoteOrFolder noteOrFolder : dao.getAll()) {
+                                        if (noteOrFolder.inFolderId.equals(getFolderNameFromDataBase(id))) {
+                                            dao.updateInFolderIdById(text.getText().toString(), noteOrFolder.id);
                                         }
                                     }
-                                    App.getInstance().getDatabase().noteOrFolderDao().updateFolderTitle(text.getText().toString(), getFolderNameFromDataBase(id));
-                                    App.getInstance().getDatabase().noteOrFolderDao().updateInFolderId(text.getText().toString(), getFolderNameFromDataBase(id));
+                                    dao.updateFolderTitle(text.getText().toString(), getFolderNameFromDataBase(id));
+                                    dao.updateInFolderId(text.getText().toString(), getFolderNameFromDataBase(id));
 
                                     notifyItemChanged(position);
                                 }
@@ -797,7 +492,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         ShowAlertDialog.show(builder);
                         break;
                     case 1:
-                        UselessUtils.replace(NotesMoving.newInstance(items.get(0).in_folder_id), "moving");
+                        UselessUtils.replace((AppCompatActivity) activity, NotesMovingFragment.newInstance(items.get(0).inFolderId), "moving", true, null);
                         break;
                     case 2:
                         int currentColor;
@@ -813,7 +508,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             @Override
                             public void onColorSelected(int dialogId, int color) {
                                 Logger.log("onColorSelected: " + "#" + Integer.toHexString(color));
-                                App.getInstance().getDatabase().noteOrFolderDao().updateFolderColor("#" + Integer.toHexString(color), getFolderNameFromDataBase(id));
+                                dao.updateFolderColor("#" + Integer.toHexString(color), getFolderNameFromDataBase(id));
 
                                 notifyItemChanged(position);
                             }
@@ -828,7 +523,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
                         break;
                     case 3:
-                        App.getInstance().getDatabase().noteOrFolderDao().updateFolderColor("", getFolderNameFromDataBase(id));
+                        dao.updateFolderColor("", getFolderNameFromDataBase(id));
                         notifyItemChanged(position);
                         break;
                 }
@@ -855,7 +550,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-
                         int currentColor;
 
                         try {
@@ -870,7 +564,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             public void onColorSelected(int dialogId, int color) {
                                 Logger.log("onColorSelected: " + "#" + Integer.toHexString(color) + " id: " + id);
 
-                                App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("#" + Integer.toHexString(color), id);
+                                dao.updateNoteColor("#" + Integer.toHexString(color), id);
                                 notifyItemChanged(position);
                             }
 
@@ -879,26 +573,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                             }
                         });
-
-                        FragmentActivity fragmentActivity = (FragmentActivity) activity;
-
-                        colorPickerDialog.show(fragmentActivity.getSupportFragmentManager(), "");
+                        colorPickerDialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), "");
                         break;
                     case 1:
-                        UselessUtils.replace(NotesMoving.newInstance(items.get(0).in_folder_id), "moving");
+                        UselessUtils.replace((AppCompatActivity) activity, NotesMovingFragment.newInstance(items.get(0).inFolderId), "moving", true, null);
                         break;
                     case 2:
-                        Bundle args = new Bundle();
-                        args.putString("in_id", "def");
-                        args.putLong("id", id);
-
-                        MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                                R.id.container, ChooseFolder.newInstance(args), "choose_folder")
-                                .addToBackStack(null).commit();
+                        UselessUtils.replace((AppCompatActivity) activity, ChooseFolderFragment.newInstance(id, "def"), "choose_folder", true, null);
                         break;
                     case 3:
-                        App.getInstance().getDatabase().noteOrFolderDao().updateNoteColor("", id);
+                        dao.updateNoteColor("", id);
                         notifyItemChanged(position);
                         break;
                 }
@@ -906,40 +590,25 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         });
 
         ShowAlertDialog.show(builder1);
-
     }
 
     private String getColorFromDataBase(long id) {
-        String color = "0xffffffff";
-
-        for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.id == id) {
-                color = noteOrFolder.color;
-            }
-        }
-
-        return color;
+        return App.getInstance().getDatabase().noteOrFolderDao().getById(id).color;
     }
 
     @Override
     public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewRecycled(holder);
-
-        if (holder instanceof folderViewHolder) {
-
-        }
     }
 
     @Override
     public int getItemViewType(int position) {
-        dao = App.getInstance().getDatabase().noteOrFolderDao();
-
         NoteOrFolder item = items.get(position);
-        if (item.is_folder == 0) {
+        if (item.isFolder == 0) {
             return NOTE;
-        } else if (item.is_folder == 1) {
+        } else if (item.isFolder == 1) {
             return FOLDER;
-        } else if (item.is_folder == 2) {
+        } else if (item.isFolder == 2) {
             return NOTIFY;
         } else {
             return -1;
@@ -951,60 +620,226 @@ public class ItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return items.size();
     }
 
-    class folderViewHolder extends RecyclerView.ViewHolder {
+    public class FolderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name;
-        CardView cardView;
-        ImageView folder_image;
-        ImageView drag;
+        public TextView name;
+        public ItemCardView cardView;
+        public ImageView folderImage;
+        public ImageView drag;
 
-        folderViewHolder(@NonNull View itemView) {
+        @SuppressLint("ClickableViewAccessibility")
+        public FolderViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            folder_image = itemView.findViewById(R.id.folder_image);
+            folderImage = itemView.findViewById(R.id.folder_image);
             cardView = itemView.findViewById(R.id.note_card);
             name = itemView.findViewById(R.id.name);
             drag = itemView.findViewById(R.id.drag);
+
+            if (!ableToMove) {
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        getFoldersDialog(items.get(getAdapterPosition()).id, getAdapterPosition());
+                        return false;
+                    }
+                });
+
+                cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UselessUtils.replace((AppCompatActivity) activity, NotesFragment.newInstance(getFolderNameFromDataBase(items.get(getAdapterPosition()).id,
+                                getAdapterPosition())), "in_folder", true, null);
+                    }
+                });
+            } else {
+                drag.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        touchHelper.startDrag(FolderViewHolder.this);
+                        return false;
+                    }
+                });
+            }
         }
     }
 
-    class noteViewHolder extends RecyclerView.ViewHolder {
+    public class NoteViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title;
-        TextView text;
-        CardView note_card;
-        TextView time;
-        ImageView time_pic;
-        ImageView drag;
+        public TextView title;
+        public TextView text;
+        public ItemCardView noteCard;
+        public TextView time;
+        public ImageView timePic;
+        public ImageView drag;
 
-        noteViewHolder(@NonNull View itemView) {
+        @SuppressLint("ClickableViewAccessibility")
+        public NoteViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            note_card = itemView.findViewById(R.id.note_card);
+            noteCard = itemView.findViewById(R.id.note_card);
             title = itemView.findViewById(R.id.textView_title);
             text = itemView.findViewById(R.id.textView_text);
             time = itemView.findViewById(R.id.time);
-            time_pic = itemView.findViewById(R.id.time_ic);
+            timePic = itemView.findViewById(R.id.time_ic);
             drag = itemView.findViewById(R.id.drag);
+
+            if (!ableToMove) {
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        getNotesDialog(items.get(getAdapterPosition()).id, getAdapterPosition());
+                        return false;
+                    }
+                });
+
+                noteCard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (items.get(getAdapterPosition()).locked == 1) {
+                            if (App.getDefaultSharedPreferences().getBoolean("lock", false)) {
+                                UselessUtils.replace((AppCompatActivity) activity,
+                                        LockScreenFragment.newInstance(true, items.get(getAdapterPosition()).id), "lock", true, "editor");
+                            } else {
+                                Toast.makeText(activity, activity.getString(R.string.enable_pin), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            UselessUtils.replace((AppCompatActivity) activity,
+                                    NoteEditFragment.newInstance(false, items.get(getAdapterPosition()).id, null), "edit", true, "editor");
+                        }
+
+                    }
+                });
+            } else {
+                drag.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        touchHelper.startDrag(NoteViewHolder.this);
+                        return false;
+                    }
+                });
+            }
         }
     }
 
-    class notifyViewHolder extends RecyclerView.ViewHolder {
+    public class NotifyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title;
-        TextView text;
-        ImageView notify_pic;
-        CardView cardView;
-        ImageView drag;
+        public TextView title;
+        public TextView text;
+        public ImageView notifyPic;
+        public ItemCardView cardView;
+        public ImageView drag;
 
-        notifyViewHolder(@NonNull View itemView) {
+        @SuppressLint("ClickableViewAccessibility")
+        public NotifyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.textView_title);
             text = itemView.findViewById(R.id.textView_text);
             cardView = itemView.findViewById(R.id.note_card);
-            notify_pic = itemView.findViewById(R.id.notify_pic);
+            notifyPic = itemView.findViewById(R.id.notify_pic);
             drag = itemView.findViewById(R.id.drag);
+
+            if (!ableToMove) {
+                cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String[] itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
+                                activity.getString(R.string.pin_in_status_bar), activity.getString(R.string.change)};
+
+                        final boolean pinned = activity.getSharedPreferences("notifications", Context.MODE_PRIVATE)
+                                .getBoolean("notify " + items.get(getAdapterPosition()).id, false);
+
+                        if (pinned)
+                            itemsAlert = new String[]{activity.getString(R.string.now), activity.getString(R.string.set_time),
+                                    activity.getString(R.string.unpin_from_status_bar), activity.getString(R.string.change)};
+
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
+                        builder.setItems(itemsAlert, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            String name = activity.getString(R.string.notification);
+                                            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                                            NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
+                                            channel.enableVibration(true);
+                                            channel.enableLights(true);
+                                            NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
+                                            notificationManager.createNotificationChannel(channel);
+                                        }
+
+                                        NotificationCompat.Builder builder = new NotificationCompat.Builder(activity)
+                                                .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
+                                                .setContentTitle(getNotifyTitle(items.get(getAdapterPosition()).id))
+                                                .setContentText(getNotifyText(items.get(getAdapterPosition()).id))
+                                                .setContentIntent(PendingIntent.getActivity(App.getContext(), 228, new Intent(App.getContext(), MainActivity.class),
+                                                        PendingIntent.FLAG_CANCEL_CURRENT))
+                                                .setAutoCancel(true)
+                                                .setVibrate(new long[]{1000L, 1000L, 1000L})
+                                                .setChannelId("com.f0x1d.notes.notifications");
+
+                                        NotificationManager notificationManager =
+                                                (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
+
+                                        notificationManager.notify((int) items.get(getAdapterPosition()).id, builder.build());
+                                        break;
+                                    case 1:
+                                        FragmentActivity activity1 = (FragmentActivity) activity;
+                                        SetNotifyDialog notify = new SetNotifyDialog(new Notify(getNotifyTitle(items.get(getAdapterPosition()).id), getNotifyText(items.get(getAdapterPosition()).id),
+                                                0, items.get(getAdapterPosition()).id));
+                                        notify.show(activity1.getSupportFragmentManager(), "TAG");
+                                        break;
+                                    case 2:
+                                        NotificationManager manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                                        if (pinned) {
+                                            manager.cancel((int) items.get(getAdapterPosition()).id + 1);
+                                            activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(getAdapterPosition()).id, false).apply();
+                                            break;
+                                        }
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            String name = activity.getString(R.string.notification);
+                                            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                                            NotificationChannel channel = new NotificationChannel("com.f0x1d.notes.notifications", name, importance);
+                                            channel.enableVibration(true);
+                                            channel.enableLights(true);
+                                            manager.createNotificationChannel(channel);
+                                        }
+
+                                        Notification.Builder builder2 = new Notification.Builder(activity);
+                                        builder2.setSmallIcon(R.drawable.ic_notifications_active_black_24dp);
+                                        builder2.setContentTitle(getNotifyTitle(items.get(getAdapterPosition()).id));
+                                        builder2.setContentText(getNotifyText(items.get(getAdapterPosition()).id));
+                                        builder2.setOngoing(true);
+                                        builder2.setStyle(new Notification.BigTextStyle().bigText(getNotifyText(items.get(getAdapterPosition()).id)));
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                                            builder2.setChannelId("com.f0x1d.notes.notifications");
+
+                                        manager.notify((int) items.get(getAdapterPosition()).id + 1, builder2.build());
+
+                                        activity.getSharedPreferences("notifications", Context.MODE_PRIVATE).edit().putBoolean("notify " + items.get(getAdapterPosition()).id, true).apply();
+                                        break;
+                                    case 3:
+                                        getNotifyDialog(items.get(getAdapterPosition()).id, getAdapterPosition());
+                                        break;
+                                }
+                            }
+                        });
+                        ShowAlertDialog.show(builder);
+                    }
+                });
+            } else {
+                drag.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        touchHelper.startDrag(NotifyViewHolder.this);
+                        return false;
+                    }
+                });
+            }
         }
     }
 }

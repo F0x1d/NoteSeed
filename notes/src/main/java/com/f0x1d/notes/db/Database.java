@@ -25,7 +25,6 @@ public abstract class Database extends RoomDatabase {
             database.execSQL("ALTER TABLE NoteItem ADD COLUMN type INTENGER DEFAULT 0 NOT NULL");
         }
     };
-
     public static final Migration MIGRATION_9_10 = new Migration(9, 10) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
@@ -41,7 +40,7 @@ public abstract class Database extends RoomDatabase {
         int lastPos = 0;
 
         for (int i = 0; i < notes.size(); i++) {
-            if (notes.get(i).in_folder_id.equals(inFolderId))
+            if (notes.get(i).inFolderId.equals(inFolderId))
                 lastPos++;
         }
 
@@ -56,7 +55,7 @@ public abstract class Database extends RoomDatabase {
         int thingsInFolder = 0;
 
         for (int i = 0; i < things.size(); i++) {
-            if (things.get(i).in_folder_id.equals(inFolderId))
+            if (things.get(i).inFolderId.equals(inFolderId))
                 thingsInFolder++;
         }
 

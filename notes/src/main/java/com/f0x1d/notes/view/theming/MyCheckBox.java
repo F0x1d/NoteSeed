@@ -15,38 +15,29 @@ public class MyCheckBox extends CheckBox {
 
     public MyCheckBox(Context context) {
         super(context);
-
-        if (UselessUtils.ifCustomTheme())
-            setCheckBoxColor(this, Color.GRAY, ThemesEngine.accentColor);
+        init();
     }
 
     public MyCheckBox(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        if (UselessUtils.ifCustomTheme())
-            setCheckBoxColor(this, Color.GRAY, ThemesEngine.accentColor);
+        init();
     }
 
     public MyCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        if (UselessUtils.ifCustomTheme())
-            setCheckBoxColor(this, Color.GRAY, ThemesEngine.accentColor);
+        init();
     }
 
-    public MyCheckBox(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-
-        if (UselessUtils.ifCustomTheme())
+    public void init() {
+        if (UselessUtils.isCustomTheme())
             setCheckBoxColor(this, Color.GRAY, ThemesEngine.accentColor);
     }
-
 
     public static void setCheckBoxColor(CheckBox checkBox, int uncheckedColor, int checkedColor) {
         ColorStateList colorStateList = new ColorStateList(
                 new int[][]{
-                        new int[]{-android.R.attr.state_checked}, // unchecked
-                        new int[]{android.R.attr.state_checked}  // checked
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
                 },
                 new int[]{
                         uncheckedColor,

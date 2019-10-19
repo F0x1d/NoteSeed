@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.adapter.TranslationsAdapter;
 import com.f0x1d.notes.utils.Logger;
@@ -51,7 +52,6 @@ public class TranslationsFragment extends Fragment {
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.translations));
-        getActivity().setActionBar(toolbar);
 
         recyclerView = view.findViewById(R.id.recyclerView);
 
@@ -76,14 +76,8 @@ public class TranslationsFragment extends Fragment {
     }
 
     public void restart() {
-        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("change_l", true).apply();
-
-        Intent i1 = getActivity().getBaseContext().getPackageManager().
-                getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
-        i1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getActivity().startActivity(i1);
-        getActivity().finish();
+        App.getDefaultSharedPreferences().edit().putBoolean("change_l", true).apply();
+        requireActivity().recreate();
     }
 
     public void openFile(String minmeType, int requestCode, Context c) {
@@ -109,7 +103,7 @@ public class TranslationsFragment extends Fragment {
         try {
             startActivityForResult(chooserIntent, requestCode);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getActivity(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -119,7 +113,7 @@ public class TranslationsFragment extends Fragment {
 
         if (data != null && requestCode == 228) {
             try {
-                Translations.addTranslation((FileInputStream) getActivity().getContentResolver().openInputStream(data.getData()), UselessUtils.getFileName(data.getData()));
+                Translations.addTranslation((FileInputStream) requireActivity().getContentResolver().openInputStream(data.getData()), UselessUtils.getFileName(data.getData()));
                 restart();
             } catch (IncorrectTranslationError | FileNotFoundException incorrectTranslationError) {
                 Logger.log(incorrectTranslationError);

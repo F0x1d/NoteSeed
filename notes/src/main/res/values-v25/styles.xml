@@ -8,22 +8,8 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
-        <item name="swirl_ridgeColor">@android:color/darker_gray</item>
-        <item name="swirl_errorColor">?android:attr/colorError</item>
-        <item name="preferenceTheme">@style/AppTheme.PreferenceThemeOverlay</item>
-    </style>
-
-    <style name="AppTheme_Orange" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="alertDialogTheme">@style/AlertDialog.AppTheme.Light</item>
-        <item name="colorPrimary">@color/noname</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/noname</item>
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:navigationBarColor">@android:color/white</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="swirl_ridgeColor">@android:color/darker_gray</item>
         <item name="swirl_errorColor">?android:attr/colorError</item>
         <item name="preferenceTheme">@style/AppTheme.PreferenceThemeOverlay</item>
@@ -35,6 +21,7 @@
         <item name="colorAccent">@color/white</item>
         <item name="alertDialogTheme">@style/AlertDialog.AppTheme.Dark</item>
         <item name="android:statusBarColor">@color/statusbar</item>
+        <item name="android:navigationBarColor">@color/statusbar</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
         <item name="android:windowBackground">@color/statusbar</item>

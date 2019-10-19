@@ -3,8 +3,6 @@ package com.f0x1d.notes.fragment.lock;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +17,15 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.fragment.main.Notes;
-import com.f0x1d.notes.fragment.settings.MainSettings;
+import com.f0x1d.notes.fragment.main.NotesFragment;
+import com.f0x1d.notes.fragment.settings.MainSettingsFragment;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.theming.MyButton;
 
-public class СhoosePin extends Fragment {
+public class СhooseLockFragment extends Fragment {
 
     private EditText pass;
 
@@ -34,10 +33,10 @@ public class СhoosePin extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lock_choose, container, false);
 
-        if (UselessUtils.ifCustomTheme()) {
-            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+        if (UselessUtils.isCustomTheme()) {
+            requireActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            requireActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            requireActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
 
         ((TextView) view.findViewById(R.id.textView5)).setText(getString(R.string.pass));
@@ -57,10 +56,10 @@ public class СhoosePin extends Fragment {
         MyButton nol = view.findViewById(R.id.nol);
         ImageButton done = view.findViewById(R.id.done);
         done.setBackground(null);
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)) {
-            done.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_white_24dp));
+        if (App.getDefaultSharedPreferences().getBoolean("night", false)) {
+            done.setImageDrawable(requireActivity().getDrawable(R.drawable.ic_done_white_24dp));
         } else {
-            done.setImageDrawable(getActivity().getDrawable(R.drawable.ic_done_black_24dp));
+            done.setImageDrawable(requireActivity().getDrawable(R.drawable.ic_done_black_24dp));
         }
 
         MyButton back = view.findViewById(R.id.back);
@@ -108,15 +107,12 @@ public class СhoosePin extends Fragment {
                         break;
                     case R.id.done:
                         if (pass.getText().toString().isEmpty()) {
-                            Toast.makeText(getActivity(), getString(R.string.empty_pass), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity(), getString(R.string.empty_pass), Toast.LENGTH_SHORT).show();
                         } else {
-                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("pass", pass.getText().toString()).apply();
-                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("lock", true).apply();
+                            App.getDefaultSharedPreferences().edit().putString("pass", pass.getText().toString()).apply();
+                            App.getDefaultSharedPreferences().edit().putBoolean("lock", true).apply();
 
-                            UselessUtils.clear_back_stack();
-                            Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
-                            UselessUtils.replaceNoBackStack(new Notes(), "notes");
-                            UselessUtils.replace(new MainSettings(), "settings");
+                            requireActivity().getSupportFragmentManager().popBackStack();
                         }
                         break;
 
@@ -140,30 +136,30 @@ public class СhoosePin extends Fragment {
         done.setOnClickListener(oclBtn);
         back.setOnClickListener(oclBtn);
 
-        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
+        Animation animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.push_up);
         animation.setDuration(400);
         back.startAnimation(animation);
         done.startAnimation(animation);
 
-        Animation animation2 = AnimationUtils.loadAnimation(getActivity(), R.anim.push_down);
+        Animation animation2 = AnimationUtils.loadAnimation(requireActivity(), R.anim.push_down);
         animation2.setDuration(400);
 
         ImageView icon = view.findViewById(R.id.icon);
         icon.startAnimation(animation2);
 
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)) {
-            odin.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            dva.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            tri.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            cheture.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            pat.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            shest.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            sem.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            vosem.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            devat.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            nol.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            back.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
-            done.setBackgroundTintList(ColorStateList.valueOf(getActivity().getResources().getColor(R.color.statusbar)));
+        if (App.getDefaultSharedPreferences().getBoolean("night", false)) {
+            odin.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            dva.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            tri.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            cheture.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            pat.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            shest.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            sem.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            vosem.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            devat.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            nol.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            back.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
+            done.setBackgroundTintList(ColorStateList.valueOf(requireActivity().getResources().getColor(R.color.statusbar)));
         }
         return view;
     }
@@ -172,7 +168,7 @@ public class СhoosePin extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         if (pass.getText().toString().isEmpty()) {
-            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("lock", false).apply();
+            App.getDefaultSharedPreferences().edit().putBoolean("lock", false).apply();
         }
     }
 }

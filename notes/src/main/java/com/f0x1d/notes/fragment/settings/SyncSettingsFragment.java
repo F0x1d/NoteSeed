@@ -5,7 +5,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -34,9 +34,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.services.drive.DriveScopes;
 
-public class SyncSettings extends PreferenceFragmentCompat {
+public class SyncSettingsFragment extends PreferenceFragmentCompat {
 
-    public static SyncSettings instance;
+    public static SyncSettingsFragment instance;
     private Preference login;
     private Preference logout;
 
@@ -46,18 +46,17 @@ public class SyncSettings extends PreferenceFragmentCompat {
 
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        if (UselessUtils.ifCustomTheme()) {
-            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+        if (UselessUtils.isCustomTheme()) {
+            requireActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            requireActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            requireActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
             toolbar.setTitle(getString(R.string.sync));
-            getActivity().setActionBar(toolbar);
 
-            if (UselessUtils.ifCustomTheme())
+            if (UselessUtils.isCustomTheme())
                 toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
         return v;
@@ -91,9 +90,9 @@ public class SyncSettings extends PreferenceFragmentCompat {
                         .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
                         .build();
 
-                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
 
-                new SignInDialog().show(getActivity(), mGoogleSignInClient);
+                new SignInDialog().show(requireActivity(), mGoogleSignInClient);
                 return false;
             }
         });
@@ -102,11 +101,11 @@ public class SyncSettings extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 if (GoogleSignIn.getLastSignedInAccount(getContext()) == null) {
-                    Toast.makeText(getActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
                     Logger.log("error, sign in please");
                 }
 
-                ProgressDialog dialog = new ProgressDialog(getActivity());
+                ProgressDialog dialog = new ProgressDialog(requireActivity());
                 dialog.setCancelable(false);
                 dialog.setMessage("Loading...");
                 dialog.show();
@@ -117,7 +116,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
                         .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
                         .build();
 
-                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
                 mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -134,32 +133,32 @@ public class SyncSettings extends PreferenceFragmentCompat {
             }
         });
 
-        Preference import_gdrive = findPreference("import_g");
-        import_gdrive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference importGDrive = findPreference("import_g");
+        importGDrive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null) {
+                if (GoogleSignIn.getLastSignedInAccount(requireActivity()) != null) {
                     importFromGDrive();
                 } else {
-                    Toast.makeText(getActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
         });
 
-        Preference export_gdrive = findPreference("export_g");
-        export_gdrive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference exportGDrive = findPreference("export_g");
+        exportGDrive.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null) {
+                if (GoogleSignIn.getLastSignedInAccount(requireActivity()) != null) {
                     SyncUtils.export();
 
-                    ProgressDialog dialog = new ProgressDialog(getActivity());
+                    ProgressDialog dialog = new ProgressDialog(requireActivity());
                     dialog.setMessage("Loading...");
                     dialog.setCancelable(false);
                     dialog.show();
 
-                    if (UselessUtils.ifCustomTheme())
+                    if (UselessUtils.isCustomTheme())
                         dialog.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
                     else if (UselessUtils.getBool("night", false))
                         dialog.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
@@ -173,18 +172,18 @@ public class SyncSettings extends PreferenceFragmentCompat {
                         }
                     });
                 } else {
-                    Toast.makeText(getActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "error, sign in please", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }
         });
 
-        Preference import_db = findPreference("import");
-        import_db.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference importDb = findPreference("import");
+        importDb.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 SyncUtils.importFile();
-                Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -194,7 +193,7 @@ public class SyncSettings extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 SyncUtils.export();
-                Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -202,45 +201,45 @@ public class SyncSettings extends PreferenceFragmentCompat {
 
     @Override
     protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
-        return new MainSettings.CustomPreferenceGroupAdapter(preferenceScreen);
+        return new MainSettingsFragment.CustomPreferenceGroupAdapter(preferenceScreen);
     }
 
     public void importFromGDrive() {
-        ProgressDialog dialog1 = new ProgressDialog(getActivity());
-        dialog1.setCancelable(false);
-        dialog1.setMessage("Loading...");
-        dialog1.show();
+        ProgressDialog progressDialog = new ProgressDialog(requireActivity());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
 
-        if (UselessUtils.ifCustomTheme())
-            dialog1.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
+        if (UselessUtils.isCustomTheme())
+            progressDialog.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
         else if (UselessUtils.getBool("night", false))
-            dialog1.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
+            progressDialog.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
         else
-            dialog1.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
+            progressDialog.getWindow().getDecorView().getBackground().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC);
 
-        SyncUtils.ifBackupExistsOnGDrive(GoogleSignIn.getLastSignedInAccount(getActivity()).getAccount()).addOnCompleteListener(new OnCompleteListener<String>() {
+        SyncUtils.ifBackupExistsOnGDrive(GoogleSignIn.getLastSignedInAccount(requireActivity()).getAccount()).addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 try {
-                    SyncUtils.importFromGDrive(task.getResult(), GoogleSignIn.getLastSignedInAccount(getActivity()).getAccount()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    SyncUtils.importFromGDrive(task.getResult(), GoogleSignIn.getLastSignedInAccount(requireActivity()).getAccount()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             SyncUtils.importFile();
-                            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("restored", true).apply();
-                            dialog1.cancel();
+                            App.getDefaultSharedPreferences().edit().putBoolean("restored", true).apply();
+                            progressDialog.cancel();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                            dialog1.cancel();
+                            Toast.makeText(requireActivity(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.cancel();
                         }
                     });
 
                 } catch (Exception e) {
                     Logger.log(e);
-                    Toast.makeText(getActivity(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                    dialog1.cancel();
+                    Toast.makeText(requireActivity(), "error: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    progressDialog.cancel();
                 }
             }
         });

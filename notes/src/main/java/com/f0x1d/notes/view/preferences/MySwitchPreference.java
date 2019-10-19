@@ -62,13 +62,13 @@ public class MySwitchPreference extends SwitchPreference {
 
         aSwitch = holder.itemView.findViewById(android.R.id.switch_widget);
 
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             colorSwitch(aSwitch, ThemesEngine.accentColor);
         }
 
         TextView text = holder.itemView.findViewById(android.R.id.title);
         TextView text2 = holder.itemView.findViewById(android.R.id.summary);
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             text.setTextColor(ThemesEngine.textColor);
             text2.setTextColor(ThemesEngine.textColor);
         }

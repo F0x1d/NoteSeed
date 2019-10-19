@@ -6,10 +6,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -31,10 +31,10 @@ public class BackupDialog {
         dialog.setMessage("Loading...");
         dialog.setCancelable(false);
 
-        if (!PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("restored", false)) {
+        if (!App.getDefaultSharedPreferences().getBoolean("want_sign_in", true)) {
             dialog.show();
 
-            if (UselessUtils.ifCustomTheme())
+            if (UselessUtils.isCustomTheme())
                 dialog.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
             else if (UselessUtils.getBool("night", false))
                 dialog.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
@@ -54,7 +54,7 @@ public class BackupDialog {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SyncUtils.importFile();
-                        PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("restored", true).apply();
+                        App.getDefaultSharedPreferences().edit().putBoolean("restored", true).apply();
                         activity.recreate();
                     }
                 });
@@ -65,7 +65,7 @@ public class BackupDialog {
             builder.setNeutralButton(activity.getString(R.string.no), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("restored", true).apply();
+                    App.getDefaultSharedPreferences().edit().putBoolean("restored", true).apply();
                     dialog.cancel();
                 }
             });
@@ -92,7 +92,7 @@ public class BackupDialog {
                                 dialog1.setMessage("Loading...");
                                 dialog1.show();
 
-                                if (UselessUtils.ifCustomTheme())
+                                if (UselessUtils.isCustomTheme())
                                     dialog1.getWindow().getDecorView().getBackground().setColorFilter(ThemesEngine.background, PorterDuff.Mode.SRC);
                                 else if (UselessUtils.getBool("night", false))
                                     dialog1.getWindow().getDecorView().getBackground().setColorFilter(activity.getResources().getColor(R.color.statusbar_for_dialogs), PorterDuff.Mode.SRC);
@@ -105,7 +105,7 @@ public class BackupDialog {
                                         SyncUtils.importFile();
                                         dialog1.cancel();
                                         dialog.cancel();
-                                        PreferenceManager.getDefaultSharedPreferences(activity).edit().putBoolean("restored", true).apply();
+                                        App.getDefaultSharedPreferences().edit().putBoolean("restored", true).apply();
                                         activity.recreate();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {

@@ -52,7 +52,7 @@ public class MyFAB extends FloatingActionButton {
     @Override
     public void setImageDrawable(@Nullable Drawable drawable) {
         super.setImageDrawable(drawable);
-        if (UselessUtils.ifCustomTheme())
+        if (UselessUtils.isCustomTheme())
             setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
         else if (UselessUtils.getBool("night", false))
             setImageTintList(ColorStateList.valueOf(getContext().getResources().getColor(android.R.color.black)));
@@ -252,7 +252,7 @@ public class MyFAB extends FloatingActionButton {
     }
 
     private void start() {
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             setBackgroundTintList(ColorStateList.valueOf(ThemesEngine.fabColor));
             setImageTintList(ColorStateList.valueOf(ThemesEngine.fabIconColor));
             setCompatElevation(ThemesEngine.shadows);
@@ -263,38 +263,5 @@ public class MyFAB extends FloatingActionButton {
         } else {
             setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
         }
-
-        MainActivity.instance.viewModel.fabColor.observe(MainActivity.instance, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                int colorFrom = getBackgroundTintList().getDefaultColor();
-
-                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
-                colorAnimation.setDuration(250);
-                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animator) {
-                        setBackgroundTintList(ColorStateList.valueOf((int) animator.getAnimatedValue()));
-                    }
-                });
-                colorAnimation.start();
-            }
-        });
-        MainActivity.instance.viewModel.fabIconColor.observe(MainActivity.instance, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                int colorFrom = getImageTintList().getDefaultColor();
-
-                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
-                colorAnimation.setDuration(250);
-                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animator) {
-                        setImageTintList(ColorStateList.valueOf((int) animator.getAnimatedValue()));
-                    }
-                });
-                colorAnimation.start();
-            }
-        });
     }
 }

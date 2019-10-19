@@ -32,7 +32,7 @@ public class SignInDialog {
         });
         builder.setNeutralButton(activity.getString(R.string.no), (dialog, which) -> {
             dialog.cancel();
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
+            App.getDefaultSharedPreferences().edit().putBoolean("want_sign_in", false).apply();
         });
         ShowAlertDialog.show(builder);
     }

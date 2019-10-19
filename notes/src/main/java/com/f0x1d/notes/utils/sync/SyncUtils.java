@@ -142,19 +142,19 @@ public class SyncUtils {
                 JSONArray elements = new JSONArray();
 
                 for (NoteItem noteItem : App.getInstance().getDatabase().noteItemsDao().getAll()) {
-                    if (noteItem.to_id == noteOrFolder.id) {
+                    if (noteItem.toId == noteOrFolder.id) {
                         JSONObject element = new JSONObject();
 
                         try {
                             element.put("id", noteItem.id);
-                            element.put("to_id", noteItem.to_id);
+                            element.put("to_id", noteItem.toId);
                             element.put("type", noteItem.type);
                             element.put("checked", noteItem.checked);
 
-                            if (noteItem.pic_res == null) {
+                            if (noteItem.picRes == null) {
                                 element.put("pic_res", "null");
                             } else {
-                                element.put("pic_res", noteItem.pic_res);
+                                element.put("pic_res", noteItem.picRes);
                             }
 
                             if (noteItem.text == null) {
@@ -181,10 +181,10 @@ public class SyncUtils {
 
                     note.put("locked", noteOrFolder.locked);
                     note.put("id", noteOrFolder.id);
-                    note.put("is_folder", noteOrFolder.is_folder);
+                    note.put("is_folder", noteOrFolder.isFolder);
                     note.put("pinned", noteOrFolder.pinned);
-                    note.put("edit_time", noteOrFolder.edit_time);
-                    note.put("in_folder_id", noteOrFolder.in_folder_id);
+                    note.put("edit_time", noteOrFolder.editTime);
+                    note.put("in_folder_id", noteOrFolder.inFolderId);
                     note.put("position", noteOrFolder.position);
 
                     if (noteOrFolder.text == null) {
@@ -194,10 +194,10 @@ public class SyncUtils {
                     }
 
                     note.put("color", noteOrFolder.color);
-                    if (noteOrFolder.folder_name == null) {
+                    if (noteOrFolder.folderName == null) {
                         note.put("folder_name", "null");
                     } else {
-                        note.put("folder_name", noteOrFolder.folder_name);
+                        note.put("folder_name", noteOrFolder.folderName);
                     }
 
                     note.put("elems", elements);

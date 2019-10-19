@@ -1,12 +1,10 @@
 package com.f0x1d.notes;
 
 import android.app.Application;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Environment;
-import android.os.IBinder;
 
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
@@ -15,7 +13,7 @@ import com.crashlytics.android.Crashlytics;
 import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
-import com.f0x1d.notes.fragment.editing.NoteEdit;
+import com.f0x1d.notes.fragment.editing.NoteEditFragment;
 import com.f0x1d.notes.service.CaptureNoteNotificationService;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -33,6 +31,7 @@ import io.fabric.sdk.android.Fabric;
 public final class App extends Application {
 
     private static App instance;
+    private static SharedPreferences defaultSharedPrefs;
     private FirebaseAnalytics mFirebaseAnalytics;
     private Database database;
 
@@ -42,6 +41,10 @@ public final class App extends Application {
 
     public static Context getContext() {
         return instance.getApplicationContext();
+    }
+
+    public static SharedPreferences getDefaultSharedPreferences() {
+        return defaultSharedPrefs == null ? defaultSharedPrefs = PreferenceManager.getDefaultSharedPreferences(instance) : defaultSharedPrefs;
     }
 
     @Override
@@ -70,21 +73,10 @@ public final class App extends Application {
             mainFolder.mkdirs();
         exportStrings();
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("showCaptureNotification", false)) {
+        if (App.getDefaultSharedPreferences().getBoolean("showCaptureNotification", false)) {
             Intent intent = new Intent(this, CaptureNoteNotificationService.class);
-
             startService(intent);
-            bindService(intent, new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-
-                }
-            }, 0);
+            bindService(intent, UselessUtils.EMPTY_SERVICE_CONNECTION, 0);
         }
     }
 
@@ -104,11 +96,11 @@ public final class App extends Application {
         for (NoteOrFolder note : notes) {
             int position;
 
-            if (positions.containsKey(note.in_folder_id))
-                position = positions.get(note.in_folder_id);
+            if (positions.containsKey(note.inFolderId))
+                position = positions.get(note.inFolderId);
             else
                 position = 0;
-            positions.put(note.in_folder_id, position + 1);
+            positions.put(note.inFolderId, position + 1);
 
             dao.updatePosition(position, note.id);
         }
@@ -137,7 +129,7 @@ public final class App extends Application {
             File strings = new File(mainFolder, "strings " + BuildConfig.VERSION_NAME + ".json");
             if (!strings.exists()) {
                 try {
-                    NoteEdit.copy(getAssets().open("stringKeys.json"), strings);
+                    NoteEditFragment.copy(getAssets().open("stringKeys.json"), strings);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

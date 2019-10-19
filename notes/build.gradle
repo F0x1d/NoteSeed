@@ -101,10 +101,6 @@ buildNoteSeed.finalizedBy(build)
 
 android {
 
-    dataBinding {
-        enabled = true
-    }
-
     lintOptions {
         abortOnError false
     }
@@ -143,7 +139,7 @@ android {
             minSdkVersion 21
             targetSdkVersion 28
             versionCode code
-            versionName "6.5.5"
+            versionName "6.6"
 
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         }

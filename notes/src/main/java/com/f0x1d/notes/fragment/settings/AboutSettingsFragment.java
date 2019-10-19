@@ -20,24 +20,23 @@ import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
 import com.f0x1d.notes.view.CenteredToolbar;
 
-public class AboutSettings extends PreferenceFragmentCompat {
+public class AboutSettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        if (UselessUtils.ifCustomTheme()) {
-            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-            getActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
-            getActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+        if (UselessUtils.isCustomTheme()) {
+            requireActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            requireActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            requireActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             CenteredToolbar toolbar = v.findViewById(R.id.toolbar);
             toolbar.setTitle(getString(R.string.about));
-            getActivity().setActionBar(toolbar);
 
-            if (UselessUtils.ifCustomTheme())
+            if (UselessUtils.isCustomTheme())
                 toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
 
@@ -54,6 +53,6 @@ public class AboutSettings extends PreferenceFragmentCompat {
 
     @Override
     protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
-        return new MainSettings.CustomPreferenceGroupAdapter(preferenceScreen);
+        return new MainSettingsFragment.CustomPreferenceGroupAdapter(preferenceScreen);
     }
 }

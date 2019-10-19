@@ -2,10 +2,7 @@ package com.f0x1d.notes.adapter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,7 +46,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
 
         if (anim) {
             Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.push_down);
-            animation.setDuration(550);
+            animation.setDuration(400);
             view.startAnimation(animation);
         }
 
@@ -64,7 +60,7 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
 
     @Override
     public void onBindViewHolder(@NonNull ThemeViewHolder holder, int position) {
-        if (!UselessUtils.ifBrightColor(themes.get(position).card_color)) {
+        if (!UselessUtils.ifBrightColor(themes.get(position).cardColor)) {
             holder.name.setTextColor(Color.WHITE);
             holder.author.setTextColor(Color.WHITE);
         } else {
@@ -73,26 +69,11 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
         }
 
         holder.name.setText(themes.get(position).name);
-        holder.name.setTextColor(themes.get(position).card_text_color);
+        holder.name.setTextColor(themes.get(position).cardTextColor);
         holder.author.setText(themes.get(position).author);
-        holder.author.setTextColor(themes.get(position).card_text_color);
+        holder.author.setTextColor(themes.get(position).cardTextColor);
 
-        holder.card.setCardBackgroundColor(themes.get(position).card_color);
-
-        holder.card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cardClick(position);
-            }
-        });
-
-        holder.card.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                cardLongClick(position);
-                return false;
-            }
-        });
+        holder.card.setCardBackgroundColor(themes.get(position).cardColor);
     }
 
     @Override
@@ -105,8 +86,6 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
             Toast.makeText(activity, "Nope", Toast.LENGTH_SHORT).show();
         } else if (position == 1) {
             Toast.makeText(activity, "Nope", Toast.LENGTH_SHORT).show();
-        } else if (position == 2) {
-            Toast.makeText(activity, "Nope", Toast.LENGTH_SHORT).show();
         } else {
             String[] variants = {activity.getString(R.string.delete)};
 
@@ -116,25 +95,15 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case 0:
-                            try {
-                                if (PreferenceManager.getDefaultSharedPreferences(activity).getString("path_theme", "").equals(themes.get(position).theme_file.getAbsolutePath())) {
-                                    themes.get(position).theme_file.delete();
+                            if (App.getDefaultSharedPreferences().getString("path_theme", "").equals(themes.get(position).themeFile.getAbsolutePath())) {
+                                themes.get(position).themeFile.delete();
 
-                                    PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("night", false).apply();
-                                    PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("change", true).apply();
-                                    PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("orange", false).apply();
-                                    PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("custom_theme", false).apply();
+                                App.getDefaultSharedPreferences().edit().putBoolean("night", false).apply();
+                                App.getDefaultSharedPreferences().edit().putBoolean("custom_theme", false).apply();
 
-                                    Intent i1 = activity.getBaseContext().getPackageManager().
-                                            getLaunchIntentForPackage(activity.getBaseContext().getPackageName());
-                                    i1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    i1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    activity.startActivity(i1);
-                                    activity.finish();
-                                } else {
-                                    themes.get(position).theme_file.delete();
-                                }
-                            } catch (Exception e) {
+                                activity.recreate();
+                            } else {
+                                themes.get(position).themeFile.delete();
                             }
 
                             themes.remove(position);
@@ -150,54 +119,42 @@ public class ThemesAdapter extends RecyclerView.Adapter<ThemesAdapter.ThemeViewH
 
     private void cardClick(int position) {
         if (position == 0) {
-            new ThemesEngine().setupStockTheme(ThemesEngine.LIGHT_BLUE, (AppCompatActivity) activity);
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putString("path_theme", ThemesEngine.LIGHT_BLUE).apply();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    activity.getWindow().getDecorView().setSystemUiVisibility(activity.getWindow().getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-                }
-            }
+            App.getDefaultSharedPreferences().edit().putBoolean("night", false).putBoolean("custom_theme", false).apply();
         } else if (position == 1) {
-            new ThemesEngine().setupStockTheme(ThemesEngine.LIGHT_ORANGE, (AppCompatActivity) activity);
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putString("path_theme", ThemesEngine.LIGHT_ORANGE).apply();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    activity.getWindow().getDecorView().setSystemUiVisibility(activity.getWindow().getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-                }
-            }
-        } else if (position == 2) {
-            new ThemesEngine().setupStockTheme(ThemesEngine.DARK, (AppCompatActivity) activity);
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putString("path_theme", ThemesEngine.DARK).apply();
-            activity.getWindow().getDecorView().setSystemUiVisibility(0);
+            App.getDefaultSharedPreferences().edit().putBoolean("night", true).putBoolean("custom_theme", false).apply();
         } else {
-            new ThemesEngine().setTheme(themes.get(position).theme_file, (AppCompatActivity) activity);
-            if (ThemesEngine.dark)
-                activity.getWindow().getDecorView().setSystemUiVisibility(0);
-            else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        activity.getWindow().getDecorView().setSystemUiVisibility(activity.getWindow().getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-                    }
-                }
-            }
+            ThemesEngine.setTheme(themes.get(position).themeFile);
         }
+        activity.recreate();
     }
 
-    class ThemeViewHolder extends RecyclerView.ViewHolder {
+    public class ThemeViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name;
-        TextView author;
-        CardView card;
+        public TextView name;
+        public TextView author;
+        public CardView card;
 
-        ThemeViewHolder(@NonNull View itemView) {
+        public ThemeViewHolder(@NonNull View itemView) {
             super(itemView);
 
             author = itemView.findViewById(R.id.author);
             name = itemView.findViewById(R.id.name);
             card = itemView.findViewById(R.id.card);
+
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cardClick(getAdapterPosition());
+                }
+            });
+
+            card.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    cardLongClick(getAdapterPosition());
+                    return false;
+                }
+            });
         }
     }
 }

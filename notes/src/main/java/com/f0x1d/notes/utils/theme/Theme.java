@@ -6,16 +6,16 @@ public class Theme {
 
     public String name;
     public String author;
-    public int card_color;
-    public int card_text_color;
+    public int cardColor;
+    public int cardTextColor;
 
-    public File theme_file;
+    public File themeFile;
 
-    public Theme(File theme_file, String name, String author, int card_color, int card_text_color) {
+    public Theme(File themeFile, String name, String author, int cardColor, int cardTextColor) {
         this.name = name;
-        this.card_color = card_color;
+        this.cardColor = cardColor;
         this.author = author;
-        this.theme_file = theme_file;
-        this.card_text_color = card_text_color;
+        this.themeFile = themeFile;
+        this.cardTextColor = cardTextColor;
     }
 }

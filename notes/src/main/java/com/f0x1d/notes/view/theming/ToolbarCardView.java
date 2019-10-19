@@ -25,7 +25,7 @@ public class ToolbarCardView extends MaterialCardView {
     }
 
     private void init() {
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             setCardElevation(ThemesEngine.shadows);
             setCardBackgroundColor(ThemesEngine.toolbarColor);
         } else if (UselessUtils.getBool("night", false)) {

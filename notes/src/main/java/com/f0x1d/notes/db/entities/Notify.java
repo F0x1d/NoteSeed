@@ -1,5 +1,6 @@
 package com.f0x1d.notes.db.entities;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -14,10 +15,11 @@ public class Notify {
     public String title;
     public String text;
 
-    public long to_id;
+    @ColumnInfo(name = "to_id")
+    public long toId;
 
-    public Notify(String title, String text, long time, long to_id) {
-        this.to_id = to_id;
+    public Notify(String title, String text, long time, long toId) {
+        this.toId = toId;
         this.time = time;
         this.text = text;
         this.title = title;

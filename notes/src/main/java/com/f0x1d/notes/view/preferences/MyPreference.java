@@ -64,7 +64,7 @@ public class MyPreference extends Preference {
         try {
             TextView text = holder.itemView.findViewById(android.R.id.title);
             TextView text2 = holder.itemView.findViewById(android.R.id.summary);
-            if (UselessUtils.ifCustomTheme()) {
+            if (UselessUtils.isCustomTheme()) {
                 text.setTextColor(ThemesEngine.textColor);
                 text2.setTextColor(ThemesEngine.textColor);
             }

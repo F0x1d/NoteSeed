@@ -8,7 +8,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
@@ -48,10 +48,10 @@ public class CustomBottomSheet extends BottomSheetDialogFragment {
 
         LinearLayout layout = v.findViewById(R.id.background);
 
-        if (UselessUtils.ifCustomTheme())
+        if (UselessUtils.isCustomTheme())
             layout.setBackgroundColor(ThemesEngine.background);
-        else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false))
-            layout.setBackgroundColor(getActivity().getResources().getColor(R.color.statusbar));
+        else if (App.getDefaultSharedPreferences().getBoolean("night", false))
+            layout.setBackgroundColor(requireActivity().getResources().getColor(R.color.statusbar));
         else
             layout.setBackgroundColor(Color.WHITE);
 

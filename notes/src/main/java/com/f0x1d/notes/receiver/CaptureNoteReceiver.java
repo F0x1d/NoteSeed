@@ -12,13 +12,13 @@ import com.f0x1d.notes.adapter.NoteItemsAdapter;
 import com.f0x1d.notes.db.Database;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
-import com.f0x1d.notes.fragment.main.Notes;
+import com.f0x1d.notes.fragment.main.NotesFragment;
 import com.f0x1d.notes.service.CaptureNoteNotificationService;
 
 public class CaptureNoteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        long rowID = App.getInstance().getDatabase().noteOrFolderDao().insert(new NoteOrFolder(generateName(context), null, Notes.genId(), 0, "def",
+        long rowID = App.getInstance().getDatabase().noteOrFolderDao().insert(new NoteOrFolder(generateName(context), null, NotesFragment.genId(), 0, "def",
                 0, null, 0, "", System.currentTimeMillis(), Database.getLastPosition("def")));
 
         App.getInstance().getDatabase().noteItemsDao().insert(
@@ -34,7 +34,7 @@ public class CaptureNoteReceiver extends BroadcastReceiver {
         String name = c.getString(R.string.new_note);
 
         for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
-            if (noteOrFolder.is_folder == 0 && noteOrFolder.title.equals(name)) {
+            if (noteOrFolder.isFolder == 0 && noteOrFolder.title.equals(name)) {
                 name = c.getString(R.string.new_note) + first_number;
                 first_number++;
             }

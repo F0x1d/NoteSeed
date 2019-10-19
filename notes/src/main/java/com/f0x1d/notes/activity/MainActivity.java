@@ -8,30 +8,21 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.databinding.ActivityMainBinding;
-import com.f0x1d.notes.fragment.editing.NoteAdd;
-import com.f0x1d.notes.fragment.editing.NoteEdit;
-import com.f0x1d.notes.fragment.lock.LockScreen;
-import com.f0x1d.notes.fragment.lock.LockTickerScreen;
-import com.f0x1d.notes.fragment.main.Notes;
-import com.f0x1d.notes.fragment.settings.MainSettings;
-import com.f0x1d.notes.fragment.settings.SyncSettings;
-import com.f0x1d.notes.fragment.settings.themes.ThemesFragment;
-import com.f0x1d.notes.fragment.settings.translations.TranslationsFragment;
+import com.f0x1d.notes.fragment.editing.NoteEditFragment;
+import com.f0x1d.notes.fragment.lock.LockScreenFragment;
+import com.f0x1d.notes.fragment.main.NotesFragment;
+import com.f0x1d.notes.fragment.settings.SyncSettingsFragment;
 import com.f0x1d.notes.receiver.CopyTextReceiver;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.PermissionUtils;
@@ -40,7 +31,6 @@ import com.f0x1d.notes.utils.dialogs.BackupDialog;
 import com.f0x1d.notes.utils.dialogs.SignInDialog;
 import com.f0x1d.notes.utils.sync.SyncService;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
-import com.f0x1d.notes.utils.theme.ThemingViewModel;
 import com.f0x1d.notes.utils.translations.CustomResources;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -52,21 +42,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.api.services.drive.DriveScopes;
 
 import static android.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
-import static com.f0x1d.notes.utils.UselessUtils.clear_back_stack;
+import static com.f0x1d.notes.utils.UselessUtils.clearBackStack;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static MainActivity instance;
-    public ThemingViewModel viewModel;
     private GoogleSignInClient mGoogleSignInClient;
     private CustomResources resources;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        instance = this;
         PermissionUtils.requestPermissions(this);
-
-        viewModel = ViewModelProviders.of(this).get(ThemingViewModel.class);
 
         Thread.UncaughtExceptionHandler defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -104,22 +89,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (UselessUtils.ifCustomTheme()) {
-            new ThemesEngine().setupAll(this);
+        if (UselessUtils.isCustomTheme()) {
+            ThemesEngine.setupAll();
         }
 
-        setTheme(R.style.AppTheme);
+        if (UselessUtils.isDarkTheme()) {
+            setTheme(R.style.NightTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                getWindow().setNavigationBarColor(Color.BLACK);
+            }
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                getWindow().setStatusBarColor(Color.GRAY);
+            }
+        }
 
-        getWindow().setStatusBarColor(viewModel.statusBarColor.getValue());
-        getWindow().setNavigationBarColor(viewModel.navBarColor.getValue());
-
-        if (ThemesEngine.dark)
-            getWindow().getDecorView().setSystemUiVisibility(0);
+        if (UselessUtils.isCustomTheme()) {
+            getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
+        }
 
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setViewmodel(ViewModelProviders.of(this).get(ThemingViewModel.class));
-        binding.setLifecycleOwner(this);
+        setContentView(R.layout.activity_main);
 
         if (GoogleSignIn.getLastSignedInAccount(this) == null) {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -133,51 +125,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (getIntent().getExtras() != null && getIntent().getStringExtra("open") != null && getIntent().getStringExtra("open").equals("add")) {
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                    R.id.container, new Notes(), "notes").commit();
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                    R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
-            return;
-        }
-
-        if (getIntent().getExtras() != null) {
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                    R.id.container, new Notes(), "notes").commit();
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                    R.id.container, NoteEdit.newInstance(getIntent().getExtras()), "edit").addToBackStack("editor").commit();
-            return;
-        }
-
-        try {
-            savedInstanceState.getString("what_frag");
-        } catch (Exception e) {
-            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)) {
-                clear_back_stack();
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, new Notes(), "notes").commit();
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, new MainSettings(), "settings").addToBackStack(null).commit();
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, ThemesFragment.newInstance(false), "themes").addToBackStack(null).commit();
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change", false).apply();
-
-            } else if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change_l", false)) {
-                clear_back_stack();
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, new Notes(), "notes").commit();
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, new MainSettings(), "settings").addToBackStack(null).commit();
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, TranslationsFragment.newInstance(), "translations").addToBackStack(null).commit();
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("change_l", false).apply();
-
-            } else {
-                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false)) {
-                    getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            R.id.container, LockScreen.newInstance(), "lock").commit();
+            UselessUtils.replace(this, NotesFragment.newInstance("def"), "notes", false, null);
+            UselessUtils.replace(this, NoteEditFragment.newInstance(true, 0, "def"), "add", true, "editor");
+        } else if (getIntent().getExtras() != null) {
+            UselessUtils.replace(this, NotesFragment.newInstance("def"), "notes", false, null);
+            UselessUtils.replace(this,
+                    NoteEditFragment.newInstance(false, getIntent().getExtras().getLong("id"), null), "edit", true, "editor");
+        } else {
+            if (savedInstanceState == null) {
+                if (App.getDefaultSharedPreferences().getBoolean("lock", false)) {
+                    UselessUtils.replace(this, LockScreenFragment.newInstance(false, 0), "lock", false, null);
                 } else {
-                    getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                            R.id.container, new Notes(), "notes").commit();
+                    UselessUtils.replace(this, NotesFragment.newInstance("def"), "notes", false, null);
                 }
             }
         }
@@ -192,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("what_frag", "other");
+        //outState.putString("what_frag", "other");
     }
 
     @Override
@@ -211,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             Account account = completedTask.getResult(ApiException.class).getAccount();
 
-            PreferenceManager.getDefaultSharedPreferences(App.getContext()).edit().putBoolean("want_sign_in", false).apply();
-            if (SyncSettings.instance != null)
-                SyncSettings.instance.updateSignedState();
+            App.getDefaultSharedPreferences().edit().putBoolean("want_sign_in", false).apply();
+            if (SyncSettingsFragment.instance != null)
+                SyncSettingsFragment.instance.updateSignedState();
             BackupDialog.show(this, account);
         } catch (ApiException e) {
             Logger.log(e);
@@ -237,26 +196,29 @@ public class MainActivity extends AppCompatActivity {
         if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())) {
             getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
 
-            if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("restored", false)) {
+            if (App.getDefaultSharedPreferences().getBoolean("restored", false)) {
                 if (!UselessUtils.getBool("auto_s", false))
                     return;
 
+                Intent intent = new Intent(this, SyncService.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    startForegroundService(new Intent(this, SyncService.class));
+                    startForegroundService(intent);
                 else
-                    startService(new Intent(this, SyncService.class));
+                    startService(intent);
+                bindService(intent, UselessUtils.EMPTY_SERVICE_CONNECTION, 0);
+
             }
             return;
         }
 
         if (notes != null && notes.isVisible()) {
-            clear_back_stack();
+            clearBackStack(this);
             super.onBackPressed();
             return;
         }
 
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            clear_back_stack();
+            clearBackStack(this);
             super.onBackPressed();
         } else {
             getSupportFragmentManager().popBackStack();
@@ -271,50 +233,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("change", false)) {
+        if (App.getDefaultSharedPreferences().getBoolean("change", false)) {
             if (UselessUtils.getBool("autolock", true))
                 UselessUtils.edit().putLong("lockTicker", 0).apply();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (UselessUtils.getBool("autolock", true))
-            UselessUtils.edit().putLong("lockTicker", System.currentTimeMillis()).apply();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!UselessUtils.getBool("autolock", true))
-            return;
-
-        if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("lock", false))
-            return;
-
-        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getLong("lockTicker", 0) == 0)
-            return;
-
-        if (System.currentTimeMillis() - PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getLong("lockTicker", 0) > 60000) {
-            UselessUtils.clear_back_stack();
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                    R.id.container, LockTickerScreen.newInstance(new LockTickerScreen.Callback() {
-                        @Override
-                        public int describeContents() {
-                            return 0;
-                        }
-
-                        @Override
-                        public void writeToParcel(Parcel dest, int flags) {
-                        }
-
-                        @Override
-                        public void onSuccess(LockTickerScreen screen) {
-                            UselessUtils.edit().putLong("lockTicker", 0).apply();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.container, new Notes(), "notes").commit();
-                        }
-                    }), "lockTicked").commit();
         }
     }
 

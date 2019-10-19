@@ -8,7 +8,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
@@ -28,26 +28,21 @@ public class TextSizeDialog extends BottomSheetDialogFragment {
     @Override
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);
-
         View view = LayoutInflater.from(getContext()).inflate(R.layout.text_size_layout, null);
 
         LinearLayout layout = view.findViewById(R.id.background);
-
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             layout.setBackgroundColor(ThemesEngine.background);
-        } else if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("night", false)) {
-            layout.setBackgroundColor(getActivity().getResources().getColor(R.color.statusbar));
+        } else if (App.getDefaultSharedPreferences().getBoolean("night", false)) {
+            layout.setBackgroundColor(requireActivity().getResources().getColor(R.color.statusbar));
         } else {
             layout.setBackgroundColor(Color.WHITE);
         }
 
         final SeekBar size = view.findViewById(R.id.text_size);
+        size.setProgress(Integer.parseInt(App.getDefaultSharedPreferences().getString("text_size", "15")));
 
         final TextView text = view.findViewById(R.id.text);
-        text.setText(getString(R.string.text));
-
-        size.setProgress(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("text_size", "15")));
-
         text.setTextSize(size.getProgress());
         text.setText(getString(R.string.text) + " " + size.getProgress());
 
@@ -57,7 +52,7 @@ public class TextSizeDialog extends BottomSheetDialogFragment {
                 text.setTextSize(size.getProgress());
                 text.setText(getString(R.string.text) + " " + size.getProgress());
 
-                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putString("text_size", String.valueOf(size.getProgress())).apply();
+                App.getDefaultSharedPreferences().edit().putString("text_size", String.valueOf(size.getProgress())).apply();
             }
 
             @Override

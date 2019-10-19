@@ -2,12 +2,8 @@ package com.f0x1d.notes.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -22,12 +18,11 @@ import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.lifecycle.Observer;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
-import com.f0x1d.notes.fragment.search.Search;
+import com.f0x1d.notes.fragment.search.SearchFragment;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.theme.ThemesEngine;
@@ -103,7 +98,7 @@ public class CenteredToolbar extends Toolbar {
         tvTitle.setEllipsize(TextUtils.TruncateAt.END);
         tvTitle.setTextAppearance(getContext(), R.style.TextAppearance_AppCompat_Widget_ActionBar_Title);
 
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             tvTitle.setTextColor(ThemesEngine.toolbarTextColor);
             setBackgroundColor(Color.TRANSPARENT);
         }
@@ -130,7 +125,7 @@ public class CenteredToolbar extends Toolbar {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                if (UselessUtils.ifCustomTheme()) {
+                if (UselessUtils.isCustomTheme()) {
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), ThemesEngine.iconsColor));
                 } else if (UselessUtils.getBool("night", false)) {
                     setOverflowIcon(UselessUtils.setTint(getResources().getDrawable(androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, getContext().getTheme()), Color.WHITE));
@@ -141,97 +136,54 @@ public class CenteredToolbar extends Toolbar {
                 Logger.log(e);
             }
         }
-
-        MainActivity.instance.viewModel.toolbarColor.observe(MainActivity.instance, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                int colorFrom;
-
-                Drawable backgroundDrawable = getBackground();
-                if (backgroundDrawable instanceof ColorDrawable)
-                    colorFrom = ((ColorDrawable) backgroundDrawable).getColor();
-                else
-                    colorFrom = Color.WHITE;
-
-                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
-                colorAnimation.setDuration(250);
-                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animator) {
-                        setBackgroundColor((int) animator.getAnimatedValue());
-                    }
-                });
-                colorAnimation.start();
-            }
-        });
-        MainActivity.instance.viewModel.toolbarTextColor.observe(MainActivity.instance, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                int colorFrom = tvTitle.getCurrentTextColor();
-
-                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, integer);
-                colorAnimation.setDuration(250);
-                colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animator) {
-                        tvTitle.setTextColor((int) animator.getAnimatedValue());
-                    }
-                });
-                colorAnimation.start();
-            }
-        });
     }
 
-    public void goAnim(String inFolderId) {
+    public void goAnim(String inFolderId, AppCompatActivity activity) {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                UselessUtils.replace(Search.newInstance(inFolderId), "search");
+                UselessUtils.replace(activity, SearchFragment.newInstance(inFolderId), "search", true, null);
             }
         });
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                try {
-                    tvTitle.animate()
-                            .alpha(0.0f)
-                            .setDuration(300)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    super.onAnimationEnd(animation);
-                                    tvTitle.setVisibility(View.GONE);
-                                }
-                            });
+                tvTitle.animate()
+                        .alpha(0.0f)
+                        .setDuration(300)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                tvTitle.setVisibility(View.GONE);
+                            }
+                        });
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            tvTitle.setVisibility(VISIBLE);
-                            tvTitle.setText(getContext().getString(R.string.tap_to_search));
-                            tvTitle.setTextSize(17);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvTitle.setVisibility(VISIBLE);
+                        tvTitle.setText(getContext().getString(R.string.tap_to_search));
+                        tvTitle.setTextSize(17);
 
-                            LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                            linear.setGravity(Gravity.START);
-                            lp.gravity = Gravity.START;
-                            linear.setLayoutParams(lp);
+                        LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        linear.setGravity(Gravity.START);
+                        lp.gravity = Gravity.START;
+                        linear.setLayoutParams(lp);
 
-                            tvTitle.animate()
-                                    .alpha(0.0f)
-                                    .alpha(1.0f)
-                                    .setDuration(300)
-                                    .setListener(new AnimatorListenerAdapter() {
-                                        @Override
-                                        public void onAnimationEnd(Animator animation) {
-                                            super.onAnimationEnd(animation);
-                                        }
-                                    });
-                        }
-                    }, 500);
-                } catch (Exception e) {
-                }
-
+                        tvTitle.animate()
+                                .alpha(0.0f)
+                                .alpha(1.0f)
+                                .setDuration(300)
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        super.onAnimationEnd(animation);
+                                    }
+                                });
+                    }
+                }, 500);
             }
         }, 1500);
     }

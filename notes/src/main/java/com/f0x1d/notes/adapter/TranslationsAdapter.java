@@ -9,11 +9,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.fragment.editing.NoteEdit;
-import com.f0x1d.notes.fragment.settings.translations.TranslationsEditor;
+import com.f0x1d.notes.fragment.editing.NoteEditFragment;
+import com.f0x1d.notes.fragment.settings.translations.TranslationsEditorFragment;
 import com.f0x1d.notes.fragment.settings.translations.TranslationsFragment;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
@@ -51,7 +52,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull TranslationViewHolder holder, int position) {
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             holder.cardView.setCardBackgroundColor(Color.BLACK);
         }
 
@@ -64,16 +65,16 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
                 public void onClick(View v) {
                     String[] items = {fragment.getString(R.string.import_db), fragment.getString(R.string.create)};
 
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(fragment.getContext());
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(fragment.requireContext());
                     builder.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case 0:
-                                    fragment.openFile("*/*", 228, fragment.getContext());
+                                    fragment.openFile("*/*", 228, fragment.requireContext());
                                     break;
                                 case 1:
-                                    UselessUtils.replace(TranslationsEditor.newInstance(null), "translations_edit");
+                                    UselessUtils.replace((AppCompatActivity) fragment.requireActivity(), TranslationsEditorFragment.newInstance(null), "translations_edit", true, null);
                                     break;
                             }
                         }
@@ -140,14 +141,15 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
                                     }
                                     break;
                                 case 1:
-                                    UselessUtils.replace(TranslationsEditor.newInstance(translation.file.getAbsolutePath()), "translations_edit");
+                                    UselessUtils.replace((AppCompatActivity) fragment.requireActivity(),
+                                            TranslationsEditorFragment.newInstance(translation.file.getAbsolutePath()), "translations_edit", true, null);
                                     break;
                                 case 2:
                                     File dst = new File(Environment.getExternalStorageDirectory() + "/Notes/translations");
                                     if (!dst.exists())
                                         dst.mkdirs();
                                     try {
-                                        NoteEdit.copy(new FileInputStream(translation.file), new File(dst, translation.name));
+                                        NoteEditFragment.copy(new FileInputStream(translation.file), new File(dst, translation.name));
                                         Toast.makeText(fragment.getContext(), fragment.getString(R.string.success), Toast.LENGTH_SHORT).show();
                                     } catch (IOException e) {
                                         Logger.log(e);

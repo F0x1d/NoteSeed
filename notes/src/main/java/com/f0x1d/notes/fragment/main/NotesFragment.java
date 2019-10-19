@@ -7,8 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -27,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.adapter.NoteItemsAdapter;
 import com.f0x1d.notes.db.Database;
@@ -35,10 +33,9 @@ import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
-import com.f0x1d.notes.fragment.bottomSheet.SetNotify;
-import com.f0x1d.notes.fragment.editing.NoteAdd;
-import com.f0x1d.notes.fragment.settings.MainSettings;
-import com.f0x1d.notes.utils.Logger;
+import com.f0x1d.notes.fragment.bottomSheet.SetNotifyDialog;
+import com.f0x1d.notes.fragment.editing.NoteEditFragment;
+import com.f0x1d.notes.fragment.settings.MainSettingsFragment;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.BottomSheetCreator;
 import com.f0x1d.notes.utils.bottomSheet.Element;
@@ -49,16 +46,21 @@ import com.f0x1d.notes.view.theming.MyFAB;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 
-public class Notes extends Fragment {
+public class NotesFragment extends Fragment {
+
+    public static NotesFragment newInstance(String inFolderId) {
+        Bundle args = new Bundle();
+        args.putString("id", inFolderId);
+
+        NotesFragment fragment = new NotesFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public static RecyclerView recyclerView;
     NoteOrFolderDao dao;
@@ -69,9 +71,10 @@ public class Notes extends Fragment {
     ItemsAdapter adapter;
     private List<NoteOrFolder> allList;
 
+    private String inFolderId;
+
     public static long genId() {
         long id = 0;
-
         for (NoteOrFolder noteOrFolder : App.getInstance().getDatabase().noteOrFolderDao().getAll()) {
             if (noteOrFolder.id > id) {
                 id = noteOrFolder.id;
@@ -84,7 +87,7 @@ public class Notes extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        inFolderId = getArguments().getString("id");
     }
 
     @Override
@@ -92,71 +95,90 @@ public class Notes extends Fragment {
         View view = inflater.inflate(R.layout.notes_layout, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.notes));
-        toolbar.goAnim("def");
+        toolbar.setTitle(inFolderId.equals("def") ? getString(R.string.notes) : inFolderId);
+        toolbar.goAnim(inFolderId, (AppCompatActivity) requireActivity());
 
-        Drawable settings;
-        if (UselessUtils.ifCustomTheme())
-            settings = UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor);
-        else if (UselessUtils.getBool("night", false))
-            settings = getActivity().getDrawable(R.drawable.ic_settings_white_24dp);
-        else
-            settings = getActivity().getDrawable(R.drawable.ic_settings_black_24dp);
+        if (inFolderId.equals("def")) {
+            Drawable settings;
+            if (UselessUtils.isCustomTheme())
+                settings = UselessUtils.setTint(requireActivity().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor);
+            else if (UselessUtils.getBool("night", false))
+                settings = requireActivity().getDrawable(R.drawable.ic_settings_white_24dp);
+            else
+                settings = requireActivity().getDrawable(R.drawable.ic_settings_black_24dp);
 
-        toolbar.inflateMenu(R.menu.main);
-        toolbar.getMenu().findItem(R.id.settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        toolbar.getMenu().findItem(R.id.settings).setIcon(settings);
+            toolbar.inflateMenu(R.menu.main);
+            toolbar.getMenu().findItem(R.id.settings).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            toolbar.getMenu().findItem(R.id.settings).setIcon(settings);
+            toolbar.getMenu().findItem(R.id.settings).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    UselessUtils.replace((AppCompatActivity) requireActivity(), new MainSettingsFragment(), "settings", true, null);
+                    return false;
+                }
+            });
+        } else {
+            Drawable root;
+            if (UselessUtils.isCustomTheme())
+                root = UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_arrow_upward_white_24dp), ThemesEngine.iconsColor);
+            else if (UselessUtils.isDarkTheme())
+                root = requireActivity().getDrawable(R.drawable.ic_arrow_upward_white_24dp);
+            else 
+                root = requireActivity().getDrawable(R.drawable.ic_arrow_upward_black_24dp);
 
-        if (UselessUtils.ifCustomTheme()) {
-            getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
-            getActivity().getWindow().setStatusBarColor(MainActivity.instance.viewModel.statusBarColor.getValue());
-            getActivity().getWindow().setNavigationBarColor(MainActivity.instance.viewModel.navBarColor.getValue());
+            toolbar.inflateMenu(R.menu.in_folder_menu);
+            toolbar.getMenu().findItem(R.id.root).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            toolbar.getMenu().findItem(R.id.root).setIcon(root);
+            toolbar.getMenu().findItem(R.id.root).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    UselessUtils.clearBackStack((AppCompatActivity) requireActivity());
+                    UselessUtils.replace((AppCompatActivity) requireActivity(), NotesFragment.newInstance("def"), "notes", false, null);
+                    return false;
+                }
+            });
+        }
+
+        if (UselessUtils.isCustomTheme()) {
+            requireActivity().getWindow().setBackgroundDrawable(new ColorDrawable(ThemesEngine.background));
+            requireActivity().getWindow().setStatusBarColor(ThemesEngine.statusBarColor);
+            requireActivity().getWindow().setNavigationBarColor(ThemesEngine.navBarColor);
 
             toolbar.setBackgroundColor(ThemesEngine.toolbarColor);
         }
 
-        getActivity().setActionBar(toolbar);
-
         MyFAB fab = view.findViewById(R.id.new_note);
 
         List<Element> elements = new ArrayList<>();
-        elements.add(new Element(getString(R.string.new_notify), getActivity().getDrawable(R.drawable.ic_notification_create_black_24dp), new View.OnClickListener() {
+        elements.add(new Element(getString(R.string.new_notify), requireActivity().getDrawable(R.drawable.ic_notification_create_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createNotify();
                 fab.closeList();
             }
         }));
-        elements.add(new Element(getString(R.string.new_folder), getActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
+        elements.add(new Element(getString(R.string.new_folder), requireActivity().getDrawable(R.drawable.ic_create_new_folder_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createFolder();
                 fab.closeList();
             }
         }));
-        elements.add(new Element(getString(R.string.new_note), getActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
+        elements.add(new Element(getString(R.string.new_note), requireActivity().getDrawable(R.drawable.ic_add_black_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(
-                        R.id.container, NoteAdd.newInstance("def"), "add").addToBackStack("editor").commit();
+                UselessUtils.replace((AppCompatActivity) requireActivity(), NoteEditFragment.newInstance(true, 0, inFolderId), "add", true, "editor");
                 fab.closeList();
             }
         }));
-
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_black_24dp));
+
+        dao = App.getInstance().getDatabase().noteOrFolderDao();
 
         recyclerView = view.findViewById(R.id.notes_view);
 
         allList = new ArrayList<>();
-
-        dao = App.getInstance().getDatabase().noteOrFolderDao();
-
-        for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.in_folder_id.equals("def")) {
-                allList.add(noteOrFolder);
-            }
-        }
+        allList.addAll(dao.getByInFolderId(inFolderId));
 
         nothing = view.findViewById(R.id.nothing);
         nothing.setText(getString(R.string.empty));
@@ -167,17 +189,16 @@ public class Notes extends Fragment {
             nothing.setVisibility(View.INVISIBLE);
         }
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(requireActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
         if (UselessUtils.getBool("two_rows", false)) {
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
         } else {
             recyclerView.setLayoutManager(llm);
         }
 
-        adapter = new ItemsAdapter(allList, getActivity(), true, false, null);
-
+        adapter = new ItemsAdapter(allList, requireActivity(), false, null);
         recyclerView.setAdapter(adapter);
 
         ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
@@ -217,15 +238,15 @@ public class Notes extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(recyclerView);
 
-        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up);
+        Animation animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.push_up);
         animation.setDuration(400);
         fab.startAnimation(animation);
 
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(getActivity(), getString(R.string.import_db), Toast.LENGTH_SHORT).show();
-                openFile("*/*", 228, getActivity());
+                Toast.makeText(requireActivity(), getString(R.string.import_db), Toast.LENGTH_SHORT).show();
+                openFile("*/*", 228, requireActivity());
                 return false;
             }
         });
@@ -235,7 +256,7 @@ public class Notes extends Fragment {
     }
 
     private void createNotify() {
-        View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_two_edit_texts, null);
+        View v = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_two_edit_texts, null);
 
         EditText title = v.findViewById(R.id.edit_text_one);
         title.setBackground(null);
@@ -245,18 +266,18 @@ public class Notes extends Fragment {
         text.setBackground(null);
         text.setHint(getString(R.string.text));
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireActivity());
         builder.setView(v);
 
         builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 long id = genId();
-                int position = Database.getLastPosition("def");
+                int position = Database.getLastPosition(inFolderId);
 
-                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, "def", 2,
+                dao.insert(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, inFolderId, 2,
                         null, 0, "", System.currentTimeMillis(), position));
-                allList.add(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, "def", 2,
+                allList.add(new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, inFolderId, 2,
                         null, 0, "", System.currentTimeMillis(), position));
                 recyclerView.getAdapter().notifyDataSetChanged();
 
@@ -267,9 +288,9 @@ public class Notes extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 long id = genId();
-                int position = Database.getLastPosition("def");
+                int position = Database.getLastPosition(inFolderId);
 
-                NoteOrFolder noteOrFolder = new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, "def", 2,
+                NoteOrFolder noteOrFolder = new NoteOrFolder(title.getText().toString(), text.getText().toString(), id, 0, inFolderId, 2,
                         null, 0, "", System.currentTimeMillis(), position);
 
                 dao.insert(noteOrFolder);
@@ -278,8 +299,8 @@ public class Notes extends Fragment {
 
                 nothing.setVisibility(View.INVISIBLE);
 
-                SetNotify notify = new SetNotify(new Notify(noteOrFolder.title, noteOrFolder.text, 0, noteOrFolder.id));
-                notify.show(getActivity().getSupportFragmentManager(), "TAG");
+                SetNotifyDialog notify = new SetNotifyDialog(new Notify(noteOrFolder.title, noteOrFolder.text, 0, noteOrFolder.id));
+                notify.show(requireActivity().getSupportFragmentManager(), "TAG");
             }
         });
 
@@ -287,13 +308,13 @@ public class Notes extends Fragment {
     }
 
     private void createFolder() {
-        View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_text, null);
+        View v = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_edit_text, null);
 
         EditText text = v.findViewById(R.id.edit_text);
         text.setBackground(null);
         text.setHint(getString(R.string.name));
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireActivity());
         builder.setView(v);
         builder.setTitle(getString(R.string.folder_name));
 
@@ -307,19 +328,19 @@ public class Notes extends Fragment {
                 boolean create = true;
 
                 for (NoteOrFolder noteOrFolder : dao.getAll()) {
-                    if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(text.getText().toString())) {
+                    if (noteOrFolder.isFolder == 1 && noteOrFolder.folderName.equals(text.getText().toString())) {
                         create = false;
-                        Toast.makeText(getActivity(), getString(R.string.folder_error), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity(), getString(R.string.folder_error), Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
 
                 if (create) {
                     long id = genId();
-                    int position = Database.getLastPosition("def");
+                    int position = Database.getLastPosition(inFolderId);
 
-                    dao.insert(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(), 0, "", 0, position));
-                    allList.add(new NoteOrFolder(null, null, id, 0, "def", 1, text.getText().toString(), 0, "", 0, position));
+                    dao.insert(new NoteOrFolder(null, null, id, 0, inFolderId, 1, text.getText().toString(), 0, "", 0, position));
+                    allList.add(new NoteOrFolder(null, null, id, 0, inFolderId, 1, text.getText().toString(), 0, "", 0, position));
                     recyclerView.getAdapter().notifyDataSetChanged();
 
                     nothing.setVisibility(View.INVISIBLE);
@@ -336,24 +357,13 @@ public class Notes extends Fragment {
         String name = getString(R.string.new_folder);
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.is_folder == 1 && noteOrFolder.folder_name.equals(name)) {
+            if (noteOrFolder.isFolder == 1 && noteOrFolder.folderName.equals(name)) {
                 name = getString(R.string.new_folder) + first_number;
                 first_number++;
             }
         }
 
         return name;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                UselessUtils.replace(new MainSettings(), "settings");
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void openFile(String minmeType, int requestCode, Context c) {
@@ -380,7 +390,7 @@ public class Notes extends Fragment {
         try {
             startActivityForResult(chooserIntent, requestCode);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getActivity(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "No suitable File Manager was found.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -388,35 +398,16 @@ public class Notes extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             if (requestCode == 228) {
-                InputStream fstream = null;
-
                 String title = getFileName(data.getData());
-                String text = null;
-                try {
-                    fstream = getActivity().getContentResolver().openInputStream(data.getData());
-                    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-                    boolean first = true;
-                    String strLine;
-                    while ((strLine = br.readLine()) != null) {
-                        if (first) {
-                            text = strLine;
-                            first = false;
-                        } else {
-                            text = text + "\n" + strLine;
-                        }
-                    }
-                } catch (IOException e) {
-                    Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                    Logger.log(e);
-                }
-                int position = Database.getLastPosition("def");
-                NoteOrFolder noteOrFolder = new NoteOrFolder(title, null, genId(), 0, "def", 0, null, 0, "", System.currentTimeMillis(), position);
+                String text = UselessUtils.readFileURI(data.getData());
+
+                int position = Database.getLastPosition(inFolderId);
+                NoteOrFolder noteOrFolder = new NoteOrFolder(title, null, genId(), 0, inFolderId, 0, null, 0, "", System.currentTimeMillis(), position);
 
                 dao.insert(noteOrFolder);
                 allList.add(noteOrFolder);
 
                 App.getInstance().getDatabase().noteItemsDao().insert(new NoteItem(NoteItemsAdapter.getId(), noteOrFolder.id, text, null, 0, 0, 0));
-
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         }
@@ -438,15 +429,15 @@ public class Notes extends Fragment {
     }
 
     public void delete(int position) {
-        BottomSheetCreator creator = new BottomSheetCreator(getActivity());
-        creator.addElement(new Element(getString(R.string.delete), getActivity().getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
+        BottomSheetCreator creator = new BottomSheetCreator(requireActivity());
+        creator.addElement(new Element(getString(R.string.delete), requireActivity().getDrawable(R.drawable.ic_done_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (allList.get(position).is_folder == 1) {
-                    if (ItemsAdapter.getFolderNameFromDataBaseStatic(allList.get(position).id, position).equals(""))
-                        adapter.deleteFolder(allList.get(position).folder_name);
+                if (allList.get(position).isFolder == 1) {
+                    if (ItemsAdapter.getFolderNameFromDataBase(allList.get(position).id).equals(""))
+                        adapter.deleteFolder(allList.get(position).folderName);
                     else
-                        adapter.deleteFolder(ItemsAdapter.getFolderNameFromDataBaseStatic(allList.get(position).id, position));
+                        adapter.deleteFolder(ItemsAdapter.getFolderNameFromDataBase(allList.get(position).id));
                 } else {
                     adapter.deleteNote(allList.get(position).id);
                     App.getInstance().getDatabase().noteItemsDao().deleteByToId(allList.get(position).id);
@@ -469,7 +460,7 @@ public class Notes extends Fragment {
                 }
             }
         }));
-        creator.addElement(new Element(getString(R.string.cancel), getActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
+        creator.addElement(new Element(getString(R.string.cancel), requireActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recyclerView.getAdapter().notifyItemChanged(position);
@@ -481,25 +472,5 @@ public class Notes extends Fragment {
             }
         }));
         creator.show("", false);
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
-
-        MenuItem item = menu.findItem(R.id.settings);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        Drawable settings;
-        if (UselessUtils.ifCustomTheme())
-            settings = UselessUtils.setTint(getActivity().getDrawable(R.drawable.ic_settings_white_24dp), ThemesEngine.iconsColor);
-        else if (UselessUtils.getBool("night", false))
-            settings = getActivity().getDrawable(R.drawable.ic_settings_white_24dp);
-        else
-            settings = getActivity().getDrawable(R.drawable.ic_settings_black_24dp);
-        item.setIcon(settings);
-
-        super.onCreateOptionsMenu(menu, inflater);
     }
 }

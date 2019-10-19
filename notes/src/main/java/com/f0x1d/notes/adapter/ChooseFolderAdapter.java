@@ -10,101 +10,66 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
-import com.f0x1d.notes.fragment.choose.ChooseFolder;
+import com.f0x1d.notes.fragment.choose.ChooseFolderFragment;
 import com.f0x1d.notes.utils.UselessUtils;
-import com.f0x1d.notes.utils.theme.ThemesEngine;
+import com.f0x1d.notes.view.theming.ItemCardView;
 
 import java.util.List;
 
-public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapter.folderViewHolder> {
+public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapter.FolderViewHolder> {
 
+    public AppCompatActivity activity;
     List<NoteOrFolder> items;
-    long note_id;
-
+    long noteId;
     NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
 
-    public ChooseFolderAdapter(List<NoteOrFolder> notes, long note_id) {
+    public ChooseFolderAdapter(List<NoteOrFolder> notes, long noteId, AppCompatActivity activity) {
         this.items = notes;
-        this.note_id = note_id;
+        this.noteId = noteId;
+        this.activity = activity;
     }
 
     @Override
-    public folderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new folderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.folder, parent, false));
+    public FolderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new FolderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.folder, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull folderViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FolderViewHolder holder, int position) {
         initLayoutFolder(holder, position);
     }
 
-    private void initLayoutFolder(folderViewHolder holder, int position) {
+    private void initLayoutFolder(FolderViewHolder holder, int position) {
         try {
             holder.cardView.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(getColorFromDataBase(position))));
 
             if (UselessUtils.ifBrightColor(Color.parseColor(getColorFromDataBase(position)))) {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.name.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                } else {
-                    holder.name.setTextColor(Color.BLACK);
-                    holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp));
-                }
+                holder.name.setTextColor(Color.BLACK);
+                holder.folderImage.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_folder_black_24dp));
             } else {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.name.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                } else {
-                    holder.name.setTextColor(Color.WHITE);
-                    holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp));
-                }
+                holder.name.setTextColor(Color.WHITE);
+                holder.folderImage.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_folder_white_24dp));
             }
         } catch (Exception e) {
-            if (UselessUtils.ifCustomTheme()) {
-                holder.cardView.setCardBackgroundColor(Color.BLACK);
-            }
+            holder.cardView.setThemedCardBackgroundColor();
 
             if (UselessUtils.ifBrightColor(holder.cardView.getCardBackgroundColor().getDefaultColor())) {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.name.setTextColor(ThemesEngine.lightColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp), ThemesEngine.lightColorIconColor));
-                } else {
-                    holder.name.setTextColor(Color.BLACK);
-                    holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_black_24dp));
-                }
+                holder.name.setTextColor(Color.BLACK);
+                holder.folderImage.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_folder_black_24dp));
             } else {
-                if (UselessUtils.ifCustomTheme()) {
-                    holder.name.setTextColor(ThemesEngine.darkColorTextColor);
-                    holder.folder_image.setImageDrawable(UselessUtils.setTint(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp), ThemesEngine.darkColorIconColor));
-                } else {
-                    holder.name.setTextColor(Color.WHITE);
-                    holder.folder_image.setImageDrawable(MainActivity.instance.getDrawable(R.drawable.ic_folder_white_24dp));
-                }
+                holder.name.setTextColor(Color.WHITE);
+                holder.folderImage.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_folder_white_24dp));
             }
         }
 
         holder.name.setText(getFolderNameFromDataBase(position));
-
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle args = new Bundle();
-                args.putLong("id", note_id);
-                args.putString("in_id", getFolderNameFromDataBase(position));
-
-                MainActivity.instance.getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out, R.animator.fade_in, R.animator.fade_out).replace(R.id.container, ChooseFolder.newInstance(args), "choose_folder")
-                        .addToBackStack(null).commit();
-            }
-        });
     }
 
     @Override
@@ -114,44 +79,33 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
 
     private String getColorFromDataBase(int position) {
         long id = items.get(position).id;
-
-        String color = "0xffffffff";
-
-        for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.id == id) {
-                color = noteOrFolder.color;
-            }
-        }
-
-        return color;
+        return dao.getById(id).color;
     }
 
     private String getFolderNameFromDataBase(int position) {
         long id = items.get(position).id;
-
-        String name = "";
-
-        for (NoteOrFolder noteOrFolder : dao.getAll()) {
-            if (noteOrFolder.id == id) {
-                name = noteOrFolder.folder_name;
-            }
-        }
-
-        return name;
+        return dao.getById(id).folderName;
     }
 
-    class folderViewHolder extends RecyclerView.ViewHolder {
+    public class FolderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name;
-        CardView cardView;
-        ImageView folder_image;
+        public TextView name;
+        public ItemCardView cardView;
+        public ImageView folderImage;
 
-        folderViewHolder(@NonNull View itemView) {
+        public FolderViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            folder_image = itemView.findViewById(R.id.folder_image);
+            folderImage = itemView.findViewById(R.id.folder_image);
             cardView = itemView.findViewById(R.id.note_card);
             name = itemView.findViewById(R.id.name);
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UselessUtils.replace(activity, ChooseFolderFragment.newInstance(noteId, getColorFromDataBase(getAdapterPosition())), "choose_folder", true, null);
+                }
+            });
         }
     }
 }

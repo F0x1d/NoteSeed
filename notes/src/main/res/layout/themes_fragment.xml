@@ -1,38 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable
-            name="viewmodel"
-            type="com.f0x1d.notes.utils.theme.ThemingViewModel" />
-    </data>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar_space"
+        android:clipToPadding="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@{viewmodel.background}">
+        android:id="@+id/recyclerView"
+        android:layout_below="@id/toolbar_space"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
 
-        <include
-            layout="@layout/toolbar"
-            android:id="@+id/toolbar_space"
-            android:clipToPadding="true"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+    <com.f0x1d.notes.view.theming.MyFAB
+        android:layout_width="wrap_content"
+        android:id="@+id/import_theme"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_height="wrap_content" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:id="@+id/recyclerView"
-            android:layout_below="@id/toolbar_space"
-            android:layout_height="match_parent"
-            android:background="@{viewmodel.background}">
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <com.f0x1d.notes.view.theming.MyFAB
-            android:layout_width="wrap_content"
-            android:id="@+id/import_theme"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
-</layout>
+</RelativeLayout>

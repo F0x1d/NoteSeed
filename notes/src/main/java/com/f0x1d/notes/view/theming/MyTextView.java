@@ -19,36 +19,32 @@ public class MyTextView extends TextView {
 
     public MyTextView(Context context) {
         super(context);
-
         setColor();
     }
 
     public MyTextView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
         setColor();
     }
 
     public MyTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         setColor();
     }
 
     private void setColor() {
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             this.setTextColor(ThemesEngine.textColor);
             try {
                 setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
             } catch (Exception e) {
             }
         }
-
         setTypeface(ResourcesCompat.getFont(getContext(), R.font.medium));
     }
 
     public void setupCompoundDrawables() {
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             try {
                 setCompoundDrawables(UselessUtils.setTint(getCompoundDrawables()[0], ThemesEngine.iconsColor), null, null, null);
             } catch (Exception e) {
@@ -68,7 +64,7 @@ public class MyTextView extends TextView {
 
     @Override
     public void setTextColor(int color) {
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             color = ThemesEngine.textColor;
             super.setTextColor(color);
         } else {
@@ -78,7 +74,7 @@ public class MyTextView extends TextView {
 
     @Override
     public void setCompoundDrawables(@Nullable Drawable left, @Nullable Drawable top, @Nullable Drawable right, @Nullable Drawable bottom) {
-        if (UselessUtils.ifCustomTheme()) {
+        if (UselessUtils.isCustomTheme()) {
             try {
                 super.setCompoundDrawables(UselessUtils.setTint(left, ThemesEngine.iconsColor), top, right, bottom);
             } catch (Exception e) {
