@@ -35,14 +35,9 @@ public abstract class Database extends RoomDatabase {
     public static int getLastPosition(String inFolderId) {
         NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
 
-        List<NoteOrFolder> notes = dao.getAll();
-
         int lastPos = 0;
-
-        for (int i = 0; i < notes.size(); i++) {
-            if (notes.get(i).inFolderId.equals(inFolderId))
-                lastPos++;
-        }
+        for (int i = 0; i < dao.getByInFolderId(inFolderId).size(); i++)
+            lastPos++;
 
         return lastPos;
     }
@@ -50,14 +45,9 @@ public abstract class Database extends RoomDatabase {
     public static int thingsInFolder(String inFolderId) {
         NoteOrFolderDao dao = App.getInstance().getDatabase().noteOrFolderDao();
 
-        List<NoteOrFolder> things = dao.getAll();
-
         int thingsInFolder = 0;
-
-        for (int i = 0; i < things.size(); i++) {
-            if (things.get(i).inFolderId.equals(inFolderId))
-                thingsInFolder++;
-        }
+        for (int i = 0; i < dao.getByInFolderId(inFolderId).size(); i++)
+            thingsInFolder++;
 
         return thingsInFolder;
     }

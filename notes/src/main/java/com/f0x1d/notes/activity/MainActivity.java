@@ -178,9 +178,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         Fragment notes = getSupportFragmentManager().findFragmentByTag("notes");
         Fragment edit = getSupportFragmentManager().findFragmentByTag("edit");
-        Fragment add = getSupportFragmentManager().findFragmentByTag("add");
 
-        if ((edit != null && edit.isVisible()) || (add != null && add.isVisible())) {
+        if (edit != null && edit.isVisible()) {
             getSupportFragmentManager().popBackStackImmediate("editor", POP_BACK_STACK_INCLUSIVE);
 
             if (App.getDefaultSharedPreferences().getBoolean("restored", false)) {

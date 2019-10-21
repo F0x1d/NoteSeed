@@ -352,14 +352,14 @@ public class NotesFragment extends Fragment {
     }
 
     public String generateName() {
-        int first_number = 1;
+        int firstNumber = 1;
 
         String name = getString(R.string.new_folder);
 
         for (NoteOrFolder noteOrFolder : dao.getAll()) {
             if (noteOrFolder.isFolder == 1 && noteOrFolder.folderName.equals(name)) {
-                name = getString(R.string.new_folder) + first_number;
-                first_number++;
+                name = getString(R.string.new_folder) + firstNumber;
+                firstNumber++;
             }
         }
 
@@ -396,6 +396,8 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (data != null) {
             if (requestCode == 228) {
                 String title = getFileName(data.getData());
@@ -411,21 +413,10 @@ public class NotesFragment extends Fragment {
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private int getPosition(long id) {
-        int pos = 0;
-
-        for (NoteOrFolder noteItem : dao.getAll()) {
-            if (noteItem.id == id) {
-                pos = noteItem.position;
-                break;
-            }
-        }
-
-        return pos;
+        return dao.getById(id).position;
     }
 
     public void delete(int position) {
@@ -453,22 +444,14 @@ public class NotesFragment extends Fragment {
                 recyclerView.getAdapter().notifyDataSetChanged();
 
                 Snackbar.make(getView(), getString(R.string.deleted), Snackbar.LENGTH_SHORT).show();
-
-                try {
-                    creator.customBottomSheet.dismiss();
-                } catch (Exception e) {
-                }
+                creator.customBottomSheet.dismiss();
             }
         }));
         creator.addElement(new Element(getString(R.string.cancel), requireActivity().getDrawable(R.drawable.ic_clear_white_24dp), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recyclerView.getAdapter().notifyItemChanged(position);
-
-                try {
-                    creator.customBottomSheet.dismiss();
-                } catch (Exception e) {
-                }
+                creator.customBottomSheet.dismiss();
             }
         }));
         creator.show("", false);
