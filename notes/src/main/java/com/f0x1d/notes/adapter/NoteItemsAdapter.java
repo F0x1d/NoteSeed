@@ -165,10 +165,10 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void setupText(TextViewHolder holder, int position) {
-        if (!editMode)
-            holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
+        if (editMode)
+            holder.editText.setText(getText(noteItems.get(position).id));
         else
-            holder.editText.setText(getText(noteItems.get(position).id).replace("\n", "<br />"));
+            holder.editText.setText(Html.fromHtml(getText(noteItems.get(position).id).replace("\n", "<br />")));
 
         if (openKeyboard) {
             if (!openedKeyboard) {

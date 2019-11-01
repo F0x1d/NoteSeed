@@ -29,6 +29,9 @@
 -keep class com.f0x1d.notes.utils.sync.SyncUtils {
     *;
 }
+-keep class com.f0x1d.notes.utils.analytics.Device {
+    *;
+}
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
   **[] $VALUES;
   public *;
