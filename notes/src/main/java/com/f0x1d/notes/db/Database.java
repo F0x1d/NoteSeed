@@ -13,8 +13,6 @@ import com.f0x1d.notes.db.entities.NoteItem;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
 import com.f0x1d.notes.db.entities.Notify;
 
-import java.util.List;
-
 @androidx.room.Database(entities = {NoteOrFolder.class, Notify.class, NoteItem.class}, version = 10, exportSchema = false)
 public abstract class Database extends RoomDatabase {
 

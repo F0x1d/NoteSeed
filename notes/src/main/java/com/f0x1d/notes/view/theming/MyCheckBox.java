@@ -28,11 +28,6 @@ public class MyCheckBox extends CheckBox {
         init();
     }
 
-    public void init() {
-        if (UselessUtils.isCustomTheme())
-            setCheckBoxColor(this, Color.GRAY, ThemesEngine.accentColor);
-    }
-
     public static void setCheckBoxColor(CheckBox checkBox, int uncheckedColor, int checkedColor) {
         ColorStateList colorStateList = new ColorStateList(
                 new int[][]{
@@ -45,5 +40,10 @@ public class MyCheckBox extends CheckBox {
                 }
         );
         checkBox.setButtonTintList(colorStateList);
+    }
+
+    public void init() {
+        if (UselessUtils.isCustomTheme())
+            setCheckBoxColor(this, Color.GRAY, ThemesEngine.accentColor);
     }
 }

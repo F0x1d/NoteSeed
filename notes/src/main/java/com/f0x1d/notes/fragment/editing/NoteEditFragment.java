@@ -74,22 +74,18 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 public class NoteEditFragment extends Fragment {
 
     public NoteItemsAdapter adapter;
-
+    public boolean newNote;
+    public boolean editMode = false;
     private EditText title;
     private RecyclerView recyclerView;
     private CenteredToolbar toolbar;
-
     private long id;
-    public boolean newNote;
     private int locked;
     private String titleStr;
     private String inFolderId;
-
     private NoteOrFolderDao dao;
     private NoteItemsDao noteItemsDao;
     private List<NoteItem> noteItems;
-
-    public boolean editMode = false;
     private boolean pinned = false;
     private String currentPhotoPath;
 

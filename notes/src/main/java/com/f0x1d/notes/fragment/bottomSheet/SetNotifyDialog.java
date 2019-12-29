@@ -50,23 +50,30 @@ public class SetNotifyDialog extends BottomSheetDialogFragment {
 
     private TextView time;
     private TextView date;
+    DatePickerDialog.OnDateSetListener myCallBack2 = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.YEAR, year);
 
+            myYear = year;
+            myMonth = monthOfYear;
+            myMonth = myMonth + 1;
+            myDay = dayOfMonth;
+            date.setText(myDay + "." + myMonth + "." + myYear);
+        }
+    };
     private RelativeLayout chooseTime;
     private RelativeLayout chooseDate;
-
     private MyButton ok;
     private MyButton delete;
-
     private boolean exists = false;
-
     private String title = null;
     private String text = null;
     private long timeAlready;
     private long toId = 0;
     private long id = 0;
-
     private NotifyDao dao;
-
     private Notify notify;
     private TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -86,19 +93,6 @@ public class SetNotifyDialog extends BottomSheetDialogFragment {
                 hour = "0" + hour;
 
             time.setText(hour + ":" + minutes);
-        }
-    };
-    DatePickerDialog.OnDateSetListener myCallBack2 = new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            myCalendar.set(Calendar.MONTH, monthOfYear);
-            myCalendar.set(Calendar.YEAR, year);
-
-            myYear = year;
-            myMonth = monthOfYear;
-            myMonth = myMonth + 1;
-            myDay = dayOfMonth;
-            date.setText(myDay + "." + myMonth + "." + myYear);
         }
     };
 

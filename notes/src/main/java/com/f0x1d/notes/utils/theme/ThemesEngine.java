@@ -2,14 +2,8 @@ package com.f0x1d.notes.utils.theme;
 
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.view.View;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.utils.Logger;
@@ -17,13 +11,8 @@ import com.f0x1d.notes.utils.UselessUtils;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Environment;
 
 import androidx.preference.PreferenceManager;
@@ -18,20 +17,12 @@ import com.f0x1d.notes.fragment.editing.NoteEditFragment;
 import com.f0x1d.notes.service.CaptureNoteNotificationService;
 import com.f0x1d.notes.utils.Logger;
 import com.f0x1d.notes.utils.UselessUtils;
-import com.f0x1d.notes.utils.analytics.DeviceInfoCollector;
 import com.f0x1d.notes.utils.translations.IncorrectTranslationError;
 import com.f0x1d.notes.utils.translations.Translations;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -87,9 +78,6 @@ public final class App extends Application {
             startService(intent);
             bindService(intent, UselessUtils.EMPTY_SERVICE_CONNECTION, 0);
         }
-
-        if (App.getDefaultSharedPreferences().getBoolean("shouldSend", true))
-            new SendDevice().execute();
     }
 
     public Database getDatabase() {
@@ -148,32 +136,6 @@ public final class App extends Application {
             }
         } catch (Exception e) {
             Logger.log(e);
-        }
-    }
-
-    public class SendDevice extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                Logger.log(new Gson().toJson(new DeviceInfoCollector().collect(App.this)));
-                URL obj = new URL("https://f0x1d.gq/api/noteseed/newUser?text=" + URLEncoder.encode(new Gson().toJson(new DeviceInfoCollector().collect(App.this)), "utf8"));
-                HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-                connection.setRequestMethod("GET");
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-                if (response.toString().equals("vzlom"))
-                    App.getDefaultSharedPreferences().edit().putBoolean("shouldSend", false).apply();
-            } catch (Exception e) {
-                Logger.log(e);
-            }
-            return null;
         }
     }
 }

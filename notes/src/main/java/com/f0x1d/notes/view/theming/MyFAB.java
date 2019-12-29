@@ -1,7 +1,5 @@
 package com.f0x1d.notes.view.theming;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -14,10 +12,8 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
-import androidx.lifecycle.Observer;
 
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.utils.UselessUtils;
 import com.f0x1d.notes.utils.bottomSheet.Element;
 import com.f0x1d.notes.utils.theme.ThemesEngine;

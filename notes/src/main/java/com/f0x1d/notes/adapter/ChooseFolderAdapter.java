@@ -2,7 +2,6 @@ package com.f0x1d.notes.adapter;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

@@ -53,6 +53,14 @@ import static com.f0x1d.notes.utils.UselessUtils.getFileName;
 
 public class NotesFragment extends Fragment {
 
+    public static RecyclerView recyclerView;
+    NoteOrFolderDao dao;
+    TextView nothing;
+    CenteredToolbar toolbar;
+    ItemsAdapter adapter;
+    private List<NoteOrFolder> allList;
+    private String inFolderId;
+
     public static NotesFragment newInstance(String inFolderId) {
         Bundle args = new Bundle();
         args.putString("id", inFolderId);
@@ -61,17 +69,6 @@ public class NotesFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-    public static RecyclerView recyclerView;
-    NoteOrFolderDao dao;
-
-    TextView nothing;
-    CenteredToolbar toolbar;
-
-    ItemsAdapter adapter;
-    private List<NoteOrFolder> allList;
-
-    private String inFolderId;
 
     public static long genId() {
         long id = 0;
@@ -123,7 +120,7 @@ public class NotesFragment extends Fragment {
                 root = UselessUtils.setTint(getResources().getDrawable(R.drawable.ic_arrow_upward_white_24dp), ThemesEngine.iconsColor);
             else if (UselessUtils.isDarkTheme())
                 root = requireActivity().getDrawable(R.drawable.ic_arrow_upward_white_24dp);
-            else 
+            else
                 root = requireActivity().getDrawable(R.drawable.ic_arrow_upward_black_24dp);
 
             toolbar.inflateMenu(R.menu.in_folder_menu);

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.f0x1d.notes.App;
 import com.f0x1d.notes.R;
-import com.f0x1d.notes.activity.MainActivity;
 import com.f0x1d.notes.adapter.ItemsAdapter;
 import com.f0x1d.notes.db.daos.NoteOrFolderDao;
 import com.f0x1d.notes.db.entities.NoteOrFolder;
@@ -29,6 +28,14 @@ import java.util.ArrayList;
 
 public class NotesMovingFragment extends Fragment {
 
+    public RecyclerView recyclerView;
+    public CenteredToolbar toolbar;
+    public MyFAB apply;
+    public ArrayList<NoteOrFolder> allList;
+    public NoteOrFolderDao dao;
+    public ItemsAdapter adapter;
+    public String inFolderId;
+
     public static NotesMovingFragment newInstance(String inFolderId) {
         Bundle args = new Bundle();
         args.putString("in_f_id", inFolderId);
@@ -37,15 +44,6 @@ public class NotesMovingFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-    public RecyclerView recyclerView;
-    public CenteredToolbar toolbar;
-    public MyFAB apply;
-
-    public ArrayList<NoteOrFolder> allList;
-    public NoteOrFolderDao dao;
-    public ItemsAdapter adapter;
-    public String inFolderId;
 
     @Nullable
     @Override
