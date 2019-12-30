@@ -386,7 +386,7 @@ public class NoteEditFragment extends Fragment {
                     noteItems.add(noteItem);
                 }
 
-                recyclerView.getAdapter().notifyDataSetChanged();
+                recyclerView.getAdapter().notifyItemInserted(noteItems.size() - 1);
             }
         });
         ShowAlertDialog.show(builder);
@@ -453,7 +453,7 @@ public class NoteEditFragment extends Fragment {
                         noteItemsDao.insert(noteItem);
                         noteItems.add(noteItem);
 
-                        recyclerView.getAdapter().notifyDataSetChanged();
+                        recyclerView.getAdapter().notifyItemInserted(noteItems.size() - 1);
 
                         creator.customBottomSheet.dismiss();
                     }
@@ -693,7 +693,7 @@ public class NoteEditFragment extends Fragment {
                     Logger.log(e);
                 }
 
-                recyclerView.getAdapter().notifyDataSetChanged();
+                recyclerView.getAdapter().notifyItemInserted(noteItems.size() - 1);
 
                 dao.updateNoteTime(System.currentTimeMillis(), id);
             } catch (Exception e) {
@@ -713,7 +713,7 @@ public class NoteEditFragment extends Fragment {
                 Logger.log(e);
             }
 
-            recyclerView.getAdapter().notifyDataSetChanged();
+            recyclerView.getAdapter().notifyItemInserted(noteItems.size() - 1);
 
             dao.updateNoteTime(System.currentTimeMillis(), id);
         }
@@ -756,7 +756,7 @@ public class NoteEditFragment extends Fragment {
                                 Logger.log(e);
                             }
 
-                            recyclerView.getAdapter().notifyDataSetChanged();
+                            recyclerView.getAdapter().notifyItemInserted(noteItems.size() - 1);
                         }
                     });
 

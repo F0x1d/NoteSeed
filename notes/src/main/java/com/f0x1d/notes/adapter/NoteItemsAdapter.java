@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -42,6 +41,7 @@ import com.f0x1d.notes.view.theming.MyEditText;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
@@ -242,30 +242,11 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return dao.getById(id).checked;
     }
 
-    private int getPosition(long id) {
-        return dao.getById(id).position;
-    }
-
     public void onItemMoved(int fromPosition, int toPosition) {
-        dao.updateElementPos(toPosition, noteItems.get(fromPosition).id);
+        Collections.swap(noteItems, fromPosition, toPosition);
 
-        NoteItem targetUser = noteItems.get(fromPosition);
-        noteItems.remove(fromPosition);
-        noteItems.add(toPosition, targetUser);
-
-        if (fromPosition < toPosition) {
-            for (int i = 0; i < noteItems.size(); i++) {
-                if (getPosition(noteItems.get(i).id) != i) {
-                    dao.updateElementPos(i, noteItems.get(i).id);
-                }
-            }
-        } else {
-            for (int i = noteItems.size() - 1; i > 0; i--) {
-                if (getPosition(noteItems.get(i).id) != i) {
-                    dao.updateElementPos(i, noteItems.get(i).id);
-                }
-            }
-        }
+        for (int i = 0; i < noteItems.size(); i++)
+            dao.updateElementPos(i, noteItems.get(i).id);
 
         notifyItemMoved(fromPosition, toPosition);
         notifyItemChanged(fromPosition);
@@ -318,13 +299,10 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     dao.deleteItem(noteItems.get(position).id);
                     noteItems.remove(position);
 
-                    for (int i = 0; i < noteItems.size(); i++) {
-                        if (getPosition(noteItems.get(i).id) != i) {
-                            dao.updateElementPos(i, noteItems.get(i).id);
-                        }
-                    }
+                    for (int i = 0; i < noteItems.size(); i++)
+                        dao.updateElementPos(i, noteItems.get(i).id);
 
-                    notifyDataSetChanged();
+                    notifyItemRemoved(position);
                 } catch (Exception e) {
                     Logger.log(e);
                     Toast.makeText(activity, "error: " + e, Toast.LENGTH_SHORT).show();
@@ -385,12 +363,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             else {
                 editText.setFocusableInTouchMode(false);
                 editText.setFocusable(false);
-                editText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        fragment.enterEditMode();
-                    }
-                });
+                editText.setOnClickListener(v -> fragment.enterEditMode());
             }
 
             editText.setTextSize(Integer.parseInt(App.getDefaultSharedPreferences().getString("text_size", "15")));
@@ -473,12 +446,7 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             else {
                 editText.setFocusableInTouchMode(false);
                 editText.setFocusable(false);
-                editText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        fragment.enterEditMode();
-                    }
-                });
+                editText.setOnClickListener(v -> fragment.enterEditMode());
             }
 
             editText.setTextSize(Integer.parseInt(App.getDefaultSharedPreferences().getString("text_size", "15")));
@@ -489,17 +457,14 @@ public class NoteItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             editTexts.add(editText);
 
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        dao.updateIsChecked(1, noteItems.get(getAdapterPosition()).id);
-                    } else {
-                        dao.updateIsChecked(0, noteItems.get(getAdapterPosition()).id);
-                    }
-
-                    dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(getAdapterPosition()).toId);
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    dao.updateIsChecked(1, noteItems.get(getAdapterPosition()).id);
+                } else {
+                    dao.updateIsChecked(0, noteItems.get(getAdapterPosition()).id);
                 }
+
+                dao.updateNoteTime(System.currentTimeMillis(), noteItems.get(getAdapterPosition()).toId);
             });
         }
     }
