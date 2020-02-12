@@ -1,3 +1,5 @@
+This is my first android app, so it contains a lot of bad code, don't read it pls 🌚
+
 <h1 align="center">
 This is official <a href="https://play.google.com/store/apps/details?id=com.f0x1d.notes">NoteSeed</a>'s repo!
   </h1>
